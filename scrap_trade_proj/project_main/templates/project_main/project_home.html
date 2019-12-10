@@ -1,0 +1,35 @@
+{% extends "project_main/base.html" %}
+{% load i18n %}
+
+{% block style %}
+  <style>
+    body {
+      {% if user.is_authenticated %}
+        background-image: url("{{ user.project.project_background.url }}");
+      {% else %}
+        {% if project %}
+          background-image: url("{{ project.project_background.url }}");
+        {% else %}
+          background-image: url("/media/default-project-background.jpg");
+        {% endif %}
+      {% endif %}
+      background-repeat: no-repeat;
+      background-size: cover;
+  }
+  </style>
+{% endblock style %}
+
+
+{% block content %}
+<div class="content-section">
+  {% trans "Project home page" as var_header context "project-home-header" %}
+  <h1 class="main-page_headers">{{ var_header }}</h1>
+</div>
+{% endblock content %}
+
+{% block spec_action %}
+{% if user.is_authenticated and user.is_superuser %}
+    {% trans "Administration tools" as var_admin context "right-navbar" %}
+    <a class="nav-item nav-link btn btn-outline-secondary right-column-button" href="/admin">{{ var_admin }}</a>
+{% endif %}
+{% endblock spec_action %}

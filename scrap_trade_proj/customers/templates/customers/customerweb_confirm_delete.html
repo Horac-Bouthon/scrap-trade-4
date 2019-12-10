@@ -1,0 +1,34 @@
+{% extends "project_main/base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block style %}
+  <style>
+    body {
+      background-image: url("{{ object.customer.customer_background.url }}");
+      background-repeat: no-repeat;
+      background-size: cover;
+  }
+  </style>
+{% endblock style %}
+
+
+{% block content %}
+  <div class="content-section">
+    <form class="" method="POST">
+      {% csrf_token %}
+      <fieldset class="form-group">
+        {% trans "Delete web url" as var_web %}
+        <legend class="border-bottom mb-4">{{ var_web }}</legend>
+        {% trans "Are you sure, you want to delete web url: " as var_question %}
+        <h2>{{ var_question }} "{{ object.customer_web }}" </h2>
+      </fieldset>
+      <div class="form-group">
+        {% trans "Yes, Delete" as var_delete %}
+        <button class="btn btn-outline-danger" type="submit">{{ var_delete }}</button>
+        {% trans "Cancel" as var_cancel %}
+        <a class="btn btn-outline-secondary" href="{% url 'project-customer-detail' object.customer.pk %}">{{ var_cancel }}</a>
+      </div>
+    </form>
+  </div>
+{% endblock content %}

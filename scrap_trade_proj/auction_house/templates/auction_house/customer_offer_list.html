@@ -1,0 +1,61 @@
+{% extends "project_main/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block style %}
+{% if customer.customer_background %}
+  <style>
+    body {
+      background-image: url("{{ customer.customer_background.url }}");
+      background-repeat: no-repeat;
+      background-size: cover;
+  }
+  </style>
+{% endif %}
+{% endblock style %}
+
+
+{% block content %}
+  <article class="media content-section">
+    <a class=""
+      href="{% url 'project-customer-info' customer.pk %}" target="_blank">
+      <img class="rounded-circle customer-logo" src="{{ customer.customer_logo.url }}">
+    </a>
+    <div class="media-body">
+      <h2 class="customer-name">{{ customer.customer_name }} ({{ selection }})</h2>
+      {% trans "Back to auction" as var_back %}
+      <div class="auction_nav">
+        <a class="btn btn-outline-secondary" href="{% url 'ah-customer-auction' customer.pk %}">{{ var_back }}</a>
+        <p></p>
+      </div>
+      <table class="table_offer">
+        <tr class="table_offer">
+          {% trans "ID" as var_o_n %}
+          <th class="th_offer table_offer">{{ var_o_n }}</th>
+          {% trans "Description" as var_des %}
+          <th class="th_offer table_offer">{{ var_des }}</th>
+          {% trans "Creator" as var_crea %}
+          <th class="th_offer table_offer">{{ var_crea }}</th>
+          {% trans "Created at" as var_cre_at %}
+          <th class="th_offer table_offer">{{ var_cre_at }}</th>
+        </tr>
+        {% for offer in offer_list %}
+        <tr class="table_offer">
+          <td class="td_offer table_offer"> {{ offer.pk }} </td>
+          <td class="td_offer table_offer">
+            {% trans "Click to update the offer" as var_hint1 %}
+            <a class="customer-detail-content" href="{% url 'ah-offer-detail' offer.pk %}"
+              data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}" target="_blank">{{ offer.description }}</a>
+          </td>
+          <td class="td_offer table_offer"> {{ offer.creator.name }}</td>
+          <td class="td_offer table_offer"> {{ offer.created_at }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </article>
+{% endblock content %}
+
+{% block spec_action %}
+{% endblock spec_action %}

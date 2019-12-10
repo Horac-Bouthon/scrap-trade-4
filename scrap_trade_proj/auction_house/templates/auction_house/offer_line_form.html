@@ -1,0 +1,44 @@
+{% extends "project_main/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block style %}
+{% if offer.owner.customer_background %}
+  <style>
+    body {
+      background-image: url("{{ offer.owner.customer_background.url }}");
+      background-repeat: no-repeat;
+      background-size: cover;
+  }
+  </style>
+{% endif %}
+{% endblock style %}
+
+
+{% block content %}
+  <article class="media content-section">
+    <a href="{% url 'project-customer-info' offer.owner.pk %}" target="_blank">
+      <img class="rounded-circle customer-logo" src="{{ offer.owner.customer_logo.url }}">
+    </a>
+    <div class="media-body">
+      <form class="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+          {% trans "Offer line:" as var_ol %}
+          <legend class="border-bottom mb-4">{{ var_ol }}</legend>
+          {{ form|crispy }}
+        </fieldset>
+        <div class="form-group">
+          {% trans "Send" as var_add %}
+          <button class="btn btn-outline-info" type="submit">{{ var_add }}</button>
+          {% trans "Cancel" as var_cancel %}
+          <a class="btn btn-outline-secondary" href="{% url 'ah-offer-detail' offer.pk %}">{{ var_cancel }}</a>
+        </div>
+      </form>
+    </div>
+  </article>
+{% endblock content %}
+
+{% block spec_action %}
+{% endblock spec_action %}

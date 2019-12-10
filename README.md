@@ -1,1 +1,3 @@
-# scrap-trade-4
+# Scrap Trade web environment
+
+Waste auction house

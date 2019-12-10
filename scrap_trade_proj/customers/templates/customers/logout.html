@@ -1,0 +1,35 @@
+{% extends "project_main/system_base.html" %}
+{% load i18n %}
+
+
+{{% block style %}
+  <style>
+    body {
+      {% if user.is_authenticated %}
+        background-image: url("{{ user.project.project_background.url }}");
+      {% else %}
+        {% if project %}
+          background-image: url("{{ project.project_background.url }}");
+        {% else %}
+          background-image: url("/media/default-project-background.jpg");
+        {% endif %}
+      {% endif %}
+      background-repeat: no-repeat;
+      background-size: cover;
+  }
+  </style>
+{% endblock style %}
+
+
+{% block content %}
+<div class="content-section">
+  {% trans "You have been logged out" as var_log_out_text %}
+  <h2>{{ var_log_out_text }}</h2>
+  <div class="border-top pt-3">
+    <small class="text-muted">
+      {% trans "Log In Again" as var_log_in %}
+      <a class="ml-2" href="{% url 'project-user-mylogin' %}">{{ var_log_in }}</a>
+    </small>
+  </div>
+</div>
+{% endblock content %}

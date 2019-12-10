@@ -1,0 +1,254 @@
+{% extends "project_main/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block style %}
+<style>
+  body {
+    background-image: url("{{ object.owner.customer_background.url }}");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+</style>
+{% endblock style %}
+
+{% block content %}
+
+    <article class="media content-section">
+      <a href="{% url 'project-customer-info' object.owner.pk %}" target="_blank">
+        <img class="rounded-circle customer-logo" src="{{ object.owner.customer_logo.url }}">
+      </a>
+      <div class="media-body">
+        {% trans "Click to update offer" as var_hint1 %}
+        <h2 class="customer-name">
+          {% if "customers.is_poweruser" in perms or object.is_new or object.is_ready_close %}
+            {% if "customers.is_poweruser" in perms %}
+              <a class="" href="{% url 'ah-offer-update' object.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ object.description }}</a>
+            {% else %}
+              <a class="" href="{% url 'ah-offer-customer-update' object.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ object.description }}</a>
+            {% endif %}
+          {% else %}
+            {{ object.description }}
+          {% endif %}
+        </h2>
+        <p>
+          {% trans "Status:" as var_status %}
+          <span class="customer-detail-content-highlighite">{{ var_status }} </span>
+          {% if object.is_new %}
+            {% trans "New" as var_new %}
+            <span class="customer-detail-content">{{ var_new }}</span>
+          {% endif %}
+          {% if object.is_confirmed %}
+            {% trans "Confirmed" as var_corf %}
+            <span class="customer-detail-content">{{ var_corf }}</span>
+          {% endif %}
+          {% if object.is_accepted %}
+            {% trans "Accepted" as var_accept %}
+            <span class="customer-detail-content">{{ var_accept }}</span>
+          {% endif %}
+          {% if object.is_ready_close %}
+            {% trans "Ready to close" as var_ready_close %}
+            <span class="customer-detail-content">{{ var_ready_close }}</span>
+          {% endif %}
+          {% if object.is_closed %}
+            {% trans "Closed" as var_clos %}
+            <span class="customer-detail-content">{{ var_clos }}</span>
+          {% endif %}
+          {% if object.is_cancelled %}
+            {% trans "Canceled" as var_canc %}
+            <span class="customer-detail-content">{{ var_canc }}</span>
+          {% endif %}
+        </p>
+        <p>
+          {% trans "Auction date:" as var_auction %}
+          <span class="customer-detail-content-highlighite">{{ var_auction }} </span>
+          <span class="customer-detail-content">{{ object.auction_date }}</span>
+        </p>
+        <p>
+          {% trans "Delivery date:" as var_delivery %}
+          <span class="customer-detail-content-highlighite">{{ var_delivery }} </span>
+          <span class="customer-detail-content">{{ object.delivery_date }}</span>
+        </p>
+        <p/>
+        {% if "customers.is_poweruser" in perms or object.is_new %}
+          {% trans "Click to add offers line" as var_hint1 %}
+          {% trans "Lines" as var_line_header %}
+          <h5 class="customer-title">
+            <a class="" href="{% url 'ah-offer-line-create' object.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ var_line_header }}</a>
+          </h5>
+        {% endif %}
+        {% if object.lines.all.count > 0 %}
+          <table class="table_lines">
+            <tr class="table_lines">
+              {% trans "ID" as var_o_n %}
+              <th class="th_lines table_lines">{{ var_o_n }}</th>
+              {% trans "Description" as var_des %}
+              <th class="th_lines table_lines">{{ var_des }}</th>
+              {% trans "Material class" as var_mc %}
+              <th class="th_lines table_lines">{{ var_mc }}</th>
+              {% trans "Amount" as var_crea %}
+              <th class="th_lines table_lines">{{ var_crea }}</th>
+              {% if object.is_new %}
+                <th class="th_lines table_lines"></th>
+              {% endif %}
+            </tr>
+            {% trans "Click to update line" as var_hint3 %}
+            {% for line in  object.lines.all %}
+            <tr class="table_lines">
+              <td class="td_lines table_lines"> {{ line.id }} </td>
+              <td class="td_lines table_lines">
+                {% if object.is_new %}
+                  <a class="table_lines" href="{% url 'ah-offer-line-update' object.pk line.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}">
+                   {{ line.description }}
+                  </a>
+                {% else %}
+                  {{ line.description }}
+                {% endif %}
+              </td>
+              <td class="td_lines table_lines">
+                <a class="table_lines" href="{% url 'ah-mat-class-detail' line.mat_class.id %}" data-toggle="tooltip" data-placement="top" title="{{ line.mat_class.act_mat_class_description }}" target="_blank">
+                 {{ line.mat_class.act_display_name }}
+                </a>
+              </td>
+              <td class="td_lines table_lines"> {{ line.amount }} {{ line.mat_class.measurement_unit }} </td>
+              {% if object.is_new %}
+                <td class="td_lines table_lines">
+                  {% trans "Click to delete line" as var_hint4 %}
+                  <a class="" href="{% url 'ah-offer-line-delete' line.id %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint4 }}">
+                    <img class="rounded-circle delete-icon" src="/media/icons/delete_icon.jpg">
+                  </a>
+                </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </table>
+
+          {% if object.is_confirmed%}
+            {% if my_answers.count > 0 %}
+              <p></p>
+              {% trans "Answers" as var_answers_header %}
+              <h5 class="customer-title">
+                {{ var_answers_header }} ({{ answers_total }})
+              </h5>
+              <table class="table_lines">
+                <tr class="table_lines">
+                  {% trans "ID" as var_o_n %}
+                  <th class="th_lines table_lines">{{ var_o_n }}</th>
+                  {% trans "Total price" as var_des %}
+                  <th class="th_lines table_lines">{{ var_des }}</th>
+                </tr>
+                {% trans "Click to update line" as var_hint3 %}
+                {% for answer in  my_answers %}
+                  <tr class="table_lines">
+                    <td class="td_lines table_lines"> {{ answer.id }} </td>
+                    <td class="td_lines table_lines">
+                        {{ answer.total_price }}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </table>
+            {% endif %}
+          {% endif %}
+          {% if object.is_accepted or object.is_ready_close or object.is_closed %}
+            {% if bound_answers.count > 0 %}
+              {% for answer in  bound_answers %}
+`                <p></p>
+                {% trans "Answer" as var_answer_header %}
+                <h5 class="customer-title">
+                  {{ var_answer_header }}
+                </h5>
+
+
+                <h5>
+                  <a class=""
+                    href="{% url 'project-customer-info' answer.owner.pk %}" target="_blank">
+                    <img class="rounded-circle customer-logo" src="{{ answer.owner.customer_logo.url }}">
+                    {{ answer.owner.customer_name }}
+                  </a>
+                </h5>
+                <h2 class="customer-name">{{ answer.description }}</h2>
+                <p>
+                  {% trans "Status:" as var_status %}
+                  <span class="customer-detail-content-highlighite">{{ var_status }} </span>
+                  {% if answer.is_new %}
+                    {% trans "New" as var_new %}
+                    <span class="customer-detail-content">{{ var_new }}</span>
+                  {% endif %}
+                  {% if answer.is_confirmed %}
+                    {% trans "Confirmed" as var_corf %}
+                    <span class="customer-detail-content">{{ var_corf }}</span>
+                  {% endif %}
+                  {% if answer.is_successful %}
+                    {% trans "Successful" as var_in_proc %}
+                    <span class="customer-detail-content">{{ var_in_proc }}</span>
+                  {% endif %}
+                  {% if answer.is_accepted %}
+                    {% trans "Accepted" as var_accepted %}
+                    <span class="customer-detail-content">{{ var_accepted }}</span>
+                  {% endif %}
+                  {% if answer.is_closed %}
+                    {% trans "Closed" as var_clos %}
+                    <span class="customer-detail-content">{{ var_clos }}</span>
+                  {% endif %}
+                  {% if answer.is_cancelled %}
+                    {% trans "Canceled" as var_canc %}
+                    <span class="customer-detail-content">{{ var_canc }}</span>
+                  {% endif %}
+                </p>
+                <p>
+                  {% trans "Answer total:" as var_at %}
+                  <span class="customer-detail-content-highlighite">{{ var_at }} </span>
+                  <span class="customer-detail-content">{{ answer.total_price }}</span>
+                </p>
+                <p/>
+                {% if answer.my_lines.all.count > 0 %}
+                  <table class="table_lines">
+                    <tr class="table_lines">
+                      {% trans "ID" as var_o_n %}
+                      <th class="th_lines table_lines">{{ var_o_n }}</th>
+                      {% trans "Description" as var_offer_des %}
+                      <th class="th_lines table_lines">{{ var_offer_des }}</th>
+                      {% trans "Material class" as var_mc %}
+                      <th class="th_lines table_lines">{{ var_mc }}</th>
+                      {% trans "Amount" as var_crea %}
+                      <th class="th_lines table_lines">{{ var_crea }}</th>
+                      {% trans "Price per unit" as var_ppu %}
+                      <th class="th_lines table_lines">{{ var_ppu }}</th>
+                      {% trans "Price total" as var_line_total %}
+                      <th class="th_lines table_lines">{{ var_line_total }}</th>
+                    </tr>
+                    {% for line in  answer.my_lines.all %}
+                    <tr class="table_lines">
+                      <td class="td_lines table_lines"> {{ line.id }} </td>
+                      <td class="td_lines table_lines">
+                        {{ line.offer_line.description }}
+                      </td>
+                      <td class="td_lines table_lines">
+                          {{ line.offer_line.mat_class.act_display_name }}
+                      </td>
+                      <td class="td_lines table_lines"> {{ line.offer_line.amount }} {{ line.offer_line.mat_class.measurement_unit }} </td>
+                      <td class="td_lines table_lines">
+                          {{ line.ppu }}
+                      </td>
+                      <td class="td_lines table_lines">
+                          {{ line.total_price }}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+                {% endif %}
+
+
+
+              {% endfor %}
+`           {% endif %}
+          {% endif %}
+        {% endif %}
+      </div>
+    </article>
+
+
+{% endblock content %}
+
+{% block spec_action %}
+{% endblock spec_action %}

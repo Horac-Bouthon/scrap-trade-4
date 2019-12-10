@@ -1,0 +1,47 @@
+{% extends "project_main/system_base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block style %}
+  <style>
+    body {
+      {% if user.is_authenticated %}
+        background-image: url("{{ user.project.project_background.url }}");
+      {% else %}
+        {% if project %}
+          background-image: url("{{ project.project_background.url }}");
+        {% else %}
+          background-image: url("/media/default-project-background.jpg");
+        {% endif %}
+      {% endif %}
+      background-repeat: no-repeat;
+      background-size: cover;
+  }
+  </style>
+{% endblock style %}
+
+{% block content %}
+
+    <article class="media content-section">
+      <div class="media-body">
+        <h2 class="customer-name">
+          {{ object.act_display_name }}
+        </h2>
+        <p>
+          {{ object.act_mat_class_description|linebreaks }}
+        </p>
+        <p>
+          {% trans "Material class name:" as var_cl_n %}
+          <span class="customer-detail-content-highlighite">{{ var_cl_n }} </span>
+          <span class="customer-detail-content">{{ object.class_name }}</span>
+        </p>
+        <p>
+          {% trans "Measurement unit:" as var_m_u %}
+          <span class="customer-detail-content-highlighite">{{ var_m_u }} </span>
+          <span class="customer-detail-content">{{ object.measurement_unit }}</span>
+        </p>
+      </div>
+    </article>
+
+
+{% endblock content %}

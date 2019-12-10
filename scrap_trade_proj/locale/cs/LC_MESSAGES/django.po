@@ -1,0 +1,2159 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-10 15:07+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#: auction_house/admin.py:17 auction_house/admin.py:18
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:71
+#: auction_house/templates/auction_house/ahanswer_detail.html:85
+#: auction_house/templates/auction_house/ahoffer_detail.html:87
+#: auction_house/templates/auction_house/ahoffer_detail.html:211
+#: auction_house/templates/auction_house/ahoffer_info.html:65
+msgid "Material class"
+msgstr "Třída materiálu"
+
+#: auction_house/forms.py:20 auction_house/forms.py:21
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:59
+#: auction_house/templates/auction_house/ahanswer_detail.html:68
+#: auction_house/templates/auction_house/ahoffer_detail.html:68
+#: auction_house/templates/auction_house/ahoffer_info.html:53
+msgid "Delivery date:"
+msgstr "Datum dodání:"
+
+#: auction_house/models.py:20 auction_house/models.py:148
+#: auction_house/models.py:243
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:69
+#: auction_house/templates/auction_house/ahanswer_detail.html:83
+#: auction_house/templates/auction_house/ahanswer_list.html:29
+#: auction_house/templates/auction_house/ahoffer_detail.html:85
+#: auction_house/templates/auction_house/ahoffer_detail.html:209
+#: auction_house/templates/auction_house/ahoffer_info.html:63
+#: auction_house/templates/auction_house/ahoffer_list.html:29
+#: auction_house/templates/auction_house/customer_answer_list.html:36
+#: auction_house/templates/auction_house/customer_offer_list.html:36
+#: auction_house/templates/auction_house/customer_waiting_list.html:36
+#: customers/models.py:221
+msgid "Description"
+msgstr "Popis"
+
+#: auction_house/models.py:21 auction_house/models.py:244
+msgid "Offers description"
+msgstr "Popis nabídky"
+
+#: auction_house/models.py:27 auction_house/models.py:274
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:33
+#: auction_house/templates/auction_house/ahanswer_detail.html:38
+#: auction_house/templates/auction_house/ahoffer_detail.html:38
+#: auction_house/templates/auction_house/ahoffer_detail.html:174
+#: auction_house/templates/auction_house/ahoffer_info.html:27
+msgid "New"
+msgstr "Nová"
+
+#: auction_house/models.py:28 auction_house/models.py:275
+msgid "New created offer. "
+msgstr "Nově vytvořená nabídka"
+
+#: auction_house/models.py:32 auction_house/models.py:279
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:37
+#: auction_house/templates/auction_house/ahanswer_detail.html:42
+#: auction_house/templates/auction_house/ahoffer_detail.html:42
+#: auction_house/templates/auction_house/ahoffer_detail.html:178
+#: auction_house/templates/auction_house/ahoffer_info.html:31
+msgid "Confirmed"
+msgstr "Potvrzená"
+
+#: auction_house/models.py:33
+msgid "Offers is confirmed by owner. "
+msgstr "Nabídka je potvrzena vlastníkem"
+
+#: auction_house/models.py:36
+msgctxt "AhOffer definition"
+msgid "Confirmed at"
+msgstr "Potvrzeno"
+
+#: auction_house/models.py:42 auction_house/models.py:300
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:41
+#: auction_house/templates/auction_house/ahanswer_detail.html:50
+#: auction_house/templates/auction_house/ahoffer_detail.html:46
+#: auction_house/templates/auction_house/ahoffer_detail.html:186
+#: auction_house/templates/auction_house/ahoffer_info.html:35
+msgid "Accepted"
+msgstr "Přijatá"
+
+#: auction_house/models.py:43
+msgid "Mark offers accepted by the buyer."
+msgstr "Označuje nabídky přijaté kupujícím"
+
+#: auction_house/models.py:46
+msgctxt "AhOffer definition"
+msgid "Accepted at"
+msgstr "Přijmuto"
+
+#: auction_house/models.py:52
+#: auction_house/templates/auction_house/ahoffer_detail.html:50
+msgid "Ready to close"
+msgstr "Připravena k uzavření"
+
+#: auction_house/models.py:53
+msgid "Mark ready to close offers."
+msgstr "Označení nabídky připravené k uzavření"
+
+#: auction_house/models.py:56
+msgctxt "AhOffer definition"
+msgid "Ready to close at"
+msgstr "Uzavřeno"
+
+#: auction_house/models.py:62 auction_house/models.py:311
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:45
+#: auction_house/templates/auction_house/ahanswer_detail.html:54
+#: auction_house/templates/auction_house/ahoffer_detail.html:54
+#: auction_house/templates/auction_house/ahoffer_detail.html:190
+#: auction_house/templates/auction_house/ahoffer_info.html:39
+msgid "Closed"
+msgstr "Uzavřená"
+
+#: auction_house/models.py:63
+msgid "Mark closed offers. "
+msgstr "Označení uzavřené nabídky"
+
+#: auction_house/models.py:66
+msgctxt "AhOffer definition"
+msgid "Closed at"
+msgstr "Uzavřeno"
+
+#: auction_house/models.py:72 auction_house/models.py:322
+msgid "Cancelled"
+msgstr "Zrušená"
+
+#: auction_house/models.py:73
+msgid "Mark cancelled offers. "
+msgstr "Označení zrušené nabídky"
+
+#: auction_house/models.py:76
+msgctxt "AhOffer definition"
+msgid "Canceled at"
+msgstr "Zrušeno"
+
+#: auction_house/models.py:83
+msgctxt "AhOffer definition"
+msgid "Owner"
+msgstr "Vlastník"
+
+#: auction_house/models.py:84
+msgctxt "AhOffer definition"
+msgid "Link to Owner"
+msgstr "Odkaz na vlastníka"
+
+#: auction_house/models.py:91
+msgctxt "AhOffer definition"
+msgid "Creator"
+msgstr "Tvůrce"
+
+#: auction_house/models.py:92
+msgctxt "AhOffer definition"
+msgid "Link to Creator"
+msgstr "Odkaz na tvůrce"
+
+#: auction_house/models.py:97 auction_house/models.py:121
+msgctxt "AhOffer definition"
+msgid "Delivery date"
+msgstr "Datum dodání"
+
+#: auction_house/models.py:98 auction_house/models.py:122
+msgctxt "AhOffer definition"
+msgid "Date of the delivery"
+msgstr "Datum dodání materiálu"
+
+#: auction_house/models.py:104
+msgctxt "AhOffer definition"
+msgid "Last change"
+msgstr "Poslední změnil"
+
+#: auction_house/models.py:105
+msgctxt "AhOffer definition"
+msgid "Link to user made last change"
+msgstr "Odkaz uživatele, který provedl poslední změnu"
+
+#: auction_house/models.py:110
+msgctxt "AhOffer definition"
+msgid "Changed at"
+msgstr "Změněno"
+
+#: auction_house/models.py:115
+msgctxt "AhOffer definition"
+msgid "Offered to"
+msgstr "Nabídnuto"
+
+#: auction_house/models.py:116
+msgctxt "AhOffer definition"
+msgid "List of customers who received the offer"
+msgstr "Zákazníci, kterým byla nabídka postoupena"
+
+#: auction_house/models.py:127
+msgctxt "AhOffer definition"
+msgid "Auction date"
+msgstr "Datum aukce"
+
+#: auction_house/models.py:128
+msgctxt "AhOffer definition"
+msgid "Date of auction"
+msgstr "Datum aukce"
+
+#: auction_house/models.py:134
+msgctxt "AhOffer definition"
+msgid "Offer"
+msgstr "Nabídka"
+
+#: auction_house/models.py:135
+msgctxt "AhOffer definition"
+msgid "Offers"
+msgstr "Nabídky"
+
+#: auction_house/models.py:149
+msgid "Offers line description"
+msgstr "Popis řádky nabídky"
+
+#: auction_house/models.py:156
+msgctxt "AhOfferLine definition"
+msgid "Amount"
+msgstr "Množství"
+
+#: auction_house/models.py:157
+msgctxt "AhOfferLine definition"
+msgid "Quantity of material"
+msgstr "Množství materiálu"
+
+#: auction_house/models.py:164
+msgctxt "AhOfferLine definition"
+msgid "Offer"
+msgstr "Nabídka"
+
+#: auction_house/models.py:165
+msgctxt "AhOfferLine definition"
+msgid "Link to Offer"
+msgstr "Odkaz na nabídku"
+
+#: auction_house/models.py:173
+msgctxt "AhOfferLine definition"
+msgid "Material class"
+msgstr "Třída materiálu"
+
+#: auction_house/models.py:174
+msgctxt "AhOfferLine definition"
+msgid "Link to Material class"
+msgstr "Odkaz na třídu materiálu"
+
+#: auction_house/models.py:181
+msgctxt "AhOffer definition"
+msgid "Offer line"
+msgstr "Řádka nabídkek"
+
+#: auction_house/models.py:182
+msgctxt "AhOffer definition"
+msgid "Offer lines"
+msgstr "Řádky nabídkek"
+
+#: auction_house/models.py:195
+msgid "Material class name"
+msgstr "Jméno třídy materiálu"
+
+#: auction_house/models.py:196
+msgid "Name of the material class"
+msgstr "Jméno třídy materiálu"
+
+#: auction_house/models.py:201
+msgid "Measurement unit"
+msgstr "Měrná jednotka"
+
+#: auction_house/models.py:202
+msgid "Units in which material is entered"
+msgstr "Jednotka, ve které se zadává množství materiálu"
+
+#: auction_house/models.py:207
+msgctxt "AhMatClass definition"
+msgid "Material class"
+msgstr "Trída materiálu"
+
+#: auction_house/models.py:208
+msgctxt "AhMatClass definition"
+msgid "Material classes"
+msgstr "Trídy materiálu"
+
+#: auction_house/models.py:225
+msgid "Material class display name"
+msgstr "Jméno třídy materiálu k zobrazení"
+
+#: auction_house/models.py:226
+msgid "Name of the material class for displaying"
+msgstr "Jméno třídy materiálu, které se bude zobrazovat"
+
+#: auction_house/models.py:231
+msgid "Material class description"
+msgstr "Popis třídy materiálu"
+
+#: auction_house/models.py:232
+msgid "Text to describe the material class."
+msgstr "Text popisující třídu materiálu"
+
+#: auction_house/models.py:251
+msgctxt "AhAnswer definition"
+msgid "Owner"
+msgstr "Vlastník"
+
+#: auction_house/models.py:252
+msgctxt "AhAnswer definition"
+msgid "Link to Owner"
+msgstr "Odkaz na vlastníka"
+
+#: auction_house/models.py:259
+msgctxt "AhAnswer definition"
+msgid "Offer"
+msgstr "Nabídka"
+
+#: auction_house/models.py:260
+msgctxt "AhAnswer definition"
+msgid "Link to Offer"
+msgstr "Odkaz na nabídku"
+
+#: auction_house/models.py:267
+msgctxt "AhAnswer definition"
+msgid "Total price"
+msgstr "Celková cena"
+
+#: auction_house/models.py:268
+msgctxt "AhAnswer definition"
+msgid "Final price for the answer"
+msgstr "Cena za celou odpověď"
+
+#: auction_house/models.py:280
+msgid "Answer is confirmed by owner. "
+msgstr "Odpověď je potvrzena vlastníkem"
+
+#: auction_house/models.py:283
+msgctxt "AhAnswer definition"
+msgid "Confirmed at"
+msgstr "Potvrzeno"
+
+#: auction_house/models.py:284
+msgctxt "AhAnswer definition"
+msgid "Confirmed from..."
+msgstr "Potvrzeno od..."
+
+#: auction_house/models.py:290
+#: auction_house/templates/auction_house/ahanswer_detail.html:46
+#: auction_house/templates/auction_house/ahoffer_detail.html:182
+msgid "Successful"
+msgstr "Úspěšná"
+
+#: auction_house/models.py:291
+msgid "Mark successful answers. "
+msgstr "Označení úspěšné odpovědi"
+
+#: auction_house/models.py:295
+msgid "Bound"
+msgstr "Propojeno"
+
+#: auction_house/models.py:296
+msgid "Mark bound answers. "
+msgstr "Označení propojené odpovědi"
+
+#: auction_house/models.py:301
+msgid "Mark accepted answers. "
+msgstr "Označení přijaté odpovědi"
+
+#: auction_house/models.py:304
+msgctxt "AhAnswer definition"
+msgid "Accepted at"
+msgstr "Přijmuto"
+
+#: auction_house/models.py:305
+msgctxt "AhAnswer definition"
+msgid "Accepted from..."
+msgstr "Přijato od..."
+
+#: auction_house/models.py:312
+msgid "Mark closed answers. "
+msgstr "Označení uzavřené odpovědi"
+
+#: auction_house/models.py:315
+msgctxt "AhAnswer definition"
+msgid "Closed at"
+msgstr "Uzavřeno"
+
+#: auction_house/models.py:316
+msgctxt "AhAnswer definition"
+msgid "Closed from..."
+msgstr "Uzavřeno od..."
+
+#: auction_house/models.py:323
+msgid "Mark cancelled answers. "
+msgstr "Označení zrušené odpovědi"
+
+#: auction_house/models.py:326
+msgctxt "AhAnswer definition"
+msgid "Canceled at"
+msgstr "Zrušeno"
+
+#: auction_house/models.py:327
+msgctxt "AhAnswer definition"
+msgid "Canceled from..."
+msgstr "Zrušeno od..."
+
+#: auction_house/models.py:334
+msgctxt "AhAnswer definition"
+msgid "Creator"
+msgstr "Tvůrce"
+
+#: auction_house/models.py:335
+msgctxt "AhAnswer definition"
+msgid "Link to Creator"
+msgstr "Odkaz na tvůrce"
+
+#: auction_house/models.py:343
+msgctxt "AhAnswer definition"
+msgid "Last change"
+msgstr "Poslední změnil"
+
+#: auction_house/models.py:344
+msgctxt "AhAnswer definition"
+msgid "Link to user made last change"
+msgstr "Odkaz uživatele, který provedl poslední změnu"
+
+#: auction_house/models.py:351
+msgctxt "AhAnswer definition"
+msgid "Answer"
+msgstr "Odpověď"
+
+#: auction_house/models.py:352
+msgctxt "AhAnswer definition"
+msgid "Answers"
+msgstr "Odpovědi"
+
+#: auction_house/models.py:375
+msgctxt "AhAnswerLine definition"
+msgid "Price per unit"
+msgstr "Cena za jednotku"
+
+#: auction_house/models.py:376
+msgctxt "AhAnswerLine definition"
+msgid "Price for one measurement unit"
+msgstr "Cena za měrnou jednotku"
+
+#: auction_house/models.py:382
+msgctxt "AhAnswerLine definition"
+msgid "Total price"
+msgstr "Celková cena"
+
+#: auction_house/models.py:383
+msgctxt "AhAnswerLine definition"
+msgid "Final price for the line"
+msgstr "Celková cena řádky"
+
+#: auction_house/models.py:388
+msgctxt "AhAnswerLine definition"
+msgid "Answer"
+msgstr "Odpověď"
+
+#: auction_house/models.py:389
+msgctxt "AhAnswerLine definition"
+msgid "Link to Answer"
+msgstr "Odkaz na odpověď"
+
+#: auction_house/models.py:396
+msgctxt "AhAnswerLine definition"
+msgid "Offer line"
+msgstr "Řádka nabídky"
+
+#: auction_house/models.py:397
+msgctxt "AhAnswerLine definition"
+msgid "Link to line of offer"
+msgstr "Odkaz na řádku nabídky"
+
+#: auction_house/models.py:403
+msgctxt "AhAnswerLine definition"
+msgid "Answer line"
+msgstr "Řádka odpovědi"
+
+#: auction_house/models.py:404
+msgctxt "AhAnswerLine definition"
+msgid "Answer lines"
+msgstr "Řádky odpovědi"
+
+#: auction_house/templates/auction_house/ahanswer_confirm.html:21
+#: auction_house/templates/auction_house/ahanswer_confirm_cancel.html:21
+#: auction_house/templates/auction_house/ahanswer_confirm_close.html:21
+#: auction_house/templates/auction_house/ahoffer_confirm.html:21
+#: auction_house/templates/auction_house/ahoffer_confirm_close.html:21
+#: auction_house/templates/auction_house/ahoffer_customer_form.html:33
+msgid "Confirm offer"
+msgstr "Potvrdit nabídku"
+
+#: auction_house/templates/auction_house/ahanswer_confirm.html:23
+msgid "Are you sure, you want confirm answer "
+msgstr "Jste si jistý, že chete potvrdit odpověď"
+
+#: auction_house/templates/auction_house/ahanswer_confirm.html:25
+msgid ""
+"If you confirm answer, you can't change it and you must contact poweruser. "
+msgstr ""
+"Když potvrdíte odpověď, nemůžete jí dále měnit a musíte kontaktovat super "
+"uživatele."
+
+#: auction_house/templates/auction_house/ahanswer_confirm.html:31
+#: auction_house/templates/auction_house/ahoffer_confirm.html:31
+msgid "Yes, Confirm"
+msgstr "Ano, potvrdit"
+
+#: auction_house/templates/auction_house/ahanswer_confirm.html:33
+#: auction_house/templates/auction_house/ahanswer_confirm_accept.html:29
+#: auction_house/templates/auction_house/ahanswer_confirm_close.html:29
+#: auction_house/templates/auction_house/ahanswer_confirm_delete.html:29
+#: auction_house/templates/auction_house/ahanswer_customer_form.html:52
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:102
+#: auction_house/templates/auction_house/ahanswer_form.html:34
+#: auction_house/templates/auction_house/ahoffer_confirm.html:33
+#: auction_house/templates/auction_house/ahoffer_confirm_close.html:29
+#: auction_house/templates/auction_house/ahoffer_confirm_delete.html:29
+#: auction_house/templates/auction_house/ahoffer_customer_form.html:48
+#: auction_house/templates/auction_house/ahoffer_customer_new.html:34
+#: auction_house/templates/auction_house/ahoffer_form.html:34
+#: auction_house/templates/auction_house/ahofferline_confirm_delete.html:29
+#: auction_house/templates/auction_house/answer_line_form.html:35
+#: auction_house/templates/auction_house/offer_line_form.html:35
+#: customers/templates/customers/customer_confirm_delete.html:29
+#: customers/templates/customers/customer_form.html:32
+#: customers/templates/customers/customer_translation.html:47
+#: customers/templates/customers/customerbankaccount_confirm_delete.html:29
+#: customers/templates/customers/customerbankaccount_form.html:34
+#: customers/templates/customers/customeremail_confirm_delete.html:29
+#: customers/templates/customers/customerestablishments_confirm_delete.html:29
+#: customers/templates/customers/customerestablishments_form.html:34
+#: customers/templates/customers/customerphone_confirm_delete.html:29
+#: customers/templates/customers/customerphone_form.html:34
+#: customers/templates/customers/customerweb_confirm_delete.html:29
+#: customers/templates/customers/customerweb_form.html:34
+#: customers/templates/customers/email_form.html:34
+#: customers/templates/customers/projectcustomuser_active.html:34
+#: customers/templates/customers/projectcustomuser_form.html:34
+msgid "Cancel"
+msgstr "Zpět"
+
+#: auction_house/templates/auction_house/ahanswer_confirm_accept.html:21
+msgid "Accept succesful answer"
+msgstr "Přijetí úspěšné odpovědi"
+
+#: auction_house/templates/auction_house/ahanswer_confirm_accept.html:23
+msgid "Are you sure, you want accept succestul answer "
+msgstr "Jste si jistý, že chete přijmout úspěšnou odpověď"
+
+#: auction_house/templates/auction_house/ahanswer_confirm_accept.html:27
+msgid "Yes, Accept"
+msgstr "Ano, přijmout"
+
+#: auction_house/templates/auction_house/ahanswer_confirm_cancel.html:23
+msgid "Are you sure, you want cancel answer "
+msgstr "Jste si jistý, že chete zrušit odpověď"
+
+#: auction_house/templates/auction_house/ahanswer_confirm_cancel.html:27
+#: auction_house/templates/auction_house/ahoffer_confirm_cancel.html:31
+msgid "Yes, cancel"
+msgstr "Ano, zrušit"
+
+#: auction_house/templates/auction_house/ahanswer_confirm_cancel.html:29
+#: auction_house/templates/auction_house/ahoffer_confirm_cancel.html:33
+msgid "Do not cancel"
+msgstr "Nerušit"
+
+#: auction_house/templates/auction_house/ahanswer_confirm_close.html:23
+msgid "Are you sure, you want close answer "
+msgstr "Jste si jistý, že chete zavřít odpověď"
+
+#: auction_house/templates/auction_house/ahanswer_confirm_close.html:27
+#: auction_house/templates/auction_house/ahoffer_confirm_close.html:27
+msgid "Yes, close"
+msgstr "Ano, zavřít"
+
+#: auction_house/templates/auction_house/ahanswer_confirm_delete.html:21
+#: auction_house/templates/auction_house/ahoffer_confirm_delete.html:21
+#: auction_house/templates/auction_house/ahofferline_confirm_delete.html:21
+msgid "Delete offer"
+msgstr "Smazat nabídku"
+
+#: auction_house/templates/auction_house/ahanswer_confirm_delete.html:23
+msgid "Are you sure, you want to delete the answer"
+msgstr "Jste si jistý, že chete odstranit odpověď"
+
+#: auction_house/templates/auction_house/ahanswer_confirm_delete.html:27
+#: auction_house/templates/auction_house/ahoffer_confirm_delete.html:27
+#: auction_house/templates/auction_house/ahofferline_confirm_delete.html:27
+#: customers/templates/customers/customer_confirm_delete.html:27
+#: customers/templates/customers/customerbankaccount_confirm_delete.html:27
+#: customers/templates/customers/customeremail_confirm_delete.html:27
+#: customers/templates/customers/customerestablishments_confirm_delete.html:27
+#: customers/templates/customers/customerphone_confirm_delete.html:27
+#: customers/templates/customers/customerweb_confirm_delete.html:27
+msgid "Yes, Delete"
+msgstr "Ano, odstranit"
+
+#: auction_house/templates/auction_house/ahanswer_customer_form.html:33
+msgid "Confirm answer"
+msgstr "Podrvďte odpověď."
+
+#: auction_house/templates/auction_house/ahanswer_customer_form.html:37
+msgid "Accept answer"
+msgstr "Přijmout odpověd"
+
+#: auction_house/templates/auction_house/ahanswer_customer_form.html:41
+msgid "Close answer"
+msgstr "Uzavřit odpověd"
+
+#: auction_house/templates/auction_house/ahanswer_customer_form.html:45
+msgid "Cancel answer"
+msgstr "Zrušit odpověd"
+
+#: auction_house/templates/auction_house/ahanswer_customer_form.html:50
+#: auction_house/templates/auction_house/ahanswer_form.html:32
+#: auction_house/templates/auction_house/ahoffer_customer_form.html:46
+#: auction_house/templates/auction_house/ahoffer_customer_new.html:32
+#: auction_house/templates/auction_house/ahoffer_form.html:32
+#: customers/templates/customers/customer_form.html:30
+#: customers/templates/customers/projectcustomuser_active.html:32
+#: customers/templates/customers/user_profile.html:25
+msgid "Update"
+msgstr "Uložit"
+
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:26
+msgid "Offer"
+msgstr "Nabídka"
+
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:30
+#: auction_house/templates/auction_house/ahanswer_detail.html:35
+#: auction_house/templates/auction_house/ahoffer_detail.html:35
+#: auction_house/templates/auction_house/ahoffer_detail.html:171
+#: auction_house/templates/auction_house/ahoffer_info.html:24
+msgid "Status:"
+msgstr "Status:"
+
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:49
+#: auction_house/templates/auction_house/ahanswer_detail.html:58
+#: auction_house/templates/auction_house/ahoffer_detail.html:58
+#: auction_house/templates/auction_house/ahoffer_detail.html:194
+#: auction_house/templates/auction_house/ahoffer_info.html:43
+msgid "Canceled"
+msgstr "Zrušená"
+
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:54
+#: auction_house/templates/auction_house/ahanswer_detail.html:63
+#: auction_house/templates/auction_house/ahoffer_detail.html:63
+#: auction_house/templates/auction_house/ahoffer_info.html:48
+msgid "Auction date:"
+msgstr "Datum aukce:"
+
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:67
+#: auction_house/templates/auction_house/ahanswer_detail.html:81
+#: auction_house/templates/auction_house/ahanswer_list.html:27
+#: auction_house/templates/auction_house/ahoffer_detail.html:83
+#: auction_house/templates/auction_house/ahoffer_detail.html:135
+#: auction_house/templates/auction_house/ahoffer_detail.html:207
+#: auction_house/templates/auction_house/ahoffer_info.html:61
+#: auction_house/templates/auction_house/ahoffer_list.html:27
+#: auction_house/templates/auction_house/customer_answer_list.html:34
+#: auction_house/templates/auction_house/customer_offer_list.html:34
+#: auction_house/templates/auction_house/customer_waiting_list.html:34
+msgid "ID"
+msgstr "Id"
+
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:73
+#: auction_house/templates/auction_house/ahanswer_detail.html:87
+#: auction_house/templates/auction_house/ahoffer_detail.html:89
+#: auction_house/templates/auction_house/ahoffer_detail.html:213
+#: auction_house/templates/auction_house/ahoffer_info.html:67
+msgid "Amount"
+msgstr "Množství"
+
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:76
+#: auction_house/templates/auction_house/ahanswer_detail.html:94
+#: auction_house/templates/auction_house/ahoffer_detail.html:95
+#: auction_house/templates/auction_house/ahoffer_detail.html:140
+#: auction_house/templates/auction_house/ahoffer_info.html:70
+msgid "Click to update line"
+msgstr "Použijte ke změně řádky"
+
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:92
+msgid "New answer"
+msgstr "Nová odpověď"
+
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:100
+msgid "Create"
+msgstr "Vytvořit"
+
+#: auction_house/templates/auction_house/ahanswer_detail.html:22
+msgid "Click to update answer"
+msgstr "Použijte ke změně odpovědi"
+
+#: auction_house/templates/auction_house/ahanswer_detail.html:73
+#: auction_house/templates/auction_house/ahoffer_detail.html:199
+msgid "Answer total:"
+msgstr "Odpověd celkem:"
+
+#: auction_house/templates/auction_house/ahanswer_detail.html:89
+#: auction_house/templates/auction_house/ahoffer_detail.html:215
+msgid "Price per unit"
+msgstr "Cena za jednotku"
+
+#: auction_house/templates/auction_house/ahanswer_detail.html:91
+#: auction_house/templates/auction_house/ahoffer_detail.html:217
+msgid "Price total"
+msgstr "Celková cena"
+
+#: auction_house/templates/auction_house/ahanswer_detail.html:109
+msgid "Click to update price per unit"
+msgstr "Použijte ke změně ceny za jednotku"
+
+#: auction_house/templates/auction_house/ahanswer_list.html:31
+#: auction_house/templates/auction_house/ahoffer_list.html:31
+#: auction_house/templates/auction_house/customer_waiting_list.html:38
+msgid "Owner"
+msgstr "Vlastník"
+
+#: auction_house/templates/auction_house/ahanswer_list.html:33
+#: auction_house/templates/auction_house/ahoffer_list.html:33
+#: auction_house/templates/auction_house/customer_answer_list.html:38
+#: auction_house/templates/auction_house/customer_offer_list.html:38
+msgid "Creator"
+msgstr "Tvůrce"
+
+#: auction_house/templates/auction_house/ahanswer_list.html:35
+#: auction_house/templates/auction_house/ahoffer_list.html:35
+#: auction_house/templates/auction_house/customer_answer_list.html:40
+#: auction_house/templates/auction_house/customer_offer_list.html:40
+#: auction_house/templates/auction_house/customer_waiting_list.html:40
+msgid "Created at"
+msgstr "Vytvořeno"
+
+#: auction_house/templates/auction_house/ahanswer_list.html:43
+msgid "Click to update the answer"
+msgstr "Použijte ke změně odpovědi"
+
+#: auction_house/templates/auction_house/ahanswer_list.html:50
+msgid "Click to delete answer"
+msgstr "Použijte k odstranění odpovědi"
+
+#: auction_house/templates/auction_house/ahmatclass_detail.html:34
+msgid "Material class name:"
+msgstr "Jméno třídy materiálu:"
+
+#: auction_house/templates/auction_house/ahmatclass_detail.html:39
+msgid "Measurement unit:"
+msgstr "Měrná jednotka:"
+
+#: auction_house/templates/auction_house/ahoffer_confirm.html:23
+msgid "Are you sure, you want confirm offer "
+msgstr "Jste si jistý, že chete potvrdit nabídku"
+
+#: auction_house/templates/auction_house/ahoffer_confirm.html:25
+msgid ""
+"If you confirm offer, you can't change it and you must contact poweruser. "
+msgstr ""
+"Když potvrdíte nabídku, nemůžete jí dále měnit a musíte kontaktovat super "
+"uživatele."
+
+#: auction_house/templates/auction_house/ahoffer_confirm_cancel.html:21
+#: auction_house/templates/auction_house/ahoffer_customer_form.html:41
+msgid "Cancel offer"
+msgstr "Zrušit nabídku"
+
+#: auction_house/templates/auction_house/ahoffer_confirm_cancel.html:23
+msgid "Are you sure, you want cancel offer "
+msgstr "Jste si jistý, že chete zrušit nabídku"
+
+#: auction_house/templates/auction_house/ahoffer_confirm_cancel.html:25
+msgid ""
+"If you cancel offer, you can't change it and you must contact poweruser. "
+msgstr ""
+"Když zrušíte nabídku, nemůžete jí dále měnit a musíte kontaktovat super "
+"uživatele."
+
+#: auction_house/templates/auction_house/ahoffer_confirm_close.html:23
+msgid "Are you sure, you want close offer "
+msgstr "Jste si jistý, že chete zavřít odpověď"
+
+#: auction_house/templates/auction_house/ahoffer_confirm_delete.html:23
+msgid "Are you sure, you want to delete the offer"
+msgstr "Jste si jistý, že chete odstranit nabídku"
+
+#: auction_house/templates/auction_house/ahoffer_customer_form.html:37
+msgid "Close offer"
+msgstr "Uzavřit nabídku"
+
+#: auction_house/templates/auction_house/ahoffer_customer_form.html:58
+#: auction_house/templates/auction_house/ahoffer_form.html:44
+#: project_main/templates/project_main/base.html:129
+#: project_main/templates/project_main/project_home.html:32
+msgctxt "right-navbar"
+msgid "Administration tools"
+msgstr "Administratorské nástroje"
+
+#: auction_house/templates/auction_house/ahoffer_detail.html:22
+msgid "Click to update offer"
+msgstr "Použijte ke změně nabídky"
+
+#: auction_house/templates/auction_house/ahoffer_detail.html:74
+msgid "Click to add offers line"
+msgstr "Použijte ke změně řádky nabídky"
+
+#: auction_house/templates/auction_house/ahoffer_detail.html:75
+msgid "Lines"
+msgstr "Řádky"
+
+#: auction_house/templates/auction_house/ahoffer_detail.html:116
+msgid "Click to delete line"
+msgstr "Použijte na odstranění řádky"
+
+#: auction_house/templates/auction_house/ahoffer_detail.html:129
+#: auction_house/templates/auction_house/customer_auction.html:100
+msgid "Answers"
+msgstr "Odpovědi"
+
+#: auction_house/templates/auction_house/ahoffer_detail.html:137
+msgid "Total price"
+msgstr "Celková cena"
+
+#: auction_house/templates/auction_house/ahoffer_detail.html:156
+msgid "Answer"
+msgstr "Odpověď"
+
+#: auction_house/templates/auction_house/ahoffer_list.html:43
+#: auction_house/templates/auction_house/customer_answer_list.html:47
+#: auction_house/templates/auction_house/customer_offer_list.html:47
+#: auction_house/templates/auction_house/customer_waiting_list.html:49
+msgid "Click to update the offer"
+msgstr "Použijte ke změně nabídky"
+
+#: auction_house/templates/auction_house/ahoffer_list.html:50
+msgid "Click to delete offer"
+msgstr "Použijte na odstranění nabídky"
+
+#: auction_house/templates/auction_house/ahofferline_confirm_delete.html:23
+msgid "Are you sure, you want to delete offer line"
+msgstr "Jste si jistý, že chete odstranit řádku nabidky"
+
+#: auction_house/templates/auction_house/answer_line_form.html:28
+#: auction_house/templates/auction_house/offer_line_form.html:28
+msgid "Offer line:"
+msgstr "Řádka nabídky:"
+
+#: auction_house/templates/auction_house/answer_line_form.html:33
+#: auction_house/templates/auction_house/offer_line_form.html:33
+#: customers/templates/customers/customer_translation.html:45
+#: customers/templates/customers/customerbankaccount_form.html:32
+#: customers/templates/customers/customerestablishments_form.html:32
+#: customers/templates/customers/customerphone_form.html:32
+#: customers/templates/customers/customerweb_form.html:32
+#: customers/templates/customers/email_form.html:32
+#: customers/templates/customers/projectcustomuser_form.html:32
+msgid "Send"
+msgstr "Odeslat"
+
+#: auction_house/templates/auction_house/customer_answer_list.html:27
+#: auction_house/templates/auction_house/customer_offer_list.html:27
+#: auction_house/templates/auction_house/customer_waiting_list.html:27
+msgid "Back to auction"
+msgstr "Zpět na aukci"
+
+#: auction_house/templates/auction_house/customer_auction.html:28
+msgid "Offers"
+msgstr "Nabídky"
+
+#: auction_house/templates/auction_house/customer_auction.html:32
+#: auction_house/templates/auction_house/customer_auction.html:37
+msgid "New offers"
+msgstr "Nové nabídky"
+
+#: auction_house/templates/auction_house/customer_auction.html:43
+#: auction_house/templates/auction_house/customer_auction.html:48
+msgid "Commited offers"
+msgstr "Potvrzené nabídky"
+
+#: auction_house/templates/auction_house/customer_auction.html:54
+#: auction_house/templates/auction_house/customer_auction.html:59
+msgid "Accepted offers"
+msgstr "Přijaté nabídky"
+
+#: auction_house/templates/auction_house/customer_auction.html:67
+#: auction_house/templates/auction_house/customer_auction.html:72
+msgid "Ready to close offers"
+msgstr "Nabídky připravené k uzavření"
+
+#: auction_house/templates/auction_house/customer_auction.html:78
+#: auction_house/templates/auction_house/customer_auction.html:83
+msgid "Closed offers"
+msgstr "Uzavřené nabídky"
+
+#: auction_house/templates/auction_house/customer_auction.html:89
+#: auction_house/templates/auction_house/customer_auction.html:94
+msgid "Canceled offers"
+msgstr "Zrušené nabídky"
+
+#: auction_house/templates/auction_house/customer_auction.html:105
+#: auction_house/templates/auction_house/customer_auction.html:110
+msgid "Waiting offers"
+msgstr "Čekající nabídky"
+
+#: auction_house/templates/auction_house/customer_auction.html:116
+#: auction_house/templates/auction_house/customer_auction.html:121
+msgid "New answers"
+msgstr "Nové odpovědi"
+
+#: auction_house/templates/auction_house/customer_auction.html:127
+#: auction_house/templates/auction_house/customer_auction.html:132
+msgid "Commited answers"
+msgstr "Potvrzené odpovědi"
+
+#: auction_house/templates/auction_house/customer_auction.html:138
+#: auction_house/templates/auction_house/customer_auction.html:143
+msgid "Successful answers"
+msgstr "Úspěšné odpovědi"
+
+#: auction_house/templates/auction_house/customer_auction.html:149
+#: auction_house/templates/auction_house/customer_auction.html:154
+msgid "Accepted answers"
+msgstr "Přijaté odpovědi"
+
+#: auction_house/templates/auction_house/customer_auction.html:160
+#: auction_house/templates/auction_house/customer_auction.html:165
+msgid "Closed answers"
+msgstr "Uzavřené odpovědi"
+
+#: auction_house/templates/auction_house/customer_auction.html:171
+#: auction_house/templates/auction_house/customer_auction.html:176
+msgid "Canceled answers"
+msgstr "Zrušené odpovědi"
+
+#: auction_house/templates/auction_house/customer_auction.html:186
+msgid "Create new offer"
+msgstr "Vytvořit novou nabídku"
+
+#: auction_house/templates/auction_house/customer_auction.html:189
+msgid "Set customer"
+msgstr "Upravit zákazníka"
+
+#: auction_house/templates/auction_house/customer_waiting_list.html:53
+msgid "Click to view the offer"
+msgstr "Použijte k prohlédnutí nabídky"
+
+#: auction_house/templates/auction_house/customer_waiting_list.html:59
+msgid "Click to view offer owner"
+msgstr "Použijte k prohlédnutí vlastníka nabídky"
+
+#: auction_house/templates/auction_house/customer_waiting_list.html:65
+msgid "Click to create answer"
+msgstr "Použijte k vytvoření nové odpovědi"
+
+#: auction_house/views.py:116 auction_house/views.py:784
+#: auction_house/views.py:820
+msgid "Your line has been updated!"
+msgstr "Váše řádka byla změněna!"
+
+#: auction_house/views.py:122
+msgctxt "ah_offer_line_update-title"
+msgid "update-line"
+msgstr "řádka-nastavení"
+
+#: auction_house/views.py:144 auction_house/views.py:241
+msgid "Your offer has been added!"
+msgstr "Váše nabídka byla přidána!"
+
+#: auction_house/views.py:150
+msgctxt "ah_offer_line_create-title"
+msgid "create-offer"
+msgstr "nabídka-vytvoření"
+
+#: auction_house/views.py:196
+msgctxt "ah_customer_auction-title"
+msgid "customer-auction"
+msgstr "aukce zákazníka"
+
+#: auction_house/views.py:247
+msgctxt "ah_customer_offers_create-title"
+msgid "create-offer"
+msgstr "nabídka-vytvoření"
+
+#: auction_house/views.py:260 auction_house/views.py:288
+msgctxt "ah_customer_offers_new-title"
+msgid "new-offers"
+msgstr "nabídka-vytvoření"
+
+#: auction_house/views.py:263
+msgid "new offers"
+msgstr "nové nabídky"
+
+#: auction_house/views.py:284
+msgid "Your offer has been confirmed!"
+msgstr "Váše nabídka byla přidána!"
+
+#: auction_house/views.py:311
+msgid "Your offer has been closed!"
+msgstr "Váše nabídka byla uzavřena!"
+
+#: auction_house/views.py:315
+msgctxt "ah_customer_offers_close-title"
+msgid "close-offer"
+msgstr "uzavřít-nabídku"
+
+#: auction_house/views.py:346
+msgid "Your offer has been canceled!"
+msgstr "Váše nabídka byla zrušena!"
+
+#: auction_house/views.py:350
+msgctxt "ah_customer_offers_cancel-title"
+msgid "cancel-offers"
+msgstr "zrušit-nabídku"
+
+#: auction_house/views.py:363
+msgctxt "ah_customer_offers_commited-title"
+msgid "commited-offers"
+msgstr "potvrzené nabídky"
+
+#: auction_house/views.py:366
+msgid "commited offers"
+msgstr "potvrzené nabídky"
+
+#: auction_house/views.py:376
+msgctxt "ah_customer_offers_closed-title"
+msgid "accepted-offers"
+msgstr "přijaté-nabídky"
+
+#: auction_house/views.py:379
+msgid "accepted offers"
+msgstr "přijaté nabídky"
+
+#: auction_house/views.py:389
+msgctxt "ah_customer_offers_ready_close-title"
+msgid "ready-to-close-offers"
+msgstr "nabídky-k-uzavření"
+
+#: auction_house/views.py:392
+msgid "ready to close offers"
+msgstr "nabídky k uzavření"
+
+#: auction_house/views.py:403
+msgctxt "ah_customer_offers_closed-title"
+msgid "closed-offers"
+msgstr "uzavřené nabídky"
+
+#: auction_house/views.py:406
+msgid "closed offers"
+msgstr "uzavřené nabídky"
+
+#: auction_house/views.py:416
+msgctxt "ah_customer_offers_canceled-title"
+msgid "canceled-offers"
+msgstr "zrušené nabídky"
+
+#: auction_house/views.py:419
+msgid "canceled offers"
+msgstr "zrušené nabídky"
+
+#: auction_house/views.py:505 auction_house/views.py:519
+msgctxt "ah_customer_answer_new-title"
+msgid "new-answers"
+msgstr "nové-odpovědi"
+
+#: auction_house/views.py:508
+msgid "waiting offer"
+msgstr "čekající nabídky"
+
+#: auction_house/views.py:522
+msgid "new answers"
+msgstr "nové odpovědi"
+
+#: auction_house/views.py:532
+msgctxt "ah_customer_answer_confirmed-title"
+msgid "confirmed-answers"
+msgstr "potvrzené-odpovědi"
+
+#: auction_house/views.py:535
+msgid "confirmed answers"
+msgstr "potvrzené odpovědi"
+
+#: auction_house/views.py:545
+msgctxt "ah_customer_answer_successful-title"
+msgid "successful-answers"
+msgstr "úspěšné-odpovědi"
+
+#: auction_house/views.py:548
+msgid "successful answers"
+msgstr "úspěšné odpovědi"
+
+#: auction_house/views.py:558
+msgctxt "ah_customer_answer_accepted-title"
+msgid "accepted-answers"
+msgstr "přijaté-odpovědi"
+
+#: auction_house/views.py:561
+msgid "accepted answers"
+msgstr "přijaté odpovědi"
+
+#: auction_house/views.py:571
+msgctxt "ah_customer_answer_closed-title"
+msgid "closed-answers"
+msgstr "uzavřené-odpovědi"
+
+#: auction_house/views.py:574
+msgid "closed answers"
+msgstr "uzavřené odpovědi"
+
+#: auction_house/views.py:584
+msgctxt "ah_customer_answer_cancelled-title"
+msgid "cancelled-answers"
+msgstr "zrušené-odpovědi"
+
+#: auction_house/views.py:587
+msgid "cancelled answers"
+msgstr "zrušené odpovědi"
+
+#: auction_house/views.py:618
+msgid "Your answer has been added!"
+msgstr "Váš odpověď byla přidána!"
+
+#: auction_house/views.py:624
+msgctxt "ah_customer_answer_create-title"
+msgid "create-answer"
+msgstr "odpověď-vytvoření"
+
+#: auction_house/views.py:649
+msgid "Your answer has been confirmed!"
+msgstr "Váše vaše odpověď byla potvrzena!"
+
+#: auction_house/views.py:653
+msgctxt "ah_customer_answer_confirm-title"
+msgid "confirm-offer"
+msgstr "potvrdit-nabídku"
+
+#: auction_house/views.py:686
+msgid "Your answer has been accepted!"
+msgstr "Váše odpověď byla přijata!"
+
+#: auction_house/views.py:690
+msgctxt "ah_customer_answer_accept-title"
+msgid "accept-offer"
+msgstr "přijmout-nabídku"
+
+#: auction_house/views.py:715
+msgid "Your answer has been canceled!"
+msgstr "Váše odpověď byla zrušena!"
+
+#: auction_house/views.py:719
+msgctxt "ah_customer_answer_cancell-title"
+msgid "cancel-offer"
+msgstr "zrušit-nabídku"
+
+#: auction_house/views.py:752
+msgid "Your answer has been closed!"
+msgstr "Váše odpověď byla uzavřena!"
+
+#: auction_house/views.py:756
+msgctxt "ah_customer_answer_close-title"
+msgid "close-offer"
+msgstr "uzavřít-nabídku"
+
+#: auction_house/views.py:790 auction_house/views.py:826
+msgctxt "ah_answer_line_update-title"
+msgid "update-line"
+msgstr "řádka-změny"
+
+#: customers/admin.py:28 customers/admin.py:55
+msgid "Password"
+msgstr "Heslo"
+
+#: customers/admin.py:28 customers/admin.py:55
+msgid "Enter password"
+msgstr "Vložte heslo"
+
+#: customers/admin.py:29 customers/admin.py:56
+msgid "Password confirmation"
+msgstr "Ověření hesla"
+
+#: customers/admin.py:29 customers/admin.py:56
+msgid "Confirm password"
+msgstr "Opětovným zadáním ověřte heslo."
+
+#: customers/admin.py:40 customers/admin.py:67
+msgid "Passwords don't match"
+msgstr "Hesla nesouhlasí."
+
+#: customers/admin.py:130 customers/admin.py:141 project_main/admin.py:14
+msgid "Translation"
+msgstr "Překlad"
+
+#: customers/admin.py:131 customers/admin.py:142 project_main/admin.py:15
+msgid "Translations"
+msgstr "Překlady"
+
+#: customers/models.py:24
+msgid "User must have an email address."
+msgstr "Uživatel musí mít e-mailovou adresu"
+
+#: customers/models.py:48
+msgid "email address"
+msgstr "e-mail adresa"
+
+#: customers/models.py:49
+msgid "Required: 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+msgstr "Minimálně 150 znaku. Pouze písmena, čísla a @/./+/-/_"
+
+#: customers/models.py:50
+msgid "user name"
+msgstr "uživatelské jméno"
+
+#: customers/models.py:50
+msgid "User identification"
+msgstr "identifikace uživatele"
+
+#: customers/models.py:51
+msgid "active user"
+msgstr "aktivní uživatel"
+
+#: customers/models.py:51
+msgid "User can log in"
+msgstr "uživatel se může přihlásit"
+
+#: customers/models.py:52
+msgid "access admin tools"
+msgstr "admin nástroje"
+
+#: customers/models.py:53
+msgid "User can access administration tools"
+msgstr "uživatel má přístup na administrativní nástroje"
+
+#: customers/models.py:57
+msgctxt "ProjectCustomUser definition"
+msgid "Customer"
+msgstr "Zákazník"
+
+#: customers/models.py:58
+msgctxt "ProjectCustomUser definition"
+msgid "Link to Customer"
+msgstr "Odkaz na zákazníka"
+
+#: customers/models.py:64
+msgctxt "ProjectCustomUser definition"
+msgid "Project"
+msgstr "Projekt"
+
+#: customers/models.py:65
+msgctxt "ProjectCustomUser definition"
+msgid "Link to Project"
+msgstr "Odkaz na projekt"
+
+#: customers/models.py:74
+msgctxt "ProjectCustomUser definition"
+msgid "User"
+msgstr "Uživatel"
+
+#: customers/models.py:75
+msgctxt "ProjectCustomUser definition"
+msgid "Users"
+msgstr "uživatelé"
+
+#: customers/models.py:98
+msgctxt "UserProfile user"
+msgid "user"
+msgstr "uživatel"
+
+#: customers/models.py:100
+msgctxt "UserProfile image"
+msgid "image"
+msgstr "obrázek"
+
+#: customers/models.py:103
+msgctxt "UserProfile definition"
+msgid "User Profile"
+msgstr "uživateský profil"
+
+#: customers/models.py:104
+msgctxt "UserProfile definition"
+msgid "User Profiles"
+msgstr "uživatelské profily"
+
+#: customers/models.py:118
+msgid "Establishment"
+msgstr "Provozovna"
+
+#: customers/models.py:119
+msgid "Establishment name"
+msgstr "Jméno provozovny"
+
+#: customers/models.py:120
+msgid "Street"
+msgstr "Ulice"
+
+#: customers/models.py:121
+msgid "Street in address"
+msgstr "Ulice v adrese"
+
+#: customers/models.py:122
+msgid "House"
+msgstr "Č.P."
+
+#: customers/models.py:123
+msgid "House number in address"
+msgstr "Číslo popisné domu"
+
+#: customers/models.py:124
+msgid "City"
+msgstr "Město"
+
+#: customers/models.py:125
+msgid "City name in address"
+msgstr "Jméno města v adrese"
+
+#: customers/models.py:126
+msgid "ZIP"
+msgstr "PSČ"
+
+#: customers/models.py:127
+msgid "ZIP code in address"
+msgstr "Poštovní směrovací číslo v adrese"
+
+#: customers/models.py:128
+msgid "headquarter"
+msgstr "Sídlo"
+
+#: customers/models.py:129
+msgid "Mark customers headquarter. "
+msgstr "Označení sídla zákazníka"
+
+#: customers/models.py:133
+msgctxt "CustomerEstablishments definition"
+msgid "Customer"
+msgstr "Zákazník"
+
+#: customers/models.py:134
+msgctxt "CustomerEstablishments definition"
+msgid "Link to Customer"
+msgstr "Odkaz na zákazníka"
+
+#: customers/models.py:139
+msgctxt "CustomerEstablishments definition"
+msgid "Establishment"
+msgstr "Provozovna"
+
+#: customers/models.py:140
+msgctxt "CustomerEstablishments definition"
+msgid "Establishments"
+msgstr "Provozovny"
+
+#: customers/models.py:143
+msgctxt "CustomerAddress __str__"
+msgid "establishment"
+msgstr "provozovna"
+
+#: customers/models.py:148
+msgctxt "Customer definition"
+msgid "email address"
+msgstr "e-mail adresa"
+
+#: customers/models.py:149
+msgctxt "Customer definition"
+msgid "Required: 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+msgstr "Minimálně 150 znaku. Pouze písmena, čísla a @/./+/-/_"
+
+#: customers/models.py:154 customers/models.py:179 customers/models.py:255
+msgctxt "CustomerEmail definition"
+msgid "Customer"
+msgstr "Zákazník"
+
+#: customers/models.py:155 customers/models.py:180 customers/models.py:256
+msgctxt "CustomerEmail definition"
+msgid "Link to Customer"
+msgstr "Odkaz na zákazníka"
+
+#: customers/models.py:158
+msgid "admin address"
+msgstr "administrátorská adresa"
+
+#: customers/models.py:159
+msgid "Mark special addresses to send additional administration messages. "
+msgstr ""
+"Označuje adresy, kam se take automaticky odesílají zprávy pro administrátora"
+
+#: customers/models.py:162
+msgctxt "CustomerEmail definition"
+msgid "Customer email"
+msgstr "E-mail zákazníka"
+
+#: customers/models.py:163
+msgctxt "CustomerEmail definition"
+msgid "Customer emails"
+msgstr "E-maily zákazníka"
+
+#: customers/models.py:166 customers/models.py:265 customers/models.py:301
+msgid "address"
+msgstr "adresa"
+
+#: customers/models.py:170 customers/models.py:171
+msgid "Account number"
+msgstr "Číslo účtu"
+
+#: customers/models.py:172
+msgid "Bank ID"
+msgstr "Identifikace banky"
+
+#: customers/models.py:173
+msgid "National identification of the bank"
+msgstr "Vnitrostátní identifikace banky"
+
+#: customers/models.py:174
+msgid "IBAN"
+msgstr "IBAN"
+
+#: customers/models.py:175
+msgid "International account identification"
+msgstr "Mezináridní inentifikace účtu"
+
+#: customers/models.py:183
+msgid "Prefered account"
+msgstr "Preferovaný účet"
+
+#: customers/models.py:184
+msgid "Preferably use this account."
+msgstr "Přednostně používat tento účet"
+
+#: customers/models.py:187
+msgctxt "CustomerBankAccount definition"
+msgid "Customer bank account"
+msgstr "Bankovní účet zákazníka"
+
+#: customers/models.py:188
+msgctxt "CustomerBankAccount definition"
+msgid "Customer bank accounts"
+msgstr "Bankovní účty zákazníka"
+
+#: customers/models.py:197
+msgctxt "BasicPhoneCategory definition"
+msgid "Type"
+msgstr "Typ"
+
+#: customers/models.py:198
+msgctxt "BasicPhoneCategory definition"
+msgid "Phone category type"
+msgstr "Typ kategorie telefonu"
+
+#: customers/models.py:204
+msgctxt "BasicPhoneCategory definition"
+msgid "Phone category"
+msgstr "Kategorie telefonu"
+
+#: customers/models.py:205
+msgctxt "BasicPhoneCategory definition"
+msgid "Phone categories"
+msgstr "Kategorie telefonu"
+
+#: customers/models.py:219
+msgid "Customer phone"
+msgstr "Telefon"
+
+#: customers/models.py:220
+msgid "Customer phone number"
+msgstr "Telefonní číslo"
+
+#: customers/models.py:222
+msgid "Phone description"
+msgstr "Popis telefonu"
+
+#: customers/models.py:228
+msgctxt "CustomerPhone definition"
+msgid "Phone category"
+msgstr "Kategorie telefonu"
+
+#: customers/models.py:229
+msgctxt "CustomerPhone definition"
+msgid "Category of the phone"
+msgstr "Kategorie do které je telefon zařazen."
+
+#: customers/models.py:234
+msgctxt "CustomerPhone definition"
+msgid "Customer"
+msgstr "Zákazník"
+
+#: customers/models.py:235
+msgctxt "CustomerPhone definition"
+msgid "Link to Customer"
+msgstr "Odkaz na zákazníka"
+
+#: customers/models.py:240
+msgctxt "CustomerEmail definition"
+msgid "Customer phone"
+msgstr "Zákazníkův Telefon"
+
+#: customers/models.py:241
+msgctxt "CustomerEmail definition"
+msgid "Customer phones"
+msgstr "Zákazníkovy Telefony"
+
+#: customers/models.py:249
+msgid "Customer web"
+msgstr "Webstránka zákazníka"
+
+#: customers/models.py:250
+msgid "Customers website URL"
+msgstr "URL stránky zánazníka"
+
+#: customers/models.py:261
+msgctxt "CustomerWeb definition"
+msgid "Customer website"
+msgstr "Webstránka zákazníka"
+
+#: customers/models.py:262
+msgctxt "CustomerWeb definition"
+msgid "Customer websites"
+msgstr "Webstránky zákazníka"
+
+#: customers/models.py:270
+msgid "Customer name"
+msgstr "Jméno zákazníka"
+
+#: customers/models.py:271
+msgid "Customer identification"
+msgstr "Identifikace zákazníka"
+
+#: customers/models.py:274
+msgid "Registration number"
+msgstr "IČO"
+
+#: customers/models.py:275
+msgid "Customer registration number"
+msgstr "Identifikační číslo zákazníka"
+
+#: customers/models.py:279
+msgid "VAT"
+msgstr "DIČ"
+
+#: customers/models.py:280
+msgid "Customer VAT number"
+msgstr "Daňová identifikace zákazníka"
+
+#: customers/models.py:286
+msgctxt "Customer image"
+msgid "Background"
+msgstr "Pozadí"
+
+#: customers/models.py:287
+msgid "Image to fill customers web page background"
+msgstr "Obrázek pro nastavení pozadí stránek zákazníka"
+
+#: customers/models.py:292
+msgctxt "Customer image"
+msgid "Logo"
+msgstr "Logo"
+
+#: customers/models.py:293
+msgid "Customer logo"
+msgstr "Zákazníkovo logo"
+
+#: customers/models.py:297
+msgctxt "Customer definition"
+msgid "Customer"
+msgstr "Zákazník"
+
+#: customers/models.py:298
+msgctxt "Customer definition"
+msgid "Customers"
+msgstr "Zákazníci"
+
+#: customers/models.py:326
+msgid "Customer description"
+msgstr "Popis zákazníka"
+
+#: customers/models.py:327
+msgid "Text to describe the Customer extensively."
+msgstr "Text podrobně popisující zákazníka"
+
+#: customers/models.py:333
+msgid "Short description"
+msgstr "Krátký popis"
+
+#: customers/models.py:334
+msgid "Short text to describe the Customer."
+msgstr "Text který krátce popisuje zákazníka"
+
+#: customers/templates/customers/customer_confirm_delete.html:21
+msgid "Delete Customer"
+msgstr "Smazat zákazníka"
+
+#: customers/templates/customers/customer_confirm_delete.html:23
+msgid "Are you sure, you want to delete the Customer"
+msgstr "Jste si jistý, že chete odstranit zákazníka"
+
+#: customers/templates/customers/customer_detail.html:20
+#: customers/templates/customers/customer_info.html:20
+msgid "Click to update the description"
+msgstr "Použijte ke změně provozovny"
+
+#: customers/templates/customers/customer_detail.html:25
+#: customers/templates/customers/customer_home.html:42
+#: customers/templates/customers/customer_info.html:25
+msgid "Registration number:"
+msgstr "IČO:"
+
+#: customers/templates/customers/customer_detail.html:29
+#: customers/templates/customers/customer_home.html:48
+#: customers/templates/customers/customer_info.html:29
+msgid "VAT:"
+msgstr "DIČ:"
+
+#: customers/templates/customers/customer_detail.html:34
+msgid "Short description:"
+msgstr "Krátký popis:"
+
+#: customers/templates/customers/customer_detail.html:39
+msgid "Description:"
+msgstr "Popis:"
+
+#: customers/templates/customers/customer_detail.html:43
+#: customers/templates/customers/customer_info.html:49
+msgid "E-mails:"
+msgstr "E-maily:"
+
+#: customers/templates/customers/customer_detail.html:44
+msgid "Click to create new email"
+msgstr "Použijte k vytvoření nového e-mailu"
+
+#: customers/templates/customers/customer_detail.html:49
+msgid "Click to update email"
+msgstr "Použijte ke změně e-mailu"
+
+#: customers/templates/customers/customer_detail.html:50
+#: customers/templates/customers/customeremail_confirm_delete.html:21
+msgid "Delete email"
+msgstr "Odstranit emial"
+
+#: customers/templates/customers/customer_detail.html:51
+msgid "Click to delete email"
+msgstr "Použijte na odstranění e-mailu"
+
+#: customers/templates/customers/customer_detail.html:62
+#: customers/templates/customers/customer_info.html:61
+msgid "Websites:"
+msgstr "Webové stránky"
+
+#: customers/templates/customers/customer_detail.html:63
+msgid "Click to create new web url"
+msgstr "Použijte k vytvoření nového odkazu na stránku"
+
+#: customers/templates/customers/customer_detail.html:68
+msgid "Click to update web url"
+msgstr "Použijte ke změně odkazu na stránku"
+
+#: customers/templates/customers/customer_detail.html:69
+#: customers/templates/customers/customerweb_confirm_delete.html:21
+msgid "Delete web url"
+msgstr "Odstranit odkaz na stránku"
+
+#: customers/templates/customers/customer_detail.html:70
+msgid "Click to delete web url"
+msgstr "Použijte na odstranění odkazu na stránku"
+
+#: customers/templates/customers/customer_detail.html:81
+#: customers/templates/customers/customer_home.html:57
+#: customers/templates/customers/customer_info.html:36
+msgid "Establishments:"
+msgstr "Provozovny:"
+
+#: customers/templates/customers/customer_detail.html:82
+msgid "Click to create new establishment"
+msgstr "Použijte k vytvoření nové provozovny"
+
+#: customers/templates/customers/customer_detail.html:87
+msgid "Click to update establishment"
+msgstr "Použijte ke změně provozovny"
+
+#: customers/templates/customers/customer_detail.html:88
+#: customers/templates/customers/customerestablishments_confirm_delete.html:21
+msgid "Delete establishment"
+msgstr "Odstranit provozovnu"
+
+#: customers/templates/customers/customer_detail.html:89
+msgid "Click to delete establishment"
+msgstr "Použijte na odstranění provozovny"
+
+#: customers/templates/customers/customer_detail.html:112
+#: customers/templates/customers/customer_info.html:73
+msgid "Phones:"
+msgstr "Telefonní čísla:"
+
+#: customers/templates/customers/customer_detail.html:113
+msgid "Click to create new phone"
+msgstr "Použijte k vytvoření nového telefonního čísla"
+
+#: customers/templates/customers/customer_detail.html:118
+msgid "Click to update phone"
+msgstr "Použijte ke změně telefonního čísla"
+
+#: customers/templates/customers/customer_detail.html:119
+#: customers/templates/customers/customerphone_confirm_delete.html:21
+msgid "Delete phone"
+msgstr "Smazat telefonního čísla"
+
+#: customers/templates/customers/customer_detail.html:120
+msgid "Click to delete phone"
+msgstr "Použijte na odstranění telefonního"
+
+#: customers/templates/customers/customer_detail.html:133
+#: customers/templates/customers/customer_info.html:85
+msgid "Bank accounts:"
+msgstr "Bankovní spojení:"
+
+#: customers/templates/customers/customer_detail.html:134
+msgid "Click to create new bank account"
+msgstr "Použijte k vytvoření nového bankovního spojení"
+
+#: customers/templates/customers/customer_detail.html:139
+msgid "Click to update bank account"
+msgstr "Použijte ke změně banovního spojení"
+
+#: customers/templates/customers/customer_detail.html:140
+#: customers/templates/customers/customerbankaccount_confirm_delete.html:21
+msgid "Delete bank account"
+msgstr "Odstranit bankovní spojení"
+
+#: customers/templates/customers/customer_detail.html:141
+msgid "Click to delete bank account"
+msgstr "Použijte na odstranění bankovního spojení"
+
+#: customers/templates/customers/customer_detail.html:154
+msgid "Users:"
+msgstr "Uživatelé:"
+
+#: customers/templates/customers/customer_detail.html:155
+msgid "Click to create new user"
+msgstr "Použijte k vytvoření nového uživatele"
+
+#: customers/templates/customers/customer_detail.html:160
+msgid "Click to update user"
+msgstr "Použijte ke změně uživatele"
+
+#: customers/templates/customers/customer_detail.html:181
+msgctxt "right-navbar"
+msgid "Delete customer"
+msgstr "Odstranit zákazníka"
+
+#: customers/templates/customers/customer_form.html:38
+msgid "Edit translations"
+msgstr "Upravit překlady"
+
+#: customers/templates/customers/customer_home.html:73
+msgctxt "right-navbar"
+msgid "Add customer"
+msgstr "Přidat zákazníka"
+
+#: customers/templates/customers/customer_info.html:105
+msgctxt "right-navbar"
+msgid "Edit customer"
+msgstr "Nastavit zákazníka"
+
+#: customers/templates/customers/customer_translation.html:36
+msgctxt "navbar-languages"
+msgid "Go"
+msgstr "start"
+
+#: customers/templates/customers/customerbankaccount_confirm_delete.html:23
+msgid "Are you sure, you want to delete bank account: "
+msgstr "Jste si jistý, že chete odstranit bankovní spojení: "
+
+#: customers/templates/customers/customerbankaccount_form.html:27
+msgid "Bank account:"
+msgstr "Bankovní spojení:"
+
+#: customers/templates/customers/customeremail_confirm_delete.html:23
+msgid "Are you sure, you want to delete email: "
+msgstr "Jste si jistý, že chete odstranit e-mail: "
+
+#: customers/templates/customers/customerestablishments_confirm_delete.html:23
+msgid "Are you sure, you want to delete establishment: "
+msgstr "Jste si jistý, že chete odstranit provozovnu: "
+
+#: customers/templates/customers/customerestablishments_form.html:27
+msgid "Establishment:"
+msgstr "Provozovna:"
+
+#: customers/templates/customers/customerphone_confirm_delete.html:23
+msgid "Are you sure, you want to delete phone: "
+msgstr "Jste si jistý, že chete odstranit telefonní číslo: "
+
+#: customers/templates/customers/customerphone_form.html:27
+msgid "Phone:"
+msgstr "Telefonní číslo:"
+
+#: customers/templates/customers/customerweb_confirm_delete.html:23
+msgid "Are you sure, you want to delete web url: "
+msgstr "Jste si jistý, že chete odstranit odkaz na stránku: "
+
+#: customers/templates/customers/customerweb_form.html:27
+msgid "Web url:"
+msgstr "Odkaz na stránku"
+
+#: customers/templates/customers/email_form.html:27
+msgid "E-mail:"
+msgstr "E-mail:"
+
+#: customers/templates/customers/login.html:29
+#: project_main/templates/project_main/base.html:118
+msgctxt "login_template"
+msgid "Log In"
+msgstr "Přihlašení"
+
+#: customers/templates/customers/login.html:33
+#: project_main/templates/project_main/base.html:122
+msgid "Login"
+msgstr "Přihlásit se"
+
+#: customers/templates/customers/logout.html:26
+msgid "You have been logged out"
+msgstr "Byli jste odhlášeni."
+
+#: customers/templates/customers/logout.html:30
+msgid "Log In Again"
+msgstr "Přihlašte se znovu"
+
+#: customers/templates/customers/projectcustomuser_active.html:27
+#: customers/templates/customers/projectcustomuser_form.html:27
+msgid "User:"
+msgstr "Uživatel:"
+
+#: customers/templates/customers/user_profile.html:19
+msgid "Profile info"
+msgstr "Informace o profilu"
+
+#: customers/templates/customers/user_register.html:10
+msgid "Join Today"
+msgstr "Přidejte se"
+
+#: customers/templates/customers/user_register.html:15
+msgid "Sign Up"
+msgstr "Vytvořit"
+
+#: customers/templates/customers/user_register.html:21
+msgid "Already Have An Account?"
+msgstr "Máte již účet?"
+
+#: customers/templates/customers/user_register.html:22
+msgid "Please Log In"
+msgstr "přihlašte se, prosím"
+
+#: customers/views.py:120
+msgid "Your e-mail has been updated!"
+msgstr "Váš e-mail byl změněn!"
+
+#: customers/views.py:126
+msgctxt "customer_email_update-title"
+msgid "update-email"
+msgstr "email-nastavení"
+
+#: customers/views.py:148
+msgid "Your e-mail has been added!"
+msgstr "Váš e-mail byl přidán!"
+
+#: customers/views.py:154
+msgctxt "customer_email_update-title"
+msgid "create-email"
+msgstr "email-vytvoření"
+
+#: customers/views.py:199
+msgid "Your web url has been added!"
+msgstr "Váš odkaz na stránku byl přidán!"
+
+#: customers/views.py:205 customers/views.py:282
+msgctxt "customer_web_update-title"
+msgid "create-phone"
+msgstr "telefon-vytvoření"
+
+#: customers/views.py:225
+msgid "Your web url has been updated!"
+msgstr "Váš odkaz na stránku byl změněn!"
+
+#: customers/views.py:231
+msgctxt "customer_web_update-title"
+msgid "update-web"
+msgstr "web-nastavení"
+
+#: customers/views.py:276 customers/views.py:352
+msgid "Your phone has been added!"
+msgstr "Váše telefonní číslo bylo přidáno!"
+
+#: customers/views.py:302
+msgid "Your phone has been updated!"
+msgstr "Váš telefonní číslo bylo změněno!"
+
+#: customers/views.py:308
+msgctxt "customer_phone_update-title"
+msgid "update-phone"
+msgstr "telefon-nastavení"
+
+#: customers/views.py:358
+msgctxt "customer_bank_create-title"
+msgid "create-bank-account"
+msgstr "vytvořit-účet"
+
+#: customers/views.py:378
+msgid "Your bank account has been updated!"
+msgstr "Váš účet byl změněn!"
+
+#: customers/views.py:384
+msgctxt "customer_bank_update-title"
+msgid "update-bank"
+msgstr "nastavení-provozovna"
+
+#: customers/views.py:432 customers/views.py:516
+msgid "Your establishment has been added!"
+msgstr "Váše provozovna byla přidána!"
+
+#: customers/views.py:438
+msgctxt "customer_est_create-title"
+msgid "create-establishment"
+msgstr "vytvořit-provozovnu"
+
+#: customers/views.py:458
+msgid "Your establishment has been updated!"
+msgstr "Váše provozovna byla změněna!"
+
+#: customers/views.py:464
+msgctxt "customer_bank_update-title"
+msgid "update-establishment"
+msgstr "aktualizace-provozovny"
+
+#: customers/views.py:523
+msgctxt "customer_user_create-title"
+msgid "create-user"
+msgstr "uživatel-vytvoření"
+
+#: customers/views.py:543
+msgid "User has been updated!"
+msgstr "Zákazník byl změněn!"
+
+#: customers/views.py:549
+msgctxt "customer_user_update-title"
+msgid "update-user"
+msgstr "uživatel-nastavení"
+
+#: customers/views.py:593
+msgid "Your translation has been updated!"
+msgstr "Váš překlad byl změněn!"
+
+#: customers/views.py:599
+msgctxt "customer_tran_update-title"
+msgid "update-translation"
+msgstr "úprava-překladu"
+
+#: customers/views.py:624
+msgctxt "customer-login-title"
+msgid "Login"
+msgstr "Přihlásit se"
+
+#: customers/views.py:635
+msgctxt "customer-login-title"
+msgid "Logged out"
+msgstr "Odpojeno"
+
+#: customers/views.py:653
+msgid "Your account has been created! You are now able to log in."
+msgstr "Váš účet byl vytvořen. Teď se můžete přihlásit."
+
+#: customers/views.py:658
+msgctxt "customer-register-title"
+msgid "register"
+msgstr "registrace"
+
+#: customers/views.py:678
+msgid "Your account has been updated!"
+msgstr "Váš účet byl změněn!"
+
+#: customers/views.py:685
+msgctxt "customer-user-profile-title"
+msgid "user-profile"
+msgstr "uživateský profil"
+
+#: project_main/models.py:12 project_main/models.py:13
+msgid "Project name"
+msgstr "Jméno projektu."
+
+#: project_main/models.py:15
+msgid "Project description"
+msgstr "Popis projektu"
+
+#: project_main/models.py:16
+msgid "Text to describe project."
+msgstr "Text popisující projekt"
+
+#: project_main/models.py:24
+msgctxt "Project image"
+msgid "Background"
+msgstr "Pozadí"
+
+#: project_main/models.py:25
+msgid "Image to fill Project web page background"
+msgstr "Obrázek pro nastavení pozadí projektu"
+
+#: project_main/models.py:30
+msgctxt "Project image"
+msgid "Logo"
+msgstr "Logo"
+
+#: project_main/models.py:31
+msgid "Project logo"
+msgstr "Logo projektu."
+
+#: project_main/models.py:35
+msgctxt "Project definition"
+msgid "Project"
+msgstr "Projekt"
+
+#: project_main/models.py:36
+msgctxt "Project definition"
+msgid "Projects"
+msgstr "Projekty"
+
+#: project_main/models.py:48
+msgid "Page identity"
+msgstr "Označení stránky"
+
+#: project_main/models.py:49
+msgid "Identifikation of page"
+msgstr "Identifikace stránky"
+
+#: project_main/models.py:52
+msgid "Sequence number"
+msgstr "Pořadové číslo"
+
+#: project_main/models.py:53
+msgid "Page order in the menu"
+msgstr "Pořadí strany v menu"
+
+#: project_main/models.py:59
+msgctxt "StaticPage definition"
+msgid "Project"
+msgstr "Projekt"
+
+#: project_main/models.py:60
+msgctxt "StaticPage definition"
+msgid "Link to Project"
+msgstr "Odkaz na projekt"
+
+#: project_main/models.py:65
+msgctxt "StaticPage definition"
+msgid "Static page"
+msgstr "Stránka"
+
+#: project_main/models.py:66
+msgctxt "StaticPage definition"
+msgid "Static pages"
+msgstr "Stránky"
+
+#: project_main/models.py:87
+msgid "Page name"
+msgstr "Jméno stránky"
+
+#: project_main/models.py:88
+msgid "Static page name"
+msgstr "Jméno statické stránky"
+
+#: project_main/models.py:93
+msgid "Page title"
+msgstr "Nadpis stránky"
+
+#: project_main/models.py:94
+msgid "Static page title."
+msgstr "Nadpis statické stránky"
+
+#: project_main/models.py:99
+msgid "Page body"
+msgstr "Tělo stránky"
+
+#: project_main/models.py:100
+msgid "Static page text."
+msgstr "Text statické stránky"
+
+#: project_main/templates/project_main/base.html:48
+#: project_main/templates/project_main/system_base.html:50
+msgctxt "base-navbar"
+msgid "Customers"
+msgstr "Zákazníci"
+
+#: project_main/templates/project_main/base.html:84
+#: project_main/templates/project_main/system_base.html:86
+msgctxt "base-navbar-languages"
+msgid "Go"
+msgstr "start"
+
+#: project_main/templates/project_main/base.html:112
+msgctxt "base-navbar"
+msgid "Log Out"
+msgstr "Odhlásit"
+
+#: project_main/templates/project_main/base.html:133
+msgctxt "right-navbar"
+msgid "Offer list"
+msgstr "Soupis nabídek"
+
+#: project_main/templates/project_main/base.html:135
+msgctxt "right-navbar"
+msgid "Answer list"
+msgstr "Seznam odpovědi"
+
+#: project_main/templates/project_main/project_home.html:25
+msgctxt "project-home-header"
+msgid "Project home page"
+msgstr "Domácí strana projektu"
+
+#: project_main/views.py:24
+msgctxt "project-home-title2"
+msgid "home"
+msgstr "domů"
+
+#: project_main/views.py:46
+msgctxt "who_are_we-title2"
+msgid "who are we"
+msgstr "kdo jsme"
+
+#: project_main/views.py:68
+msgctxt "how_we_work-title2"
+msgid "how we work"
+msgstr "jak pracujeme"
+
+#: project_main/views.py:90
+msgctxt "partners-title2"
+msgid "partners"
+msgstr "partneři"
+
+#: project_main/views.py:112
+msgctxt "contacts-title2"
+msgid "contacts"
+msgstr "kontakty"
+
+#~ msgctxt "ah_customer_answer_accept-title"
+#~ msgid "new-offers"
+#~ msgstr "nabídka-vytvoření"
+
+#~ msgid "In process"
+#~ msgstr "Ve zpracování"
+
+#~ msgid "Offers is in auction. "
+#~ msgstr "Nabídka je zařazena do aukce"

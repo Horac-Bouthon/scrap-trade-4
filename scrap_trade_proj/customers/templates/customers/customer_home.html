@@ -1,0 +1,76 @@
+{% extends "project_main/base.html" %}
+{% load i18n %}
+
+{% block style %}
+  <style>
+    body {
+      {% if user.is_authenticated %}
+        background-image: url("{{ user.project.project_background.url }}");
+      {% else %}
+        {% if project %}
+          background-image: url("{{ project.project_background.url }}");
+        {% else %}
+          background-image: url("/media/default-project-background.jpg");
+        {% endif %}
+      {% endif %}
+      background-repeat: no-repeat;
+      background-size: cover;
+  }
+  </style>
+{% endblock style %}
+
+{% block content %}
+  {% for customer in customers %}
+    <article class="media content-section">
+      <img class="rounded-circle customer-logo" src="{{ customer.customer_logo.url }}">
+      <div class="media-body">
+        <!--
+        <div class="article-metadata">
+          <a class="mr-2" href="#">{{ post.author }}</a>
+          <small class="text-muted">{{ post.date_posted }}</small>
+        </div>
+         -->
+        <h2>
+          {% if user.customer == customer or "customers.is_poweruser" in perms %}
+            <a class="customer-name" href="{% url 'ah-customer-auction' customer.id %}">{{ customer.customer_name }}</a>
+          {% else %}
+            <a class="customer-name" href="{% url 'project-customer-info' customer.id %}">{{ customer.customer_name }}</a>
+          {% endif %}
+        </h2>
+        {% if customer.customer_ICO %}
+          <p>
+            {% trans "Registration number:" as var_rn %}
+            <span class="customer-detail-content-highlighite">{{ var_rn }} </span>
+            <span class="customer-detail-content">{{ customer.customer_ICO }}</span></p>
+        {% endif %}
+        {% if customer.customer_DIC %}
+          <p>
+            {% trans "VAT:" as var_vat %}
+            <span class="customer-detail-content-highlighite">{{ var_vat }} </span>
+            <span class="customer-detail-content">{{ customer.customer_DIC }}</span>
+          </p>
+        {% endif %}
+        {% if customer.act_short %}
+          <p class="customer-detail-content">{{ customer.act_short }}</p>
+        {% endif %}
+        {% if customer.customerestablishments_set.all.count > 0 %}
+          {% trans "Establishments:" as var_est %}
+          <h5 class="customer-title">{{ var_est }}</h5>
+          {% for address in customer.customerestablishments_set.all %}
+            <p class="customer-detail-content-highlighite">{{ address.establishment}}</p>
+            <p class="customer-detail-content">{{ address.address_street }} {{ address.address_number }}</p>
+            <p class="customer-detail-content">{{ address.address_zip_code }} {{ address.address_town }}</p>
+          {% endfor %}
+        {% endif %}
+
+      </div>
+    </article>
+  {% endfor %}
+{% endblock content %}
+
+{% block spec_action %}
+{% if "customers.is_poweruser" in perms %}
+  {% trans "Add customer" as var_new_customer context "right-navbar" %}
+  <a class="nav-item nav-link btn btn-outline-secondary right-column-button" href="{% url 'project-customer-new' %}">{{ var_new_customer }}</a>
+{% endif %}
+{% endblock spec_action %}
