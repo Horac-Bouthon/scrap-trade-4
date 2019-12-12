@@ -72,6 +72,7 @@ class CustomerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
 class CustomerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Customer
     fields = ['customer_name','customer_ICO','customer_DIC','customer_background','customer_logo']
+    template_name = "customers/customer_create.html"
     permission_required = 'customers.is_poweruser'
 
     #def form_valid(self, form):

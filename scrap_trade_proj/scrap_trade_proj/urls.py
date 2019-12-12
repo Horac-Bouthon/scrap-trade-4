@@ -13,6 +13,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('customers/', include('customers.urls')),
     path('ac_ho/', include('auction_house.urls')),
+    path('api/', include('project_api.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

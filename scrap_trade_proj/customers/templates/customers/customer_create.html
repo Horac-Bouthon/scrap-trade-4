@@ -1,0 +1,45 @@
+{% extends "project_main/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block style %}
+{% if object.customer_background %}
+  <style>
+    body {
+      background-image: url("{{ object.customer_background.url }}");
+      background-repeat: no-repeat;
+      background-size: cover;
+  }
+  </style>
+{% endif %}
+{% endblock style %}
+
+
+{% block content %}
+  <article class="media content-section">
+    <img class="rounded-circle customer-logo" src="/media/default-logo.jpg">
+    <div class="media-body">
+      <h2 class="customer-name">{{ object.customer_name }}</h2>
+      <form class="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+          {{ form|crispy }}
+        </fieldset>
+        <div class="form-group">
+          {% trans "Add" as var_add %}
+          <button class="btn btn-outline-info" type="submit">{{ var_add }}</button>
+          {% trans "Cancel" as var_cancel %}
+          {% if object.pk %}
+            <a class="btn btn-outline-secondary" href="{% url 'project-customer-detail' object.pk %}">{{ var_cancel }}</a>
+          {% else %}
+            <a class="btn btn-outline-secondary" href="{% url 'project-customer-home' %}">{{ var_cancel }}</a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </article>
+{% endblock content %}
+
+{% block spec_action %}
+{% endblock spec_action %}

@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'project_main.apps.ProjectMainConfig',
     'crispy_forms',
     'auction_house.apps.AuctionHouseConfig',
+    'project_api.apps.ProjectApiConfig',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
