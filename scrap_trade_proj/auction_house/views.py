@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Q
 from datetime import datetime
+from .modules.auction import resurect_auction, set_auction
 from .decorators import user_belong_offer, user_corespond_customer, user_belong_answer
 from customers.decorators import user_belong_customer
 from django.contrib.auth.decorators import login_required, permission_required
@@ -702,6 +703,8 @@ def ah_customer_answer_cancel(request, pk, pk2):
     answer = AhAnswer.objects.filter(id = pk2).first()
 
     if request.method == 'POST':
+        # ---- original bound
+        store_bound = answer.is_bound
         answer.is_new = False
         answer.is_confirmed = False
         answer.is_accepted = False
@@ -712,6 +715,12 @@ def ah_customer_answer_cancel(request, pk, pk2):
         answer.canceled_at = datetime.now()
         answer.changed_by = request.user
         answer.save()
+        #---- if bound must repeate auction eval.
+        if store_bound:
+            # serurect offers
+            resurect_auction(answer.ah_offer)
+            # run auction eval.
+            set_auction(answer.ah_offer)
         success_message = _('Your answer has been canceled!')
         messages.success(request, success_message)
         return redirect('ah-customer-auction', pk)

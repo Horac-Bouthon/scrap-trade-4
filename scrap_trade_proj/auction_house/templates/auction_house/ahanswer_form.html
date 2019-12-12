@@ -29,6 +29,24 @@
           {{ form|crispy }}
         </fieldset>
         <div class="form-group">
+          {% if object.is_new %}
+            {% trans "Confirm answer" as var_conf %}
+            <a class="btn btn-outline-secondary" href="{% url 'ah-customer-confirm-answer' object.owner.pk object.pk %}">{{ var_conf }}</a>
+          {% endif %}
+          {% if object.is_successful %}
+            {% trans "Accept answer" as var_accept %}
+            <a class="btn btn-outline-secondary" href="{% url 'ah-customer-accept-answer' object.owner.pk object.pk %}">{{ var_accept }}</a>
+          {% endif %}
+          {% if object.is_accepted %}
+            {% trans "Close answer" as var_close %}
+            <a class="btn btn-outline-secondary" href="{% url 'ah-customer-close-answer' object.owner.pk object.pk %}">{{ var_close }}</a>
+          {% endif %}
+          {% if object.is_cancelled == False and object.is_closed == False %}
+            {% trans "Cancel answer" as var_cancel %}
+            <a class="btn btn-outline-danger" href="{% url 'ah-customer-cancel-answer' object.owner.pk object.pk %}">{{ var_cancel }}</a>
+          {% endif %}
+        </div>
+        <div class="form-group">
           {% trans "Update" as var_add %}
           <button class="btn btn-outline-info" type="submit">{{ var_add }}</button>
           {% trans "Cancel" as var_cancel %}

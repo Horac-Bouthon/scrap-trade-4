@@ -46,7 +46,7 @@
           <td class="td_offer table_offer">
             {% trans "Click to update the offer" as var_hint1 %}
             <a class="customer-detail-content" href="{% url 'ah-answer-detail' answer.pk %}"
-              data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}" target="_blank">{{ answer.description }}</a>
+              data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ answer.description }}</a>
           </td>
           <td class="td_offer table_offer"> {{ answer.creator.name }}</td>
           <td class="td_offer table_offer"> {{ answer.created_at }}</td>

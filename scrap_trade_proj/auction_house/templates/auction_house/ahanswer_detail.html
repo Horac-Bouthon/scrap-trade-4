@@ -19,6 +19,11 @@
         <img class="rounded-circle customer-logo" src="{{ object.owner.customer_logo.url }}">
       </a>
       <div class="media-body">
+        {% trans "Back to auction" as var_back %}
+        <div class="auction_nav">
+          <a class="btn btn-outline-secondary" href="{% url 'ah-customer-auction' object.owner.pk %}">{{ var_back }}</a>
+          <p></p>
+        </div>
         {% trans "Click to update answer" as var_hint1 %}
         <h2 class="customer-name">
           {% if "customers.is_poweruser" in perms or object.is_new or object.is_successful or object.is_accepted %}

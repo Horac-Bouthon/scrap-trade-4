@@ -14,6 +14,24 @@ from datetime import date
 from datetime import datetime
 
 def resurect_auction(par_offer):
+    print('resurect offer: {}'.format(par_offer))
+    par_offer.is_new = False
+    par_offer.is_confirmed = True
+    par_offer.is_accepted = False
+    par_offer.is_ready_close = False
+    par_offer.is_closed = False
+    par_offer.is_cancelled = False
+    par_offer.save()
+    for set_a in par_offer.answers.filter(is_cancelled = False):
+        print('resurect answer: {}'.format(set_a))
+        set_a.is_new = False
+        set_a.is_confirmed = True
+        set_a.is_accepted = False
+        set_a.is_closed = False
+        set_a.is_successful = False
+        set_a.is_cancelled = False
+        set_a.changed_by = None
+        set_a.save()
     return
 
 def set_auction(par_offer):

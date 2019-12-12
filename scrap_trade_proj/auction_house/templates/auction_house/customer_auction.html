@@ -26,7 +26,7 @@
       <h2 class="customer-name">{{ customer.customer_name }}</h2>
       <div class="">
         {% trans "Offers" as var_offers %}
-        <h5>{{ var_offers }}</h5>
+        <h5  class="customer-title">{{ var_offers }}</h5>
         {% if new_offers.count > 0 %}
           <p>
             {% trans "New offers" as var_offers_new %}
@@ -98,7 +98,7 @@
       </div>
       <div class="">
         {% trans "Answers" as var_answers %}
-        <h5>{{ var_answers }}</h5>
+        <h5  class="customer-title">{{ var_answers }}</h5>
         <p></p>
         {% if waiting_offers.count > 0 %}
           <p>
