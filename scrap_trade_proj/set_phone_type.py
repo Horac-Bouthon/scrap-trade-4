@@ -7,7 +7,7 @@ phones = BasicPhoneCategory.objects.filter(phone_type = 'phone')
 if phones.count() > 0:
     phone = phones.first()
 else:
-    phone = BasicPhoneCategory.create(
+    phone = BasicPhoneCategory(
         phone_type = 'phone',
     )
     phone.save()
@@ -53,7 +53,7 @@ mobiles = BasicPhoneCategory.objects.filter(phone_type = 'mobile')
 if mobiles.count() > 0:
     mobile = mobiles.first()
 else:
-    mobile = BasicPhoneCategory.create(
+    mobile = BasicPhoneCategory(
         phone_type = 'mobile',
     )
     mobile.save()
@@ -98,7 +98,7 @@ faxs = BasicPhoneCategory.objects.filter(phone_type = 'fax')
 if faxs.count() > 0:
     fax = faxs.first()
 else:
-    fax = BasicPhoneCategory.create(
+    fax = BasicPhoneCategory(
         phone_type = 'fax',
     )
     fax.save()
