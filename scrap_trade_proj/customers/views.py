@@ -4,7 +4,11 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin, 
+    UserPassesTestMixin, 
+    PermissionRequiredMixin,
+)
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from .decorators import user_belong_customer
