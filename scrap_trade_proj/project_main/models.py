@@ -25,7 +25,7 @@ class Project(models.Model):
         help_text=_('Image to fill Project web page background')
     )
     project_logo = models.ImageField(
-        default="default-project-logo.jpg",
+        default="default-project-logo.png",
         upload_to='project_main',
         verbose_name=tr.pgettext_lazy('Project image', 'Logo'),
         help_text=_('Project logo')
