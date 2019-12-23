@@ -1,3 +1,5 @@
+/* @todo;  make variables for colors */
+
 body {
   margin-top: 5rem;
   background-image: url("/media/default-project-background.jpg");
@@ -91,7 +93,7 @@ a.article-title:hover {
 }
 
 .customer-detail {
-  white-space: pre-line;
+  /* white-space: pre-line; */
 }
 
 .customer-title {
@@ -118,7 +120,7 @@ a.article-title:hover {
 }
 
 .customer-detail-content {
-  white-space: pre-line;
+  /* white-space: pre-line; */
 }
 
 .customer-detail-content-highlighite {
@@ -154,39 +156,4 @@ a.article-title:hover {
 
 .stat_page_body {
   margin-top: 2em;
-}
-
-.table_offer {
-  border: 1px solid black;
-}
-
-.table_answer {
-  border: 1px solid black;
-}
-
-.td_offer {
-  padding:0 10px 0 10px;
-}
-
-.td_answer {
-  padding:0 10px 0 10px;
-}
-
-.th_offer {
-  padding:0 10px 0 10px;
-}
-
-.th_answer {
-  padding:0 10px 0 10px;
-}
-
-.table_lines {
-}
-
-.td_lines {
-  padding:0 15px 0 15px;
-}
-
-.th_lines {
-  padding:0 15px 0 15px;
 }
