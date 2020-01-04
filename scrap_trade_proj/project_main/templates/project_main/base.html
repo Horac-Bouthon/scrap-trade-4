@@ -4,7 +4,8 @@
 {% load i18n %}
 
 <!DOCTYPE html>
-<html lang="en" {# @todo; Shouldn't the lang be handled differently? #}
+<html lang="{{ LANGUAGE_CODE }}"
+      {# @todo; Expose other languages to search engines with a route like `..cz/en/..`? Google will only crawl the default variant unless we make a route for it -- Google can't click language buttons (https://support.google.com/webmasters/answer/182192) #}
       dir="ltr">  
   <head>
     <!-- Required meta tags -->
@@ -13,7 +14,7 @@
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <!-- My styles -->
     <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css">
 
