@@ -1,7 +1,10 @@
 /* @todo;  make variables for colors */
 
 body {
-  margin-top: 5rem;
+  padding-top: 5rem;  /* Spacing for the nav header */
+
+  /* Background setting */
+  min-height: 100vh;  /* Stretch it out, no whitespace*/
   background-image: url("/media/default-project-background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -11,12 +14,12 @@ h1, h2, h3, h4, h5, h6 {
   color: #444444;
 }
 
-ul {
-  margin: 0;
-}
+/* @todo; Why does this need to be here? */
+ul {  margin: 0; }
 
+/* Shade the navbar, don't just make it dark */
 nav.navbar-dark {
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.7);
 }
 
 .site-header .navbar-nav .nav-link {
