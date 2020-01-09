@@ -3,115 +3,97 @@
 
 <header class="site-header">
   {# @todo; Better navbar for phone users -- burger+sidebar? #}
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top">
-    <div class="container">
-      <div class="collapse navbar-collapse" id="navbar-primary-collapse">
-        <div class="navbar-nav mr-auto">
-          <ul class="nav navbar-nav">
-            
-            {# Project Logo #}
-            <li>
-              {# @todo; The logo shouldn't change, what is this... #}
-              <a href="{% url 'project-home' %}">
-                {% if user.is_authenticated %}
-                  <img class="project-logo" id="logo-project-middle"
-                       src="{{ user.project.project_logo.url }}"
-                       alt="Project logo user">
-                {% else %}
-                  {% if project %}
-                    <img class="project-logo" id="logo-project-middle"
-                         src="{{ project.project_logo.url }}"
-                         alt="Project logo proj">
-                  {% else %}
-                    <img class="project-logo" id="logo-project-middle"
-                         src="/media/default-project-logo.png"
-                         alt="Project logo">
-                  {% endif %}
-                {% endif %}
-              </a>
-            </li>
+  <nav class="navbar navbar-dark fixed-top 
+              navbar-expand-md">
+    <div class="container-lg">
+      
+      {# Project Logo #}
+      <a class="navbar-brand"
+         href="{% url 'project-home' %}">
+        {% if project %}
+          <img class="project-logo" id="logo-project-middle"
+               src="{{ project.project_logo.url }}"
+               alt="Project logo">
+        {% else %}
+          <img class="project-logo" id="logo-project-middle"
+               src="/media/default-project-logo.png"
+               alt="Default project logo">
+        {% endif %}
+      </a>
 
-            {# Auction navigation ...@todo; Can't we do that better?? #}
-            {% if user.is_authenticated %}
-              {% trans "Customers" as var_customers context "base-navbar" %}
-              <li><a class="btn nav-item nav-link" href="{% url 'project-customer-home' %}">{{ var_customers }}</a></li>
-              {% if user.customer %}
-                <li><a class="btn nav-item nav-link" href="{% url 'ah-customer-auction' user.customer.pk %}">{{ user.customer.customer_name }}</a></li>
-              {% endif %}
-            {% endif %}
-            
-          </ul>
-        </div>
+      {# Toggle the navigation #}
+      <button class="navbar-toggler" type="button"
+              data-toggle="collapse"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+              data-target="#navbar-primary-collapse"
+              aria-controls="navbar-primary-collapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <div class="navbar-nav">
+
+      
+      <div class="navbar-collapse collapse" id="navbar-primary-collapse">
+        
+        <ul class="navbar-nav">
           
-          {# Static page navigation #}
-          {# @todo; Show the static page nav differently when logged in and working inside the auction sections #}
-          <ul class="nav navbar-nav">
-            {% if user.is_authenticated %}
-              
-              {% for page in user.project.get_page_sequence %}
-                <li><a class="btn nav-item nav-link"
-                       href="{% url page.page_code %}">
-                  {{ page.act_name }}
-                </a></li>
-              {% endfor %}
-              
-            {% else %}
-              {% if project %}
-                
-                {% for page in project.get_page_sequence %}
-                  <li><a class="btn nav-item nav-link"
-                         href="{% url page.page_code %}">
-                    {{ page.act_name }}
-                  </a></li>
-                {% endfor %}
-                
-              {% endif %}
-              {# What to do when we don't have the project?? #}
+          {# Auction navigation ...@todo; Can't we do that better?? #}
+          {% if user.is_authenticated %}
+            {% trans "Customers" as var_customers context "base-navbar" %}
+            <li><a class="btn nav-item nav-link"
+                   href="{% url 'project-customer-home' %}">
+              {{ var_customers }}
+            </a></li>
+            
+            {% if user.customer %}
+              <li><a class="btn nav-item nav-link"
+                     href="{% url 'ah-customer-auction' user.customer.pk %}">
+                {{ user.customer.customer_name }}
+              </a></li>
             {% endif %}
-          </ul>
-
-          {# Profile or Login #}
-
-          {# Language switching #}
-          <div class="lang dropdown">
-            {% get_current_language as LANGUAGE_CODE %}
-            {% get_available_languages as LANGUAGES %}
-            {% get_language_info_list for LANGUAGES as languages %}
             
-            <button class="btn btn-outline-light btn-sm dropdown-toggle"
-                    type="button"
-                    id="lang-dropdown-btn"
-                    data-toggle="dropdown" aria-expanded="false">
-              {{ LANGUAGE_CODE | upper }}
-              {# Current language as dropdown button title #}
-              {# @todo; Make button for language dropdown a flag image of current lang #}
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-              <form action="{% url 'set_language' %}" method="post">
-                {% csrf_token %}
-                <input name="next" type="hidden"
-                       value="{{ redirect_to }}" />
-                
-                {% for language in languages %}
-                  <button type="submit"
-                          name="language"
-                          value="{{ language.code }}"
-                          class="dropdown-item 
-                                {% if language.code == LANGUAGE_CODE %}
-                                active
-                                {% endif %}">
-                    {{ language.name_local | capfirst }}
-                  </button>
-                {% endfor %}
-                
-              </form>
-            </div>
+          {% endif %}
+          
+        </ul>
+        
+        <div class="mr-auto">
+          {# Empty spacer that pushes the next items to the right #}
+        </div>  
+
+        {# Static page navigation #}
+        {# @todo; Show the static page nav differently when logged in and working inside the auction sections #}
+        <ul class="nav navbar-nav">
+          {% if user.is_authenticated %}
             
-          </div>
-        </div>
+            {% for page in user.project.get_page_sequence %}
+              <li><a class="btn nav-item nav-link"
+                     href="{% url page.page_code %}">
+                {{ page.act_name }}
+              </a></li>
+            {% endfor %}
+            
+          {% else %}
+            
+            {% for page in project.get_page_sequence %}
+              <li><a class="btn nav-item nav-link"
+                     href="{% url page.page_code %}">
+                {{ page.act_name }}
+              </a></li>
+            {% endfor %}
+            
+          {% endif %}
+        </ul>
+
+
+        
       </div>
+
+      {# Language switching #}
+      <div class="d-none d-lg-flex  {# ...display in header only on large screens, mobile users can go to the footer for now. #}
+                  align-items-center mx-2">
+        {% include "project_main/__lang-switcher.html" with outlined_button=True %}
+      </div>
+      
     </div>
   </nav>
 </header>
