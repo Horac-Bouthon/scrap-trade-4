@@ -1,4 +1,4 @@
-/* @todo;  make variables for colors */
+/* @todo; Make pallette variables?? */
 
 body {
   padding-top: 5rem;  /* Spacing for the nav header */
@@ -8,13 +8,12 @@ body {
   background-image: url("/media/default-project-background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-}
 
-h1, h2, h3, h4, h5, h6 {
+  /* Default text color */
   color: #444444;
 }
 
-/* @todo; Why does this need to be here? */
+/* @todo; Why do we remove <ul> margins? */
 ul {  margin: 0; }
 
 /* Shade the navbar, don't just make it dark */
@@ -158,4 +157,23 @@ a.article-title:hover {
 
 .stat_page_body {
   margin-top: 2em;
+}
+
+
+
+#Footer h1, #Footer h2, #Footer h3,
+#Footer h4, #Footer h5, #Footer h6 {
+  color: white;
+}
+
+#Footer .lang-switcher {
+  position: absolute;  /* Needs a correct `position: relative;` anchor */
+  top: 0.6em;
+  right: 1em;
+  z-index: 1; /* Otherwise mouse events don't register */
+}
+
+#Footer .form-group {
+  /* Reset the excessive margins in the tight footer space */
+  margin: 0; 
 }

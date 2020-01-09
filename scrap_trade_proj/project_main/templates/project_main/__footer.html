@@ -1,0 +1,72 @@
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+<footer id="Footer"
+        class="bg-dark text-light position-relative">
+
+  {% include "project_main/__lang-switcher.html" %}
+  
+  <div class="d-md-flex">
+
+    <div class="col-md-6 py-4">
+
+      {% if not user.is_authenticated %}
+        {# Login panel #}
+        <form class="login-form" method="POST">
+          {% csrf_token %}
+          
+          <fieldset>
+            <legend>
+              <h4 class="border-bottom font-weight-bold">
+                {% trans "Log In" context 'login_template' %}
+              </h4>
+            </legend>
+            
+            {{ form_login|crispy }}
+
+            <button class="btn btn-primary mt-3"
+                    type="submit">  
+              {% trans "Login" %}
+            </button>
+            
+          </fieldset>
+        </form>
+      
+      {% else %}
+
+        {# Log out button #}
+        <a href="{% url 'project-user-logout' %}"
+           class="btn btn-sm btn-light">
+          {% trans "Log Out" context "base-navbar" %}
+        </a>
+        
+        {# Basic navigation for the APP part - Auction, Customer Detail etc. #}
+        {# Pretty much anything that doesn't fit into the navbar goes here. #}
+        
+      {% endif %}
+
+    </div>
+    
+    <div class="col-md-6 py-4">
+      <h4 class="border-bottom font-weight-bold">
+        Contact
+      </h4>
+      <div class="contact-info">
+        {# @todo; Get the address elements from DB, add a field in Project model for an address #}
+        <h4>Scrap Trade s. r. o.</h4>
+        <p>Kamenný Újezd 179, Nýřany</p>
+        <h5>phone</h5> <p>+420 608 155 552</p>
+        <h5>e-mail</h5>
+        <p><a href="mailto:info@scraptrade.cz">
+          info@scraptrade.cz
+        </a></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container p-1 text-center border-top text-light">
+    /// @todo; copyright? ///
+  </div>
+  
+</footer>

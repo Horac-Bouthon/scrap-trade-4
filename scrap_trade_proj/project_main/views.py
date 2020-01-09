@@ -7,7 +7,35 @@ from project_main.models import Project
 from django.utils import translation as tr
 from django.utils.translation import gettext as _
 
-# Create your views here.
+
+def spa(request): 
+    
+    if request.method == 'POST':
+        # Attempt at logging in
+        auth_form = AuthenticationForm(data=request.POST)
+        if auth_form.is_valid():  # Also checks credentials!
+            login(request, auth_form.get_user())
+            return redirect('project-customer-home')
+        else: 
+            # @todo; Redirect to the proper login page where errors will be more readable
+            pass 
+    else:
+        # Empty login form
+        auth_form = AuthenticationForm()
+        # Strip the autofocus, we don't want login always focused on the homepage
+        auth_form.fields['username'].widget.attrs.pop("autofocus", None)
+    
+    project = Project.objects.first()
+    static_page_sections = project.staticpage_set.all().order_by('sequence')
+    
+    return render(request, 'project_main/homepage_spa.html', {
+        'form_login': auth_form, 
+        'project': project,
+        'sections': static_page_sections,
+    })
+
+
+
 def home_project(request):
     proj = Project.objects.all().first()
     stat_page = proj.staticpage_set.filter(page_code = 'project-home').first()

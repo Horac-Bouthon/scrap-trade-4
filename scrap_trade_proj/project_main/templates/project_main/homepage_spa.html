@@ -1,0 +1,73 @@
+{% extends 'project_main/static_page_base.html' %}
+{% load i18n %}
+
+{% block page-style %}
+  <style>
+   body {
+       /* Get rid of the project background */
+       background: white;
+       /* Reset the navbar spacing, sections have their own padding */
+       padding-top: 0;
+   }
+
+   .section {
+       padding-top: 10vh;
+       padding-bottom: 14vh;
+       font-size: 1.3em;
+   }
+   .section_heading { padding-bottom: 0.6em; }
+
+   .section_heading h1, .section_heading h2, .section_heading h3 {
+       /* An underline for the section headings */
+       border-bottom: 1px solid rgba(0,0,0,0.2);
+       padding-bottom: 0.1em;
+   }
+   
+   .section--first {
+       min-height: 100vh;
+       padding-top: 60vh;
+       
+       background-image: url("/media/default-project-background.jpg");
+       background-repeat: no-repeat;
+       background-size: cover;
+   }
+   
+   /* First section's splash text -- the first thing a visitor sees */
+   .section--first h1, .section--first h2 {
+       font-size: 3rem;
+       font-weight: bold; 
+       line-height: 1.0;
+       
+       color: white;
+       text-shadow: 3px 4px 4px rgba(0,0,0,0.5);
+   }
+  </style>
+{% endblock %}
+
+
+{% block content %}  {# How the `block content` would be loaded #}
+  {% for section in sections %}
+    
+    {% if forloop.first %}
+      <div class="section section--first">
+        <div class="container-lg">
+          {{ section.act_title | safe }}
+          {{ section.act_body | safe }}
+        </div>
+      </div>
+    {% else %}
+      <div class="section d-flex justify-content-center
+                  {% cycle 'bg-white' 'bg-light' %}">
+        <div class="container-md">
+          <div class="section_heading">
+            {{ section.act_title | safe }}
+          </div>
+          <div class="section_content">
+            {{ section.act_body | safe }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    
+  {% endfor %}
+{% endblock %}
