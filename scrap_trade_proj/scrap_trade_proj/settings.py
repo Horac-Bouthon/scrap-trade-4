@@ -37,15 +37,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'customers.apps.CustomersConfig',
     'project_main.apps.ProjectMainConfig',
-    'crispy_forms',
     'auction_house.apps.AuctionHouseConfig',
     'project_api.apps.ProjectApiConfig',
-    'rest_framework'
+    
+    'crispy_forms',
+    'rest_framework', 
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    
+    # Note: You should include the Debug Toolbar middleware as early as possible in the list. However, it must come after any other middleware that encodes the response’s content, such as GZipMiddleware.
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -144,6 +151,8 @@ MEDIA_URL = '/media/'
 AUTH_USER_MODEL = 'customers.ProjectCustomUser'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+INTERNAL_IPS = ['127.0.0.1']  # For limiting Debug Toolbar to dev
 
 LOGIN_REDIRECT_URL = 'project-home'
 LOGIN_URL = 'project-user-login'
