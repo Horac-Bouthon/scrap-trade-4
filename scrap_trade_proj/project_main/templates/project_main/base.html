@@ -71,9 +71,14 @@
                  href="{% url 'project-user-profile' %}">
                 <img class="rounded-circle link-side-bar-img"
                      src="{{ user.userprofile.image.url }}"
-                     alt="Profile image" />
+                     alt="Profile image"
+                     title="{% trans "Edit Profile" context "base-navbar" %}" />
               </a>
-              
+
+              <a class="mb-2 btn btn-secondary"
+                 href="{% url 'project-user-profile' %}">
+                {% trans "Edit Profile" context "base-navbar" %}
+              </a>
               <a class="mb-2 
                         btn btn-secondary"
                  href="{% url 'project-user-logout' %}">
