@@ -2,7 +2,6 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views as user_views
 from . views import (
-    CustomerListView,
     CustomerDetailView,
     CustomerCreateView,
     CustomerUpdateView,
@@ -17,7 +16,7 @@ from . views import (
 
 
 urlpatterns = [
-    path('', CustomerListView.as_view(), name='project-customer-home'),
+    path('', user_views.customer_list, name='project-customer-home'),
     path('register/', user_views.register, name='project-user-register'),
     path('mylogin/', user_views.my_loging_view, name='project-user-mylogin'),
     path('login/', auth_views.LoginView.as_view(template_name='customers/login.html'), name='project-user-login'),

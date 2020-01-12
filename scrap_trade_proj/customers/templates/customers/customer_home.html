@@ -1,76 +1,160 @@
 {% extends "project_main/base.html" %}
 {% load i18n %}
 
-{% block style %}
-  <style>
-    body {
-      {% if user.is_authenticated %}
-        background-image: url("{{ user.project.project_background.url }}");
-      {% else %}
-        {% if project %}
-          background-image: url("{{ project.project_background.url }}");
-        {% else %}
-          background-image: url("/media/default-project-background.jpg");
-        {% endif %}
-      {% endif %}
-      background-repeat: no-repeat;
-      background-size: cover;
-  }
-  </style>
-{% endblock style %}
 
 {% block content %}
-  {% for customer in customers %}
-    <article class="media content-section">
-      <img class="rounded-circle customer-logo" src="{{ customer.customer_logo.url }}">
-      <div class="media-body">
-        <!--
-        <div class="article-metadata">
-          <a class="mr-2" href="#">{{ post.author }}</a>
-          <small class="text-muted">{{ post.date_posted }}</small>
-        </div>
-         -->
-        <h2>
-          {% if user.customer == customer or "customers.is_poweruser" in perms %}
-            <a class="customer-name" href="{% url 'ah-customer-auction' customer.id %}">{{ customer.customer_name }}</a>
-          {% else %}
-            <a class="customer-name" href="{% url 'project-customer-info' customer.id %}">{{ customer.customer_name }}</a>
-          {% endif %}
-        </h2>
-        {% if customer.customer_ICO %}
-          <p>
-            {% trans "Registration number:" as var_rn %}
-            <span class="customer-detail-content-highlighite">{{ var_rn }} </span>
-            <span class="customer-detail-content">{{ customer.customer_ICO }}</span></p>
-        {% endif %}
-        {% if customer.customer_DIC %}
-          <p>
-            {% trans "VAT:" as var_vat %}
-            <span class="customer-detail-content-highlighite">{{ var_vat }} </span>
-            <span class="customer-detail-content">{{ customer.customer_DIC }}</span>
-          </p>
-        {% endif %}
-        {% if customer.act_short %}
-          <p class="customer-detail-content">{{ customer.act_short }}</p>
-        {% endif %}
-        {% if customer.customerestablishments_set.all.count > 0 %}
-          {% trans "Establishments:" as var_est %}
-          <h5 class="customer-title">{{ var_est }}</h5>
-          {% for address in customer.customerestablishments_set.all %}
-            <p class="customer-detail-content-highlighite">{{ address.establishment}}</p>
-            <p class="customer-detail-content">{{ address.address_street }} {{ address.address_number }}</p>
-            <p class="customer-detail-content">{{ address.address_zip_code }} {{ address.address_town }}</p>
-          {% endfor %}
-        {% endif %}
 
-      </div>
-    </article>
-  {% endfor %}
+  {% include 'project_main/__content-header.html' %}  
+  
+  <ol class="container 
+             py-3
+             list-unstyled">
+
+    <section class="pb-2">
+      {% if "customers.is_poweruser" in perms %}
+        <a class="btn btn-outline-primary"
+           href="{% url 'project-customer-new' %}"
+           title="{% trans "Create a new customer" context "button-title" %}">
+          <i data-feather="plus"></i>
+          {% trans "Add customer" %}
+        </a>
+      {% endif %}
+    </section>
+    
+    {% for customer in customers %}
+
+      <li class="py-2">
+
+        {# Header -- toggles the details below #}
+        <section class="d-flex w-100 
+                        bg-white rounded overflow-hidden border shadow-sm
+                        mb-0">
+
+          {# Logo #}
+          <div class="d-flex align-self-center my-2 mx-1"
+               style="width: 100px; height: 80px;">
+            <img class="align-self-center m-auto 
+                        h-100"
+                 alt="{{ customer.customer_name }} logo"
+                 src="{{ customer.customer_logo.url }}"/>
+          </div>
+
+          
+          <div class="align-self-stretch border-right"></div> {# spacer #}
+
+          
+          <div class="flex-fill align-self-center text-left
+                      px-2 py-3">
+            {# Customer name #}
+            <h3 class="mb-1 line-height-minimal d-block">
+              {{ customer.customer_name }}
+            </h3>
+            {# Action buttons #}
+            <section class="">
+
+              <a class="btn btn-outline-info btn-sm"
+                 href="{% url 'project-customer-info' customer.id %}"
+                 title="{% trans "View detailed customer info" context "button-tooltip" %}">
+                {% trans "Detail" %}
+              </a>
+              
+              {% if user.customer == customer or "customers.is_poweruser" in perms %}
+                <a class="btn btn-outline-primary btn-sm"
+                   href="{% url 'ah-customer-auction' customer.id %}"
+                   title="{% trans "View my auction page" context "button-tooltip" %}">
+                  {% trans "Auction" context "button-text" %}
+                </a>
+              {% endif %}
+            </section>
+          </div>
+
+          
+          <div class="align-self-stretch border-right"></div> {# spacer #}
+
+          
+          {# Button with icon -- Openable list item #}
+          <button class="btn btn-outline-secondary 
+                         align-self-stretch border-0 rounded-0
+                         px-lg-4"
+                  data-toggle="collapse"
+                  data-target="#Customer_Collapse_{{ forloop.counter }}"
+                  aria-controls="Customer_Collapse_{{ forloop.counter }}"
+                  title="{% trans "Toggle details" context "collapse-button-title" %}">
+            <i data-feather="chevron-down"></i>
+          </button>
+          
+        </section>
+
+        {# Details #}
+        <section class="collapse mx-2
+                        bg-white 
+                        border border-top-0 rounded-bottom shadow-sm"
+                 id="Customer_Collapse_{{ forloop.counter }}">
+          <div class="container p-3">
+
+            {# Description #}
+            {% if customer.act_short %}
+              <p><big>
+                {{ customer.act_short }}
+              </big></p>
+            {% endif %}
+            
+
+            {# Details #}
+            <h4 class="border-bottom">
+              Details
+            </h4>
+            
+            {% if customer.customer_ICO %}
+              <p class="mb-0">
+                {% trans "Registration number:" %} </p>
+              <p class="ml-3 font-weight-bold">
+                {{ customer.customer_ICO }} </p>
+            {% endif %}
+            
+            {% if customer.customer_DIC %}
+              <p class="mb-0">
+                {% trans "VAT:" %} </p>
+              <p class="ml-3 font-weight-bold">
+                {{ customer.customer_DIC }}</p>
+            {% endif %}
+
+            {# Addresses #}
+            {% if customer.customerestablishments_set.all.count > 0 %} {# @sqlcall #}
+              <h4 class="border-bottom">
+                {% trans "Establishments" %}
+              </h4>
+              {% for address in customer.customerestablishments_set.all %}
+                {# @todo; Use an include for displaying addresses #}
+                <h5 class="">
+                  {{ address.establishment}}
+                </h5>
+                <p class="m-0">
+                  {{ address.address_street }} {{ address.address_number }}
+                </p>
+                <p class="m-0">
+                  {{ address.address_zip_code }} {{ address.address_town }}
+                </p>
+              {% endfor %}
+            {% endif %}
+
+          </div>
+        </section>
+      </li>
+      
+    {% endfor %}
+  </ol>
+  
 {% endblock content %}
 
 {% block spec_action %}
-{% if "customers.is_poweruser" in perms %}
-  {% trans "Add customer" as var_new_customer context "right-navbar" %}
-  <a class="nav-item nav-link btn btn-outline-secondary right-column-button" href="{% url 'project-customer-new' %}">{{ var_new_customer }}</a>
-{% endif %}
-{% endblock spec_action %}
+  
+  {% if "customers.is_poweruser" in perms %}
+    <a class="btn btn-secondary"
+       href="{% url 'project-customer-new' %}">
+      {% trans "Add customer" context "right-navbar" %}
+    </a>
+  {% endif %}
+  
+{% endblock %}
+

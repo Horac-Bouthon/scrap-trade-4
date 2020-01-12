@@ -161,6 +161,9 @@ a.article-title:hover {
 
 
 
+
+
+
 #Footer h1, #Footer h2, #Footer h3,
 #Footer h4, #Footer h5, #Footer h6 {
   color: white;
@@ -176,4 +179,25 @@ a.article-title:hover {
 #Footer .form-group {
   /* Reset the excessive margins in the tight footer space */
   margin: 0; 
+}
+
+/*********************************************************
+ * Custom Utility Classes
+ */
+
+/* Note / line-heights: Bootstrap makes line heights 
+   really big, like 1.4 for text.
+   That's just ridiculous for headings. */
+.line-height-minimal {
+  line-height: 1.0;
+}
+.line-height-smaller {
+  line-height: 1.2;
+}
+
+/* Use this style for any error messages intended 
+   for development  */
+.debug-error {  
+  background-color: rgba(250, 20, 20, 0.7);
+  color: var(--light);
 }

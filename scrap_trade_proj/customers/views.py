@@ -46,14 +46,21 @@ from django.views.generic import (
     DeleteView,
 )
 from django.utils.translation import gettext as _
+    
 
 
-# Create your views here.
-class CustomerListView(LoginRequiredMixin, ListView):
-    model = Customer
-    template_name = 'customers/customer_home.html'
-    context_object_name = 'customers'
-    ordering = ['customer_name']
+@login_required
+def customer_list(request):
+    customer_list = Customer.objects.all().order_by('customer_name')  #perf
+    context = {
+        'customers': customer_list,
+        'content_header': { 
+            'title': _('Customer list'),
+            'desc': _('A list of all signed up customers using the website.'),
+        }
+    }
+    return render(request, 'customers/customer_home.html', context)
+
 
 
 class CustomerInfoDetailView(LoginRequiredMixin, DetailView):
