@@ -17,11 +17,14 @@ from . views import (
 
 urlpatterns = [
     path('', user_views.customer_list, name='project-customer-home'),
-    path('register/', user_views.register, name='project-user-register'),
-    path('mylogin/', user_views.my_loging_view, name='project-user-mylogin'),
-    path('login/', auth_views.LoginView.as_view(template_name='customers/login.html'), name='project-user-login'),
-    path('logout/', user_views.my_logout_view, name='project-user-logout'),
-    path('user/profile/', user_views.user_profile, name='project-user-profile'),
+    
+    # @todo; Register page is not used anywhere in the project??
+    path('user/register/', user_views.register, name='user-register'),
+    
+    path('user/login/', user_views.log_in, name='user-login'),
+    path('user/logout/', user_views.log_out, name='user-logout'),
+    path('user/profile/', user_views.profile, name='user-profile'),
+    
     path('<int:pk>/info/', CustomerInfoDetailView.as_view(), name='project-customer-info'),
     path('<int:pk>/profile/', CustomerDetailView.as_view(), name='project-customer-detail'),
     path('new/', CustomerCreateView.as_view(), name='project-customer-new'),

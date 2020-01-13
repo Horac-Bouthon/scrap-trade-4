@@ -154,7 +154,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 INTERNAL_IPS = ['127.0.0.1']  # For limiting Debug Toolbar to dev
 
-LOGIN_REDIRECT_URL = 'project-home'
-LOGIN_URL = 'project-user-login'
-
 LOCALE_PATHS = ( os.path.join(BASE_DIR, 'locale'), )

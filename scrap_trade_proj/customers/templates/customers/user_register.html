@@ -7,20 +7,24 @@
     <form class="" method="POST">
       {% csrf_token %}
       <fieldset class="form-group">
-        {% trans "Join Today" as var_join %}
-        <legend class="border-bottom mb-4">{{ var_join }}</legend>
+        <legend class="border-bottom mb-4">
+          {% trans "Join Today" %}
+        </legend>
         {{ form|crispy }}
       </fieldset>
       <div class="form-group">
-        {% trans "Sign Up" as var_sign_up %}
-        <button class="btn btn-outline-info" type="submit">{{ var_sign_up }}</button>
+        <button class="btn btn-outline-info" type="submit">
+          {% trans "Sign Up" %}
+        </button>
       </div>
     </form>
     <div class="border-top pt-3">
       <small class="text-muted">
-        {% trans "Already Have An Account?" as var_account %}
-        {{ var_account }} <a class="ml-2" href="{% url 'project-user-login' %}">{% trans "Please Log In" %}</a>
+        {% trans "Already Have An Account?" %}
+        <a class="ml-2" href="{% url 'user-login' %}">
+          {% trans "Please Log In" %}
+        </a>
       </small>
     </div>
   </div>
-{% endblock content %}
+{% endblock %}

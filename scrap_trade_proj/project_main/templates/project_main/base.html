@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}"
       {# @todo; Expose other languages to search engines with a route like `..cz/en/..`? Google will only crawl the default variant unless we make a route for it -- Google can't click language buttons (https://support.google.com/webmasters/answer/182192) #}
-      dir="ltr">  
+      dir="ltr">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -68,7 +68,7 @@
             {% if user.is_authenticated %}
 
               <a class="my-2"
-                 href="{% url 'project-user-profile' %}">
+                 href="{% url 'user-profile' %}">
                 <img class="rounded-circle link-side-bar-img"
                      src="{{ user.userprofile.image.url }}"
                      alt="Profile image"
@@ -76,12 +76,12 @@
               </a>
 
               <a class="mb-2 btn btn-secondary"
-                 href="{% url 'project-user-profile' %}">
+                 href="{% url 'user-profile' %}">
                 {% trans "Edit Profile" context "base-navbar" %}
               </a>
               <a class="mb-2 
                         btn btn-secondary"
-                 href="{% url 'project-user-logout' %}">
+                 href="{% url 'user-logout' %}">
                 {% trans "Log Out" context "base-navbar" %}
               </a>
               
