@@ -8,9 +8,10 @@ from django.conf.urls.i18n import i18n_patterns
 from django.utils.translation import gettext_lazy as _
 
 urlpatterns = [
-    path('i18n/', include('django.conf.urls.i18n')),
-    path('', include('project_main.urls')),
+    path('i18n/', include('django.conf.urls.i18n'), name='set_language'),
     path('admin/', admin.site.urls),
+    
+    path('', include('project_main.urls')),
     path('customers/', include('customers.urls')),
     path('ac_ho/', include('auction_house.urls')),
     path('api/', include('project_api.urls')),
@@ -18,4 +19,7 @@ urlpatterns = [
 
 
 if settings.DEBUG:
-    urlpatterns +=  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    import debug_toolbar
+    urlpatterns += [ path('__debug__/', include(debug_toolbar.urls)) ]
+    
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

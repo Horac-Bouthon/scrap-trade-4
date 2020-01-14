@@ -1,0 +1,66 @@
+{% if content_header %}
+
+  <header class="page-head">
+    <div class="px-3 px-md-4 py-3 
+                d-md-flex">
+
+      {% if content_header.image %}
+        {# @todo; Fiddle with the content_header.image styles #}
+        <div class="page-head__logo 
+                    d-flex pr-3
+                    mb-2 mb-md-0">
+          <img class="page-head__logo-image 
+                      align-self-center"
+               style="width: 120px;" 
+               src="{{ content_header.image.src }}"
+               alt="{{ content_header.image.alt }}" />
+        </div>
+      {% endif %}
+      
+      <div class="d-flex
+                  flex-fill">      
+        <div class="align-self-center flex-fill">
+
+          {# Note: `pr-x` classes are for breaking the line earlier #}
+
+          {# Title #}
+          <h2 class="page-head__title
+                     border-bottom py-1 m-0 
+                     line-height-minimal pr-3">
+            {% if content_header.title %}
+              {{ content_header.title }}
+            {% elif debug %}
+              <span class="debug-error">
+                Undefined required text
+              </span>
+            {% endif %}
+          </h2>
+
+          {# Description #}
+          {% if content_header.desc %}
+            <p class="page-head__desc
+                      text-muted m-0 mt-1 
+                      line-height-smaller pr-4">
+              {{ content_header.desc }}
+            </p>
+          {% endif %}
+          
+        </div>
+      </div>    
+    </div>
+  </header>
+  
+{% else %}
+  
+  {% if debug %}
+    <header class="debug-error p-3">
+      <h4>
+        Invalid content header usage!
+      </h4><p>
+        The content header was included but its data wasn't
+        found in the template.
+      </p>
+    </header>
+  {% endif %}
+  
+{% endif %}

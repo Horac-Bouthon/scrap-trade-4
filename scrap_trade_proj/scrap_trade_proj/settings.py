@@ -37,16 +37,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'customers.apps.CustomersConfig',
     'project_main.apps.ProjectMainConfig',
-    'crispy_forms',
     'auction_house.apps.AuctionHouseConfig',
     'project_api.apps.ProjectApiConfig',
-    'rest_framework',
+    'crispy_forms',
+    'rest_framework', 
+    'debug_toolbar',
     'state_wf.apps.StateWfConfig',
-]
 
 MIDDLEWARE = [
+    
+    # Note: You should include the Debug Toolbar middleware as early as possible in the list. However, it must come after any other middleware that encodes the response’s content, such as GZipMiddleware.
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -66,11 +71,14 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                # Additions applied to every page's context
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
+                
+                'project_main.context_processors.project',
             ],
         },
     },
@@ -143,10 +151,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'customers.ProjectCustomUser'
+LOGIN_URL = 'user-login'  # Used by access view mixins + other builtin auth
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_REDIRECT_URL = 'project-home'
-LOGIN_URL = 'project-user-login'
+INTERNAL_IPS = ['127.0.0.1']  # For limiting Debug Toolbar to dev
 
 LOCALE_PATHS = ( os.path.join(BASE_DIR, 'locale'), )

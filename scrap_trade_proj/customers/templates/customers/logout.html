@@ -1,3 +1,5 @@
+{# @todo; Delete the logout template when we're sure we don't want it #}
+
 {% extends "project_main/system_base.html" %}
 {% load i18n %}
 
@@ -28,7 +30,7 @@
   <div class="border-top pt-3">
     <small class="text-muted">
       {% trans "Log In Again" as var_log_in %}
-      <a class="ml-2" href="{% url 'project-user-mylogin' %}">{{ var_log_in }}</a>
+      <a class="ml-2" href="{% url 'user-login' %}">{{ var_log_in }}</a>
     </small>
   </div>
 </div>

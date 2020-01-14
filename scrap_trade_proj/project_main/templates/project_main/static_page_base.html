@@ -1,51 +1,68 @@
 {% load static %}
-{% load crispy_forms_tags %}
 {% load i18n %}
 
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" dir="ltr">
+<html lang="{{ LANGUAGE_CODE }}"
+      {# @todo; Expose other languages to search engines with a route like `..cz/en/..`? Google will only crawl the default variant unless we make a route for it -- Google can't click language buttons (https://support.google.com/webmasters/answer/182192) #}
+      dir="ltr">
+  
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <!-- My styles -->
     <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css">
 
-    {% if title %}
-      <title>Scrap Trade - {{ title }}</title>
-      <meta name="description" content="Scrap Trade - {{ title }}">
-    {% else %}
-      <title>Scrap Trade</title>
-    {% endif %}
-
-    {% block style %}
-    {% endblock style %}
+    <!-- SEO -->
+    <title>
+      {# @todo; Add <title> text to Django models #}
+      {% block title-dynamic-part %}
+        {% trans "All Waste Has Its Value" context "homepage-title" %}
+      {% endblock %}
+      | Scrap Trade
+    </title>
+    {# @todo; Add HTML tags for SEO like description, at least for the static pages that will get crawled by search engines #}
+    
+    {% block page-style %} {% endblock %}
 
   </head>
   <body>
 
 
+    
     {% include 'project_main/__header.html' %}
-
-    <main role="main" class="container">
-      <div class="row">
-        <div class="col-md-9">
-          {% if messages %}
+    
+    <main role="main">
+      
+      {# Form feedback messages #}
+      {% if messages %}
+        <div class="row d-flex justify-content-center 
+                    message-wrap">
             {% for message in messages %}
               <div class="alert alert-{{ message.tags }}">
                 {{ message }}
               </div>
             {% endfor %}
-          {% endif %}
-          {% block content %}
-          {% endblock content %}
         </div>
+      {% endif %}
+        
+      {# Content inserted by templates extending the base #}
+      {% block content %} {% endblock content %}
+      
       </div>
     </main>
 
+    {% include "project_main/__footer.html" %}
+
+
+    
+    <!-- My Javascript -->
+    <script src="{% static 'script.js' %}"></script>
+    
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

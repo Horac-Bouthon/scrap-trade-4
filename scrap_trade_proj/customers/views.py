@@ -46,14 +46,21 @@ from django.views.generic import (
     DeleteView,
 )
 from django.utils.translation import gettext as _
+    
 
 
-# Create your views here.
-class CustomerListView(LoginRequiredMixin, ListView):
-    model = Customer
-    template_name = 'customers/customer_home.html'
-    context_object_name = 'customers'
-    ordering = ['customer_name']
+@login_required
+def customer_list(request):
+    customer_list = Customer.objects.all().order_by('customer_name')  #perf
+    context = {
+        'customers': customer_list,
+        'content_header': { 
+            'title': _('Customer list'),
+            'desc': _('A list of all signed up customers using the website.'),
+        }
+    }
+    return render(request, 'customers/customer_home.html', context)
+
 
 
 class CustomerInfoDetailView(LoginRequiredMixin, DetailView):
@@ -614,13 +621,14 @@ def customer_tran_update(request, pk, lang):
 # ----------------------------------------------------
 
 
-def my_loging_view(request):
+def log_in(request):
     proj = Project.objects.all().first()
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user_f = form.get_user()
             login(request, user_f)
+            messages.success(request, _('Successfully logged in'))
             if user_f.customer:
                 return redirect('ah-customer-auction', user_f.customer.pk)
             return redirect('project-customer-home')
@@ -631,18 +639,13 @@ def my_loging_view(request):
         'form': form,
         'title': title2,
         'project': proj,
-}
+    }
     return render(request, 'customers/login.html', context)
 
-def my_logout_view(request):
-    proj = Project.objects.all().first()
+def log_out(request):
     logout(request)
-    title2 = tr.pgettext('customer-login-title', 'Logged out')
-    context = {
-        'title': title2,
-        'project': proj,
-}
-    return render(request, 'customers/logout.html', context)
+    messages.success(request, _('You have been logged out'))
+    return redirect('user-login')
 
 
 
@@ -670,7 +673,7 @@ def register(request):
 
 
 @login_required
-def user_profile(request):
+def profile(request):
     proj = Project.objects.all().first()
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
@@ -682,7 +685,7 @@ def user_profile(request):
             profile_form.save()
             success_message = _('Your account has been updated!')
             messages.success(request, success_message)
-            return redirect('project-user-profile')
+            return redirect('user-profile')
     else:
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.userprofile)

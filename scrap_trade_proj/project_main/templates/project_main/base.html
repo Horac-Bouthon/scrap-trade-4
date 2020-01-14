@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}"
       {# @todo; Expose other languages to search engines with a route like `..cz/en/..`? Google will only crawl the default variant unless we make a route for it -- Google can't click language buttons (https://support.google.com/webmasters/answer/182192) #}
-      dir="ltr">  
+      dir="ltr">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -15,143 +15,32 @@
     
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Icons: Feather -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    
+    
     <!-- My styles -->
     <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css">
 
-    {# @todo; Add HTML tags for SEO like description, at least for the static pages #}
+    <!-- SEO -->
+    <title>
+      {% block title-dynamic-part %}
+        {% trans "All Waste Has Its Value" context "homepage-title" %}
+      {% endblock %}
+      | Scrap Trade
+    </title>
+    {# @todo; Add HTML tags for SEO like description, at least for the static pages that will get crawled by search engines #}
     
-    {% if title %}
-      <title>{{ title | capfirst }} | Scrap Trade</title>
-      <meta name="description" content="{{ title | capfirst }} | Scrap Trade">
-    {% else %}
-      <title>Scrap Trade</title>
-    {% endif %}
-
-    {% block style %} {% endblock style %}
+    {% block page-style %} {% endblock %}
 
   </head>
   <body>
-    <header class="site-header">
-      {# @todo; Better navbar for phone users -- burger+sidebar? #}
-      <nav class="navbar navbar-expand-md navbar-dark fixed-top">
-        <div class="container">
-          <div class="collapse navbar-collapse" id="navbar-primary-collapse">
-            <div class="navbar-nav mr-auto">
-              <ul class="nav navbar-nav">
-                
-                {# Project Logo #}
-                <li>
-                  <a href="{% url 'project-home' %}">
-                    {% if user.is_authenticated %}
-                      <img class="project-logo" id="logo-project-middle"
-                           src="{{ user.project.project_logo.url }}"
-                           alt="Project logo user">
-                    {% else %}
-                      {% if project %}
-                        <img class="project-logo" id="logo-project-middle"
-                             src="{{ project.project_logo.url }}"
-                             alt="Project logo proj">
-                      {% else %}
-                        <img class="project-logo" id="logo-project-middle"
-                             src="/media/default-project-logo.png"
-                             alt="Project logo">
-                      {% endif %}
-                    {% endif %}
-                  </a>
-                </li>
 
-                {# Auction navigation ...?? #}
-                {% if user.is_authenticated %}
-                  {% trans "Customers" as var_customers context "base-navbar" %}
-                  <li><a class="btn nav-item nav-link" href="{% url 'project-customer-home' %}">{{ var_customers }}</a></li>
-                  {% if user.customer %}
-                    <li><a class="btn nav-item nav-link" href="{% url 'ah-customer-auction' user.customer.pk %}">{{ user.customer.customer_name }}</a></li>
-                  {% endif %}
-                {% endif %}
-                
-              </ul>
-            </div>
-
-            <div class="navbar-nav">
-              
-              {# Static page navigation #}
-              {# @todo; Show the static page nav differently when logged in and working inside the auction sections #}
-              {% if user.is_authenticated %}
-                <ul class="nav navbar-nav">
-                  {% for page in user.project.get_page_sequence %}
-                      <li><a class="btn nav-item nav-link" href="{% url page.page_code %}">{{ page.act_name }}</a></li>
-                  {% endfor %}
-                </ul>
-              {% else %}
-                {% if project %}
-                <ul class="nav navbar-nav">
-                  {% for page in project.get_page_sequence %}
-                    <li><a class="btn nav-item nav-link" href="{% url page.page_code %}">{{ page.act_name }}</a></li>
-                  {% endfor %}
-                </ul>
-                {% endif %}
-              {% endif %}
-
-              {# Language switching #}
-              <div class="lang dropdown">
-                {% get_current_language as LANGUAGE_CODE %}
-                {% get_available_languages as LANGUAGES %}
-                {% get_language_info_list for LANGUAGES as languages %}
-                
-                <button class="btn btn-outline-light btn-sm dropdown-toggle"
-                        type="button"
-                        id="lang-dropdown-btn"
-                        data-toggle="dropdown" aria-expanded="false">
-                  {{ LANGUAGE_CODE | upper }}
-                  {# Current language as dropdown button title #}
-                  {# @todo; Make button for language dropdown a flag image of current lang #}
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                  
-                  <form action="{% url 'set_language' %}" method="post">
-                    {% csrf_token %}
-                    <input name="next" type="hidden"
-                           value="{{ redirect_to }}" />                      
-
-                    {# Print the selected language always as first item #}
-                    {% for language in languages %}
-                      {% if language.code == LANGUAGE_CODE %}
-                        <button type="submit"
-                                name="language"
-                                value="{{ language.code }}"
-                                class="dropdown-item">
-                          {{ language.name_local | capfirst }}
-                        </button>
-                      {% endif %}
-                    {% endfor %}
-                    
-                    {# Print the other choices #}
-                    {% for language in languages %}
-                      {% if language.code != LANGUAGE_CODE %}
-                        <button type="submit"
-                                name="language"
-                                value="{{ language.code }}"
-                                class="dropdown-item">
-                          {{ language.name_local | capfirst }}
-                        </button>
-                      {% endif %}
-                    {% endfor %}
-                      
-                    </div>
-                  </form>
-                </div>
-              </div>
-              
-
-            </div>
-          </div>
-        </div>
-      </nav>
-    </header>
-
-    <main role="main" class="container">
+    {% include 'project_main/__header.html' %}
+    
+    <div class="container pb-5">
       <div class="row">
-        <div class="col-md-9">
+        <main class="col-lg-9 mb-5">
           
           {# Form feedback messages #}
           {% if messages %}
@@ -162,57 +51,112 @@
             {% endfor %}
           {% endif %}
 
+          <div class="bg-light overflow-hidden rounded shadow-lg">
+            {% block content %}
+              {# Content inserted by templates extending the base #}
+            {% endblock content %}
+          </div>
           
-          {% block content %}
-          {% endblock content %}
+        </main>
+
+        
+        <aside class="col-lg-3">
           
-        </div>
-        <div class="col-md-3">
-          <div class="content-section right-column">
-              {% if user.is_authenticated %}
-                <a class="nav-item nav-link" href="{% url 'project-user-profile' %}">
-                  <img class="rounded-circle link-side-bar-img" src="{{ user.userprofile.image.url }}">
-                </a>
-                {% trans "Log Out" as var_LogOut context "base-navbar" %}
-                <a class="nav-item nav-link btn btn-outline-secondary right-column-button" href="{% url 'project-user-logout' %}">{{ var_LogOut }}</a>
-              {% else %}
-                <form class="" method="POST">
-                  {% csrf_token %}
-                  <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">{% trans "Log In" context 'login_template' %}</legend>
-                    {{ form_login|crispy }}
-                  </fieldset>
-                  <div class="form-group">
-                    {% trans "Login" as var_button %}
-                    <button class="btn btn-outline-info" type="submit">{{ var_button }}</button>
-                  </div>
-                </form>
-              {% endif %}
+          <div class="bg-light rounded p-3
+                      d-flex flex-column">
+            
+            {% if user.is_authenticated %}
 
-              {% if user.is_authenticated and user.is_superuser %}
-                  {% trans "Administration tools" as var_admin context "right-navbar" %}
-                  <a class="nav-item nav-link btn btn-outline-secondary right-column-button" href="/admin" target="_blank">{{ var_admin }}</a>
-              {% endif %}
-              {% if "customers.is_poweruser" in perms %}
-                {% trans "Offer list" as var_offer_list context "right-navbar" %}
-                <a class="nav-item nav-link btn btn-outline-secondary right-column-button" href="{% url 'ah-offer-list' %}">{{ var_offer_list }}</a>
-                {% trans "Answer list" as var_answer_list context "right-navbar" %}
-                <a class="nav-item nav-link btn btn-outline-secondary right-column-button" href="{% url 'ah-answer-list' %}">{{ var_answer_list }}</a>
-              {% endif %}
+              <a class="my-2"
+                 href="{% url 'user-profile' %}">
+                <img class="rounded-circle link-side-bar-img"
+                     src="{{ user.userprofile.image.url }}"
+                     alt="Profile image"
+                     title="{% trans "Edit Profile" context "base-navbar" %}" />
+              </a>
 
-              {% block spec_action %}
-              {% endblock spec_action %}
+              <a class="mb-2 btn btn-secondary"
+                 href="{% url 'user-profile' %}">
+                {% trans "Edit Profile" context "base-navbar" %}
+              </a>
+              <a class="mb-2 
+                        btn btn-secondary"
+                 href="{% url 'user-logout' %}">
+                {% trans "Log Out" context "base-navbar" %}
+              </a>
+              
+            {% else %}
 
-              {% block site_list %}
-              {% endblock site_list %}
+              <form class="login-form" method="POST">
+                {% csrf_token %}
+                
+                <fieldset class="form-group">
+                  <legend class="border-bottom mb-4">
+                    {% trans "Log In" context 'login_template' %}
+                  </legend>
+                  {{ form_login|crispy }}
+                </fieldset>
+                
+                <div class="form-group">
+                  <button class="btn btn-outline-info"
+                          type="submit">
+                    {% trans "Login" %}
+                  </button>
+                </div>
+              </form>
+              
+            {% endif %}
+
+            
+            {% if user.is_superuser %}
+
+              <span>Superuser</span>
+              <a class="mb-2
+                        btn btn-secondary"
+                 href="/admin" target="_blank">
+                {% trans "Administration tools" context "right-navbar" %}
+              </a>
+              
+            {% endif %}
+
+            
+            {% if "customers.is_poweruser" in perms %}
+
+              <span>Poweruser</span>
+              <a class="mb-2
+                        btn btn-secondary"
+                 href="{% url 'ah-offer-list' %}">
+                {% trans "Offer list" context "right-navbar" %}
+              </a>
+              <a class="mb-2
+                        btn btn-secondary"
+                 href="{% url 'ah-answer-list' %}">
+                {% trans "Answer list" context "right-navbar" %}
+              </a>
+              
+            {% endif %}
+
+            <span>Contextual</span>
+            {% block spec_action %}
+            {% endblock spec_action %}
+            <div class="border-top my-2"></div>
+            {% block site_list %}
+            {% endblock site_list %}
+            {# @todo; Delete button-commenting elements in side-panel after testing #}
             </p>
           </div>
-        </div>
+        </aside>
+
+        
       </div>
-    </main>
+    </div>
 
     <!-- My Javascript -->
     <script src="{% static 'script.js' %}"></script>
+    
+    <script>
+     feather.replace()  // Trigger icon replacement
+    </script>
     
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
