@@ -37,21 +37,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'customers.apps.CustomersConfig',
     'project_main.apps.ProjectMainConfig',
     'auction_house.apps.AuctionHouseConfig',
     'project_api.apps.ProjectApiConfig',
     'crispy_forms',
-    'rest_framework', 
+    'rest_framework',
     'debug_toolbar',
     'state_wf.apps.StateWfConfig',
+]
 
 MIDDLEWARE = [
-    
+
     # Note: You should include the Debug Toolbar middleware as early as possible in the list. However, it must come after any other middleware that encodes the response’s content, such as GZipMiddleware.
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -77,7 +78,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
-                
+
                 'project_main.context_processors.project',
             ],
         },
