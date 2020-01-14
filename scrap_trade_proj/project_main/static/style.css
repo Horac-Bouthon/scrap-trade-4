@@ -161,8 +161,63 @@ a.article-title:hover {
 
 
 
+/* Styles for buttons that only have an icon */
+.btn-icon-only {
+  padding: 0.125rem;
+}
 
 
+/**********
+ * Tables */
+
+/* Because we might be rendering a table with tags or filters, 
+   we might not have control over the classes inside the table. 
+   Use classes as sparsely as possible to avoid having to control
+   classes by passing data to the filters. */
+
+/* Use a wrapper with Bootstrap to make it scrollable, bordered,
+   rounded corners etc. */
+
+table {
+  min-width: 100%;
+  overflow: hidden;
+  font-size: 1.1em;
+}
+table th {
+  background-color: var(--dark);
+  color: var(--light);
+  
+  padding: .9rem .5rem;
+  font-size: 1.1em;  /* Stacks with wrap's ems */
+}
+table td {
+  padding: .2rem .5rem;
+}
+
+table tr {
+  background-color: var(--white);
+}
+table tr:nth-child(2n) {
+  background-color: var(--light);
+}
+
+table th, table td {
+  border: 0px solid var(--dark);
+  border: 0px solid rgba(0,0,0,0.1);
+}
+table th:not(:last-child),
+table td:not(:last-child) {
+  border-width: 0 1px 0 0;
+}
+
+table .btn-icon-only {
+  text-align: center;
+}
+
+
+
+/**********
+ * Footer */
 
 #Footer h1, #Footer h2, #Footer h3,
 #Footer h4, #Footer h5, #Footer h6 {
@@ -198,6 +253,14 @@ a.article-title:hover {
 /* Use this style for any error messages intended 
    for development  */
 .debug-error {  
-  background-color: rgba(250, 20, 20, 0.7);
+  background-color: var(--red);
   color: var(--light);
+}
+
+
+/* Limit element height to be always smaller than
+   the window size, making the element always fittable
+   to view. Can be used well with scroll-wraps. */
+.max-height-visible {
+  max-height: 80vh; 
 }

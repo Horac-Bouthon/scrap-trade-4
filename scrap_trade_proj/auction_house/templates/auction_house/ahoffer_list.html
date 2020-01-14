@@ -20,43 +20,56 @@
 {% endblock style %}
 
 {% block content %}
-  <article class="media content-section">
-  <div class="media-body">
-    <table class="table_offer">
-      <tr class="table_offer">
-        {% trans "ID" as var_o_n %}
-        <th class="th_offer table_offer">{{ var_o_n }}</th>
-        {% trans "Description" as var_des %}
-        <th class="th_offer table_offer">{{ var_des }}</th>
-        {% trans "Owner" as var_owner %}
-        <th class="th_offer table_offer">{{ var_owner }}</th>
-        {% trans "Creator" as var_crea %}
-        <th class="th_offer table_offer">{{ var_crea }}</th>
-        {% trans "Created at" as var_cre_at %}
-        <th class="th_offer table_offer">{{ var_cre_at }}</th>
-        <th class="th_offer table_offer"></th>
-      </tr>
-      {% for offer in offers %}
-      <tr class="table_offer">
-        <td class="td_offer table_offer"> {{ offer.pk }} </td>
-        <td class="td_offer table_offer">
-          {% trans "Click to update the offer" as var_hint1 %}
-          <a class="customer-detail-content" href="{% url 'ah-offer-detail' offer.pk %}"  data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ offer.description }}</a>
-        </td>
-        <td class="td_offer table_offer"> {{ offer.owner.customer_name }} </td>
-        <td class="td_offer table_offer"> {{ offer.creator.name }}</td>
-        <td class="td_offer table_offer"> {{ offer.created_at }}</td>
-        <td class="td_offer table_offer">
-          {% trans "Click to delete offer" as var_hint3 %}
-          <a class="" href="{% url 'ah-offer-delete' offer.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}">
-            <img class="rounded-circle delete-icon" src="/media/icons/delete_icon.jpg">
-          </a>
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
-  </article>
+
+  {% include 'project_main/__content-header.html' %}
+  
+  <section class="container py-3">
+    <div class="border overflow-hidden rounded shadow">
+      <div class="overflow-auto max-height-visible">
+        <table>
+          <tr>
+            <th>{% trans "ID" %}</th>
+            <th>{% trans "Description" %}</th>
+            <th>{% trans "Owner" %}</th>
+            <th>{% trans "Creator" %}</th>
+            <th>{% trans "Created at" %}</th>
+            <th>{# Icons column #}</th>
+          </tr>
+          {% for offer in offers %}
+            <tr>
+              <td>{{ offer.pk }}</td>
+              
+              <td>{{ offer.description }}</td>
+              
+              <td>{{ offer.owner.customer_name }}</td>
+              
+              <td>{{ offer.creator.name }}</td>
+              
+              <td>{{ offer.created_at }}</td>
+              
+              <td>
+                {% with btn_styles="btn btn-icon-only" %}
+                  <div class="d-flex justify-content-around">
+                    <a class="btn-info {{ btn_styles }}"
+                       href="{% url 'ah-offer-detail' offer.pk %}"
+                       title="{% trans "Click to update the offer" %}">
+                      <i data-feather="edit-3"></i>
+                    </a>
+                    <a class="btn-danger {{ btn_styles }}"
+                       href="{% url 'ah-offer-delete' offer.pk %}"
+                       title="{% trans "Click to delete offer" %}">
+                      <i data-feather="x"></i>
+                    </a>
+                  </div>
+                {% endwith %}
+              </td>
+              
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </section>
 {% endblock content %}
 
 {% block spec_action %}
