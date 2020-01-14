@@ -3,7 +3,21 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Q
 from datetime import datetime
-from .modules.auction import resurect_auction, set_auction
+from .modules.auction import (
+    resurect_auction,
+    set_auction,
+    customer_offer_create,
+    offer_add_state,
+    fiter_by_state,
+    customer_answer_create,
+    answer_add_state,
+    get_waiting_offers,
+    get_auction_list_control_obj,
+)
+from state_wf.models import (
+    Step,
+    StepState,
+)
 from .decorators import user_belong_offer, user_corespond_customer, user_belong_answer
 from customers.decorators import user_belong_customer
 from django.contrib.auth.decorators import login_required, permission_required
@@ -26,6 +40,7 @@ from .forms import (
     AhAnwserLinePpuUpdateForm,
     AhAnwserLineTotalUpdateForm,
     AhAnwserCreateForm,
+    StepUpdateForm,
 )
 
 from django.utils import translation as tr
@@ -60,11 +75,15 @@ class AhOfferDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
         object = kwargs.get('object')
-        context['my_answers'] = object.answers.filter(is_confirmed = True,
-            is_closed = False, is_cancelled = False).order_by('-total_price')[:5]
+        context['my_answers'] = fiter_by_state(object.answers, 'answer_confirmed').order_by('-total_price')[:5]
         context['bound_answers'] = object.answers.filter(is_bound = True)
-        context['answers_total'] = object.answers.filter(is_confirmed = True,
-            is_closed = False, is_cancelled = False).count()
+        context['answers_total'] = fiter_by_state(object.answers, 'answer_confirmed').count()
+        context['state_new'] = StepState.objects.get(state_key='offer_new')
+        context['state_confirmed'] = StepState.objects.get(state_key='offer_confirmed')
+        context['state_accepted'] = StepState.objects.get(state_key='offer_accepted')
+        context['state_ready_to_close'] = StepState.objects.get(state_key='offer_ready_to_close')
+        context['state_closed'] = StepState.objects.get(state_key='offer_closed')
+        object.refresh_total_price()
 
         return context
 
@@ -75,11 +94,11 @@ class AhOfferInfoView(LoginRequiredMixin, DetailView):
 class AhOfferUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = AhOffer
     fields = ['description', 'delivery_date', 'auction_date',
-        'is_new', 'is_confirmed', 'confirmed_at', 'is_accepted', 'accepted_at',
-        'is_ready_close', 'ready_close_at',
-        'is_closed', 'closed_at', 'is_cancelled', 'canceled_at', 'offered_to',
+        'minimal_total_price', 'auction_url', 'auction_start',
+        'auction_end', 'offered_to',
     ]
     permission_required = 'customers.is_poweruser'
+
 
 class AhOfferCustomerUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = AhOffer
@@ -114,6 +133,7 @@ def ah_offer_line_update(request, pk, pk2):
         form = AhOfferLineUpdateForm(request.POST, instance=offer_line)
         if form.is_valid():
             form.save()
+            offer.refresh_total_price()
             success_message = _('Your line has been updated!')
             messages.success(request, success_message)
             return redirect('ah-offer-detail', pk)
@@ -140,8 +160,10 @@ def ah_offer_line_create(request, pk):
                 description = form.cleaned_data['description'],
                 amount = form.cleaned_data['amount'],
                 mat_class = form.cleaned_data['mat_class'],
+                minimal_ppu = form.cleaned_data['minimal_ppu'],
                 offer = offer,
             )
+            offer.refresh_total_price()
             success_message = _('Your offer has been added!')
             messages.success(request, success_message)
             return redirect('ah-offer-detail', pk)
@@ -181,64 +203,35 @@ class AhDeletelOfferLine(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 class AhMatClassDetailView(LoginRequiredMixin, DetailView):
     model = AhMatClass
 
-def get_waiting_offers(par_customer):
-    ret_offers = par_customer.receive_offers.filter(is_confirmed = True)
-    for answer in par_customer.owned_answers.all():
-        ret_offers = ret_offers.exclude(id = answer.ah_offer.pk)
-    return ret_offers.order_by("-pk")
-
-
 #-------------------------------- ah_customer_auction
 @login_required()
 @user_belong_customer
 def ah_customer_auction(request, pk):
     customer = Customer.objects.filter(id = pk).first()
 
+    auc_obj = get_auction_list_control_obj(customer, customer.owned_offers, customer.owned_answers)
+
     title2 = tr.pgettext('ah_customer_auction-title', 'customer-auction')
     context = {
         'title': title2,
         'customer': customer,
-        'new_offers': customer.owned_offers.filter(is_new = True),
-        'commited_offers': customer.owned_offers.filter(is_confirmed = True),
-        'accepted_offers': customer.owned_offers.filter(is_accepted = True),
-        'ready_close_offfer': customer.owned_offers.filter(is_ready_close = True),
-        'closed_offers': customer.owned_offers.filter(is_closed = True),
-        'canceled_offers': customer.owned_offers.filter(is_cancelled = True),
-        'new_answers': customer.owned_answers.filter(is_new = True),
-        'confirmed_answers': customer.owned_answers.filter(is_confirmed = True),
-        'successful_answers': customer.owned_answers.filter(is_successful = True),
-        'accepted_answers': customer.owned_answers.filter(is_accepted = True),
-        'closed_answers': customer.owned_answers.filter(is_closed = True),
-        'cancelled_answers': customer.owned_answers.filter(is_cancelled = True),
-        'waiting_offers': get_waiting_offers(customer),
+        'auc_obj': auc_obj,
     }
     return render(request, 'auction_house/customer_auction.html', context)
-
-#-------------------------------- offer views
-def offer_to(par_customer):
-    return Customer.objects.exclude(id = par_customer.pk)
 
 @login_required()
 @user_belong_customer
 def ah_customer_offers_create(request, pk):
     customer = Customer.objects.filter(id = pk).first()
-    user = request.user
 
     if request.method == 'POST':
         form = AhOfferUpdateForm(request.POST)
         if form.is_valid():
-            new = AhOffer(
-                description = form.cleaned_data['description'],
-                delivery_date = form.cleaned_data['delivery_date'],
-                auction_date = form.cleaned_data['auction_date'],
-                is_new = True,
-                owner = customer,
-                creator = user,
+            customer_offer_create(
+                customer = customer,
+                user = request.user,
+                data = form.cleaned_data
             )
-            new.save()
-            for cc in offer_to(customer):
-                new.offered_to.add(cc)
-            new.save()
             success_message = _('Your offer has been added!')
             messages.success(request, success_message)
             return redirect('ah-customer-auction', pk)
@@ -256,172 +249,75 @@ def ah_customer_offers_create(request, pk):
 
 @login_required()
 @user_belong_customer
-def ah_customer_offers_new(request, pk):
+def ah_customer_offers_by_state_key(request, pk, sk):
     customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_offers_new-title', 'new-offers')
+    title2 = tr.pgettext('ah_customer_offer_by_state_key-title', 'offers-by-state')
+    selected_state = StepState.objects.filter(state_key = sk).first()
     context = {
         'title': title2,
-        'selection': _('new offers'),
+        'selection': selected_state.get_state_name_plural(),
         'customer': customer,
-        'offer_list': customer.owned_offers.filter(is_new = True).order_by('-pk'),
+        'offer_list': fiter_by_state(customer.owned_offers, sk).order_by('-pk'),
     }
     return render(request, 'auction_house/customer_offer_list.html', context)
 
 @login_required()
 @user_belong_customer
-def ah_customer_offers_confirm(request, pk, pk2):
+def ah_offers_change_state(request, pk, pk2, pk3):
     customer = Customer.objects.filter(id = pk).first()
     offer = AhOffer.objects.filter(id = pk2).first()
+    set_state = StepState.objects.get(id=pk3)
 
     if request.method == 'POST':
-        offer.is_new = False
-        offer.is_confirmed = True
-        offer.is_accepted = False
-        offer.is_ready_close = False
-        offer.is_closed = False
-        offer.is_cancelled = False
-        offer.confirmed_at = datetime.now()
-        offer.save()
-        success_message = _('Your offer has been confirmed!')
+        offer_add_state(offer, set_state, request.user)
+        if set_state.state_key == 'offer_canceled':
+            state_send = StepState.objects.get(state_key = 'answer_canceled')
+            my_answers = fiter_by_state(offer.answers, 'answer_confirmed')
+            for answer in my_answers.all():
+                answer_add_state(answer, state_send, request.user)
+        success_message = _('Your offer has change the state!')
         messages.success(request, success_message)
         return redirect('ah-customer-auction', pk)
 
-    title2 = tr.pgettext('ah_customer_offers_new-title', 'new-offers')
+    title2 = tr.pgettext('ah_offers_change_state-title', 'offer-state')
     context = {
         'title': title2,
         'customer': customer,
         'offer': offer,
+        'state': set_state,
     }
-    return render(request, 'auction_house/ahoffer_confirm.html', context)
+    return render(request, 'auction_house/ahoffer_change_state.html', context)
 
 @login_required()
 @user_belong_customer
-def ah_customer_offers_close(request, pk, pk2):
+def ah_answer_change_state(request, pk, pk2, pk3):
     customer = Customer.objects.filter(id = pk).first()
-    offer = AhOffer.objects.filter(id = pk2).first()
+    answer = AhAnswer.objects.filter(id = pk2).first()
+    set_state = StepState.objects.get(id=pk3)
 
     if request.method == 'POST':
-        offer.is_new = False
-        offer.is_confirmed = False
-        offer.is_accepted = False
-        offer.is_ready_close = False
-        offer.is_closed = True
-        offer.is_cancelled = False
-        offer.confirmed_at = datetime.now()
-        offer.save()
-        success_message = _('Your offer has been closed!')
+        answer_add_state(answer, set_state, request.user)
+        if set_state.state_key == 'answer_accepted':
+            state_send = StepState.objects.get(state_key = 'offer_accepted')
+            offer_add_state(answer.ah_offer, state_send, request.user)
+        if set_state.state_key == 'answer_closed':
+            state_send = StepState.objects.get(state_key = 'offer_ready_to_close')
+            offer_add_state(answer.ah_offer, state_send, request.user)
+        if set_state.state_key == 'answer_canceled' and answer.is_bound:
+            resurect_auction(answer.ah_offer)
+            set_auction(answer.ah_offer)
+        success_message = _('Your answer has change the state!')
         messages.success(request, success_message)
         return redirect('ah-customer-auction', pk)
 
-    title2 = tr.pgettext('ah_customer_offers_close-title', 'close-offer')
+    title2 = tr.pgettext('ah_answer_change_state-title', 'offer-state')
     context = {
         'title': title2,
         'customer': customer,
-        'offer': offer,
+        'answer': answer,
+        'state': set_state,
     }
-    return render(request, 'auction_house/ahoffer_confirm_close.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_offers_cancel(request, pk, pk2):
-    customer = Customer.objects.filter(id = pk).first()
-    offer = AhOffer.objects.filter(id = pk2).first()
-
-    if request.method == 'POST':
-        offer.is_new = False
-        offer.is_confirmed = False
-        offer.is_accepted = False
-        offer.is_ready_close = False
-        offer.is_closed = False
-        offer.is_cancelled = True
-        offer.confirmed_at = datetime.now()
-        offer.save()
-        for answer in offer.answers.all():
-            answer.is_new = False
-            answer.is_confirmed = False
-            answer.is_successful = False
-            answer.is_bound = False
-            answer.is_closed = False
-            answer.is_cancelled = True
-            answer.save()
-        success_message = _('Your offer has been canceled!')
-        messages.success(request, success_message)
-        return redirect('ah-customer-auction', pk)
-
-    title2 = tr.pgettext('ah_customer_offers_cancel-title', 'cancel-offers')
-    context = {
-        'title': title2,
-        'customer': customer,
-        'offer': offer,
-    }
-    return render(request, 'auction_house/ahoffer_confirm_cancel.html', context)
-
-
-@login_required()
-@user_belong_customer
-def ah_customer_offers_commited(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_offers_commited-title', 'commited-offers')
-    context = {
-        'title': title2,
-        'selection': _('commited offers'),
-        'customer': customer,
-        'offer_list': customer.owned_offers.filter(is_confirmed = True).order_by('-pk'),
-    }
-    return render(request, 'auction_house/customer_offer_list.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_offers_accepted(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_offers_closed-title', 'accepted-offers')
-    context = {
-        'title': title2,
-        'selection': _('accepted offers'),
-        'customer': customer,
-        'offer_list': customer.owned_offers.filter(is_accepted = True).order_by('-pk'),
-    }
-    return render(request, 'auction_house/customer_offer_list.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_offers_ready_close(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_offers_ready_close-title', 'ready-to-close-offers')
-    context = {
-        'title': title2,
-        'selection': _('ready to close offers'),
-        'customer': customer,
-        'offer_list': customer.owned_offers.filter(is_ready_close = True).order_by('-pk'),
-    }
-    return render(request, 'auction_house/customer_offer_list.html', context)
-
-
-@login_required()
-@user_belong_customer
-def ah_customer_offers_closed(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_offers_closed-title', 'closed-offers')
-    context = {
-        'title': title2,
-        'selection': _('closed offers'),
-        'customer': customer,
-        'offer_list': customer.owned_offers.filter(is_closed = True).order_by('-pk'),
-    }
-    return render(request, 'auction_house/customer_offer_list.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_offers_canceled(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_offers_canceled-title', 'canceled-offers')
-    context = {
-        'title': title2,
-        'selection': _('canceled offers'),
-        'customer': customer,
-        'offer_list': customer.owned_offers.filter(is_cancelled = True).order_by('-pk'),
-    }
-    return render(request, 'auction_house/customer_offer_list.html', context)
+    return render(request, 'auction_house/ahanswer_change_state.html', context)
 
 #-------------------------------- answer views
 class AhAnswerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -447,11 +343,15 @@ class AhAnswerDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
         object = kwargs.get('object')
-        if object.is_new or object.is_confirmed:
-            can = self.request.user.has_perm('customers.is_poweruser')
-        else:
-            can = False
-        context['power_can_change'] = can
+        state_new = StepState.objects.get(state_key='answer_new')
+        state_confirmed = StepState.objects.get(state_key='answer_confirmed')
+        context['state_new'] = state_new
+        context['state_confirmed'] = state_confirmed
+        context['state_successful'] = StepState.objects.get(state_key='answer_successful')
+        context['state_accepted'] = StepState.objects.get(state_key='answer_accepted')
+        context['state_closed'] = StepState.objects.get(state_key='answer_closed')
+        context['state_canceled'] = StepState.objects.get(state_key='answer_canceled')
+        object.refresh_total_price()
         return context
 
 
@@ -461,18 +361,7 @@ class AhAnswerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
         'description',
         'owner',
         'ah_offer',
-        'total_price',
-        'is_new',
-        'is_confirmed',
-        'confirmed_at',
-        'is_successful',
         'is_bound',
-        'is_accepted',
-        'accepted_at',
-        'is_closed',
-        'closed_at',
-        'is_cancelled',
-        'canceled_at',
     ]
     permission_required = 'customers.is_poweruser'
 
@@ -503,7 +392,7 @@ class AhAnswerDeletelView(LoginRequiredMixin, PermissionRequiredMixin, DeleteVie
 @user_belong_customer
 def ah_customer_answer_waiting_offers(request, pk):
     customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_answer_new-title', 'new-answers')
+    title2 = tr.pgettext('ah_customer_answer_waiting_offers-title', 'offers_waiting')
     context = {
         'title': title2,
         'selection': _('waiting offer'),
@@ -515,79 +404,15 @@ def ah_customer_answer_waiting_offers(request, pk):
 
 @login_required()
 @user_belong_customer
-def ah_customer_answer_new(request, pk):
+def ah_customer_answer_by_state_key(request, pk, sk):
     customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_answer_new-title', 'new-answers')
+    title2 = tr.pgettext('ah_customer_answer_by_state_key-title', 'answers-by-state')
+    selected_state = StepState.objects.filter(state_key = sk).first()
     context = {
         'title': title2,
-        'selection': _('new answers'),
+        'selection': selected_state.get_state_name_plural(),
         'customer': customer,
-        'answer_list': customer.owned_answers.filter(is_new = True).order_by('-pk'),
-    }
-    return render(request, 'auction_house/customer_answer_list.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_answer_confirmed(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_answer_confirmed-title', 'confirmed-answers')
-    context = {
-        'title': title2,
-        'selection': _('confirmed answers'),
-        'customer': customer,
-        'answer_list': customer.owned_answers.filter(is_confirmed = True).order_by('-pk'),
-    }
-    return render(request, 'auction_house/customer_answer_list.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_answer_successful(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_answer_successful-title', 'successful-answers')
-    context = {
-        'title': title2,
-        'selection': _('successful answers'),
-        'customer': customer,
-        'answer_list': customer.owned_answers.filter(is_successful = True).order_by('-pk'),
-    }
-    return render(request, 'auction_house/customer_answer_list.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_answer_accepted(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_answer_accepted-title', 'accepted-answers')
-    context = {
-        'title': title2,
-        'selection': _('accepted answers'),
-        'customer': customer,
-        'answer_list': customer.owned_answers.filter(is_accepted = True).order_by('-pk'),
-    }
-    return render(request, 'auction_house/customer_answer_list.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_answer_closed(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_answer_closed-title', 'closed-answers')
-    context = {
-        'title': title2,
-        'selection': _('closed answers'),
-        'customer': customer,
-        'answer_list': customer.owned_answers.filter(is_closed = True).order_by('-pk'),
-    }
-    return render(request, 'auction_house/customer_answer_list.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_answer_cancelled(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_answer_cancelled-title', 'cancelled-answers')
-    context = {
-        'title': title2,
-        'selection': _('cancelled answers'),
-        'customer': customer,
-        'answer_list': customer.owned_answers.filter(is_cancelled = True).order_by('-pk'),
+        'answer_list': fiter_by_state(customer.owned_answers, sk).order_by('-pk'),
     }
     return render(request, 'auction_house/customer_answer_list.html', context)
 
@@ -601,21 +426,7 @@ def ah_customer_answer_create(request, pk, pk2):
     if request.method == 'POST':
         form = AhAnwserCreateForm(request.POST)
         if form.is_valid():
-            new = AhAnswer(
-                description = form.cleaned_data['description'],
-                owner = customer,
-                ah_offer = offer,
-                is_new = True,
-                creator = user,
-                changed_by = user,
-            )
-            new.save()
-            for line in offer.lines.all():
-                n_a_l = AhAnswerLine(
-                    answer = new,
-                    offer_line = line,
-                )
-                n_a_l.save()
+            customer_answer_create(customer, offer, user, form.cleaned_data)
             success_message = _('Your answer has been added!')
             messages.success(request, success_message)
             return redirect('ah-customer-auction', pk)
@@ -630,146 +441,6 @@ def ah_customer_answer_create(request, pk, pk2):
         'offer': offer,
     }
     return render(request, 'auction_house/ahanswer_customer_new.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_answer_confirm(request, pk, pk2):
-    customer = Customer.objects.filter(id = pk).first()
-    answer = AhAnswer.objects.filter(id = pk2).first()
-
-    if request.method == 'POST':
-        answer.is_new = False
-        answer.is_confirmed = True
-        answer.is_accepted = False
-        answer.is_closed = False
-        answer.is_successful = False
-        answer.is_cancelled = False
-        answer.confirmed_at = datetime.now()
-        answer.changed_by = request.user
-        answer.save()
-        success_message = _('Your answer has been confirmed!')
-        messages.success(request, success_message)
-        return redirect('ah-customer-auction', pk)
-
-    title2 = tr.pgettext('ah_customer_answer_confirm-title', 'confirm-offer')
-    context = {
-        'title': title2,
-        'customer': customer,
-        'answer': answer,
-    }
-    return render(request, 'auction_house/ahanswer_confirm.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_answer_accept(request, pk, pk2):
-    customer = Customer.objects.filter(id = pk).first()
-    answer = AhAnswer.objects.filter(id = pk2).first()
-
-    if request.method == 'POST':
-        my_now = datetime.now()
-        answer.is_new = False
-        answer.is_confirmed = False
-        answer.is_accepted = True
-        answer.is_closed = False
-        answer.is_successful = False
-        answer.is_cancelled = False
-        answer.accepted_at = my_now
-        answer.changed_by = request.user
-        answer.save()
-        answer.ah_offer.is_new = False
-        answer.ah_offer.is_confirmed = False
-        answer.ah_offer.is_accepted = True
-        answer.ah_offer.is_ready_close = False
-        answer.ah_offer.is_closed = False
-        answer.ah_offer.is_cancelled = False
-        answer.ah_offer.accepted_at = my_now
-        answer.ah_offer.save()
-        success_message = _('Your answer has been accepted!')
-        messages.success(request, success_message)
-        return redirect('ah-customer-auction', pk)
-
-    title2 = tr.pgettext('ah_customer_answer_accept-title', 'accept-offer')
-    context = {
-        'title': title2,
-        'customer': customer,
-        'answer': answer,
-    }
-    return render(request, 'auction_house/ahanswer_confirm_accept.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_answer_cancel(request, pk, pk2):
-    customer = Customer.objects.filter(id = pk).first()
-    answer = AhAnswer.objects.filter(id = pk2).first()
-
-    if request.method == 'POST':
-        # ---- original bound
-        store_bound = answer.is_bound
-        answer.is_new = False
-        answer.is_confirmed = False
-        answer.is_accepted = False
-        answer.is_closed = False
-        answer.is_successful = False
-        answer.is_bound = False
-        answer.is_cancelled = True
-        answer.canceled_at = datetime.now()
-        answer.changed_by = request.user
-        answer.save()
-        #---- if bound must repeate auction eval.
-        if store_bound:
-            # serurect offers
-            resurect_auction(answer.ah_offer)
-            # run auction eval.
-            set_auction(answer.ah_offer)
-        success_message = _('Your answer has been canceled!')
-        messages.success(request, success_message)
-        return redirect('ah-customer-auction', pk)
-
-    title2 = tr.pgettext('ah_customer_answer_cancell-title', 'cancel-offer')
-    context = {
-        'title': title2,
-        'customer': customer,
-        'answer': answer,
-    }
-    return render(request, 'auction_house/ahanswer_confirm_cancel.html', context)
-
-@login_required()
-@user_belong_customer
-def ah_customer_answer_close(request, pk, pk2):
-    customer = Customer.objects.filter(id = pk).first()
-    answer = AhAnswer.objects.filter(id = pk2).first()
-    my_now = datetime.now()
-
-    if request.method == 'POST':
-        answer.is_new = False
-        answer.is_confirmed = False
-        answer.is_accepted = False
-        answer.is_closed = True
-        answer.is_successful = False
-        answer.is_cancelled = False
-        answer.closed_at = my_now
-        answer.changed_by = request.user
-        answer.save()
-        answer.ah_offer.is_new = False
-        answer.ah_offer.is_confirmed = False
-        answer.ah_offer.is_accepted = False
-        answer.ah_offer.is_ready_close = True
-        answer.ah_offer.is_closed = False
-        answer.ah_offer.is_cancelled = False
-        answer.ah_offer.accepted_at = my_now
-        answer.ah_offer.save()
-        success_message = _('Your answer has been closed!')
-        messages.success(request, success_message)
-        return redirect('ah-customer-auction', pk)
-
-    title2 = tr.pgettext('ah_customer_answer_close-title', 'close-offer')
-    context = {
-        'title': title2,
-        'customer': customer,
-        'answer': answer,
-    }
-    return render(request, 'auction_house/ahanswer_confirm_close.html', context)
-
 
 @login_required()
 @user_belong_answer
@@ -801,6 +472,7 @@ def ah_answer_line_update_ppu(request, pk, pk2):
         'form': form,
         'title': title2,
         'answer': answer,
+        'min_price': answer_line.offer_line.minimal_ppu,
     }
     return render(request, 'auction_house/answer_line_form.html', context)
 
@@ -839,3 +511,67 @@ def ah_answer_line_update_total(request, pk, pk2):
         'answer': answer,
     }
     return render(request, 'auction_house/answer_line_form.html', context)
+
+@login_required()
+@permission_required('customers.is_poweruser')
+def ah_offer_step_create(request, pk):
+    offer = AhOffer.objects.get(id = pk)
+    customer = offer.owner
+
+    if request.method == 'POST':
+        form = StepUpdateForm(request.POST)
+        if form.is_valid():
+            new = Step(
+                state = form.cleaned_data['state'],
+                offer_link = offer,
+                answer_link = None,
+                changed_by = request.user,
+            )
+            new.save()
+            success_message = _('Step has been added!')
+            messages.success(request, success_message)
+            return redirect('ah-offer-update', pk)
+    else:
+        form = StepUpdateForm()
+
+    title2 = tr.pgettext('ah_offer_step_create-title', 'create-step')
+    context = {
+        'form': form,
+        'title': title2,
+        'customer': customer,
+        'object': offer,
+        'update_url': 'ah-offer-update',
+    }
+    return render(request, 'auction_house/ah_step_new.html', context)
+
+@login_required()
+@permission_required('customers.is_poweruser')
+def ah_answer_step_create(request, pk):
+    answer = AhAnswer.objects.get(id = pk)
+    customer = answer.owner
+
+    if request.method == 'POST':
+        form = StepUpdateForm(request.POST)
+        if form.is_valid():
+            new = Step(
+                state = form.cleaned_data['state'],
+                offer_link = None,
+                answer_link = answer,
+                changed_by = request.user,
+            )
+            new.save()
+            success_message = _('Step has been added!')
+            messages.success(request, success_message)
+            return redirect('ah-answer-update', pk)
+    else:
+        form = StepUpdateForm()
+
+    title2 = tr.pgettext('ah_answer_step_create-title', 'create-step')
+    context = {
+        'form': form,
+        'title': title2,
+        'customer': customer,
+        'object': answer,
+        'update_url': 'ah-answer-update',
+    }
+    return render(request, 'auction_house/ah_step_new.html', context)

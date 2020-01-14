@@ -29,22 +29,34 @@
           {{ form|crispy }}
         </fieldset>
         <div class="form-group">
-          {% if object.is_new %}
-            {% trans "Confirm answer" as var_conf %}
-            <a class="btn btn-outline-secondary" href="{% url 'ah-customer-confirm-answer' object.owner.pk object.pk %}">{{ var_conf }}</a>
-          {% endif %}
-          {% if object.is_successful %}
-            {% trans "Accept answer" as var_accept %}
-            <a class="btn btn-outline-secondary" href="{% url 'ah-customer-accept-answer' object.owner.pk object.pk %}">{{ var_accept }}</a>
-          {% endif %}
-          {% if object.is_accepted %}
-            {% trans "Close answer" as var_close %}
-            <a class="btn btn-outline-secondary" href="{% url 'ah-customer-close-answer' object.owner.pk object.pk %}">{{ var_close }}</a>
-          {% endif %}
-          {% if object.is_cancelled == False and object.is_closed == False %}
-            {% trans "Cancel answer" as var_cancel %}
-            <a class="btn btn-outline-danger" href="{% url 'ah-customer-cancel-answer' object.owner.pk object.pk %}">{{ var_cancel }}</a>
-          {% endif %}
+          {% for next in object.actual_state.next_states.all %}
+            {% if next.is_alert_button == False and next.manual_set == True %}
+              {% if next.security_level > 0 %}
+                {% if next.security_level == 1  and "customers.is_customer_admin" in perms %}
+                  <a class="btn btn-outline-secondary" href="{% url 'ah-answer-change-state' object.owner.pk object.pk next.pk %}">{{ next.get_actual_state_button }}</a>
+                {% endif %}
+                {% if next.security_level > 1 and "customers.is_poweruser" in perms %}
+                  <a class="btn btn-outline-secondary" href="{% url 'ah-answer-change-state' object.owner.pk object.pk next.pk %}">{{ next.get_actual_state_button }}</a>
+                {% endif %}
+              {% else %}
+                <a class="btn btn-outline-secondary" href="{% url 'ah-answer-change-state' object.owner.pk object.pk next.pk %}">{{ next.get_actual_state_button }}</a>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+          {% for next in object.actual_state.next_states.all %}
+            {% if next.is_alert_button == True and next.manual_set == True %}
+              {% if next.security_level > 0 %}
+                {% if next.security_level == 1  and "customers.is_customer_admin" in perms %}
+                  <a class="btn btn-outline-danger" href="{% url 'ah-answer-change-state' object.owner.pk object.pk next.pk %}">{{ next.get_actual_state_button }}</a>
+                {% endif %}
+                {% if next.security_level > 1 and "customers.is_poweruser" in perms %}
+                  <a class="btn btn-outline-danger" href="{% url 'ah-answer-change-state' object.owner.pk object.pk next.pk %}">{{ next.get_actual_state_button }}</a>
+                {% endif %}
+              {% else %}
+                <a class="btn btn-outline-danger" href="{% url 'ah-answer-change-state' object.owner.pk object.pk next.pk %}">{{ next.get_actual_state_button }}</a>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
         </div>
         <div class="form-group">
           {% trans "Update" as var_add %}

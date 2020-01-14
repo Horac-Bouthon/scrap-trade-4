@@ -26,7 +26,7 @@
         </div>
         {% trans "Click to update answer" as var_hint1 %}
         <h2 class="customer-name">
-          {% if "customers.is_poweruser" in perms or object.is_new or object.is_successful or object.is_accepted %}
+          {% if "customers.is_poweruser" in perms or object.actual_state == state_new or object.actual_state == state_successful or object.actual_state == state_accepted %}
             {% if "customers.is_poweruser" in perms %}
               <a class="" href="{% url 'ah-answer-update' object.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ object.description }}</a>
             {% else %}
@@ -39,30 +39,7 @@
         <p>
           {% trans "Status:" as var_status %}
           <span class="customer-detail-content-highlighite">{{ var_status }} </span>
-          {% if object.is_new %}
-            {% trans "New" as var_new %}
-            <span class="customer-detail-content">{{ var_new }}</span>
-          {% endif %}
-          {% if object.is_confirmed %}
-            {% trans "Confirmed" as var_corf %}
-            <span class="customer-detail-content">{{ var_corf }}</span>
-          {% endif %}
-          {% if object.is_successful %}
-            {% trans "Successful" as var_in_proc %}
-            <span class="customer-detail-content">{{ var_in_proc }}</span>
-          {% endif %}
-          {% if object.is_accepted %}
-            {% trans "Accepted" as var_accepted %}
-            <span class="customer-detail-content">{{ var_accepted }}</span>
-          {% endif %}
-          {% if object.is_closed %}
-            {% trans "Closed" as var_clos %}
-            <span class="customer-detail-content">{{ var_clos }}</span>
-          {% endif %}
-          {% if object.is_cancelled %}
-            {% trans "Canceled" as var_canc %}
-            <span class="customer-detail-content">{{ var_canc }}</span>
-          {% endif %}
+          <span class="customer-detail-content">{{ object.actual_state.act_state_name }}</span>
         </p>
         <p>
           {% trans "Auction date:" as var_auction %}
@@ -91,6 +68,8 @@
               <th class="th_lines table_lines">{{ var_mc }}</th>
               {% trans "Amount" as var_crea %}
               <th class="th_lines table_lines">{{ var_crea }}</th>
+              {% trans "Min. unit price" as var_min_price %}
+              <th class="th_lines table_lines">{{ var_min_price }}</th>
               {% trans "Price per unit" as var_ppu %}
               <th class="th_lines table_lines">{{ var_ppu }}</th>
               {% trans "Price total" as var_line_total %}
@@ -109,8 +88,9 @@
                 </a>
               </td>
               <td class="td_lines table_lines"> {{ line.offer_line.amount }} {{ line.offer_line.mat_class.measurement_unit }} </td>
+              <td class="td_lines table_lines"> {{ line.offer_line.minimal_ppu }} </td>
               <td class="td_lines table_lines">
-                {% if power_can_change or object.is_new %}
+                {% if object.actual_state == state_new %}
                   {% trans "Click to update price per unit" as var_hint3 %}
                   <a class="table_lines" href="{% url 'ah-customer-answers-line-ppu' object.pk line.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}">
                     {{ line.ppu }}
@@ -120,19 +100,47 @@
                 {% endif %}
                </td>
               <td class="td_lines table_lines">
-                {% if power_can_change or object.is_new %}
+                {% if object.actual_state == state_new %}
                   <a class="table_lines" href="{% url 'ah-customer-answers-line-total' object.pk line.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}">
                     {{ line.total_price }}
                   </a>
                 {% else %}
                   {{ line.total_price }}
                 {% endif %}
-
               </td>
             </tr>
             {% endfor %}
           </table>
         {% endif %}
+        {% if "customers.is_poweruser" in perms %}
+          <div class="">
+            <p></p>
+            {% trans "State history" as var_state_history %}
+            <h5 class="customer-title">
+              {{ var_state_history }}
+            </h5>
+            <table class="table_lines">
+              <tr class="table_lines">
+                {% trans "ID" as var_o_n %}
+                <th class="th_lines table_lines">{{ var_o_n }}</th>
+                {% trans "State" as var_state %}
+                <th class="th_lines table_lines">{{ var_state }}</th>
+                {% trans "Create by" as var_created_by %}
+                <th class="th_lines table_lines">{{ var_created_by }}</th>
+                {% trans "Create at" as var_created_at %}
+                <th class="th_lines table_lines">{{ var_created_at }}</th>
+              </tr>
+              {% for step in object.get_steps %}
+                <tr class="table_lines">
+                  <td class="td_lines table_lines"> {{ step.id }} </td>
+                  <td class="td_lines table_lines"> {{ step.state.act_state_name }} </td>
+                  <td class="td_lines table_lines"> {{ step.changed_by.name }} </td>
+                  <td class="td_lines table_lines"> {{ step.created_at }} </td>
+                </tr>
+              {% endfor %} <!-- object.get_steps -->
+            </table>
+          </div>
+        {% endif %} <!-- "customers.is_poweruser" in perms -->
       </div>
     </article>
 

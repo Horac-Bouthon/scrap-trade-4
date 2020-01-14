@@ -23,26 +23,7 @@
         <p>
           {% trans "Status:" as var_status %}
           <span class="customer-detail-content-highlighite">{{ var_status }} </span>
-          {% if object.is_new %}
-            {% trans "New" as var_new %}
-            <span class="customer-detail-content">{{ var_new }}</span>
-          {% endif %}
-          {% if object.is_confirmed %}
-            {% trans "Confirmed" as var_corf %}
-            <span class="customer-detail-content">{{ var_corf }}</span>
-          {% endif %}
-          {% if object.is_accepted %}
-            {% trans "Accepted" as var_in_proc %}
-            <span class="customer-detail-content">{{ var_in_proc }}</span>
-          {% endif %}
-          {% if object.is_closed %}
-            {% trans "Closed" as var_clos %}
-            <span class="customer-detail-content">{{ var_clos }}</span>
-          {% endif %}
-          {% if object.is_cancelled %}
-            {% trans "Canceled" as var_canc %}
-            <span class="customer-detail-content">{{ var_canc }}</span>
-          {% endif %}
+          <span class="customer-detail-content">{{ object.actual_state.act_state_name }}</span>
         </p>
         <p>
           {% trans "Auction date:" as var_auction %}
@@ -66,6 +47,8 @@
               <th class="th_lines table_lines">{{ var_mc }}</th>
               {% trans "Amount" as var_crea %}
               <th class="th_lines table_lines">{{ var_crea }}</th>
+              {% trans "Price" as var_price %}
+              <th class="th_lines table_lines">{{ var_price }}</th>
             </tr>
             {% trans "Click to update line" as var_hint3 %}
             {% for line in  object.lines.all %}
@@ -78,6 +61,7 @@
                 </a>
               </td>
               <td class="td_lines table_lines"> {{ line.amount }} {{ line.mat_class.measurement_unit }} </td>
+              <td class="td_lines table_lines"> {{ line.minimal_ppu }}</td>
             </tr>
             {% endfor %}
           </table>

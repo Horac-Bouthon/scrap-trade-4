@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'auction_house.apps.AuctionHouseConfig',
     'project_api.apps.ProjectApiConfig',
-    'rest_framework'
+    'rest_framework',
+    'state_wf.apps.StateWfConfig',
 ]
 
 MIDDLEWARE = [

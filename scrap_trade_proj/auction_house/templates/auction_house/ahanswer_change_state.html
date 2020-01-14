@@ -1,0 +1,39 @@
+{% extends "project_main/base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block style %}
+  <style>
+    body {
+      background-image: url("{{ customer.customer_background.url }}");
+      background-repeat: no-repeat;
+      background-size: cover;
+  }
+  </style>
+{% endblock style %}
+
+
+{% block content %}
+  <div class="content-section">
+    <form class="" method="POST">
+      {% csrf_token %}
+      <fieldset class="form-group">
+        <legend class="border-bottom mb-4">{{ state.get_actual_template_title }}</legend>
+        <h2>{{ state.get_actual_template_question }} "{{ answer.id }} {{ answer.description }}" </h2>
+        {% if state.get_actual_template_text %}
+          <p>
+            {{ state.get_actual_template_text }}
+          </p>
+        {% endif %}
+      </fieldset>
+      <div class="form-group">
+        <button class="btn btn-outline-danger" type="submit">{{ state.get_actual_confirm_button }}</button>
+        {% if "customers.is_poweruser" in perms %}
+          <a class="btn btn-outline-secondary" href="{% url 'ah-answer-update' answer.pk %}">{{ state.get_actual_cancel_button }}</a>
+        {% else %}
+          <a class="btn btn-outline-secondary" href="{% url 'ah-answer-customer-update' answer.pk %}">{{ state.get_actual_cancel_button }}</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+{% endblock content %}

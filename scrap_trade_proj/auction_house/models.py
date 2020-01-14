@@ -5,6 +5,7 @@ from customers.models import (
     Customer,
     ProjectCustomUser,
 )
+
 from django.conf import settings
 from django.urls import reverse
 
@@ -19,61 +20,6 @@ class AhOffer(models.Model):
         max_length=200,
         verbose_name=_('Description'),
         help_text=_("Offers description"),
-        null=True,
-        blank=True,
-    )
-    is_new = models.BooleanField(
-        default=True,
-        verbose_name=_('New'),
-        help_text=_("New created offer. ")
-    )
-    is_confirmed = models.BooleanField(
-        default=False,
-        verbose_name=_('Confirmed'),
-        help_text=_("Offers is confirmed by owner. ")
-    )
-    confirmed_at = models.DateTimeField(
-        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Confirmed at'),
-        null=True,
-        blank=True,
-    )
-    is_accepted = models.BooleanField(
-        default=False,
-        verbose_name=_('Accepted'),
-        help_text=_("Mark offers accepted by the buyer.")
-    )
-    accepted_at = models.DateTimeField(
-        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Accepted at'),
-        null=True,
-        blank=True,
-    )
-    is_ready_close = models.BooleanField(
-        default=False,
-        verbose_name=_('Ready to close'),
-        help_text=_("Mark ready to close offers.")
-    )
-    ready_close_at = models.DateTimeField(
-        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Ready to close at'),
-        null=True,
-        blank=True,
-    )
-    is_closed = models.BooleanField(
-        default=False,
-        verbose_name=_('Closed'),
-        help_text=_("Mark closed offers. ")
-    )
-    closed_at = models.DateTimeField(
-        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Closed at'),
-        null=True,
-        blank=True,
-    )
-    is_cancelled = models.BooleanField(
-        default=False,
-        verbose_name=_('Cancelled'),
-        help_text=_("Mark cancelled offers. ")
-    )
-    canceled_at = models.DateTimeField(
-        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Canceled at'),
         null=True,
         blank=True,
     )
@@ -129,6 +75,33 @@ class AhOffer(models.Model):
         null=True,
         blank=True,
     )
+    minimal_total_price =  models.DecimalField(
+        max_digits = 10,
+        decimal_places = 2,
+        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Minimal total price'),
+        help_text=tr.pgettext_lazy('AhOffer definition','Final minimal price'),
+        null=True,
+        blank=True,
+    )
+    auction_url = models.URLField(
+        max_length=200,
+        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Auction URL'),
+        help_text=tr.pgettext_lazy('AhOffer definition','Online auction url'),
+        null=True,
+        blank=True,
+    )
+    auction_start = models.DateTimeField(
+        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Auction start'),
+        help_text=tr.pgettext_lazy('AhOffer definition','From this time is auction URL accessible'),
+        null=True,
+        blank=True,
+    )
+    auction_end = models.DateTimeField(
+        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Auction end'),
+        help_text=tr.pgettext_lazy('AhOffer definition','From this time is auction URL closed'),
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         verbose_name = tr.pgettext_lazy('AhOffer definition', 'Offer')
@@ -139,6 +112,26 @@ class AhOffer(models.Model):
 
     def __str__(self):
         return '{} {} ({}) {}'.format(self.pk, self.owner.customer_name, self.description, self.created_at)
+
+    @property
+    def actual_state(self):
+        steps = self.my_steps.all().order_by("-created_at")
+        if steps.count() > 0:
+            return steps.first().state
+        return None
+
+    def is_equal_state(self, state):
+        return (self.actual_state == state)
+
+    def get_steps(self):
+        return self.my_steps.all().order_by("-created_at")
+
+    def refresh_total_price(self):
+        total = 0
+        for line in self.lines.all():
+             total = total + (line.amount * line.minimal_ppu)
+        self.minimal_total_price = total
+        self.save()
 
 
 #------------------------  AhOfferLine
@@ -175,6 +168,13 @@ class AhOfferLine(models.Model):
         related_name="used_lines",
         null=True,
         blank=True,
+    )
+    minimal_ppu =  models.DecimalField(
+        max_digits = 7,
+        decimal_places = 2,
+        default=0.0,
+        verbose_name=tr.pgettext_lazy('AhAnswerLine definition', 'Minimal price per unit'),
+        help_text=tr.pgettext_lazy('AhAnswerLine definition','Minimal price for one measurement unit'),
     )
 
     class Meta:
@@ -269,64 +269,10 @@ class AhAnswer(models.Model):
         null=True,
         blank=True,
     )
-    is_new = models.BooleanField(
-        default=True,
-        verbose_name=_('New'),
-        help_text=_("New created offer. ")
-    )
-    is_confirmed = models.BooleanField(
-        default=False,
-        verbose_name=_('Confirmed'),
-        help_text=_("Answer is confirmed by owner. ")
-    )
-    confirmed_at = models.DateTimeField(
-        verbose_name=tr.pgettext_lazy('AhAnswer definition', 'Confirmed at'),
-        help_text=tr.pgettext_lazy('AhAnswer definition','Confirmed from...'),
-        null=True,
-        blank=True,
-    )
-    is_successful = models.BooleanField(
-        default=False,
-        verbose_name=_('Successful'),
-        help_text=_("Mark successful answers. ")
-    )
     is_bound = models.BooleanField(
         default=False,
         verbose_name=_('Bound'),
         help_text=_("Mark bound answers. ")
-    )
-    is_accepted = models.BooleanField(
-        default=False,
-        verbose_name=_('Accepted'),
-        help_text=_("Mark accepted answers. ")
-    )
-    accepted_at = models.DateTimeField(
-        verbose_name=tr.pgettext_lazy('AhAnswer definition', 'Accepted at'),
-        help_text=tr.pgettext_lazy('AhAnswer definition','Accepted from...'),
-        null=True,
-        blank=True,
-    )
-    is_closed = models.BooleanField(
-        default=False,
-        verbose_name=_('Closed'),
-        help_text=_("Mark closed answers. ")
-    )
-    closed_at = models.DateTimeField(
-        verbose_name=tr.pgettext_lazy('AhAnswer definition', 'Closed at'),
-        help_text=tr.pgettext_lazy('AhAnswer definition','Closed from...'),
-        null=True,
-        blank=True,
-    )
-    is_cancelled = models.BooleanField(
-        default=False,
-        verbose_name=_('Cancelled'),
-        help_text=_("Mark cancelled answers. ")
-    )
-    canceled_at = models.DateTimeField(
-        verbose_name=tr.pgettext_lazy('AhAnswer definition', 'Canceled at'),
-        help_text=tr.pgettext_lazy('AhAnswer definition','Canceled from...'),
-        null=True,
-        blank=True,
     )
     creator = models.ForeignKey(
         ProjectCustomUser,
@@ -365,6 +311,26 @@ class AhAnswer(models.Model):
 
     def get_absolute_url(self):
         return reverse('ah-answer-detail', kwargs={'pk': self.pk})
+
+    @property
+    def actual_state(self):
+        steps = self.my_steps.all().order_by("-created_at")
+        if steps.count() > 0:
+            return steps.first().state
+        return None
+
+    def is_equal_state(self, state):
+        return (self.actual_state == state)
+
+    def get_steps(self):
+        return self.my_steps.all().order_by("-created_at")
+
+    def refresh_total_price(self):
+        total = 0
+        for line in self.my_lines.all():
+             total = total + line.total_price
+        self.total_price = total
+        self.save()
 
 
 class AhAnswerLine(models.Model):

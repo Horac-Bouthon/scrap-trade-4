@@ -28,27 +28,8 @@
         <h3 class="customer-name">{{ offer.description }}</h3>
         <p>
           {% trans "Status:" as var_status %}
-          <span class="customer-detail-content-highlighite">{{ var_status }} </span>
-          {% if offer.is_new %}
-            {% trans "New" as var_new %}
-            <span class="customer-detail-content">{{ var_new }}</span>
-          {% endif %}
-          {% if offer.is_confirmed %}
-            {% trans "Confirmed" as var_corf %}
-            <span class="customer-detail-content">{{ var_corf }}</span>
-          {% endif %}
-          {% if offer.is_accepted %}
-            {% trans "Accepted" as var_in_proc %}
-            <span class="customer-detail-content">{{ var_in_proc }}</span>
-          {% endif %}
-          {% if offer.is_closed %}
-            {% trans "Closed" as var_clos %}
-            <span class="customer-detail-content">{{ var_clos }}</span>
-          {% endif %}
-          {% if offer.is_cancelled %}
-            {% trans "Canceled" as var_canc %}
-            <span class="customer-detail-content">{{ var_canc }}</span>
-          {% endif %}
+          <span class="customer-detail-content-highlighit">{{ var_status }} </span>
+          <span class="customer-detail-content">{{ offer.actual_state.act_state_name }}</span>
         </p>
         <p>
           {% trans "Auction date:" as var_auction %}
@@ -59,6 +40,11 @@
           {% trans "Delivery date:" as var_delivery %}
           <span class="customer-detail-content-highlighite">{{ var_delivery }} </span>
           <span class="customer-detail-content">{{ offer.delivery_date }}</span>
+        </p>
+        <p>
+          {% trans "Minimal price:" as var_min_price %}
+          <span class="customer-detail-content-highlighite">{{ var_min_price }} </span>
+          <span class="customer-detail-content">{{ offer.minimal_total_price }}</span>
         </p>
         <p/>
         {% if offer.lines.all.count > 0 %}
@@ -72,6 +58,8 @@
               <th class="th_lines table_lines">{{ var_mc }}</th>
               {% trans "Amount" as var_crea %}
               <th class="th_lines table_lines">{{ var_crea }}</th>
+              {% trans "Minimal unit price" as var_crea %}
+              <th class="th_lines table_lines">{{ var_crea }}</th>
             </tr>
             {% trans "Click to update line" as var_hint3 %}
             {% for line in  offer.lines.all %}
@@ -84,6 +72,7 @@
                 </a>
               </td>
               <td class="td_lines table_lines"> {{ line.amount }} {{ line.mat_class.measurement_unit }} </td>
+              <td class="td_lines table_lines"> {{ line.minimal_ppu }} </td>
             </tr>
             {% endfor %}
           </table>

@@ -24,160 +24,26 @@
     </a>
     <div class="media-body">
       <h2 class="customer-name">{{ customer.customer_name }}</h2>
-      <div class="">
-        {% trans "Offers" as var_offers %}
-        <h5  class="customer-title">{{ var_offers }}</h5>
-        {% if new_offers.count > 0 %}
-          <p>
-            {% trans "New offers" as var_offers_new %}
-            <a href="{% url 'ah-customer-new-offers' customer.pk %}">{{ var_offers_new }} ({{ new_offers.count }})</a>
-          </p>
-        {% else %}
-          <p>
-            {% trans "New offers" as var_offers_new %}
-            {{ var_offers_new }}
-          </p>
-        {% endif %}
-        {% if commited_offers.count > 0 %}
-          <p>
-            {% trans "Commited offers" as var_offers_comit %}
-            <a href="{% url 'ah-customer-commited-offers' customer.pk %}">{{ var_offers_comit }} ({{ commited_offers.count }})</a>
-          </p>
-        {% else %}
-        <p>
-          {% trans "Commited offers" as var_offers_comit %}
-          {{ var_offers_comit }}
-        </p>
-        {% endif %}
-        {% if accepted_offers.count > 0 %}
-          <p>
-            {% trans "Accepted offers" as var_offers_accept %}
-            <a href="{% url 'ah-customer-accepted-offers' customer.pk %}">{{ var_offers_accept }} ({{ accepted_offers.count }}) </a>
-          </p>
-        {% else %}
-        <p>
-          {% trans "Accepted offers" as var_offers_accept %}
-          {{ var_offers_accept }}
-        </p>
-        {% endif %}
-
-
-        {% if ready_close_offfer.count > 0 %}
-          <p>
-            {% trans "Ready to close offers" as var_ready_close %}
-            <a href="{% url 'ah-customer-ready_close-offers' customer.pk %}">{{ var_ready_close }} ({{ ready_close_offfer.count }}) </a>
-          </p>
-        {% else %}
-        <p>
-          {% trans "Ready to close offers" as var_ready_close %}
-          {{ var_ready_close }}
-        </p>
-        {% endif %}
-        {% if closed_offers.count > 0 %}
-          <p>
-            {% trans "Closed offers" as var_offers_close %}
-            <a href="{% url 'ah-customer-closed-offers' customer.pk %}">{{ var_offers_close }} ({{ closed_offers.count }}) </a>
-          </p>
-        {% else %}
-        <p>
-          {% trans "Closed offers" as var_offers_close %}
-          {{ var_offers_close }}
-        </p>
-        {% endif %}
-        {% if canceled_offers.count > 0 %}
-          <p>
-            {% trans "Canceled offers" as var_offers_cancel %}
-            <a href="{% url 'ah-customer-canceled-offers' customer.pk %}">{{ var_offers_cancel }} ({{ canceled_offers.count }})</a>
-          </p>
-        {% else %}
-        <p>
-          {% trans "Canceled offers" as var_offers_cancel %}
-          {{ var_offers_cancel }}
-        </p>
-        {% endif %}
-      </div>
-      <div class="">
-        {% trans "Answers" as var_answers %}
-        <h5  class="customer-title">{{ var_answers }}</h5>
-        <p></p>
-        {% if waiting_offers.count > 0 %}
-          <p>
-            {% trans "Waiting offers" as var_waiting_offers %}
-            <a href="{% url 'ah-customer-waiting-offers' customer.pk %}">{{ var_waiting_offers }} ({{ waiting_offers.count }})</a>
-          </p>
-        {% else %}
-          <p>
-            {% trans "Waiting offers" as var_waiting_offers %}
-            {{ var_waiting_offers }}
-          </p>
-        {% endif %}
-        {% if new_answers.count > 0 %}
-          <p>
-            {% trans "New answers" as var_answers_new %}
-            <a href="{% url 'ah-customer-new-answers' customer.pk %}">{{ var_answers_new }} ({{ new_answers.count }})</a>
-          </p>
-        {% else %}
-        <p>
-          {% trans "New answers" as var_answers_new %}
-          {{ var_answers_new }}
-        </p>
-        {% endif %}
-        {% if confirmed_answers.count > 0 %}
-          <p>
-            {% trans "Commited answers" as var_answers_comit %}
-            <a href="{% url 'ah-customer-confirmed-answers' customer.pk %}">{{ var_answers_comit }} ({{ confirmed_answers.count }})</a>
-          </p>
-        {% else %}
-          <p>
-            {% trans "Commited answers" as var_answers_comit %}
-            {{ var_answers_comit }}
-          </p>
-        {% endif %}
-        {% if successful_answers.count > 0 %}
-          <p>
-            {% trans "Successful answers" as var_answers_succ %}
-            <a href="{% url 'ah-customer-successful-answers' customer.pk %}">{{ var_answers_succ }} ({{ successful_answers.count }})</a>
-          </p>
-        {% else %}
-        <p>
-          {% trans "Successful answers" as var_answers_succ %}
-          {{ var_answers_succ }}
-        </p>
-        {% endif %}
-        {% if accepted_answers.count > 0 %}
-          <p>
-            {% trans "Accepted answers" as var_answers_accept%}
-            <a href="{% url 'ah-customer-accepted-answers' customer.pk %}">{{ var_answers_accept }} ({{ accepted_answers.count }})</a>
-          </p>
-        {% else %}
-          <p>
-            {% trans "Accepted answers" as var_answers_accept%}
-            {{ var_answers_accept }}
-          </p>
-        {% endif %}
-        {% if closed_answers.count > 0 %}
-          <p>
-            {% trans "Closed answers" as var_answers_close %}
-            <a href="{% url 'ah-customer-closed-answers' customer.pk %}">{{ var_answers_close }} ({{ closed_answers.count }})</a>
-          </p>
-        {% else %}
-          <p>
-            {% trans "Closed answers" as var_answers_close %}
-            {{ var_answers_close }}
-          </p>
-        {% endif %}
-        {% if cancelled_answers.count > 0 %}
-          <p>
-            {% trans "Canceled answers" as var_answers_canceled %}
-            <a href="{% url 'ah-customer-cancelled-answers' customer.pk %}">{{ var_answers_canceled }} ({{ cancelled_answers.count }})</a>
-          </p>
-        {% else %}
-          <p>
-            {% trans "Canceled answers" as var_answers_canceled %}
-            {{ var_answers_canceled }}
-          </p>
-        {% endif %}
-      </div>
+      {% for section in auc_obj %}
+        <div class="">
+          <h5  class="customer-title">{{ section.title }}</h5>
+          {% for line in section.lines %}
+            {% if line.member_count > 0%}
+              <p>
+                {% if line.state_key != 'Not set' %}
+                  <a href="{% url line.url_key customer.pk line.state_key %}">{{ line.title }} ({{ line.member_count }})</a>
+                {% else %}
+                  <a href="{% url line.url_key customer.pk %}">{{ line.title }} ({{ line.member_count }})</a>
+                {% endif %}
+              </p>
+            {% else %}
+            <p>
+              {{ line.title }}
+            </p>
+            {% endif %}
+          {% endfor %} <!-- section.lines -->
+        </div>
+      {% endfor %} <!-- auc_obj -->
     </div>
   </article>
 {% endblock content %}
