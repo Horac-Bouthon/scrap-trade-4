@@ -149,6 +149,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'customers.ProjectCustomUser'
+LOGIN_URL = 'user-login'  # Used by access view mixins + other builtin auth
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
