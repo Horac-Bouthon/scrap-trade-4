@@ -31,23 +31,24 @@
           {% endif %}
 
           {# Contextual Buttons #}
-          <section class="pt-3">
-            {% for button in content_header.button_list %}
-              
-              <a class="btn
-                        {% if button.type %} btn-{{ type }} 
-                        {% else %} btn-primary {% endif %}"
-                 href="{{ button.href }}"
-                 title="{{ button.title }}">
-                {% if button.icon %}
-                  <i data-feather="{{ button.icon }}"></i>
-                {% endif %}
-                {{ button.text }}
-              </a>
-              
-            {% endfor %}
-          </section>
-          
+          {% if content_header.button_list %}
+            <section class="pt-3">
+              {% for button in content_header.button_list %}
+                
+                <a class="btn
+                          {% if button.type %} btn-{{ type }} 
+                          {% else %} btn-primary {% endif %}"
+                   href="{{ button.href }}"
+                   title="{{ button.title }}">
+                  {% if button.icon %}
+                    <i data-feather="{{ button.icon }}"></i>
+                  {% endif %}
+                  {{ button.text }}
+                </a>
+                
+              {% endfor %}
+            </section>
+          {% endif %}          
         </div>
       </section>
       {% if content_header.image %}

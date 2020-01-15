@@ -67,26 +67,95 @@
             
             {% if user.is_authenticated %}
 
-              <a class="my-2"
-                 href="{% url 'user-profile' %}">
-                <img class="rounded-circle link-side-bar-img"
-                     src="{{ user.userprofile.image.url }}"
-                     alt="Profile image"
-                     title="{% trans "Edit Profile" context "base-navbar" %}" />
-              </a>
-
-              <a class="mb-2 btn btn-secondary"
+              {# Basic user info #}
+              <section class="d-flex flex-wrap mb-4
+                              justify-content-center">
+                <a class="mx-2"
+                   href="{% url 'user-profile' %}">
+                  <img class="rounded-circle link-side-bar-img"
+                       src="{{ user.userprofile.image.url }}"
+                       alt="Profile image"
+                       title="{% trans "Edit Profile" context "base-navbar" %}" />
+                </a>
+                <div class="mx-2 align-self-center">
+                  <p class="h4 border-bottom mb-1">
+                    {{ user.name }}
+                  </p>
+                  <p class="text-muted small m-0 line-height-minimal
+                            pr-3">
+                    {% if 'customers.is_customer_admin' in perms %}
+                      {{ user.customer.customer_name }},
+                      <br/>
+                      {% trans "Administrator" %}
+                    {% elif 'customers.is_customer_worker' in perms %}
+                      {{ user.customer.customer_name }},
+                      <br/>
+                      {% trans "Worker" %}
+                    {% endif %}
+                    <br/>
+                    {{ user.email }}
+                    
+                    {% if user.is_superuser %}
+                      <br/>
+                      <span class="text-danger font-weight-bold">
+                        Superuser
+                      </span>
+                    {% endif %}
+                    {% if 'customers.is_superuser' in perms %}
+                      <br/>
+                      <span class="text-danger font-weight-bold">
+                        Poweruser
+                      </span>
+                    {% endif %}
+                  </p>
+                </div>
+              </section>
+              
+              {# Buttons to other sections #}
+              <a class="mb-2 btn btn-outline-primary"
                  href="{% url 'user-profile' %}">
                 {% trans "Edit Profile" context "base-navbar" %}
               </a>
               <a class="mb-2 
-                        btn btn-secondary"
+                        btn btn-outline-primary"
                  href="{% url 'user-logout' %}">
                 {% trans "Log Out" context "base-navbar" %}
               </a>
+
               
+              {% if user.is_superuser %}
+                <span>Superuser</span>
+                <a class="mb-2
+                          btn btn-secondary"
+                   href="/admin" target="_blank">
+                  {% trans "Administration tools" context "right-navbar" %}
+                </a>
+              {% endif %}
+              
+              {% if "customers.is_poweruser" in perms %}
+                <span>Poweruser</span>
+                <a class="mb-2
+                          btn btn-secondary"
+                   href="{% url 'ah-offer-list' %}">
+                  {% trans "Offer list" context "right-navbar" %}
+                </a>
+                <a class="mb-2
+                          btn btn-secondary"
+                   href="{% url 'ah-answer-list' %}">
+                  {% trans "Answer list" context "right-navbar" %}
+                </a>
+              {% endif %}
+
+              <span>Contextual</span>
+              {% block spec_action %}
+              {% endblock spec_action %}
+              <div class="border-top my-2"></div>
+              {% block site_list %}
+              {% endblock site_list %}
+              {# @todo; Delete button-commenting elements in side-panel after testing #}       
             {% else %}
 
+              {# Login form #}
               <form class="login-form" method="POST">
                 {% csrf_token %}
                 
@@ -107,43 +176,6 @@
               
             {% endif %}
 
-            
-            {% if user.is_superuser %}
-
-              <span>Superuser</span>
-              <a class="mb-2
-                        btn btn-secondary"
-                 href="/admin" target="_blank">
-                {% trans "Administration tools" context "right-navbar" %}
-              </a>
-              
-            {% endif %}
-
-            
-            {% if "customers.is_poweruser" in perms %}
-
-              <span>Poweruser</span>
-              <a class="mb-2
-                        btn btn-secondary"
-                 href="{% url 'ah-offer-list' %}">
-                {% trans "Offer list" context "right-navbar" %}
-              </a>
-              <a class="mb-2
-                        btn btn-secondary"
-                 href="{% url 'ah-answer-list' %}">
-                {% trans "Answer list" context "right-navbar" %}
-              </a>
-              
-            {% endif %}
-
-            <span>Contextual</span>
-            {% block spec_action %}
-            {% endblock spec_action %}
-            <div class="border-top my-2"></div>
-            {% block site_list %}
-            {% endblock site_list %}
-            {# @todo; Delete button-commenting elements in side-panel after testing #}
-            </p>
           </div>
         </aside>
 
