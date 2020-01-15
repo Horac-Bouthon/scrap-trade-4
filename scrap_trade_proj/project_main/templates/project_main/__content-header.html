@@ -2,22 +2,11 @@
 
   <header class="page-head">
     <div class="px-3 px-md-4 py-3 
-                d-md-flex">
-
-      {% if content_header.image %}
-        {# @todo; Fiddle with the content_header.image styles #}
-        <div class="d-flex pr-3
-                    mb-2 mb-md-0">
-          <img class="align-self-center"
-               style="width: 120px;" 
-               src="{{ content_header.image.src }}"
-               alt="{{ content_header.image.alt }}" />
-        </div>
-      {% endif %}
+                d-flex flex-md-row flex-column">
       
-      <div class="d-flex
-                  flex-fill">      
-        <div class="align-self-center flex-fill">
+      <section class="d-flex flex-fill 
+                      order-2 order-md-1">      
+        <div class="align-self-start flex-fill">
 
           {# Note: `pr-x` classes are for breaking the line earlier #}
 
@@ -59,9 +48,19 @@
             {% endfor %}
           </section>
           
-          
         </div>
-      </div>    
+      </section>
+      {% if content_header.image %}
+        <section class="d-flex 
+                        order-md-2 order-1
+                        pl-md-3
+                        mt-md-0 mb-3"
+                 style="width: 140px">
+          <img class="align-self-center m-auto"
+               src="{{ content_header.image.src }}"
+               alt="{{ content_header.image.alt }}" />
+        </section>
+      {% endif %}
     </div>
   </header>
   

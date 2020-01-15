@@ -8,6 +8,7 @@ body {
   background-image: url("/media/default-project-background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+  background-attachment: fixed;  /* Don't scroll with page */
 
   /* Default text color */
   color: #444444;
