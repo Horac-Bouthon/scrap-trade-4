@@ -2,11 +2,9 @@
 #  Context processors
 #  
 #  Processor functions take in a `HttpRequest` (same as for `render` in views) 
-#  and return a dictionary, which is added to the final context of any page 
-#  that uses the context processor. 
+#  and return a dictionary, which is added to the final context of any page.
 #  
-#  If these functions are added to `settings.TEMPLATES`, the context
-#  processor works globally across all the project's pages.
+#  These functions must be then mentioned in `settings.TEMPLATES`.
 # 
 
 

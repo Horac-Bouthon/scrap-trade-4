@@ -8,108 +8,108 @@
     background-image: url("{{ object.customer_background.url }}");
     background-repeat: no-repeat;
     background-size: cover;
-}
+  }
 </style>
 {% endblock style %}
 
 {% block content %}
+  {% include 'project_main/__content-header.html' %}
+  
+  <section class="container pb-5">
+    <div class="container">
 
-    <article class="media content-section">
-      <img class="rounded-circle customer-logo" src="{{ object.customer_logo.url }}">
-      <div class="media-body">
-        {% trans "Click to update the description" as var_hint1 %}
-        <h2 class="customer-name">
-          {{ object.customer_name }}
-        </h2>
-        <p>
-          {% trans "Registration number:" as var_reg_num %}
-          <span class="customer-detail-content-highlighite">{{ var_reg_num }} </span>
-          <span class="customer-detail-content">{{ object.customer_ICO }}</span></p>
-        <p>
-          {% trans "VAT:" as var_vat %}
-          <span class="customer-detail-content-highlighite">{{ var_vat }} </span>
-          <span class="customer-detail-content">{{ object.customer_DIC }}
-        </span></p>
+      <h4 class="border-bottom">
+        {% trans 'Details:' %}
+      </h4>
+      <p class="mb-0">
+        {% trans "Registration number:" %} </p>
+      <p class="font-weight-bold">
+        {{ object.customer_ICO }} </p>        
+      <p class="mb-0">
+        {% trans "VAT:" %} </p>
+      <p class="font-weight-bold">
+        {{ object.customer_DIC }}</p>
+
+      
+      <h4 class="border-bottom">
+        {% trans "Description:" %}
+      </h4>
+      <p>
         {% if object.act_description %}
-          <p class="customer-detail-content">{{ object.act_description }}</p>
+          {{ object.act_description }}
+        {% else %}
+          {{ object.act_short }}
         {% endif %}
-        {% trans "Establishments:" as var_est %}
-        <h5 class="customer-title">
-          {{ var_est }}
-        </h5>
-        {% if object.customerestablishments_set.all.count > 0 %}
-          {% for address in object.customerestablishments_set.all %}
-            <p>
-              {{ address.establishment}} <br>
-              {{ address.address_street }} {{ address.address_number }} <br>
-              {{ address.address_zip_code }} {{ address.address_town }} <br>
-            </p>
+      </p>
+      
+      <h4 class="border-bottom">
+        {% trans "Establishments:" %}
+      </h4>
+      {% if object.customerestablishments_set.all.count > 0 %}
+        {% for address in object.customerestablishments_set.all %}
+          {% include 'project_main/__address.html' with address=address %}
+        {% endfor %}
+      {% endif %}
+      <br/> {# spacing #}
+      
+      <h4 class="border-bottom">
+        {% trans "E-mails:" %}
+      </h4>
+      {% if object.customeremail_set.count > 0 %}
+        <ul>
+          {% for email in object.customeremail_set.all %}
+            <li class="m-0">
+              {{ email.customer_email }}
+            </li>
           {% endfor %}
-        {% endif %}
-        {% trans "E-mails:" as var_emails %}
-        <h5 class="customer-title">
-          {{ var_emails }}
-        </h5>
-        {% if object.customeremail_set.all.count > 0 %}
-            <p>
-              {% for email in object.customeremail_set.all %}
-                    {{ email.customer_email }}
-                    <br>
-              {% endfor %}
-            </p>
-        {% endif %}
-        {% trans "Websites:" as var_webs %}
-        <h5 class="customer-title">
-          {{ var_webs }}
-        </h5>
-        {% if object.customerweb_set.all.count > 0 %}
-          <p>
-            {% for web in object.customerweb_set.all %}
+        </ul>
+      {% endif %}
+      
+      
+      <h4 class="border-bottom">
+        {% trans "Websites:" %}
+      </h4>
+      {% if object.customerweb_set.all.count > 0 %}
+        <ul>
+          {% for web in object.customerweb_set.all %}
+            <li class="m-0">
               {{ web.customer_web }}
-              <br>
-            {% endfor %}
-          </p>
-        {% endif %}
-        {% trans "Phones:" as var_phones %}
-        <h5 class="customer-title">
-          {{ var_phones }}
-        </h5>
-        {% if object.customerphone_set.all.count > 0 %}
-          <p>
-            {% for phone in object.customerphone_set.all %}
-              {{ phone.customer_phone }} {{ phone.desctiption }} ({{ phone.category.act_category_name }})
-              <br>
-            {% endfor %}
-          </p>
-        {% endif %}
-        {% trans "Bank accounts:" as var_bas %}
-        <h5 class="customer-title">
-          {{ var_bas }}
-        </h5>
-        {% if object.customerbankaccount_set.all.count > 0 %}
-          <p>
-            {% for b_acc in object.customerbankaccount_set.all %}
-                {{ b_acc.account }}/{{ b_acc.bank_id }} (IBAN: {{ b_acc.iban }})
-              <br>
-            {% endfor %}
-          </p>
-        {% endif %}
-      </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
 
-    </article>
-
-
+      
+      <h4 class="border-bottom">
+        {% trans "Phones:" %}
+      </h4>
+      {% if object.customerphone_set.count > 0 %}
+        <ul>
+          {% for phone in object.customerphone_set.all %}
+            <li>
+              {{ phone.customer_phone }}
+              {{ phone.desctiption }}
+              ({{ phone.category.act_category_name }})
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      
+      <h4 class="border-bottom">
+        {% trans "Bank accounts:" %}
+      </h4>
+      {% if object.customerbankaccount_set.all.count > 0 %}
+        <ul>
+          {% for b_acc in object.customerbankaccount_set.all %}
+            <li>
+              {{ b_acc.account }}/{{ b_acc.bank_id }}
+              <br>
+              (IBAN: {{ b_acc.iban }})
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      
+    </div>
+  </section>
 {% endblock content %}
-
-{% block spec_action %}
-{% trans "Edit customer" as var_update_customer context "right-navbar" %}
-{% if object.pk == user.customer.pk %}
-  {% if "customers.is_customer_admin" in perms %}
-    <a class="nav-item nav-link btn btn-outline-secondary right-column-button" href="{% url 'project-customer-detail' object.pk %}">{{ var_update_customer }}</a>
-  {% endif %}
-{% else %}
-    {% if "customers.is_poweruser" in perms %}
-      <a class="nav-item nav-link btn btn-outline-secondary right-column-button" href="{% url 'project-customer-detail' object.pk %}">{{ var_update_customer }}</a>
-    {% endif %}
-{% endif %}
-{% endblock spec_action %}

@@ -2,23 +2,18 @@
 {% load i18n %}
 
 <header class="site-header">
-  {# @todo; Better navbar for phone users -- burger+sidebar? #}
+  
   <nav class="navbar navbar-dark fixed-top 
               navbar-expand-md">
     <div class="container-lg">
       
       {# Project Logo #}
       <a class="navbar-brand"
-         href="{% url 'project-home' %}">
-        {% if project %}
-          <img class="project-logo" id="logo-project-middle"
-               src="{{ project.project_logo.url }}"
-               alt="Project logo">
-        {% else %}
-          <img class="project-logo" id="logo-project-middle"
-               src="/media/default-project-logo.png"
-               alt="Default project logo">
-        {% endif %}
+         href="{% url 'project-home' %}"
+         title="Homepage">
+        <img class="project-logo" id="logo-project-middle"
+             src="{{ project.project_logo.url }}"
+             alt="Project logo">
       </a>
 
       {# Toggle the navigation #}
@@ -30,28 +25,26 @@
               aria-controls="navbar-primary-collapse">
         <span class="navbar-toggler-icon"></span>
       </button>
-
-
+      
       
       <div class="navbar-collapse collapse" id="navbar-primary-collapse">
         
         <ul class="navbar-nav">
-          
-          {# Auction navigation ...@todo; Can't we do that better?? #}
-          {% if user.is_authenticated %}
-            {% trans "Customers" as var_customers context "base-navbar" %}
+
+          {# Mainpages navigation #}
+          {# Navigation between applications #}
+          {% if variant != 'static_page' %}
             <li><a class="btn nav-item nav-link"
-                   href="{% url 'project-customer-home' %}">
-              {{ var_customers }}
+               href="{% url 'project-home' %}">
+              {% trans "Homepage" as t %} {{ t|upper }}
             </a></li>
-            
-            {% if user.customer %}
+          {% else %}
+            {% if user.is_authenticated %}
               <li><a class="btn nav-item nav-link"
-                     href="{% url 'ah-customer-auction' user.customer.pk %}">
-                {{ user.customer.customer_name }}
+                 href="{% url 'project-customer-home' %}">
+                {% trans "Auction" as t %} {{ t|upper }}
               </a></li>
             {% endif %}
-            
           {% endif %}
           
         </ul>
@@ -60,38 +53,41 @@
           {# Empty spacer that pushes the next items to the right #}
         </div>  
 
-        {# Static page navigation #}
-        {# @todo; Show the static page nav differently when logged in and working inside the auction sections #}
+        {# Detailed navigation #}
+        {# List only items related to current app #}
         <ul class="nav navbar-nav">
-          {% if user.is_authenticated %}
-            
-            {% for page in user.project.get_page_sequence %}
-              <li><a class="btn nav-item nav-link"
-                     href="{% url page.page_code %}">
-                {{ page.act_name }}
-              </a></li>
-            {% endfor %}
-            
-          {% else %}
-            
+          {% if variant == 'static_page' %}
             {% for page in project.get_page_sequence %}
               <li><a class="btn nav-item nav-link"
                      href="{% url page.page_code %}">
                 {{ page.act_name }}
               </a></li>
             {% endfor %}
+          {% else %}
             
+            {% if user.is_authenticated %}
+              <li><a class="btn nav-item nav-link"
+                     href="{% url 'project-customer-home' %}">
+                {% trans "Customer List" context "base-navbar" %}
+              </a></li>
+              
+              {% if user.customer %}
+                <li><a class="btn nav-item nav-link"
+                       href="{% url 'ah-customer-auction' user.customer.pk %}">
+                  {% trans "My Auction" %}
+                </a></li>
+              {% endif %}
+              
+            {% endif %}
           {% endif %}
+          
         </ul>
-
-
-        
       </div>
 
       {# Language switching #}
       <div class="d-none d-lg-flex  {# ...display in header only on large screens, mobile users can go to the footer for now. #}
                   align-items-center mx-2">
-        {% include "project_main/__lang-switcher.html" with outlined_button=True %}
+        {% include "project_main/__lang-switcher.html" with outlined=True %}
       </div>
       
     </div>

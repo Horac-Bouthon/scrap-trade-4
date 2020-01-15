@@ -10,16 +10,6 @@
              py-3
              list-unstyled">
 
-    <section class="pb-2">
-      {% if "customers.is_poweruser" in perms %}
-        <a class="btn btn-outline-primary"
-           href="{% url 'project-customer-new' %}"
-           title="{% trans "Create a new customer" context "button-title" %}">
-          <i data-feather="plus"></i>
-          {% trans "Add customer" %}
-        </a>
-      {% endif %}
-    </section>
     
     {% for customer in customers %}
 
@@ -59,7 +49,7 @@
               </a>
               
               {% if user.customer == customer or "customers.is_poweruser" in perms %}
-                <a class="btn btn-outline-primary btn-sm"
+                <a class="btn btn-outline-info btn-sm"
                    href="{% url 'ah-customer-auction' customer.id %}"
                    title="{% trans "View my auction page" context "button-tooltip" %}">
                   {% trans "Auction" context "button-text" %}
@@ -108,33 +98,24 @@
             {% if customer.customer_ICO %}
               <p class="mb-0">
                 {% trans "Registration number:" %} </p>
-              <p class="ml-3 font-weight-bold">
+              <p class="font-weight-bold">
                 {{ customer.customer_ICO }} </p>
             {% endif %}
             
             {% if customer.customer_DIC %}
               <p class="mb-0">
                 {% trans "VAT:" %} </p>
-              <p class="ml-3 font-weight-bold">
+              <p class="font-weight-bold">
                 {{ customer.customer_DIC }}</p>
             {% endif %}
 
             {# Addresses #}
-            {% if customer.customerestablishments_set.all.count > 0 %} {# @sqlcall #}
+            {% if customer.customerestablishments_set.all.count > 0 %}
               <h4 class="border-bottom">
                 {% trans "Establishments" %}
               </h4>
               {% for address in customer.customerestablishments_set.all %}
-                {# @todo; Use an include for displaying addresses #}
-                <h5 class="">
-                  {{ address.establishment}}
-                </h5>
-                <p class="m-0">
-                  {{ address.address_street }} {{ address.address_number }}
-                </p>
-                <p class="m-0">
-                  {{ address.address_zip_code }} {{ address.address_town }}
-                </p>
+                {% include 'project_main/__address.html' with address=address %}
               {% endfor %}
             {% endif %}
 

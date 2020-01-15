@@ -11,7 +11,6 @@ from . views import (
     CustomerDeletelPhone,
     CustomerDeletelBank,
     CustomerDeletelEst,
-    CustomerInfoDetailView,
 )
 
 
@@ -25,7 +24,7 @@ urlpatterns = [
     path('user/logout/', user_views.log_out, name='user-logout'),
     path('user/profile/', user_views.profile, name='user-profile'),
     
-    path('<int:pk>/info/', CustomerInfoDetailView.as_view(), name='project-customer-info'),
+    path('<int:pk>/info/', user_views.customer_info, name='project-customer-info'),
     path('<int:pk>/profile/', CustomerDetailView.as_view(), name='project-customer-detail'),
     path('new/', CustomerCreateView.as_view(), name='project-customer-new'),
     path('<int:pk>/update/', CustomerUpdateView.as_view(), name='project-customer-update'),

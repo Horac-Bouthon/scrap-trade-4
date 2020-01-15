@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import (
     PermissionRequiredMixin,
 )
 from django.contrib.auth import logout
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from .decorators import user_belong_customer
 from .forms import (
     UserUpdateForm,
@@ -52,20 +52,49 @@ from django.utils.translation import gettext as _
 @login_required
 def customer_list(request):
     customer_list = Customer.objects.all().order_by('customer_name')  #perf
+    
+    if request.user.has_perm('customers.is_poweruser'):
+        buttons = [{
+            'text': _("Add New Customer"), 
+            'icon': 'plus', 
+            'href': reverse('project-customer-new')
+        }]
+        
     context = {
         'customers': customer_list,
         'content_header': { 
             'title': _('Customer list'),
             'desc': _('A list of all signed up customers using the website.'),
-        }
+            'button_list': buttons
+        }, 
     }
     return render(request, 'customers/customer_home.html', context)
 
 
-
-class CustomerInfoDetailView(LoginRequiredMixin, DetailView):
-    model = Customer
-    template_name = 'customers/customer_info.html'
+@login_required
+def customer_info(request, pk): 
+    customer = Customer.objects.get(pk=pk)
+    user = request.user
+    
+    if user.has_perm('customers.is_customer_admin') or  \
+       (pk == user.customer.pk and user.has_perm('customers.is_customer_admin')):
+        buttons = [{ 
+            'text': _("Edit Customer"), 
+            'icon': 'edit-3',
+            'href': reverse('project-customer-detail', args=[pk]),
+        }]
+    
+    context = {
+        'object': customer,
+        'content_header': {
+            'title': customer.customer_name,
+            'desc': _("Detailed customer information"),
+            'image': { 'src': customer.customer_logo.url,
+                       'alt': _('Customer logo') },
+            'button_list': buttons,
+        },
+    }
+    return render(request, 'customers/customer_info.html', context)        
 
 
 class CustomerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, DetailView):
