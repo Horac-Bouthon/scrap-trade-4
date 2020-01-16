@@ -76,7 +76,7 @@ def customer_info(request, pk):
     customer = Customer.objects.get(pk=pk)
     user = request.user
     
-    if user.has_perm('customers.is_customer_admin') or  \
+    if user.has_perm('customers.is_poweruser') or  \
        (pk == user.customer.pk and user.has_perm('customers.is_customer_admin')):
         buttons = [{ 
             'text': _("Edit Customer"), 
