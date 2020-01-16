@@ -2,16 +2,14 @@ from django.shortcuts import render, redirect
 from customers.admin import UserCreationForm, UserRestCreationForm
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import (
-    LoginRequiredMixin, 
+    LoginRequiredMixin,
     UserPassesTestMixin, 
     PermissionRequiredMixin,
 )
-from django.contrib.auth import logout
 from django.urls import reverse_lazy, reverse
-from .decorators import user_belong_customer
 from .forms import (
     UserUpdateForm,
     ProfileUpdateForm,
@@ -46,19 +44,26 @@ from django.views.generic import (
     DeleteView,
 )
 from django.utils.translation import gettext as _
-    
+
+from .permissions import (
+    test_user_belong_customer, UserBelongCustomer, user_belong_customer,
+    test_can_edit_customer, CanEditCustomer, can_edit_customer,
+    test_poweruser, Poweruser, poweruser,
+)
+
 
 
 @login_required
 def customer_list(request):
     customer_list = Customer.objects.all().order_by('customer_name')  #perf
     
-    if request.user.has_perm('customers.is_poweruser'):
-        buttons = [{
+    buttons = []
+    if test_poweruser(request.user):
+        buttons.append({
             'text': _("Add New Customer"), 
             'icon': 'plus', 
             'href': reverse('project-customer-new')
-        }]
+        })
         
     context = {
         'customers': customer_list,
@@ -66,7 +71,7 @@ def customer_list(request):
             'title': _('Customer list'),
             'desc': _('A list of all signed up customers using the website.'),
             'button_list': buttons
-        }, 
+        },
     }
     return render(request, 'customers/customer_home.html', context)
 
@@ -76,13 +81,13 @@ def customer_info(request, pk):
     customer = Customer.objects.get(pk=pk)
     user = request.user
     
-    if user.has_perm('customers.is_poweruser') or  \
-       (pk == user.customer.pk and user.has_perm('customers.is_customer_admin')):
-        buttons = [{ 
+    buttons = []
+    if test_can_edit_customer(request.user, customer):
+        buttons.append({ 
             'text': _("Edit Customer"), 
             'icon': 'edit-3',
             'href': reverse('project-customer-detail', args=[pk]),
-        }]
+        })
     
     context = {
         'object': customer,
@@ -97,59 +102,32 @@ def customer_info(request, pk):
     return render(request, 'customers/customer_info.html', context)        
 
 
-class CustomerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, DetailView):
+class CustomerDetailView(CanEditCustomer, DetailView):
     model = Customer
-    permission_required = 'customers.is_customer_admin'
-
-    def test_func(self):
-        customer = self.get_object()
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
 
 
-class CustomerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class CustomerCreateView(Poweruser, CreateView):
     model = Customer
-    fields = ['customer_name','customer_ICO','customer_DIC','customer_background','customer_logo']
+    fields = ['customer_name','customer_ICO','customer_DIC',
+              'customer_background','customer_logo']
     template_name = "customers/customer_create.html"
-    permission_required = 'customers.is_poweruser'
+    
 
-    #def form_valid(self, form):
-    #    form.instace.author = self.request.user
-    #    return super().form_valid(form)
-
-class CustomerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, UpdateView):
+class CustomerUpdateView(CanEditCustomer, UpdateView):
     model = Customer
-    fields = ['customer_name','customer_ICO','customer_DIC','customer_background','customer_logo']
-    permission_required = 'customers.is_customer_admin'
-
-    def test_func(self):
-        customer = self.get_object()
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
+    fields = ['customer_name','customer_ICO','customer_DIC',
+              'customer_background','customer_logo']
 
 
-class CustomerDeletelView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, DeleteView):
+class CustomerDeletelView(Poweruser, DeleteView):
     model = Customer
-    permission_required = 'customers.is_poweruser'
     success_url = reverse_lazy('project-customer-home')
 
-    def test_func(self):
-        customer = self.get_object()
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
 
 
 # http://127.0.0.1:8079/customers/2/email/2
 # ------------------------- CustomerEmail
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_email_update(request, pk, pk2):
     customer = Customer.objects.filter(id = pk).first()
     email = CustomerEmail.objects.filter(id = pk2).first()
@@ -173,9 +151,7 @@ def customer_email_update(request, pk, pk2):
     return render(request, 'customers/email_form.html', context)
 
 
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_email_create(request, pk):
     customer = Customer.objects.filter(id = pk).first()
 
@@ -201,32 +177,24 @@ def customer_email_create(request, pk):
     return render(request, 'customers/email_form.html', context)
 
 
-class CustomerDeletelEmail(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, DeleteView):
+class CustomerDeletelEmail(CanEditCustomer, DeleteView):
     model = CustomerEmail
-    permission_required = 'customers.is_customer_admin'
-    # success_url = reverse_lazy('project-customer-home')
 
+    # @todo; Why do we have two different redirect methods in delete views? Also, they're the same everywhere so we could probably inherit that functionality.
+    
     def delete(self, *args, **kwargs):
         self.customer_pk = self.get_object().customer.id
         super().delete(*args, **kwargs)
-        return redirect('project-customer-detail', self.object.customer.pk)
+        return redirect('project-customer-detail', 
+                        self.object.customer.pk)
 
     def get_success_url(self):
-        return reverse_lazy('project-customer-detail',  kwargs={'pk': self.customer_pk})
-        # reverse_lazy('project-customer-detail', kwargs={'pk': 1})
-
-    def test_func(self):
-        customer = self.get_object()
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
+        return reverse_lazy('project-customer-detail',  
+                            kwargs={'pk': self.customer_pk})
 
 
 # ------------------------- CustomerWeb
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_web_create(request, pk):
     customer = Customer.objects.filter(id = pk).first()
 
@@ -251,10 +219,7 @@ def customer_web_create(request, pk):
     }
     return render(request, 'customers/customerweb_form.html', context)
 
-
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_web_update(request, pk, pk2):
     customer = Customer.objects.filter(id = pk).first()
     web = CustomerWeb.objects.filter(id = pk2).first()
@@ -278,30 +243,22 @@ def customer_web_update(request, pk, pk2):
     return render(request, 'customers/customerweb_form.html', context)
 
 
-class CustomerDeletelWeb(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, DeleteView):
+class CustomerDeletelWeb(CanEditCustomer, DeleteView):
     model = CustomerWeb
-    permission_required = 'customers.is_customer_admin'
 
     def delete(self, *args, **kwargs):
         self.customer_pk = self.get_object().customer.id
         super().delete(*args, **kwargs)
-        return redirect('project-customer-detail', self.object.customer.pk)
+        return redirect('project-customer-detail', 
+                        self.object.customer.pk)
 
     def get_success_url(self):
-        return reverse_lazy('project-customer-detail',  kwargs={'pk': self.customer_pk})
-
-    def test_func(self):
-        customer = self.get_object()
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
+        return reverse_lazy('project-customer-detail',  
+                            kwargs={'pk': self.customer_pk})
 
 
 # ------------------------- CustomerPhone
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_phone_create(request, pk):
     customer = Customer.objects.filter(id = pk).first()
 
@@ -329,9 +286,7 @@ def customer_phone_create(request, pk):
     return render(request, 'customers/customerphone_form.html', context)
 
 
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_phone_update(request, pk, pk2):
     customer = Customer.objects.filter(id = pk).first()
     phone = CustomerPhone.objects.filter(id = pk2).first()
@@ -355,9 +310,8 @@ def customer_phone_update(request, pk, pk2):
     return render(request, 'customers/customerphone_form.html', context)
 
 
-class CustomerDeletelPhone(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, DeleteView):
+class CustomerDeletelPhone(CanEditCustomer, DeleteView):
     model = CustomerPhone
-    permission_required = 'customers.is_customer_admin'
 
     def delete(self, *args, **kwargs):
         self.customer_pk = self.get_object().customer.id
@@ -367,17 +321,8 @@ class CustomerDeletelPhone(LoginRequiredMixin, PermissionRequiredMixin, UserPass
     def get_success_url(self):
         return reverse_lazy('project-customer-detail',  kwargs={'pk': self.customer_pk})
 
-    def test_func(self):
-        customer = self.get_object()
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
-
 # ---------------------------------------------------- CustomerBankAccount
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_bank_create(request, pk):
     customer = Customer.objects.filter(id = pk).first()
 
@@ -405,9 +350,7 @@ def customer_bank_create(request, pk):
     return render(request, 'customers/customerbankaccount_form.html', context)
 
 
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_bank_update(request, pk, pk2):
     customer = Customer.objects.filter(id = pk).first()
     bank = CustomerBankAccount.objects.filter(id = pk2).first()
@@ -431,9 +374,8 @@ def customer_bank_update(request, pk, pk2):
     return render(request, 'customers/customerbankaccount_form.html', context)
 
 
-class CustomerDeletelBank(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, DeleteView):
+class CustomerDeletelBank(CanEditCustomer, DeleteView):
     model = CustomerBankAccount
-    permission_required = 'customers.is_customer_admin'
 
     def delete(self, *args, **kwargs):
         self.customer_pk = self.get_object().customer.id
@@ -442,19 +384,10 @@ class CustomerDeletelBank(LoginRequiredMixin, PermissionRequiredMixin, UserPasse
 
     def get_success_url(self):
         return reverse_lazy('project-customer-detail',  kwargs={'pk': self.customer_pk})
-
-    def test_func(self):
-        customer = self.get_object()
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
-
+    
 
 # ----------------------------------------------------  CustomerEstablishments
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_est_create(request, pk):
     customer = Customer.objects.filter(id = pk).first()
 
@@ -485,9 +418,7 @@ def customer_est_create(request, pk):
     return render(request, 'customers/customerestablishments_form.html', context)
 
 
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_est_update(request, pk, pk2):
     customer = Customer.objects.filter(id = pk).first()
     est = CustomerEstablishments.objects.filter(id = pk2).first()
@@ -511,9 +442,8 @@ def customer_est_update(request, pk, pk2):
     return render(request, 'customers/customerestablishments_form.html', context)
 
 
-class CustomerDeletelEst(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, DeleteView):
+class CustomerDeletelEst(CanEditCustomer, DeleteView):
     model = CustomerEstablishments
-    permission_required = 'customers.is_customer_admin'
 
     def delete(self, *args, **kwargs):
         self.customer_pk = self.get_object().customer.id
@@ -522,20 +452,12 @@ class CustomerDeletelEst(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
 
     def get_success_url(self):
         return reverse_lazy('project-customer-detail',  kwargs={'pk': self.customer_pk})
-
-    def test_func(self):
-        customer = self.get_object()
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
+    
 
 # http://127.0.0.1:8079/customers/2/user/new
 # ---------------------------------------------------- ProjectCustomUser
 
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_user_create(request, pk):
     customer = Customer.objects.filter(id = pk).first()
 
@@ -570,9 +492,7 @@ def customer_user_create(request, pk):
     return render(request, 'customers/projectcustomuser_form.html', context)
 
 # http://127.0.0.1:8079/customers/2/user/9
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_user_update(request, pk, pk2):
     customer = Customer.objects.filter(id = pk).first()
     user = ProjectCustomUser.objects.filter(id = pk2).first()
@@ -599,9 +519,7 @@ def customer_user_update(request, pk, pk2):
 
 
 # ----------------------------------------------------  CustomerTranslation
-@login_required()
-@permission_required("customers.is_customer_admin", raise_exception=True)
-@user_belong_customer
+@can_edit_customer
 def customer_tran_update(request, pk, lang):
     customer = Customer.objects.filter(id = pk).first()
     set_lang = lang
@@ -678,6 +596,7 @@ def log_out(request):
 
 
 
+# @todo; When we know if we even need a register view, what permissions does that have??
 def register(request):
     proj = Project.objects.all().first()
     if request.method == 'POST':
