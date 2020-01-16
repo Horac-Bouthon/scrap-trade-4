@@ -15,7 +15,7 @@ from . views import (
 
 
 urlpatterns = [
-    path('', user_views.customer_list, name='project-customer-home'),
+    path('', user_views.CustomerList.as_view(), name='project-customer-home'),
     
     # @todo; Register page is not used anywhere in the project??
     path('user/register/', user_views.register, name='user-register'),
@@ -25,7 +25,7 @@ urlpatterns = [
     path('user/edit-profile/', user_views.profile, name='user-profile'),
     
     path('new/', CustomerCreateView.as_view(), name='project-customer-new'),
-    path('<int:pk>/details/', user_views.customer_info, name='project-customer-info'),
+    path('<int:pk>/details/', user_views.CustomerInfo.as_view(), name='project-customer-info'),
     path('<int:pk>/edit/', CustomerDetailView.as_view(), name='project-customer-detail'),
     path('<int:pk>/edit-main/', CustomerUpdateView.as_view(), name='project-customer-update'),
     path('<int:pk>/confirm-delete/', CustomerDeletelView.as_view(), name='project-customer-delete'),

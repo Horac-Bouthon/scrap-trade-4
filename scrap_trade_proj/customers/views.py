@@ -52,54 +52,46 @@ from .permissions import (
 )
 
 
-
-@login_required
-def customer_list(request):
-    customer_list = Customer.objects.all().order_by('customer_name')  #perf
+class CustomerList(LoginRequiredMixin, ListView):
+    model = Customer
+    ordering = ['customer_name']
     
-    buttons = []
-    if test_poweruser(request.user):
-        buttons.append({
-            'text': _("Add New Customer"), 
-            'icon': 'plus', 
-            'href': reverse('project-customer-new')
-        })
-        
-    context = {
-        'customers': customer_list,
-        'content_header': { 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['content_header'] = {   
             'title': _('Customer list'),
             'desc': _('A list of all signed up customers using the website.'),
-            'button_list': buttons
-        },
-    }
-    return render(request, 'customers/customer_home.html', context)
+        }
+        if test_poweruser(self.request.user):
+            context['content_header']['button_list'] = [{
+                'text': _("Add New Customer"), 
+                'href': reverse('project-customer-new'),
+                'icon': 'plus', 
+            }]
+        return context
 
 
-@login_required
-def customer_info(request, pk): 
-    customer = Customer.objects.get(pk=pk)
-    user = request.user
+class CustomerInfo(LoginRequiredMixin, DetailView):
+    model = Customer
+    template_name = 'customers/customer_info.html'
     
-    buttons = []
-    if test_can_edit_customer(request.user, customer):
-        buttons.append({ 
-            'text': _("Edit Customer"), 
-            'icon': 'edit-3',
-            'href': reverse('project-customer-detail', args=[pk]),
-        })
-    
-    context = {
-        'object': customer,
-        'content_header': {
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        customer = self.get_object()
+        context['content_header'] = {
             'title': customer.customer_name,
-            'desc': _("Detailed customer information"),
-            'image': { 'src': customer.customer_logo.url,
+            'desc': _('Detailed customer information'),
+            'image': { 'src': customer.customer_logo.url, 
                        'alt': _('Customer logo') },
-            'button_list': buttons,
-        },
-    }
-    return render(request, 'customers/customer_info.html', context)        
+        }
+        if test_poweruser(self.request.user):
+            context['content_header']['button_list'] = [{
+                'text': _("Edit Customer"), 
+                'href': reverse('project-customer-detail',
+                                kwargs={'pk': customer.pk}),
+                'icon': 'edit-3', 
+            }]
+        return context
 
 
 class CustomerDetailView(CanEditCustomer, DetailView):
