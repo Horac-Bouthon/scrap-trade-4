@@ -18,20 +18,20 @@
   <section class="container pb-5">
     <div class="container">
 
-      <h4 class="border-bottom">
+      <h4 class="my-section-head">
         {% trans 'Details:' %}
       </h4>
-      <p class="mb-0">
+      <p class="my-key">
         {% trans "Registration number:" %} </p>
-      <p class="font-weight-bold">
+      <p class="my-value">
         {{ object.customer_ICO }} </p>        
-      <p class="mb-0">
+      <p class="my-key">
         {% trans "VAT:" %} </p>
-      <p class="font-weight-bold">
+      <p class="my-value">
         {{ object.customer_DIC }}</p>
 
       
-      <h4 class="border-bottom">
+      <h4 class="my-section-head">
         {% trans "Description:" %}
       </h4>
       <p>
@@ -42,7 +42,7 @@
         {% endif %}
       </p>
       
-      <h4 class="border-bottom">
+      <h4 class="my-section-head">
         {% trans "Establishments:" %}
       </h4>
       {% if object.customerestablishments_set.all.count > 0 %}
@@ -52,7 +52,7 @@
       {% endif %}
       <br/> {# spacing #}
       
-      <h4 class="border-bottom">
+      <h4 class="my-section-head">
         {% trans "E-mails:" %}
       </h4>
       {% if object.customeremail_set.count > 0 %}
@@ -66,7 +66,7 @@
       {% endif %}
       
       
-      <h4 class="border-bottom">
+      <h4 class="my-section-head">
         {% trans "Websites:" %}
       </h4>
       {% if object.customerweb_set.all.count > 0 %}
@@ -80,7 +80,7 @@
       {% endif %}
 
       
-      <h4 class="border-bottom">
+      <h4 class="my-section-head">
         {% trans "Phones:" %}
       </h4>
       {% if object.customerphone_set.count > 0 %}
@@ -95,7 +95,7 @@
         </ul>
       {% endif %}
       
-      <h4 class="border-bottom">
+      <h4 class="my-section-head">
         {% trans "Bank accounts:" %}
       </h4>
       {% if object.customerbankaccount_set.all.count > 0 %}

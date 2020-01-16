@@ -84,34 +84,34 @@
 
             {# Description #}
             {% if customer.act_short %}
-              <p><big>
+              <p class="lead">
                 {{ customer.act_short }}
-              </big></p>
+              </p>
             {% endif %}
             
 
             {# Details #}
-            <h4 class="border-bottom">
+            <h4 class="my-section-head">
               Details
             </h4>
             
             {% if customer.customer_ICO %}
-              <p class="mb-0">
+              <p class="my-key">
                 {% trans "Registration number:" %} </p>
-              <p class="font-weight-bold">
+              <p class="my-value">
                 {{ customer.customer_ICO }} </p>
             {% endif %}
             
             {% if customer.customer_DIC %}
-              <p class="mb-0">
+              <p class="my-key">
                 {% trans "VAT:" %} </p>
-              <p class="font-weight-bold">
+              <p class="my-value">
                 {{ customer.customer_DIC }}</p>
             {% endif %}
 
             {# Addresses #}
             {% if customer.customerestablishments_set.all.count > 0 %}
-              <h4 class="border-bottom">
+              <h4 class="my-section-head">
                 {% trans "Establishments" %}
               </h4>
               {% for address in customer.customerestablishments_set.all %}
