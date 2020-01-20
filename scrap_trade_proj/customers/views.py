@@ -84,7 +84,7 @@ class CustomerInfo(LoginRequiredMixin, DetailView):
             'image': { 'src': customer.customer_logo.url, 
                        'alt': _('Customer logo') },
         }
-        if test_can_edit_customer(self.request.user):
+        if test_can_edit_customer(self.request.user, customer):
             context['content_header']['button_list'] = [{
                 'text': _("Edit Customer"), 
                 'href': reverse('project-customer-detail',
