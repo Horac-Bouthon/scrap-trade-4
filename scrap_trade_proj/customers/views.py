@@ -84,18 +84,36 @@ class CustomerInfo(LoginRequiredMixin, DetailView):
             'image': { 'src': customer.customer_logo.url, 
                        'alt': _('Customer logo') },
         }
-        if test_poweruser(self.request.user):
+        if test_can_edit_customer(self.request.user):
             context['content_header']['button_list'] = [{
                 'text': _("Edit Customer"), 
                 'href': reverse('project-customer-detail',
                                 kwargs={'pk': customer.pk}),
-                'icon': 'edit-3', 
+                'icon': 'edit-3',
             }]
         return context
 
 
 class CustomerDetailView(CanEditCustomer, DetailView):
     model = Customer
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        customer = self.get_object()
+        context['content_header'] = {
+            'title': customer.customer_name + ' | ' + _('Edit'),
+            'desc': _("Edit customer details"),
+            'image': { 'src': customer.customer_logo.url,
+                       'alt': _('Customer logo') },
+        }
+        if test_poweruser(self.request.user): 
+            context['content_header']['button_list'] = [{
+                'text': _("Delete Customer"),
+                'href': reverse('project-customer-delete',
+                                kwargs={'pk': customer.pk}),
+                'icon': 'trash-2', 'type': 'danger',
+            }]
+        return context
 
 
 class CustomerCreateView(Poweruser, CreateView):

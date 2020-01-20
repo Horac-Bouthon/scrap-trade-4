@@ -1,0 +1,11 @@
+{% load i18n %}
+
+
+{% trans 'Edit item' as title %}
+{% with icon='edit-3' %}
+  {% with cls='btn-icon-noborder btn-outline-primary' %}
+    
+    {% include 'project_main/__btn.html' %}
+    
+  {% endwith %}
+{% endwith %}

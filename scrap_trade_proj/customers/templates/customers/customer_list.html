@@ -81,41 +81,37 @@
                  id="Customer_Collapse_{{ forloop.counter }}">
           <div class="container p-3">
 
-            {# Description #}
-            {% if customer.act_short %}
-              <p class="lead">
-                {{ customer.act_short }}
-              </p>
-            {% endif %}
-            
-
             {# Details #}
-            <h4 class="my-section-head">
-              Details
-            </h4>
+            <dl>
+              <h4>{% trans "Details" %}</h4>
+
+              {# Description #}
+              {% if customer.act_short %}
+                <p class="lead">
+                  {{ customer.act_short }}
+                </p>
+              {% endif %}
+
+              <dt>{% trans "Registration number:" %}</dt>
+              <dd>{{ customer.customer_ICO }}</dd>
+
+              <dt>{% trans "VAT:" %}</dt>
+              <dd>{{ customer.customer_DIC }}</dd>
+            </dl>
             
-            {% if customer.customer_ICO %}
-              <p class="my-key">
-                {% trans "Registration number:" %} </p>
-              <p class="my-value">
-                {{ customer.customer_ICO }} </p>
-            {% endif %}
-            
-            {% if customer.customer_DIC %}
-              <p class="my-key">
-                {% trans "VAT:" %} </p>
-              <p class="my-value">
-                {{ customer.customer_DIC }}</p>
-            {% endif %}
 
             {# Addresses #}
             {% if customer.customerestablishments_set.all.count > 0 %}
-              <h4 class="my-section-head">
-                {% trans "Establishments" %}
-              </h4>
-              {% for address in customer.customerestablishments_set.all %}
-                {% include 'project_main/__address.html' with address=address %}
-              {% endfor %}
+            <dl>
+              <h4>{% trans "Establishments" %}</h4>
+              <ul class="d-flex flex-wrap list-unstyled">
+                {% for address in customer.customerestablishments_set.all %}
+                  <li class="px-2 pb-2">
+                    {% include 'project_main/__address.html' with address=address %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </dl>
             {% endif %}
 
           </div>
@@ -126,15 +122,4 @@
   </ol>
   
 {% endblock content %}
-
-{% block spec_action %}
-  
-  {% if "customers.is_poweruser" in perms %}
-    <a class="btn btn-secondary"
-       href="{% url 'project-customer-new' %}">
-      {% trans "Add customer" context "right-navbar" %}
-    </a>
-  {% endif %}
-  
-{% endblock %}
 

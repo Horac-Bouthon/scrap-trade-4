@@ -173,15 +173,45 @@ a.article-title:hover {
 }
 
 
-/* Detail views -- key-value pairs, lists */
-/* @todo; Detail view list styles */
-p.my-key {
+/* Key-value pairs, lists */
+
+/* Pad the content but not the heading */
+dl {
+  --leftpad: 0.5rem;
+  padding-left: var(--leftpad);
+}
+dl > h4 {
+  margin-left: calc(-1 * var(--leftpad));
+}
+dl > h4,
+.section-header {
+  border-bottom: 1px solid var(--border);
+}
+
+dl ul {
+  /* ...Same styles as bootstrap's ".list-unstyled" */
+  list-style: none;
+  padding-left: 0;
+}
+dl > h4 > a.btn {
+  /* Buttons next to the headings need a slight nudge */
+  position: relative;
+  top: -0.2em;
+}
+dl > dt {
+  /* Key */
+  display: block;
+  
   margin: 0;
   
   font-size: 0.9em;
+  font-weight: initial;
   line-height: 1.05em;
 }
-p.my-value {
+dl > dd {
+  /* Value */
+  display: block;
+  
   margin: 0;
   margin-top: 0.25rem;
   margin-bottom: 0.75rem;
@@ -190,9 +220,6 @@ p.my-value {
   font-weight: bold;
   line-height: 1.15em;
 }
-.my-section-head {
-  border-bottom: 1px solid var(--border);
-}
 
 
 
@@ -200,6 +227,10 @@ p.my-value {
 /* Styles for buttons that only have an icon */
 .btn-icon-only {
   padding: 0.125rem;
+}
+.btn-icon-noborder {
+  padding: 0.125rem;
+  border-color: transparent !important;
 }
 
 

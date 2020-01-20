@@ -18,97 +18,91 @@
   <section class="container pb-5">
     <div class="container">
 
-      <h4 class="my-section-head">
-        {% trans 'Details:' %}
-      </h4>
-      <p class="my-key">
-        {% trans "Registration number:" %} </p>
-      <p class="my-value">
-        {{ object.customer_ICO }} </p>        
-      <p class="my-key">
-        {% trans "VAT:" %} </p>
-      <p class="my-value">
-        {{ object.customer_DIC }}</p>
+      <dl>
+        <h4> {% trans "Details" %} </h4>
+        
+        <dt> {% trans "Registration number:" %} </dt>
+        <dd> {{ object.customer_ICO }} </dd>
+        
+        <dt> {% trans "VAT:" %} </dt>
+        <dd> {{ object.customer_DIC }} </dd>
 
-      
-      <h4 class="my-section-head">
-        {% trans "Description:" %}
-      </h4>
-      <p>
-        {% if object.act_description %}
-          {{ object.act_description }}
-        {% else %}
-          {{ object.act_short }}
+        <dt> {% trans "Description:" %}</dt>
+        <dd>
+          {% if object.act_description %}
+            {{ object.act_description }}
+          {% else %}
+            {{ object.act_short }}
+          {% endif %}
+        </dd>
+      </dl>
+
+      <dl>
+        <h4> {% trans "Establishments:" %} </h4>
+        {% if object.customerestablishments_set.all.count > 0 %}
+          <ul class="d-flex flex-wrap list-unstyled">
+            {% for address in object.customerestablishments_set.all %}
+              <li class="px-2 pb-2">
+                {% include 'project_main/__address.html' with address=address %}
+              </li>
+            {% endfor %}
+          </ul>
         {% endif %}
-      </p>
-      
-      <h4 class="my-section-head">
-        {% trans "Establishments:" %}
-      </h4>
-      {% if object.customerestablishments_set.all.count > 0 %}
-        {% for address in object.customerestablishments_set.all %}
-          {% include 'project_main/__address.html' with address=address %}
-        {% endfor %}
-      {% endif %}
-      <br/> {# spacing #}
-      
-      <h4 class="my-section-head">
-        {% trans "E-mails:" %}
-      </h4>
-      {% if object.customeremail_set.count > 0 %}
-        <ul>
-          {% for email in object.customeremail_set.all %}
-            <li class="m-0">
-              {{ email.customer_email }}
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-      
-      
-      <h4 class="my-section-head">
-        {% trans "Websites:" %}
-      </h4>
-      {% if object.customerweb_set.all.count > 0 %}
-        <ul>
-          {% for web in object.customerweb_set.all %}
-            <li class="m-0">
-              {{ web.customer_web }}
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+      </dl>
 
+      <dl>
+        <h4> {% trans "E-mails:" %} </h4>
+        {% if object.customeremail_set.count > 0 %}
+          <ul>
+            {% for email in object.customeremail_set.all %}
+              <li> {{ email.customer_email }} </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </dl>
       
-      <h4 class="my-section-head">
-        {% trans "Phones:" %}
-      </h4>
-      {% if object.customerphone_set.count > 0 %}
-        <ul>
-          {% for phone in object.customerphone_set.all %}
-            <li>
-              {{ phone.customer_phone }}
-              {{ phone.desctiption }}
-              ({{ phone.category.act_category_name }})
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-      
-      <h4 class="my-section-head">
-        {% trans "Bank accounts:" %}
-      </h4>
-      {% if object.customerbankaccount_set.all.count > 0 %}
-        <ul>
-          {% for b_acc in object.customerbankaccount_set.all %}
-            <li>
-              {{ b_acc.account }}/{{ b_acc.bank_id }}
-              <br>
-              (IBAN: {{ b_acc.iban }})
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+
+      <dl>
+        <h4> {% trans "Websites:" %} </h4>
+        {% if object.customerweb_set.all.count > 0 %}
+          <ul>
+            {% for web in object.customerweb_set.all %}
+              <li> {{ web.customer_web }} </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </dl>
+
+
+      <dl>
+        <h4> {% trans "Phones:" %} </h4>
+        {% if object.customerphone_set.count > 0 %}
+          <ul>
+            {% for phone in object.customerphone_set.all %}
+              <li>
+                {{ phone.customer_phone }}
+                {{ phone.desctiption }}
+                ({{ phone.category.act_category_name }})
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </dl>
+
+      <dl>
+        <h4> {% trans "Bank accounts:" %} </h4>
+        {% if object.customerbankaccount_set.all.count > 0 %}
+          <ul>
+            {% for b_acc in object.customerbankaccount_set.all %}
+              <li>
+                {{ b_acc.account }}/{{ b_acc.bank_id }}
+                <br>
+                (IBAN: {{ b_acc.iban }})
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </dl>
       
     </div>
   </section>

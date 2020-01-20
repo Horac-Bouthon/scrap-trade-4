@@ -13,172 +13,200 @@
 {% endblock style %}
 
 {% block content %}
+  
+  {% include 'project_main/__content-header.html' %}
 
-    <article class="media content-section">
-      <img class="rounded-circle customer-logo" src="{{ object.customer_logo.url }}">
-      <div class="media-body">
-        {% trans "Click to update the description" as var_hint1 %}
-        <h2 class="customer-name">
-          <a class="" href="{% url 'project-customer-update' object.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ object.customer_name }}</a>
-        </h2>
-        <p>
-          {% trans "Registration number:" as var_reg_num %}
-          <span class="customer-detail-content-highlighite">{{ var_reg_num }} </span>
-          <span class="customer-detail-content">{{ object.customer_ICO }}</span></p>
-        <p>
-          {% trans "VAT:" as var_vat %}
-          <span class="customer-detail-content-highlighite">{{ var_vat }} </span>
-          <span class="customer-detail-content">{{ object.customer_DIC }}
-        </span></p>
-        {% if object.act_short %}
-          {% trans "Short description:" as var_s_des%}
-          <h5 class="customer-title">{{ var_s_des }}</h5>
-          <p class="customer-detail-content">{{ object.act_short }}</p>
-        {% endif %}
-        {% if object.act_description %}
-          {% trans "Description:" as var_des %}
-          <h5 class="customer-title">{{ var_des }}</h5>
-          <p class="customer-detail-content">{{ object.act_description }}</p>
-        {% endif %}
-        {% trans "E-mails:" as var_emails %}
-        {% trans "Click to create new email" as var_hint1 %}
-        <h5 class="customer-title">
-          <a class="" href="{% url 'project-customer-email-create' object.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ var_emails }}</a>
-        </h5>
-        {% if object.customeremail_set.all.count > 0 %}
-            {% trans "Click to update email" as var_hint2 %}
-            {% trans "Delete email" as var_delete %}
-            {% trans "Click to delete email" as var_hint3 %}
-            <p>
-              {% for email in object.customeremail_set.all %}
-                    <a class="" href="{% url 'project-customer-email-update' object.pk email.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint2 }}">{{ email.customer_email }}</a>
-                    <a class="" href="{% url 'project-email-delete' email.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}">
-                      <img class="rounded-circle delete-icon" src="/media/icons/delete_icon.jpg">
-                    </a>
-                    <br>
-              {% endfor %}
-            </p>
-        {% endif %}
-        {% trans "Websites:" as var_webs %}
-        {% trans "Click to create new web url" as var_hint1 %}
-        <h5 class="customer-title">
-          <a class="" href="{% url 'project-customer-web-create' object.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ var_webs }}</a>
-        </h5>
-        {% if object.customerweb_set.all.count > 0 %}
-          {% trans "Click to update web url" as var_hint2 %}
-          {% trans "Delete web url" as var_delete %}
-          {% trans "Click to delete web url" as var_hint3 %}
-          <p>
-            {% for web in object.customerweb_set.all %}
-              <a class="" href="{% url 'project-customer-web-update' object.pk web.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint2 }}">{{ web.customer_web }}</a>
-              <a class="" href="{% url 'project-web-delete' web.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}">
-                <img class="rounded-circle delete-icon" src="/media/icons/delete_icon.jpg">
-              </a>
-              <br>
+  <section class="container">
+    <div class="container">
+    
+      <dl>
+        <h4>
+          {% trans "Details" %}
+          {% url 'project-customer-update' object.pk as href %}
+          {% include 'project_main/__btn-icon-edit.html' %}
+        </h4>
+        
+        <dt> {% trans "Registration number:" %} </dt>
+        <dd> {{ object.customer_ICO }} </dd>
+        
+        <dt> {% trans "VAT:" %} </dt>
+        <dd> {{ object.customer_DIC }} </dd>
+
+        <dt> {% trans "Short description:" %} </dt>
+        <dd><p>
+          {{ object.act_short }}
+        </p></dd>
+
+        <dt> {% trans "Long description:" %} </dt>
+        <dd><p>
+          {{ object.act_description }}
+        </p></dd>
+        
+      </dl>
+
+
+      <dl>
+        <h4>
+          {% trans "E-mails:" %}
+          {% url 'project-customer-email-create' object.pk as href %}
+          {% include 'project_main/__btn-icon-add.html' %}
+        </h4>
+        {% if object.customeremail_set.count > 0 %}
+          <ul>
+            {% for email in object.customeremail_set.all %}
+              <li class="my-2">
+
+                {{ email.customer_email }}
+                
+                <div class="btn-group">
+                  {% url 'project-customer-email-update' object.pk email.pk as href %}
+                  {% include 'project_main/__btn-icon-edit.html' %}
+                  {% url 'project-email-delete' email.pk as href %}
+                  {% include 'project_main/__btn-icon-delete.html' %}
+                </div>
+
+              </li>
             {% endfor %}
-          </p>
+          </ul>
         {% endif %}
-        {% trans "Establishments:" as var_est %}
-        {% trans "Click to create new establishment" as var_hint1 %}
-        <h5 class="customer-title">
-          <a class="" href="{% url 'project-customer-est-create' object.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ var_est }}</a>
-        </h5>
-        {% if object.customerestablishments_set.all.count > 0 %}
-          {% trans "Click to update establishment" as var_hint2 %}
-          {% trans "Delete establishment" as var_delete %}
-          {% trans "Click to delete establishment" as var_hint3 %}
+      </dl>
+
+      
+      <dl>
+        <h4>
+          {% trans "Websites:" %}
+          {% url 'project-customer-web-create' object.pk as href %}
+          {% include 'project_main/__btn-icon-add.html' %}
+        </h4>
+        <ul>
+          {% for web in object.customerweb_set.all %}
+            <li class="my-2">
+              
+              <a href="{{ web.customer_web }}">
+                {{ web.customer_web }} {# Link to the actual web #}
+              </a>
+
+              <div class="btn-group">   
+                {% url 'project-customer-web-update' object.pk web.pk as href %}
+                {% include 'project_main/__btn-icon-edit.html' %}
+                {% url 'project-web-delete' web.pk as href %}
+                {% include 'project_main/__btn-icon-delete.html' %}
+              </div>
+              
+            </li>
+          {% endfor %}
+        </ul>
+      </dl>
+
+      
+      <dl>
+        <h4>
+          {% trans "Establishments:" %}
+          {% url 'project-customer-est-create' object.pk as href %}
+          {% include 'project_main/__btn-icon-add.html' %}
+        </h4>
+        
+        <ul>
           {% for address in object.customerestablishments_set.all %}
-          <p>
-            <table>
-              <tr>
-                <th>
-                  <a class="" style="font-weight: normal;"
-                      href="{% url 'project-customer-est-update' object.pk address.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint2 }}">
-                      {{ address.establishment}} <br>
-                      {{ address.address_street }} {{ address.address_number }} <br>
-                      {{ address.address_zip_code }} {{ address.address_town }} <br>
-                  </a>
-                </th>
-                <th>
-                  <a class="" href="{% url 'project-est-delete' address.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}">
-                    <img class="rounded-circle delete-icon" src="/media/icons/delete_icon.jpg">
-                  </a>
-                </th>
-              </tr>
-            </table>
-          </p>
+            <li class="my-2">
+              
+              {% include 'project_main/__address.html' with address=address %}
+
+              <div class="btn-group">
+                {% url 'project-customer-est-update' object.pk address.pk as href%}
+                {% include 'project_main/__btn-icon-edit.html' %}
+                {% url 'project-est-delete' address.pk as href %}
+                {% include 'project_main/__btn-icon-delete.html' %}
+              </div>
+              
+            </li>
           {% endfor %}
-        {% endif %}
-        {% trans "Phones:" as var_phones %}
-        {% trans "Click to create new phone" as var_hint1 %}
-        <h5 class="customer-title">
-          <a class="" href="{% url 'project-customer-phone-create' object.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ var_phones }}</a>
-        </h5>
-        {% if object.customerphone_set.all.count > 0 %}
-        {% trans "Click to update phone" as var_hint2 %}
-        {% trans "Delete phone" as var_delete %}
-        {% trans "Click to delete phone" as var_hint3 %}
-          <p>
-            {% for phone in object.customerphone_set.all %}
-            <a class="" href="{% url 'project-customer-phone-update' object.pk phone.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint2 }}">
-              {{ phone.customer_phone }} {{ phone.desctiption }} ({{ phone.category.act_category_name }})
-            </a>
-            <a class="" href="{% url 'project-phone-delete' phone.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}">
-              <img class="rounded-circle delete-icon" src="/media/icons/delete_icon.jpg">
-            </a>
-            <br>
-            {% endfor %}
-          </p>
-        {% endif %}
-        {% trans "Bank accounts:" as var_bas %}
-        {% trans "Click to create new bank account" as var_hint1 %}
-        <h5 class="customer-title">
-          <a class="" href="{% url 'project-customer-bank-create' object.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ var_bas }}</a>
-        </h5>
-        {% if object.customerbankaccount_set.all.count > 0 %}
-          {% trans "Click to update bank account" as var_hint2 %}
-          {% trans "Delete bank account" as var_delete %}
-          {% trans "Click to delete bank account" as var_hint3 %}
-          <p>
-            {% for b_acc in object.customerbankaccount_set.all %}
-              <a class="" href="{% url 'project-customer-bank-update' object.pk b_acc.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint2 }}">
-                {{ b_acc.account }}/{{ b_acc.bank_id }} (IBAN: {{ b_acc.iban }})
-              </a>
-              <a class="" href="{% url 'project-bank-delete' b_acc.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}">
-                <img class="rounded-circle delete-icon" src="/media/icons/delete_icon.jpg">
-              </a>
-              <br>
-            {% endfor %}
-          </p>
-        {% endif %}
-        {% trans "Users:" as var_users %}
-        {% trans "Click to create new user" as var_hint1 %}
-        <h5 class="customer-title">
-          <a class="" href="{% url 'project-customer-user-create' object.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ var_users }}</a>
-        </h5>
-        {% if object.projectcustomuser_set.all.count > 0 %}
-          {% trans "Click to update user" as var_hint2 %}
-          {% for c_u in object.projectcustomuser_set.all %}
-            <div class="">
-              <a class="" href="{% url 'project-customer-user-update' object.pk c_u.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint2 }}">
-                {% if c_u.is_active %}
-                  {{ c_u.name }} / {{ c_u.email }}
-                {% else %}
-                  {{ c_u.name }} / {{ c_u.email }} (inactive)
-                {% endif %}
-              </a>
-            </div>
+        </ul>
+      </dl>
+
+      
+      <dl>
+        <h4>
+          {% trans "Phones:" %}
+          {% url 'project-customer-phone-create' object.pk as href %}
+          {% include 'project_main/__btn-icon-add.html' %}
+        </h4>
+        
+        <ul>
+          {% for phone in object.customerphone_set.all %}
+            <li class="my-2">
+              
+              {{ phone.customer_phone }} {{ phone.desctiption }}
+              ({{ phone.category.act_category_name }})
+
+              <div class="btn-group">
+                {% url 'project-customer-phone-update' object.pk phone.pk as href%}
+                {% include 'project_main/__btn-icon-edit.html' %}
+                {% url 'project-phone-delete' phone.pk as href %}
+                {% include 'project_main/__btn-icon-delete.html' %}
+              </div>
+              
+            </li>
           {% endfor %}
-        {% endif %}
-      </div>
-    </article>
+        </ul>
+      </dl>
 
 
+      <dl>
+        <h4>
+          {% trans "Bank accounts:" %}
+          {% url 'project-customer-bank-create' object.pk as href %}
+          {% include 'project_main/__btn-icon-add.html' %}
+        </h4>
+        
+        <ul>
+          {% for bank in object.customerebank_set.all %}
+            <li class="my-2">
+
+              <div class="btn-group">
+                {% url 'project-customer-bank-update' object.pk bank.pk as href %}
+                {% include 'project_main/__btn-icon-edit.html' %}
+                {% url 'project-bank-delete' bank.pk as href%}
+                {% include 'project_main/__btn-icon-delete.html' %}
+              </div>
+
+              {{ bank.account }}/{{ bank.bank_id }} (IBAN: {{ bank.iban }})
+              
+            </li>
+          {% endfor %}
+        </ul>
+      </dl>
+
+      
+      <dl>
+        <h4>
+          {% trans "Users:" %}
+          {% url 'project-customer-user-create' object.pk as href %}
+          {% include 'project_main/__btn-icon-add.html' %}
+        </h4>
+        
+        <ul>
+          {% for user in object.projectcustomuser_set.all %}
+            <li class="my-2">
+              
+              {% if user.is_active %}
+                {{ user.name }} / {{ user.email }}
+              {% else %}
+                <span class="text-danger">
+                  {{ user.name }} / {{ user.email }} (inactive)
+                </span>
+              {% endif %}
+
+              <div class="btn-group">
+                {% url 'project-customer-user-update' object.pk user.pk as href %}
+                {% include 'project_main/__btn-icon-edit.html' %}
+              </div>
+              
+            </li>
+          {% endfor %}
+        </ul>
+      </dl>
+      
+    </div>
+  </section>
 {% endblock content %}
-
-{% block spec_action %}
-{% if "customers.is_poweruser" in perms %}
-  {% trans "Delete customer" as var_delete_customer context "right-navbar" %}
-  <a class="nav-item nav-link btn btn-outline-secondary right-column-button" href="{% url 'project-customer-delete' object.pk %}">{{ var_delete_customer }}</a>
-{% endif %}
-{% endblock spec_action %}

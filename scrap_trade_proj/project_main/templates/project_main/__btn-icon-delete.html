@@ -1,0 +1,11 @@
+{% load i18n %}
+
+
+{% trans 'Delete item' as title %}
+{% with icon='trash-2' %}
+  {% with cls='btn-icon-noborder btn-outline-danger' %}
+    
+    {% include 'project_main/__btn.html' %}
+    
+  {% endwith %}
+{% endwith %}

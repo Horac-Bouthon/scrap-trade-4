@@ -31,12 +31,13 @@
           {% endif %}
 
           {# Contextual Buttons #}
+          {# @todo; Use the context buttons by including snippets #}
           {% if content_header.button_list %}
             <section class="pt-3">
               {% for button in content_header.button_list %}
                 
                 <a class="btn
-                          {% if button.type %} btn-{{ type }} 
+                          {% if button.type %} btn-{{ button.type }} 
                           {% else %} btn-primary {% endif %}"
                    href="{{ button.href }}"
                    title="{{ button.title }}">
@@ -66,7 +67,8 @@
       {% endif %}
     </div>
   </header>
-  
+
+
 {% else %}
   
   {% if debug %}
