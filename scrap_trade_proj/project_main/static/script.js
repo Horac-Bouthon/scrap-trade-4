@@ -24,7 +24,7 @@ function _hide(el) { el.classList.add('d-none'); }
  */
 const login = (function() {
     
-    const USE_ESCAPE_SHORTCUT = false;
+    const USE_ESCAPE_SHORTCUT = true;
     
     const LOGIN_POPUP_ID = 'LOGIN_POPUP';
     const get_popup_element = function() {
