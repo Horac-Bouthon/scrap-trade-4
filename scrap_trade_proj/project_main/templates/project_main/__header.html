@@ -131,58 +131,59 @@
 
 
 {# Login popup #}
+{% if form_login and not user.is_authenticated %}
+  <script>
+    var LOGIN_PAGEURL = "{% url 'user-login' %}";
+  </script>
 
-<script>
- var LOGIN_PAGEURL = "{% url 'user-login' %}";
-</script>
+  <section id="LOGIN_POPUP"
+           class="d-none">
 
-<section id="LOGIN_POPUP"
-         class="d-none">
-
-  <div id="LOGIN_POPUP_BACKGROUND"
-       class="d-flex h-100">
-    
-    <form method="POST"
-          action="{% url 'user-login' %}"
-          style="position: relative; max-width: 30rem"
-          class="bg-light rounded shadow
-                  m-auto align-self-center p-4">
-      {% csrf_token %}
-
-      <button onclick="login.close_popup()"
-              type="button"
-              class="btn btn-icon-only p-1 m-2 
-                       position-absolute"
-              style="top: 0; right:0;">
-        {# Copy-paste of this X icon from feather #}
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
+    <div id="LOGIN_POPUP_BACKGROUND"
+         class="d-flex h-100">
       
-      <fieldset>
-        <legend>
-          <h4 class="border-bottom font-weight-bold">
-            {% trans "Log In" context 'login_template' %}
-          </h4>
-        </legend>
-        
-        {{ form_login|crispy }}
+      <form method="POST"
+            action="{% url 'user-login' %}"
+            style="position: relative; max-width: 30rem"
+            class="bg-light rounded shadow
+                    m-auto align-self-center p-4">
+        {% csrf_token %}
 
-        <button class="btn btn-primary mt-3 text-center"
-                type="submit">  
-          {% trans "Login" context 'login form submit button' %}
+        <button onclick="login.close_popup()"
+                type="button"
+                class="btn btn-icon-only p-1 m-2 
+                         position-absolute"
+                style="top: 0; right:0;">
+          {# Copy-paste of this X icon from feather #}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-
-
-        <aside class="px-2 d-none d-md-block">
-          <hr/>
-          <p class="small font-weight-bold font-italic text-muted
-                    mx-5 m-0">
-            {% trans 'Tip: You can press the Escape key to toggle the login menu with your keyboard only!' context 'login form tip' %}
-          </p>
-        </aside>
         
-      </fieldset>
-    </form>
-    
-  </div>
-</section>
+        <fieldset>
+          <legend>
+            <h4 class="border-bottom font-weight-bold">
+              {% trans "Log In" context 'login_template' %}
+            </h4>
+          </legend>
+          
+          {{ form_login|crispy }}
+
+          <button class="btn btn-primary mt-3 text-center"
+                  type="submit">  
+            {% trans "Login" context 'login form submit button' %}
+          </button>
+
+
+          <aside class="px-2 d-none d-md-block">
+            <hr/>
+            <p class="small font-weight-bold font-italic text-muted
+                      mx-5 m-0">
+              {% trans 'Tip: You can press the Escape key to toggle the login menu with your keyboard only!' context 'login form tip' %}
+            </p>
+          </aside>
+          
+        </fieldset>
+      </form>
+      
+    </div>
+  </section>
+{% endif %}
