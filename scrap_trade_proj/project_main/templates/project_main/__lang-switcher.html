@@ -1,7 +1,4 @@
 
-{# Arguments settable with `{% include '__xxx.html' with arg=val %}`: #}
-{# - outlined_button #}
-
 {% load i18n %}
 
 <div class="lang-switcher dropdown">
@@ -11,9 +8,8 @@
   
   <button class="lang-switcher__button
                  dropdown-toggle 
-                 btn btn-sm 
-                 {% if outlined %} btn-outline-light 
-                 {% else %} btn-light {% endif %}"
+                 btn btn-sm
+                 btn-secondary"
           data-toggle="dropdown"
           aria-expanded="false">
     {# Current language as dropdown button title #}

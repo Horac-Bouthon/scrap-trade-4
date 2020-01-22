@@ -1,4 +1,4 @@
-
+{% load crispy_forms_tags %}
 {% load i18n %}
 
 <header class="site-header">
@@ -16,6 +16,24 @@
              alt="Project logo">
       </a>
 
+      {# Login/out button -- visible when <=sm (mobile) #}
+      <div class="d-block d-md-none ml-auto
+                  mx-2">
+        {% if not user.is_authenticated %}
+          <button class="btn btn-sm btn-secondary mx-1"
+                  type="button"
+                  onclick="login.show_popup()">
+            {% trans 'Login' %}
+          </button>
+        {% else %}
+          <a class="btn btn-sm btn-secondary mx-1"
+                  href="{% url 'user-logout' %}">
+            {% trans 'Logout' %}
+          </a>
+        {% endif %}
+      </div>
+
+      
       {# Toggle the navigation #}
       <button class="navbar-toggler" type="button"
               data-toggle="collapse"
@@ -26,22 +44,20 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       
-      
       <div class="navbar-collapse collapse" id="navbar-primary-collapse">
-        
         <ul class="navbar-nav">
 
           {# Mainpages navigation #}
           {# Navigation between applications #}
           {% if variant != 'static_page' %}
             <li><a class="btn nav-item nav-link"
-               href="{% url 'project-home' %}">
+                   href="{% url 'project-home' %}">
               {% trans "Homepage" as t %} {{ t|upper }}
             </a></li>
           {% else %}
             {% if user.is_authenticated %}
               <li><a class="btn nav-item nav-link"
-                 href="{% url 'project-customer-home' %}">
+                     href="{% url 'project-customer-home' %}">
                 {% trans "Auction" as t %} {{ t|upper }}
               </a></li>
             {% endif %}
@@ -56,10 +72,11 @@
         {# Detailed navigation #}
         {# List only items related to current app #}
         <ul class="nav navbar-nav">
+          
           {% if variant == 'static_page' %}
             {% for page in project.get_page_sequence %}
               <li><a class="btn nav-item nav-link"
-                     href="{% url page.page_code %}">
+                     href="{% url page.page_code %}">  {# @todo; Change the header homepage sections from redirects to href anchor jumps #}
                 {{ page.act_name }}
               </a></li>
             {% endfor %}
@@ -77,19 +94,96 @@
                   {% trans "My Auction" %}
                 </a></li>
               {% endif %}
-              
             {% endif %}
           {% endif %}
           
         </ul>
       </div>
 
-      {# Language switching #}
-      <div class="d-none d-lg-flex  {# ...display in header only on large screens, mobile users can go to the footer for now. #}
-                  align-items-center mx-2">
-        {% include "project_main/__lang-switcher.html" with outlined=True %}
+      
+      {# Login/out button -- visible when >md (desktop) #}
+      <div class="d-none d-md-block">
+        {% if not user.is_authenticated %}
+          <button class="btn btn-sm btn-secondary mx-1"
+                  type="button"
+                  onclick="login.show_popup()">
+            {% trans 'Login' %}
+          </button>
+        {% else %}
+          <a class="btn btn-sm btn-secondary mx-1"
+                  href="{% url 'user-logout' %}">
+            {% trans 'Logout' %}
+          </a>
+        {% endif %}
       </div>
       
+      {# Language switching #}
+      <div class="d-none d-lg-flex  {# ...display in header only on large screens, mobile users can go to the footer for now. #}
+                  mx-1">
+        {% include "project_main/__lang-switcher.html" %}
+      </div>
+
     </div>
+
   </nav>
 </header>
+
+
+
+{# Login popup #}
+
+<script>
+ var LOGIN_PAGEURL = "{% url 'user-login' %}";
+</script>
+
+<section id="LOGIN_POPUP"
+         class="d-none">
+
+  <div id="LOGIN_POPUP_BACKGROUND"
+       class="d-flex h-100">
+    
+    <form method="POST"
+          action="{% url 'user-login' %}"
+          style="position: relative; 
+                  max-width: 30rem"
+          class="m-auto align-self-center bg-light rounded
+                  p-4">
+      {% csrf_token %}
+
+      <button onclick="login.close_popup()"
+              type="button"
+              class="btn btn-icon-only p-1 m-2 
+                       position-absolute"
+              style="top: 0; right:0;">
+        {# Copy-paste of this X icon from feather #}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      
+      <fieldset>
+        <legend>
+          <h4 class="border-bottom font-weight-bold">
+            {% trans "Log In" context 'login_template' %}
+          </h4>
+        </legend>
+        
+        {{ form_login|crispy }}
+
+        <button class="btn btn-primary mt-3 text-center"
+                type="submit">  
+          {% trans "Login" context 'login form submit button' %}
+        </button>
+
+
+        <aside class="px-2 d-none d-md-block">
+          <hr/>
+          <p class="small font-weight-bold font-italic text-muted
+                    mx-5 m-0">
+            {% trans 'Tip: You can press the Escape key to toggle the login menu with your keyboard only!' context 'login form tip' %}
+          </p>
+        </aside>
+        
+      </fieldset>
+    </form>
+    
+  </div>
+</section>
