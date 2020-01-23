@@ -2,24 +2,6 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 
-{% block style %}
-  <style>
-   body {
-       {% if user.is_authenticated %}
-       background-image: url("{{ user.project.project_background.url }}");
-       {% else %}
-       {% if project %}
-       background-image: url("{{ project.project_background.url }}");
-       {% else %}
-       background-image: url("/media/default-project-background.jpg");
-       {% endif %}
-       {% endif %}
-       background-repeat: no-repeat;
-       background-size: cover;
-   }
-  </style>
-{% endblock style %}
-
 
 {% block content %}
   <div class="d-flex container"
