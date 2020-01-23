@@ -43,7 +43,7 @@
           <ul class="d-flex flex-wrap list-unstyled">
             {% for address in object.customerestablishments_set.all %}
               <li class="px-2 pb-2">
-                {% include 'project_main/__address.html' with address=address %}
+                {% include 'project_main/__address.html' with data=address %}
               </li>
             {% endfor %}
           </ul>

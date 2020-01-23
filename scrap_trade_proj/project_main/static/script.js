@@ -17,6 +17,68 @@ function _show(el) { el.classList.remove('d-none'); }
 function _hide(el) { el.classList.add('d-none'); }
 
 
+/**
+ *  Inline editable forms interactivitiy.
+ */
+const Inlines = (function() {
+
+    // @todo; Improve the deletion behavior (no redirects plz)
+    // @todo; Instead of hide/show, use a transition, if possible
+    
+    EDITABLE = '.Form-EDIT';
+    READ = '.Form-READ';
+    ADDED = '.Form-ADD'
+    
+    function edit(btn) {
+        if (btn.classList.contains('active')) {
+            // Allow toggling back
+            // (maybe the form is really big and Cancel is too far below)
+            restore_all();
+            return;
+        }
+        
+        restore_all();
+        btn.classList.add('active') // Leave the button in active state
+        li = _find_ancestor(btn, 'li');
+        li.querySelectorAll(EDITABLE).forEach(_show);
+    }
+    function add_line(btn) {
+        if (btn.classList.contains('active')) {
+            restore_all();
+            return;
+        }
+        restore_all();
+        btn.classList.add('active');
+        ul = _find_ancestor(btn, 'dl').querySelector('ul');
+        add = ul.querySelector(ADDED).cloneNode(true);
+        _show(add)
+        ul.appendChild(add);
+    }
+    function restore_all() {
+        // Restore all buttons from forced active states
+        document.querySelectorAll('.active').forEach(function(btn) {
+            btn.classList.remove('active');
+        })
+
+        // Hide any `edit` and `add` views
+        document.querySelectorAll(EDITABLE + ',' + ADDED)
+            .forEach(_hide);
+    }
+
+    // Escape to cancel
+    document.addEventListener('keydown', function(e) {
+        if (e.key == "Escape") {
+            restore_all();
+        }
+    });
+
+    public_api = {
+        'edit': edit,
+        'add_line': add_line,
+        'restore_all': restore_all
+    };
+    return public_api;
+})()
 
 
 /**

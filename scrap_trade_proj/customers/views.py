@@ -52,6 +52,48 @@ from .permissions import (
 )
 
 
+
+
+from django.template.loader import render_to_string
+class InlineEdit:
+    """
+    Sends all data needed for the template to generate forms 
+    for delete, update and create. 
+    In combination with client-side scripts, can be used for
+    intuitive quick-to-navigate forms instead of making separate 
+    pages for these 3 actions.
+    """
+    
+    def __init__(self, **KW):
+        # Data universal for all entries
+        self.heading = KW['heading']
+        self.owner = KW['owner']
+        self.empty_form = KW['form']()
+        self.url_create = reverse(KW['create'], kwargs={'pk': self.owner.pk})
+        
+        # Individual entry data
+        self.entries = []
+        for entry in KW['set']():
+            entry_context = {
+                'data': entry,
+                'filled_form': KW['form'](instance=entry),
+                'url_delete': reverse(KW['delete'], 
+                                      kwargs={'pk': entry.pk}),
+                'url_update': reverse(KW['update'], 
+                                      kwargs={'pk': KW['owner'].pk, 
+                                              'pk2': entry.pk}),
+            }
+            if 'view_through_template' in KW:
+                # The data will go through a template
+                template_name = KW['view_through_template']
+                rendered_html = render_to_string(template_name, {'data': entry})
+                entry_context['data'] = rendered_html
+            self.entries.append(entry_context)
+
+
+
+
+
 class CustomerList(LoginRequiredMixin, ListView):
     model = Customer
     ordering = ['customer_name']
@@ -113,7 +155,64 @@ class CustomerDetailView(CanEditCustomer, DetailView):
                                 kwargs={'pk': customer.pk}),
                 'icon': 'trash-2', 'type': 'danger',
             }]
+            
+
+        context['inlines'] = [
+            InlineEdit(
+                heading = _("E-mails:"),
+                owner = customer,
+                set = customer.customeremail_set.all,
+                form = CustomerEmailUpdateForm,
+                create = 'project-customer-email-create',
+                delete = 'project-email-delete',
+                update = 'project-customer-email-update',
+            ),
+            InlineEdit(
+                heading = _('Websites:'),
+                owner = customer,
+                set = customer.customerweb_set.all,
+                form = CustomerWebUpdateForm,
+                create = 'project-customer-web-create',
+                delete = 'project-web-delete',
+                update = 'project-customer-web-update',
+            ),
+            InlineEdit(
+                heading = _('Establishments:'),
+                owner = customer,
+                set = customer.customerestablishments_set.all,
+                form = CustomerEstUpdateForm,
+                create = 'project-customer-est-create',
+                delete = 'project-est-delete',
+                update = 'project-customer-est-update',
+                
+                view_through_template = 'project_main/__address.html',
+            ),
+            InlineEdit(
+                heading = _('Phones:'),
+                owner = customer,
+                set = customer.customerphone_set.all,
+                form = CustomerPhoneUpdateForm,
+                create = 'project-customer-phone-create',
+                delete = 'project-phone-delete',
+                update = 'project-customer-phone-update',
+                
+                view_through_template = 'project_main/__phone.html',
+            ),
+            InlineEdit(
+                heading = _('Bank accounts:'),
+                owner = customer,
+                set = customer.customerbankaccount_set.all,
+                form = CustomerBankUpdateForm,
+                create = 'project-customer-bank-create',
+                delete = 'project-bank-delete',
+                update = 'project-customer-bank-update',
+                
+                view_through_template = 'project_main/__bank.html',
+            ),
+        ]
+        
         return context
+
 
 
 class CustomerCreateView(Poweruser, CreateView):
