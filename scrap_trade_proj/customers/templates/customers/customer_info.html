@@ -14,16 +14,16 @@
 
 {% block content %}
   {% include 'project_main/__content-header.html' %}
-  
+
   <section class="container pb-5">
     <div class="container">
 
       <dl>
         <h4> {% trans "Details" %} </h4>
-        
+
         <dt> {% trans "Registration number:" %} </dt>
         <dd> {{ object.customer_ICO }} </dd>
-        
+
         <dt> {% trans "VAT:" %} </dt>
         <dd> {{ object.customer_DIC }} </dd>
 
@@ -44,6 +44,7 @@
             {% for address in object.customerestablishments_set.all %}
               <li class="px-2 pb-2">
                 {% include 'project_main/__address.html' with address=address %}
+                {% include 'project_main/__object_docs.html' with object=address %}
               </li>
             {% endfor %}
           </ul>
@@ -60,7 +61,7 @@
           </ul>
         {% endif %}
       </dl>
-      
+
 
       <dl>
         <h4> {% trans "Websites:" %} </h4>
@@ -103,7 +104,14 @@
           </ul>
         {% endif %}
       </dl>
-      
+
+      {% if object.open_id.get_docs.count > 0 %}
+        <dl>
+          <h4> {% trans "Documents:" %} </h4>
+          <br>
+          {% include 'project_main/__object_docs.html' with object=object %}
+        </dl>
+      {% endif %}
     </div>
   </section>
 {% endblock content %}

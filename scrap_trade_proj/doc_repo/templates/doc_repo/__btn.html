@@ -1,0 +1,25 @@
+
+{% if href %}
+
+  <a href="{{ href }}"
+     class="btn {{ cls }}"
+     title={{ title }}
+
+     {% if add_par_text %}
+        {{ add_par_text }}
+     {% endif %}
+
+     >
+
+    {% if icon %}
+      <i data-feather={{ icon }}></i>
+    {% endif %}
+
+    {{ text }}
+  </a>
+
+{% elif debug %}
+  <p class="lead debug-error">
+    A button always needs a href.
+  </p>
+{% endif %}

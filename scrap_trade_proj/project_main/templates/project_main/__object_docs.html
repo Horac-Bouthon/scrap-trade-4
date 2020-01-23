@@ -1,0 +1,26 @@
+{% with object.open_id.get_docs as list %}
+  {% if list.count > 0 %}
+    <div class="">
+      {% for doc in list %}
+        {% if not doc.is_file %}
+          <a class="" href="{{ doc.file.url }}" data-toggle="tooltip" data-placement="top" title="{{ doc.doc_name }}" target="_blank">
+            {% if doc.thumbnail %}
+              <img class="doc_thumbnail" src="{{ doc.thumbnail.url }}">
+            {% else %}
+              {% if doc.is_picture %}
+                <img class="doc_thumbnail" src="/media/icons/def_picture_icon.png">
+              {% endif %}
+              {% if doc.is_pdf %}
+                <img class="doc_thumbnail" src="/media/icons/def_PDF_icon.png">
+              {% endif %}
+            {% endif %}
+          </a>
+        {% else %}
+          <a class="" href="{{ doc.file.url }}" data-toggle="tooltip" data-placement="top" title="{{ doc.doc_name }}" download>
+              <img class="doc_thumbnail" src="/media/icons/def_file_icon.png">
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %} <!-- object.open_id.get_docs -->

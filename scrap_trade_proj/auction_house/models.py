@@ -5,6 +5,7 @@ from customers.models import (
     Customer,
     ProjectCustomUser,
 )
+from integ.models import OpenId
 
 from django.conf import settings
 from django.urls import reverse
@@ -102,6 +103,14 @@ class AhOffer(models.Model):
         null=True,
         blank=True,
     )
+    open_id = models.ForeignKey(
+        OpenId,
+        on_delete=models.CASCADE,
+        verbose_name=tr.pgettext_lazy('UserProfile definition', 'Open id'),
+        help_text=tr.pgettext_lazy('UserProfile definition','Link to integration key'),
+        related_name='my_offers',
+        null=True, blank=True,
+    )
 
     class Meta:
         verbose_name = tr.pgettext_lazy('AhOffer definition', 'Offer')
@@ -175,6 +184,14 @@ class AhOfferLine(models.Model):
         default=0.0,
         verbose_name=tr.pgettext_lazy('AhAnswerLine definition', 'Minimal price per unit'),
         help_text=tr.pgettext_lazy('AhAnswerLine definition','Minimal price for one measurement unit'),
+    )
+    open_id = models.ForeignKey(
+        OpenId,
+        on_delete=models.CASCADE,
+        verbose_name=tr.pgettext_lazy('UserProfile definition', 'Open id'),
+        help_text=tr.pgettext_lazy('UserProfile definition','Link to integration key'),
+        related_name='my_offer_lines',
+        null=True, blank=True,
     )
 
     class Meta:
@@ -292,6 +309,14 @@ class AhAnswer(models.Model):
         related_name="last_changed_answers",
     )
     changed_at = models.DateTimeField(auto_now=True,)
+    open_id = models.ForeignKey(
+        OpenId,
+        on_delete=models.CASCADE,
+        verbose_name=tr.pgettext_lazy('UserProfile definition', 'Open id'),
+        help_text=tr.pgettext_lazy('UserProfile definition','Link to integration key'),
+        related_name='my_answers',
+        null=True, blank=True,
+    )
 
     class Meta:
         verbose_name = tr.pgettext_lazy('AhAnswer definition', 'Answer')

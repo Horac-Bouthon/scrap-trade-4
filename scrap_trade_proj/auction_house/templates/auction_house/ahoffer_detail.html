@@ -77,9 +77,7 @@
               <th class="th_lines table_lines">{{ var_crea }}</th>
               {% trans "Price" as var_price %}
               <th class="th_lines table_lines">{{ var_price }}</th>
-              {% if object.actual_state == state_new %}
-                <th class="th_lines table_lines"></th>
-              {% endif %}
+              <th class="th_lines table_lines"></th>
             </tr>
             {% trans "Click to update line" as var_hint3 %}
             {% for line in  object.lines.all %}
@@ -101,14 +99,18 @@
               </td>
               <td class="td_lines table_lines"> {{ line.amount }} {{ line.mat_class.measurement_unit }} </td>
               <td class="td_lines table_lines"> {{ line.minimal_ppu }}</td>
-              {% if object.actual_state == state_new %}
-                <td class="td_lines table_lines">
-                  {% trans "Click to delete line" as var_hint4 %}
-                  <a class="" href="{% url 'ah-offer-line-delete' line.id %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint4 }}">
-                    <img class="rounded-circle delete-icon" src="/media/icons/delete_icon.jpg">
-                  </a>
-                </td>
-              {% endif %}
+              <td class="td_lines table_lines">
+                <div class="">
+                  {% url 'doc-repo-dokument-list' line.open_id.int_id as href %}
+                  {% include 'doc_repo/__btn-icon-doc.html' %}
+                </div>
+                {% if object.actual_state == state_new %}
+                  <div class="">
+                    {% url 'ah-offer-line-delete' line.id as href %}
+                    {% include 'project_main/__btn-icon-delete.html' %}
+                  </div>
+                {% endif %}
+              </td>
             </tr>
             {% endfor %}
           </table>
@@ -203,6 +205,15 @@
                       </tr>
                     {% endfor %} <!-- answer.my_lines.all -->
                   </table>
+                  {% if answer.open_id.get_docs.count > 0 %}
+                    <div class="">
+                      <p></p>
+                      {% trans "Answer documents" as var_docs %}
+                      <h5 class="">{{ var_docs }}</h5>
+                      {% include 'project_main/__object_docs.html' with object=answer %}
+                    </div>
+                  {% endif %}
+
                 {% endif %} <!-- answer.my_lines.all.count > 0 -->
               {% endfor %} <!-- bounut answers -->
 `           {% endif %} <!-- bound_answers.count > 0 -->
@@ -237,6 +248,10 @@
             </table>
           </div>
         {% endif %} <!-- "customers.is_poweruser" in perms -->
+        <div class="">
+          {% trans "Documents" as var_doc %}
+          <a class="btn btn-outline-secondary float-right" href="{% url 'doc-repo-dokument-list' object.open_id.int_id %}">{{ var_doc }}</a>
+        </div>
       </div>
     </article>
 

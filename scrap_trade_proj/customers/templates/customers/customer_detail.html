@@ -13,22 +13,22 @@
 {% endblock style %}
 
 {% block content %}
-  
+
   {% include 'project_main/__content-header.html' %}
 
   <section class="container">
     <div class="container">
-    
+
       <dl>
         <h4>
           {% trans "Details" %}
           {% url 'project-customer-update' object.pk as href %}
           {% include 'project_main/__btn-icon-edit.html' %}
         </h4>
-        
+
         <dt> {% trans "Registration number:" %} </dt>
         <dd> {{ object.customer_ICO }} </dd>
-        
+
         <dt> {% trans "VAT:" %} </dt>
         <dd> {{ object.customer_DIC }} </dd>
 
@@ -41,7 +41,7 @@
         <dd><p>
           {{ object.act_description }}
         </p></dd>
-        
+
       </dl>
 
 
@@ -57,7 +57,7 @@
               <li class="my-2">
 
                 {{ email.customer_email }}
-                
+
                 <div class="btn-group">
                   {% url 'project-customer-email-update' object.pk email.pk as href %}
                   {% include 'project_main/__btn-icon-edit.html' %}
@@ -71,7 +71,7 @@
         {% endif %}
       </dl>
 
-      
+
       <dl>
         <h4>
           {% trans "Websites:" %}
@@ -81,35 +81,35 @@
         <ul>
           {% for web in object.customerweb_set.all %}
             <li class="my-2">
-              
+
               <a href="{{ web.customer_web }}">
                 {{ web.customer_web }} {# Link to the actual web #}
               </a>
 
-              <div class="btn-group">   
+              <div class="btn-group">
                 {% url 'project-customer-web-update' object.pk web.pk as href %}
                 {% include 'project_main/__btn-icon-edit.html' %}
                 {% url 'project-web-delete' web.pk as href %}
                 {% include 'project_main/__btn-icon-delete.html' %}
               </div>
-              
+
             </li>
           {% endfor %}
         </ul>
       </dl>
 
-      
+
       <dl>
         <h4>
           {% trans "Establishments:" %}
           {% url 'project-customer-est-create' object.pk as href %}
           {% include 'project_main/__btn-icon-add.html' %}
         </h4>
-        
+
         <ul>
           {% for address in object.customerestablishments_set.all %}
             <li class="my-2">
-              
+
               {% include 'project_main/__address.html' with address=address %}
 
               <div class="btn-group">
@@ -117,25 +117,27 @@
                 {% include 'project_main/__btn-icon-edit.html' %}
                 {% url 'project-est-delete' address.pk as href %}
                 {% include 'project_main/__btn-icon-delete.html' %}
+                {% url 'doc-repo-dokument-list' address.open_id.int_id as href %}
+                {% include 'doc_repo/__btn-icon-doc.html' %}
               </div>
-              
+
             </li>
           {% endfor %}
         </ul>
       </dl>
 
-      
+
       <dl>
         <h4>
           {% trans "Phones:" %}
           {% url 'project-customer-phone-create' object.pk as href %}
           {% include 'project_main/__btn-icon-add.html' %}
         </h4>
-        
+
         <ul>
           {% for phone in object.customerphone_set.all %}
             <li class="my-2">
-              
+
               {{ phone.customer_phone }} {{ phone.desctiption }}
               ({{ phone.category.act_category_name }})
 
@@ -145,7 +147,7 @@
                 {% url 'project-phone-delete' phone.pk as href %}
                 {% include 'project_main/__btn-icon-delete.html' %}
               </div>
-              
+
             </li>
           {% endfor %}
         </ul>
@@ -158,7 +160,7 @@
           {% url 'project-customer-bank-create' object.pk as href %}
           {% include 'project_main/__btn-icon-add.html' %}
         </h4>
-        
+
         <ul>
           {% for bank in object.customerebank_set.all %}
             <li class="my-2">
@@ -171,24 +173,24 @@
               </div>
 
               {{ bank.account }}/{{ bank.bank_id }} (IBAN: {{ bank.iban }})
-              
+
             </li>
           {% endfor %}
         </ul>
       </dl>
 
-      
+
       <dl>
         <h4>
           {% trans "Users:" %}
           {% url 'project-customer-user-create' object.pk as href %}
           {% include 'project_main/__btn-icon-add.html' %}
         </h4>
-        
+
         <ul>
           {% for user in object.projectcustomuser_set.all %}
             <li class="my-2">
-              
+
               {% if user.is_active %}
                 {{ user.name }} / {{ user.email }}
               {% else %}
@@ -201,12 +203,12 @@
                 {% url 'project-customer-user-update' object.pk user.pk as href %}
                 {% include 'project_main/__btn-icon-edit.html' %}
               </div>
-              
+
             </li>
           {% endfor %}
         </ul>
       </dl>
-      
+
     </div>
   </section>
 {% endblock content %}

@@ -109,6 +109,13 @@
                 {% endif %}
               </td>
             </tr>
+            {% if line.offer_line.open_id.get_docs.count > 0 %}
+              <tr class="table_lines">
+                <td class="td_lines table_lines" colspan="7">
+                  {% include 'project_main/__object_docs.html' with object=line.offer_line %}
+                </td>
+              </tr>
+            {% endif %}
             {% endfor %}
           </table>
         {% endif %}
@@ -141,6 +148,10 @@
             </table>
           </div>
         {% endif %} <!-- "customers.is_poweruser" in perms -->
+        <div class="">
+          {% trans "Documents" as var_doc %}
+          <a class="btn btn-outline-secondary float-right" href="{% url 'doc-repo-dokument-list' object.open_id.int_id %}">{{ var_doc }}</a>
+        </div>
       </div>
     </article>
 

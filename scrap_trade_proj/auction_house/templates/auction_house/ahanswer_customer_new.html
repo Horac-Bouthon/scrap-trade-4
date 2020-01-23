@@ -63,19 +63,34 @@
             </tr>
             {% trans "Click to update line" as var_hint3 %}
             {% for line in  offer.lines.all %}
-            <tr class="table_lines">
-              <td class="td_lines table_lines"> {{ line.id }} </td>
-              <td class="td_lines table_lines">{{ line.description }}</td>
-              <td class="td_lines table_lines">
-                <a class="table_lines" href="{% url 'ah-mat-class-detail' line.mat_class.id %}" data-toggle="tooltip" data-placement="top" title="{{ line.mat_class.act_mat_class_description }}" target="_blank">
-                 {{ line.mat_class.act_display_name }}
-                </a>
-              </td>
-              <td class="td_lines table_lines"> {{ line.amount }} {{ line.mat_class.measurement_unit }} </td>
-              <td class="td_lines table_lines"> {{ line.minimal_ppu }} </td>
-            </tr>
+              <tr class="table_lines">
+                <td class="td_lines table_lines"> {{ line.id }} </td>
+                <td class="td_lines table_lines">{{ line.description }}</td>
+                <td class="td_lines table_lines">
+                  <a class="table_lines" href="{% url 'ah-mat-class-detail' line.mat_class.id %}" data-toggle="tooltip" data-placement="top" title="{{ line.mat_class.act_mat_class_description }}" target="_blank">
+                   {{ line.mat_class.act_display_name }}
+                  </a>
+                </td>
+                <td class="td_lines table_lines"> {{ line.amount }} {{ line.mat_class.measurement_unit }} </td>
+                <td class="td_lines table_lines"> {{ line.minimal_ppu }} </td>
+              </tr>
+              {% if line.open_id.get_docs.count > 0 %}
+                <tr class="table_lines">
+                  <td class="td_lines table_lines" colspan="4">
+                    {% include 'project_main/__object_docs.html' with object=line %}
+                  </td>
+                </tr>
+              {% endif %}
             {% endfor %}
           </table>
+          {% if offer.open_id.get_docs.count > 0 %}
+            <div class="">
+              <p></p>
+              {% trans "Offers documents" as var_docs %}
+              <h5 class="">{{ var_docs }}</h5>
+              {% include 'project_main/__object_docs.html' with object=offer %}
+            </div>
+          {% endif %}
         {% endif %}
       <p/>
       {% trans "New answer" as var_new_answer %}

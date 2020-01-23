@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
-    UserPassesTestMixin, 
+    UserPassesTestMixin,
     PermissionRequiredMixin,
 )
 from django.urls import reverse_lazy, reverse
@@ -34,6 +34,9 @@ from .models import (
     ProjectCustomUser,
 )
 from project_main.models import Project
+from integ.models import (
+    OpenId,
+)
 
 from django.utils import translation as tr
 from django.views.generic import (
@@ -55,18 +58,18 @@ from .permissions import (
 class CustomerList(LoginRequiredMixin, ListView):
     model = Customer
     ordering = ['customer_name']
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['content_header'] = {   
+        context['content_header'] = {
             'title': _('Customer list'),
             'desc': _('A list of all signed up customers using the website.'),
         }
         if test_poweruser(self.request.user):
             context['content_header']['button_list'] = [{
-                'text': _("Add New Customer"), 
+                'text': _("Add New Customer"),
                 'href': reverse('project-customer-new'),
-                'icon': 'plus', 
+                'icon': 'plus',
             }]
         return context
 
@@ -74,45 +77,59 @@ class CustomerList(LoginRequiredMixin, ListView):
 class CustomerInfo(LoginRequiredMixin, DetailView):
     model = Customer
     template_name = 'customers/customer_info.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         customer = self.get_object()
+        oid = str(customer.open_id.int_id)
         context['content_header'] = {
             'title': customer.customer_name,
             'desc': _('Detailed customer information'),
-            'image': { 'src': customer.customer_logo.url, 
+            'image': { 'src': customer.customer_logo.url,
                        'alt': _('Customer logo') },
         }
         if test_can_edit_customer(self.request.user, customer):
             context['content_header']['button_list'] = [{
-                'text': _("Edit Customer"), 
+                'text': _("Edit Customer"),
                 'href': reverse('project-customer-detail',
                                 kwargs={'pk': customer.pk}),
                 'icon': 'edit-3',
             }]
+
         return context
 
 
 class CustomerDetailView(CanEditCustomer, DetailView):
     model = Customer
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         customer = self.get_object()
+        oid = str(customer.open_id.int_id)
         context['content_header'] = {
             'title': customer.customer_name + ' | ' + _('Edit'),
             'desc': _("Edit customer details"),
             'image': { 'src': customer.customer_logo.url,
                        'alt': _('Customer logo') },
         }
-        if test_poweruser(self.request.user): 
+        if test_poweruser(self.request.user):
             context['content_header']['button_list'] = [{
                 'text': _("Delete Customer"),
                 'href': reverse('project-customer-delete',
                                 kwargs={'pk': customer.pk}),
                 'icon': 'trash-2', 'type': 'danger',
             }]
+        new_dic = {
+            'text': _("Documents"),
+            'href': reverse('doc-repo-dokument-list',
+                            kwargs={'oid': oid}),
+            'icon': 'eye',
+        }
+        if 'button_list' in context['content_header']:
+            context['content_header']['button_list'].append(new_dic)
+        else:
+            context['content_header']['button_list'] = [new_dic,]
+
         return context
 
 
@@ -121,7 +138,7 @@ class CustomerCreateView(Poweruser, CreateView):
     fields = ['customer_name','customer_ICO','customer_DIC',
               'customer_background','customer_logo']
     template_name = "customers/customer_create.html"
-    
+
 
 class CustomerUpdateView(CanEditCustomer, UpdateView):
     model = Customer
@@ -191,15 +208,15 @@ class CustomerDeletelEmail(CanEditCustomer, DeleteView):
     model = CustomerEmail
 
     # @todo; Why do we have two different redirect methods in delete views? Also, they're the same everywhere so we could probably inherit that functionality.
-    
+
     def delete(self, *args, **kwargs):
         self.customer_pk = self.get_object().customer.id
         super().delete(*args, **kwargs)
-        return redirect('project-customer-detail', 
+        return redirect('project-customer-detail',
                         self.object.customer.pk)
 
     def get_success_url(self):
-        return reverse_lazy('project-customer-detail',  
+        return reverse_lazy('project-customer-detail',
                             kwargs={'pk': self.customer_pk})
 
 
@@ -259,11 +276,11 @@ class CustomerDeletelWeb(CanEditCustomer, DeleteView):
     def delete(self, *args, **kwargs):
         self.customer_pk = self.get_object().customer.id
         super().delete(*args, **kwargs)
-        return redirect('project-customer-detail', 
+        return redirect('project-customer-detail',
                         self.object.customer.pk)
 
     def get_success_url(self):
-        return reverse_lazy('project-customer-detail',  
+        return reverse_lazy('project-customer-detail',
                             kwargs={'pk': self.customer_pk})
 
 
@@ -394,7 +411,7 @@ class CustomerDeletelBank(CanEditCustomer, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('project-customer-detail',  kwargs={'pk': self.customer_pk})
-    
+
 
 # ----------------------------------------------------  CustomerEstablishments
 @can_edit_customer
@@ -462,7 +479,7 @@ class CustomerDeletelEst(CanEditCustomer, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('project-customer-detail',  kwargs={'pk': self.customer_pk})
-    
+
 
 # http://127.0.0.1:8079/customers/2/user/new
 # ---------------------------------------------------- ProjectCustomUser
@@ -633,6 +650,7 @@ def register(request):
 @login_required
 def profile(request):
     proj = Project.objects.all().first()
+    oid = str(request.user.userprofile.open_id.int_id)
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileUpdateForm(request.POST,
@@ -654,5 +672,6 @@ def profile(request):
         'p_form': profile_form,
         'title': title2,
         'project': proj,
+        'oid': oid,
     }
     return render(request, 'customers/user_profile.html', context)

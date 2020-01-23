@@ -18,6 +18,7 @@ from state_wf.models import (
     Step,
     StepState,
 )
+
 from .decorators import user_belong_offer, user_corespond_customer, user_belong_answer
 from customers.decorators import user_belong_customer
 from django.contrib.auth.decorators import login_required, permission_required
@@ -83,6 +84,7 @@ class AhOfferDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         context['state_accepted'] = StepState.objects.get(state_key='offer_accepted')
         context['state_ready_to_close'] = StepState.objects.get(state_key='offer_ready_to_close')
         context['state_closed'] = StepState.objects.get(state_key='offer_closed')
+
         object.refresh_total_price()
 
         return context
@@ -90,6 +92,7 @@ class AhOfferDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 class AhOfferInfoView(LoginRequiredMixin, DetailView):
     model = AhOffer
     template_name = 'auction_house/ahoffer_info.html'
+
 
 class AhOfferUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = AhOffer

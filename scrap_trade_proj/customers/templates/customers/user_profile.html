@@ -24,6 +24,8 @@
     <div class="form-group">
       {% trans "Update" as var_Update %}
       <button class="btn btn-outline-info" type="submit">{{ var_Update }}</button>
+      {% trans "Documents" as var_doc %}
+      <a class="btn btn-outline-secondary float-right" href="{% url 'doc-repo-dokument-list' oid %}">{{ var_doc }}</a>
     </div>
   </form>
 

@@ -172,6 +172,11 @@ a.article-title:hover {
   margin-top: 2em;
 }
 
+.doc_thumbnail {
+  width: 100px;
+  margin-left: 10px;
+}
+
 
 /* Key-value pairs, lists */
 
@@ -201,9 +206,9 @@ dl > h4 > a.btn {
 dl > dt {
   /* Key */
   display: block;
-  
+
   margin: 0;
-  
+
   font-size: 0.9em;
   font-weight: initial;
   line-height: 1.05em;
@@ -211,11 +216,11 @@ dl > dt {
 dl > dd {
   /* Value */
   display: block;
-  
+
   margin: 0;
   margin-top: 0.25rem;
   margin-bottom: 0.75rem;
-  
+
   font-size: 1.1em;
   font-weight: bold;
   line-height: 1.15em;
@@ -237,8 +242,8 @@ dl > dd {
 /**********
  * Tables */
 
-/* Because we might be rendering a table with tags or filters, 
-   we might not have control over the classes inside the table. 
+/* Because we might be rendering a table with tags or filters,
+   we might not have control over the classes inside the table.
    Use classes as sparsely as possible to avoid having to control
    classes by passing data to the filters. */
 
@@ -253,7 +258,7 @@ table {
 table th {
   background-color: var(--dark);
   color: var(--light);
-  
+
   padding: .9rem .5rem;
   font-size: 1.1em;  /* Stacks with wrap's ems */
 }
@@ -300,14 +305,14 @@ table .btn-icon-only {
 
 #Footer .form-group {
   /* Reset the excessive margins in the tight footer space */
-  margin: 0; 
+  margin: 0;
 }
 
 /*********************************************************
  * Custom Utility Classes
  */
 
-/* Note / line-heights: Bootstrap makes line heights 
+/* Note / line-heights: Bootstrap makes line heights
    really big, like 1.4 for text.
    That's just ridiculous for headings. */
 .line-height-minimal {
@@ -317,9 +322,9 @@ table .btn-icon-only {
   line-height: 1.2;
 }
 
-/* Use this style for any error messages intended 
+/* Use this style for any error messages intended
    for development  */
-.debug-error {  
+.debug-error {
   background-color: var(--red);
   color: var(--light);
 }
@@ -329,5 +334,24 @@ table .btn-icon-only {
    the window size, making the element always fittable
    to view. Can be used well with scroll-wraps. */
 .max-height-visible {
-  max-height: 80vh; 
+  max-height: 80vh;
+}
+
+.doc_list {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.doc_list td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.thumbnail {
+  width: 150px;
+}
+
+.icons {
+  width: 50px;
 }

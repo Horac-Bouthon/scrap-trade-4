@@ -43,10 +43,13 @@ INSTALLED_APPS = [
     'auction_house.apps.AuctionHouseConfig',
     'project_api.apps.ProjectApiConfig',
     'state_wf.apps.StateWfConfig',
-    
+    'integ.apps.IntegConfig',
+    'doc_repo.apps.DocRepoConfig',
+
     'crispy_forms',
     'rest_framework',
     'debug_toolbar',
+    'django_cleanup.apps.CleanupConfig', #--- must be after all apps
 ]
 
 MIDDLEWARE = [
@@ -160,3 +163,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 INTERNAL_IPS = ['127.0.0.1']  # For limiting Debug Toolbar to dev
 
 LOCALE_PATHS = ( os.path.join(BASE_DIR, 'locale'), )
+
+THUMB_SIZE = (100, 100)

@@ -1,4 +1,5 @@
 {% extends "project_main/base.html" %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% load i18n %}
 
@@ -63,8 +64,24 @@
               <td class="td_lines table_lines"> {{ line.amount }} {{ line.mat_class.measurement_unit }} </td>
               <td class="td_lines table_lines"> {{ line.minimal_ppu }}</td>
             </tr>
+            {% if line.open_id.get_docs.count > 0 %}
+              <tr class="table_lines">
+                <td class="td_lines table_lines" colspan="5">
+                  {% include 'project_main/__object_docs.html' with object=line %}
+                </td>
+              </tr>
+            {% endif %}
             {% endfor %}
           </table>
+        {% endif %}
+
+        {% if object.open_id.get_docs.count > 0 %}
+          <div class="">
+            <p></p>
+            {% trans "Offers documents" as var_docs %}
+            <h5 class="">{{ var_docs }}</h5>
+            {% include 'project_main/__object_docs.html' with object=object %}
+          </div>
         {% endif %}
       </div>
     </article>

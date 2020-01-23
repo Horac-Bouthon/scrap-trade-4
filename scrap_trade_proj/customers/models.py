@@ -13,6 +13,7 @@ from django.utils import translation as tr
 from translatable.models import TranslatableModel, get_translation_model
 
 from project_main.models import Project
+from integ.models import OpenId
 
 # Create your models here.
 class ProjectCustomUserManager(BaseUserManager):
@@ -98,6 +99,14 @@ class UserProfile(models.Model):
                     verbose_name=tr.pgettext_lazy('UserProfile user', 'user'))
     image = models.ImageField(default="default-user.jpg", upload_to='profile_pics',
                         verbose_name=tr.pgettext_lazy('UserProfile image', 'image'))
+    open_id = models.ForeignKey(
+        OpenId,
+        on_delete=models.CASCADE,
+        verbose_name=tr.pgettext_lazy('UserProfile definition', 'Open id'),
+        help_text=tr.pgettext_lazy('UserProfile definition','Link to integration key'),
+        related_name='my_user_profs',
+        null=True, blank=True,
+    )
 
     class Meta:
         verbose_name = tr.pgettext_lazy('UserProfile definition', 'User Profile')
@@ -132,6 +141,14 @@ class CustomerEstablishments(models.Model):
         on_delete=models.CASCADE,
         verbose_name=tr.pgettext_lazy('CustomerEstablishments definition', 'Customer'),
         help_text=tr.pgettext_lazy('CustomerEstablishments definition','Link to Customer'),
+        null=True, blank=True,
+    )
+    open_id = models.ForeignKey(
+        OpenId,
+        on_delete=models.CASCADE,
+        verbose_name=tr.pgettext_lazy('UserProfile definition', 'Open id'),
+        help_text=tr.pgettext_lazy('UserProfile definition','Link to integration key'),
+        related_name='my_estab',
         null=True, blank=True,
     )
 
@@ -291,6 +308,14 @@ class Customer(TranslatableModel):
         upload_to='profile_pics',
         verbose_name=tr.pgettext_lazy('Customer image', 'Logo'),
         help_text=_('Customer logo')
+    )
+    open_id = models.ForeignKey(
+        OpenId,
+        on_delete=models.CASCADE,
+        verbose_name=tr.pgettext_lazy('UserProfile definition', 'Open id'),
+        help_text=tr.pgettext_lazy('UserProfile definition','Link to integration key'),
+        related_name='my_customers',
+        null=True, blank=True,
     )
 
     class Meta:
