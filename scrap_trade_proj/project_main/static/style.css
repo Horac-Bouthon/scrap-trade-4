@@ -12,9 +12,11 @@ body {
   /* Background setting */
   min-height: 100vh;  /* Stretch it out, no whitespace*/
   background-image: url("/media/default-project-background.jpg");
+  
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;  /* Don't scroll with page */
+  background-position: center;
 
   /* Default text color */
   color: #444444;
