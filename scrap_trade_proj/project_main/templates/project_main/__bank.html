@@ -1,0 +1,8 @@
+
+{% with bank=data %}
+
+  {{ bank.account }}/{{ bank.bank_id }}
+  <br/>
+  (IBAN: {{ bank.iban }})
+  
+{% endwith %}
