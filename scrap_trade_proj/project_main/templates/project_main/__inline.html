@@ -18,12 +18,12 @@
         <div class="Form-READ big">
 
           <div class="d-inline-flex">
-            
+
             <div class="align-self-center">
               {{ entry.data }}
             </div>
 
-            {# Edit / Delete buttons #}
+            {# Edit / Delete / Document buttons #}
             <div class="btn-group
                         align-self-center px-1">
               <button class="btn btn-icon-noborder btn-outline-primary"
@@ -32,19 +32,22 @@
                 <i data-feather="edit-3"></i>
               </button>
               {% include 'project_main/__btn-icon-delete.html' with href=entry.url_delete %}
+              {% if entry.url_docs %}
+                {% include 'doc_repo/__btn-icon-doc.html' with href=entry.url_docs %}
+              {% endif %}
             </div>
           </div>
         </div>
 
         {# Edit view #}
-        <div class="Form-EDIT 
-                    d-none 
+        <div class="Form-EDIT
+                    d-none
                     pb-4 ml-2 border-left">
           <form action="{{ entry.url_update }}"
                 method="POST"
                 class="px-3 bg-light rounded">
             {% csrf_token %}
-            
+
             {{ entry.filled_form|crispy }}
 
             <div class="">
@@ -62,18 +65,18 @@
             </div>
           </form>
         </div>
-        
+
       </li>
     {% endfor %}
 
     {# Add view #}
-    <div class="Form-ADD 
+    <div class="Form-ADD
                 d-none">
       <form action="{{ inline.url_create }}"
             method="POST"
             class="mx-3 mt-3 bg-light rounded border-top">
         {% csrf_token %}
-        
+
         {{ inline.empty_form|crispy }}
 
         <div>
@@ -91,6 +94,6 @@
         </div>
       </form>
     </div>
-    
+
   </ul>
 </dl>

@@ -34,6 +34,7 @@ from .models import (
     ProjectCustomUser,
 )
 from project_main.models import Project
+from customers.modules.customer_mod import InlineEdit
 from integ.models import (
     OpenId,
 )
@@ -53,48 +54,6 @@ from .permissions import (
     test_can_edit_customer, CanEditCustomer, can_edit_customer,
     test_poweruser, Poweruser, poweruser,
 )
-
-
-
-
-from django.template.loader import render_to_string
-class InlineEdit:
-    """
-    Sends all data needed for the template to generate forms
-    for delete, update and create.
-    In combination with client-side scripts, can be used for
-    intuitive quick-to-navigate forms instead of making separate
-    pages for these 3 actions.
-    """
-
-    def __init__(self, **KW):
-        # Data universal for all entries
-        self.heading = KW['heading']
-        self.owner = KW['owner']
-        self.empty_form = KW['form']()
-        self.url_create = reverse(KW['create'], kwargs={'pk': self.owner.pk})
-
-        # Individual entry data
-        self.entries = []
-        for entry in KW['set']():
-            entry_context = {
-                'data': entry,
-                'filled_form': KW['form'](instance=entry),
-                'url_delete': reverse(KW['delete'],
-                                      kwargs={'pk': entry.pk}),
-                'url_update': reverse(KW['update'],
-                                      kwargs={'pk': KW['owner'].pk,
-                                              'pk2': entry.pk}),
-            }
-            if 'view_through_template' in KW:
-                # The data will go through a template
-                template_name = KW['view_through_template']
-                rendered_html = render_to_string(template_name, {'data': entry})
-                entry_context['data'] = rendered_html
-            self.entries.append(entry_context)
-
-
-
 
 
 class CustomerList(LoginRequiredMixin, ListView):
@@ -199,6 +158,7 @@ class CustomerDetailView(CanEditCustomer, DetailView):
                 create = 'project-customer-est-create',
                 delete = 'project-est-delete',
                 update = 'project-customer-est-update',
+                documents = 'doc-repo-dokument-list',
 
                 view_through_template = 'project_main/__address.html',
             ),

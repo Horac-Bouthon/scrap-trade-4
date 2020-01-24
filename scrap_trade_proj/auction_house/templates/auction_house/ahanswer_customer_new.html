@@ -65,7 +65,7 @@
               {% if line.open_id.get_docs.count > 0 %}
                 <tr class="table_lines">
                   <td class="td_lines table_lines" colspan="4">
-                    {% include 'project_main/__object_docs.html' with object=line %}
+                    {% include 'doc_repo/__object_docs.html' with object=line %}
                   </td>
                 </tr>
               {% endif %}
@@ -76,7 +76,7 @@
               <p></p>
               {% trans "Offers documents" as var_docs %}
               <h5 class="">{{ var_docs }}</h5>
-              {% include 'project_main/__object_docs.html' with object=offer %}
+              {% include 'doc_repo/__object_docs.html' with object=offer %}
             </div>
           {% endif %}
         {% endif %}

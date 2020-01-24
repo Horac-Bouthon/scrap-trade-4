@@ -104,7 +104,7 @@
             {% if line.offer_line.open_id.get_docs.count > 0 %}
               <tr class="table_lines">
                 <td class="td_lines table_lines" colspan="7">
-                  {% include 'project_main/__object_docs.html' with object=line.offer_line %}
+                  {% include 'doc_repo/__object_docs.html' with object=line.offer_line %}
                 </td>
               </tr>
             {% endif %}

@@ -25,8 +25,21 @@ class OpenId(models.Model):
     def get_as_string(self):
         return str(self.int_id)
 
-    def get_docs(self):
-        return self.my_docs.all().order_by('-id')
+    def get_docs(self, max=0):
+        if max > 0:
+            rv = self.my_docs.all().order_by('-id')[:max]
+        else:
+            rv = self.my_docs.all().order_by('-id')
+        return rv
+
+    def get_docs_1(self):
+        return self.get_docs(1)
+
+    def get_docs_3(self):
+        return self.get_docs(3)
+
+    def get_docs_5(self):
+        return self.get_docs(5)
 
     def get_owner_desc(self, can_modify=False):
         if self.my_offers.all().count() > 0:

@@ -36,7 +36,7 @@
             {% for address in object.customerestablishments_set.all %}
               <li class="px-2 pb-2">
                 {% include 'project_main/__address.html' with data=address %}
-                {% include 'project_main/__object_docs.html' with object=address %}
+                {% include 'doc_repo/__object_docs.html' with object=address %}
               </li>
             {% endfor %}
           </ul>
@@ -101,7 +101,7 @@
         <dl>
           <h4> {% trans "Documents:" %} </h4>
           <br>
-          {% include 'project_main/__object_docs.html' with object=object %}
+          {% include 'doc_repo/__object_docs.html' with object=object %}
         </dl>
       {% endif %}
     </div>
