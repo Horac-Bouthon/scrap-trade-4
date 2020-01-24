@@ -1,0 +1,96 @@
+{# Note: This view requires Javascript control module #}
+{# `Inlines` for it to work #}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+<dl>
+  <h4>
+    {{ inline.heading }}
+    <button onclick="Inlines.add_line(this)"
+            class="btn btn-icon-noborder btn-outline-primary">
+      <i data-feather="plus"></i>
+    </button>
+  </h4>
+  <ul>
+    {% for entry in inline.entries %}
+      <li class="py-1">
+        <div class="Form-READ big">
+
+          <div class="d-inline-flex">
+            
+            <div class="align-self-center">
+              {{ entry.data }}
+            </div>
+
+            {# Edit / Delete buttons #}
+            <div class="btn-group
+                        align-self-center px-1">
+              <button class="btn btn-icon-noborder btn-outline-primary"
+                      onclick='Inlines.edit(this)'
+                      type='button'>
+                <i data-feather="edit-3"></i>
+              </button>
+              {% include 'project_main/__btn-icon-delete.html' with href=entry.url_delete %}
+            </div>
+          </div>
+        </div>
+
+        {# Edit view #}
+        <div class="Form-EDIT 
+                    d-none 
+                    pb-4 ml-2 border-left">
+          <form action="{{ entry.url_update }}"
+                method="POST"
+                class="px-3 bg-light rounded">
+            {% csrf_token %}
+            
+            {{ entry.filled_form|crispy }}
+
+            <div class="">
+              <button class="btn btn-sm btn-success"
+                      type="submit">
+                <i data-feather="check"></i>
+                {% trans 'Save' context 'Inline edit button text' %}
+              </button>
+              <button onclick="Inlines.restore_all()"
+                      class="btn btn-sm btn-secondary"
+                      type="button">
+                <i data-feather="x"></i>
+                {% trans 'Cancel' context 'Inline button text' %}
+              </button>
+            </div>
+          </form>
+        </div>
+        
+      </li>
+    {% endfor %}
+
+    {# Add view #}
+    <div class="Form-ADD 
+                d-none">
+      <form action="{{ inline.url_create }}"
+            method="POST"
+            class="mx-3 mt-3 bg-light rounded border-top">
+        {% csrf_token %}
+        
+        {{ inline.empty_form|crispy }}
+
+        <div>
+          <button class="btn btn-sm btn-primary"
+                  type="submit">
+            <i data-feather="plus"></i>
+            {% trans 'Add new entry' context 'Inline add new button text' %}
+          </button>
+          <button onclick="Inlines.restore_all()"
+                  class="btn btn-sm btn-secondary"
+                  type="button">
+            <i data-feather="x"></i>
+            {% trans 'Cancel' context 'Inline button text' %}
+          </button>
+        </div>
+      </form>
+    </div>
+    
+  </ul>
+</dl>
