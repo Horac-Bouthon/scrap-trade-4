@@ -3,18 +3,6 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 
-{% block style %}
-{% if object.customer_background %}
-  <style>
-    body {
-      background-image: url("{{ object.customer_background.url }}");
-      background-repeat: no-repeat;
-      background-size: cover;
-  }
-  </style>
-{% endif %}
-{% endblock style %}
-
 
 {% block content %}
   <article class="media content-section">

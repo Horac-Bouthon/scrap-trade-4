@@ -30,7 +30,32 @@
       | Scrap Trade
     </title>
     {# @todo; Add HTML tags for SEO like description, at least for the static pages that will get crawled by search engines #}
+
+
+    {# Backgrounds corresponding to page #}
+    {% if object.offer.owner.customer_background %}
+      <style>
+       body {
+           background-image: url("{{ object.offer.owner.customer_background.url }}");
+       }
+      </style>
     
+    {% elif object.owner.customer_background %} {# = Viewing customer's offers #}
+      <style>
+       body {
+           background-image: url("{{ object.owner.customer_background.url }}");
+       }
+      </style>
+    {% elif customer.customer_background %} {# = Viewing customer pages #}
+      <style>
+       body {
+           background-image: url("{{ customer.customer_background.url }}");
+       }
+      </style>
+    {% endif %}
+
+    
+    {# Additional page-local styles #}
     {% block page-style %} {% endblock %}
 
   </head>
@@ -51,7 +76,8 @@
             {% endfor %}
           {% endif %}
 
-          <div class="bg-light overflow-hidden rounded shadow-lg">
+          <div class="bg-light overflow-hidden rounded shadow-lg
+                      pb-3">
             {% block content %}
               {# Content inserted by templates extending the base #}
             {% endblock content %}

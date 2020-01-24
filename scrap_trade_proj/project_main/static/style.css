@@ -178,6 +178,23 @@ a.article-title:hover {
 }
 
 
+/* Login popup */
+#LOGIN_POPUP {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  background: rgba(0,0,0, 0.5)
+}
+
+
+#LOGIN_POPUP fieldset > .form-group {
+  padding: 0 0.5rem
+}
+
+
+
 /* Key-value pairs, lists */
 
 /* Pad the content but not the heading */
@@ -195,10 +212,10 @@ dl > h4,
 
 dl ul {
   /* ...Same styles as bootstrap's ".list-unstyled" */
-  list-style: none;
-  padding-left: 0;
+  padding-left: 1em;
 }
-dl > h4 > a.btn {
+dl > h4 > a.btn,
+dl > h4 > button.btn {
   /* Buttons next to the headings need a slight nudge */
   position: relative;
   top: -0.2em;
@@ -224,6 +241,11 @@ dl > dd {
   font-size: 1.1em;
   font-weight: bold;
   line-height: 1.15em;
+}
+
+/* Dude, bootstrap has .small but not .big?? */
+.big {
+  font-size: 1.1em;
 }
 
 

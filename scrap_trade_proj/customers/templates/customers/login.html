@@ -1,38 +1,34 @@
-{% extends "project_main/system_base.html" %}
+{% extends "project_main/static_page_base.html" %}
 {% load crispy_forms_tags %}
 {% load i18n %}
 
-{% block style %}
-  <style>
-    body {
-      {% if user.is_authenticated %}
-        background-image: url("{{ user.project.project_background.url }}");
-      {% else %}
-        {% if project %}
-          background-image: url("{{ project.project_background.url }}");
-        {% else %}
-          background-image: url("/media/default-project-background.jpg");
-        {% endif %}
-      {% endif %}
-      background-repeat: no-repeat;
-      background-size: cover;
-  }
-  </style>
-{% endblock style %}
-
 
 {% block content %}
-  <div class="content-section">
-    <form class="" method="POST">
+  <div class="d-flex container"
+       style="height: 90vh">
+    <form method="POST"
+          action="{% url 'user-login' %}"
+          style="width: 32rem;"
+          class="bg-light rounded shadow
+                  align-self-start mx-auto 
+                  p-4 mb-5">
       {% csrf_token %}
-      <fieldset class="form-group">
-        <legend class="border-bottom mb-4">{% trans "Log In" context 'login_template' %}</legend>
+      
+      <fieldset>
+        <legend>
+          <h4 class="border-bottom font-weight-bold">
+            {% trans "Log In" context 'login_template' %}
+          </h4>
+        </legend>
+        
         {{ form|crispy }}
+
+        <button class="btn btn-primary mt-3 text-center"
+                type="submit">  
+          {% trans "Login" context 'login form submit button' %}
+        </button>
+        
       </fieldset>
-      <div class="form-group">
-        {% trans "Login" as var_button %}
-        <button class="btn btn-outline-info" type="submit">{{ var_button }}</button>
-      </div>
     </form>
   </div>
 {% endblock content %}
