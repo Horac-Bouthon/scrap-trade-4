@@ -160,7 +160,7 @@ class CustomerDetailView(CanEditCustomer, DetailView):
                 update = 'project-customer-est-update',
                 documents = 'doc-repo-dokument-list',
 
-                view_through_template = 'project_main/__address.html',
+                view_through_template = 'customers/__address.html',
             ),
             InlineEdit(
                 heading = _('Phones:'),
@@ -171,7 +171,7 @@ class CustomerDetailView(CanEditCustomer, DetailView):
                 delete = 'project-phone-delete',
                 update = 'project-customer-phone-update',
 
-                view_through_template = 'project_main/__phone.html',
+                view_through_template = 'customers/__phone.html',
             ),
             InlineEdit(
                 heading = _('Bank accounts:'),
@@ -182,7 +182,7 @@ class CustomerDetailView(CanEditCustomer, DetailView):
                 delete = 'project-bank-delete',
                 update = 'project-customer-bank-update',
 
-                view_through_template = 'project_main/__bank.html',
+                view_through_template = 'customers/__bank.html',
             ),
         ]
 

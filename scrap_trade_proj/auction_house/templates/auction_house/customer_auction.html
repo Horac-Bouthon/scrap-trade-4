@@ -5,45 +5,53 @@
 
 
 {% block content %}
-  <article class="media content-section">
-    <a class=""
-      href="{% url 'project-customer-info' customer.pk %}" target="_blank">
-      <img class="rounded-circle customer-logo" src="{{ customer.customer_logo.url }}">
-    </a>
-    <div class="media-body">
-      <h2 class="customer-name">{{ customer.customer_name }}</h2>
-      {% for section in auc_obj %}
-        <div class="">
-          <h5  class="customer-title">{{ section.title }}</h5>
-          {% for line in section.lines %}
-            {% if line.member_count > 0%}
-              <p>
-                {% if line.state_key != 'Not set' %}
-                  <a href="{% url line.url_key customer.pk line.state_key %}">{{ line.title }} ({{ line.member_count }})</a>
-                {% else %}
-                  <a href="{% url line.url_key customer.pk %}">{{ line.title }} ({{ line.member_count }})</a>
-                {% endif %}
-              </p>
-            {% else %}
-            <p>
-              {{ line.title }}
-            </p>
-            {% endif %}
-          {% endfor %} <!-- section.lines -->
-        </div>
-      {% endfor %} <!-- auc_obj -->
-    </div>
-  </article>
-{% endblock content %}
 
-{% block spec_action %}
-  {% trans "Create new offer" as var_add_offer %}
-  <a class="nav-item nav-link btn btn-outline-secondary right-column-button" href="{% url 'ah-customer-create-offers' customer.pk %}">{{ var_add_offer }}</a>
-  {% if "customers.is_customer_admin" in perms %}
-    {% trans "Set customer" as var_edit %}
-    <a class="nav-item nav-link btn btn-outline-secondary right-column-button"
-      href="{% url 'project-customer-detail' customer.pk %}" target="_blank">
-      {{ var_edit }}
-    </a>
-  {% endif %}
-{% endblock spec_action %}
+  {% include 'project_main/__content-header.html' %}
+
+  <section class="container d-md-flex">
+    
+    {% for section in auc_obj %}
+      <div class="col-md-6">
+        
+        <h4 class="section-header">
+          {{ section.title }}
+        </h4>
+
+        <ul class="list-unstyled px-1">
+        {% for line in section.lines %}
+          <li class="py-1">
+            {% if line.member_count == 0 %}
+              
+              {{ line.title }}
+              
+            {% else %}
+
+              {% if line.state_key == 'Not set' %}
+                {% url line.url_key customer.pk as href %}
+              {% else %}
+                {% url line.url_key customer.pk line.state_key as href%}
+              {% endif %}
+              
+              <a href="{{ href }}"
+                 class="d-flex">
+                <span class="align-self-center">
+                  {{ line.title }}
+                </span>
+                <span class="badge-pill badge-primary
+                             font-weight-bold small
+                             align-self-start ml-1">
+                  {{ line.member_count }}
+                </span>
+              </a>
+              
+            {% endif %}
+          </li>
+          
+        {% endfor %}
+        </ul>
+        
+      </div>
+    {% endfor %}
+    
+  </section>
+{% endblock content %}

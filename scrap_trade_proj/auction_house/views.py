@@ -4,6 +4,8 @@ from django.urls import reverse_lazy
 from django.template import Context
 from django.db.models import Q
 from datetime import datetime
+from django.urls import reverse_lazy, reverse
+
 from .modules.auction import (
     resurect_auction,
     set_auction,
@@ -22,8 +24,14 @@ from state_wf.models import (
 )
 from notification.modules import ntf_manager
 
-from .decorators import user_belong_offer, user_corespond_customer, user_belong_answer
+from .decorators import (
+    # @todo; Add `permissions.py` to this app and simplify auth
+    user_belong_offer,
+    user_corespond_customer,
+    user_belong_answer,
+)
 from customers.decorators import user_belong_customer
+
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from .models import (
@@ -213,7 +221,7 @@ class AhMatClassDetailView(LoginRequiredMixin, DetailView):
 @login_required()
 @user_belong_customer
 def ah_customer_auction(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
+    customer = Customer.objects.get(id = pk)
 
     auc_obj = get_auction_list_control_obj(customer, customer.owned_offers, customer.owned_answers)
 
@@ -223,7 +231,29 @@ def ah_customer_auction(request, pk):
         'customer': customer,
         'auc_obj': auc_obj,
     }
+
+    context['content_header'] = {
+        'title': customer.customer_name + ' | ' + _('Auction'),
+        'desc': _('Auction homepage'),
+        'image': { 'src': customer.customer_logo.url,
+                   'alt': _('Customer logo') },
+        'button_list': [
+            {
+                'text': _("Create new offer"),
+                'href': reverse('ah-customer-create-offers',
+                                kwargs={'pk': customer.pk}),
+                'icon': 'plus',
+            }, {
+                'text': _("Edit customer info"),
+                'href': reverse('project-customer-detail',
+                                kwargs={'pk': customer.pk}),
+                'icon': 'edit-3',
+            }
+        ]
+    }
+
     return render(request, 'auction_house/customer_auction.html', context)
+
 
 @login_required()
 @user_belong_customer
