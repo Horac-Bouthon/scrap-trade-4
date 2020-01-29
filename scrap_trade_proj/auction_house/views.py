@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.template import Context
 from django.db.models import Q
 from datetime import datetime
 from .modules.auction import (
@@ -13,11 +14,13 @@ from .modules.auction import (
     answer_add_state,
     get_waiting_offers,
     get_auction_list_control_obj,
+    send_via_ntf,
 )
 from state_wf.models import (
     Step,
     StepState,
 )
+from notification.modules import ntf_manager
 
 from .decorators import user_belong_offer, user_corespond_customer, user_belong_answer
 from customers.decorators import user_belong_customer
@@ -278,6 +281,13 @@ def ah_offers_change_state(request, pk, pk2, pk3):
             my_answers = fiter_by_state(offer.answers, 'answer_confirmed')
             for answer in my_answers.all():
                 answer_add_state(answer, state_send, request.user)
+
+        message = ntf_manager.NtfMessage()
+        message.reciver_list.append(('tbrown.wolf@ubk.cz', 'cz'))
+        f_context = Context()
+        f_context['place'] = 'view - ah_offers_change_state()'
+        send_via_ntf(request, message, f_context)
+
         success_message = _('Your offer has change the state!')
         messages.success(request, success_message)
         return redirect('ah-customer-auction', pk)
@@ -494,8 +504,6 @@ def ah_answer_line_update_total(request, pk, pk2):
             answer_line.save()
             sum = 0
             answer = AhAnswer.objects.filter(id = pk).first()
-            print(answer)
-            print(answer.my_lines.count())
             for line in answer.my_lines.all():
                 print(line.pk)
                 sum += line.total_price

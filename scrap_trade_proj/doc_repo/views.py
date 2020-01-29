@@ -94,33 +94,6 @@ def doc_repo_document_list(request, oid):
     return render(request, 'doc_repo/doc_repo_doc_list.html', context)
 
 
-"""
-        context['content_header'] = {
-            'title': customer.customer_name + ' | ' + _('Edit'),
-            'desc': _("Edit customer details"),
-            'image': { 'src': customer.customer_logo.url,
-                       'alt': _('Customer logo') },
-        }
-        if test_poweruser(self.request.user):
-            context['content_header']['button_list'] = [{
-                'text': _("Delete Customer"),
-                'href': reverse('project-customer-delete',
-                                kwargs={'pk': customer.pk}),
-                'icon': 'trash-2', 'type': 'danger',
-            }]
-        new_dic = {
-            'text': _("Documents"),
-            'href': reverse('doc-repo-dokument-list',
-                            kwargs={'oid': oid}),
-            'icon': 'eye',
-        }
-        if 'button_list' in context['content_header']:
-            context['content_header']['button_list'].append(new_dic)
-        else:
-            context['content_header']['button_list'] = [new_dic,]
-"""
-
-
 @login_required()
 @user_can_modify_owner_obj
 def doc_repo_document_create(request, oid):

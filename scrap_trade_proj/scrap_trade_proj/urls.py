@@ -17,6 +17,7 @@ urlpatterns = [
     path('api/', include('project_api.urls')),
     path('integ/', include('integ.urls')),
     path('doc_repo/', include('doc_repo.urls')),
+    #path('notif/', include('notification.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
