@@ -13,6 +13,64 @@ from .models import (
 )
 
 
+from django.utils.translation import gettext as _
+
+
+class UserRestCreationForm(forms.ModelForm):
+    """
+    A form for creating new users.
+    """
+
+    class Meta:
+        model = ProjectCustomUser
+        fields = ('email', 'name', 'groups')  # @todo; Make a better Groups option list -> list of checkboxes with labels (frontend-only task)
+
+    def clean_password_repeated(self):
+        # Check that the two password entries match
+        pw = self.cleaned_data.get("password")
+        pw_rep = self.cleaned_data.get("password_repeated")
+        if (pw and pw_rep) and (pw != pw_rep):
+            raise forms.ValidationError(
+                _("Passwords don't match")
+            )
+        return pw_rep
+
+    def __init__(self, *args, **kwargs):
+        super(UserRestCreationForm, self).__init__(*args, **kwargs)
+        qs = Group.objects.filter(name = 'customer_admin') | Group.objects.filter(name = 'customer_worker')
+        self.fields['groups'].queryset = qs.order_by("name")
+
+
+class PasswordResetRequest(forms.Form):
+    email = forms.EmailField(
+        help_text=_(("Enter the email address used for logging in to "
+                     "your account. ")),
+    )
+    
+
+class PasswordReset(forms.Form):
+    
+    new_password = forms.CharField(
+        widget=forms.PasswordInput,
+        help_text=_("Enter a new password for yor account.")
+    )
+    password_confirmation = forms.CharField(
+        widget=forms.PasswordInput,
+        help_text=_("Repeat the same password.")
+    )
+    
+    def clean(self, *args, **kwargs):
+        # Validate 'required'-ness
+        super().clean()
+        # Validate if passwords match
+        data = self.cleaned_data
+        if data['new_password'] != data['password_confirmation']:
+            raise forms.ValidationError(
+                _("The passwords don't match. Please try writing them again."),
+            )
+        # @todo; Add the builtin django security criteria (length, special characters, similiarity to the username...)
+
+
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = ProjectCustomUser

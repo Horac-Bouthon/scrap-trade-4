@@ -8,7 +8,7 @@
        style="height: 90vh">
     <form method="POST"
           action="{% url 'user-login' %}"
-          style="width: 32rem;"
+          style="width: 24rem;"
           class="bg-light rounded shadow
                   align-self-start mx-auto 
                   p-4 mb-5">
@@ -22,13 +22,27 @@
         </legend>
         
         {{ form|crispy }}
+        
+      </fieldset>
 
-        <button class="btn btn-primary mt-3 text-center"
+      <div class="d-flex mt-2">
+        {# Login -- Submit button #}
+        <button class="btn btn-primary text-center"
                 type="submit">  
           {% trans "Login" context 'login form submit button' %}
         </button>
         
-      </fieldset>
+        {# Forgot your password? Reset button #}
+        <p class="px-2 mb-3
+                  small text-right
+                  flex-fill align-self-center">
+          <a href="{% url 'user-reset-request' %}">
+            {% trans "Forgot your password?" %}
+          </a>
+        </p>  
+      </div>
+      
     </form>
+    
   </div>
 {% endblock content %}

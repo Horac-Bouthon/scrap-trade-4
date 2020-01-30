@@ -180,6 +180,13 @@ a.article-title:hover {
 }
 
 
+
+/* Lists in alert messages can be more compact */
+.alert-block > ul {
+  padding-left: 1rem;
+}
+
+
 /* Login popup */
 #LOGIN_POPUP {
   position: fixed;
@@ -194,7 +201,6 @@ a.article-title:hover {
 #LOGIN_POPUP fieldset > .form-group {
   padding: 0 0.5rem
 }
-
 
 
 /* Key-value pairs, lists */
