@@ -3,7 +3,7 @@
 
   <a href="{{ href }}"
      class="btn {{ cls }}"
-     title={{ title }}
+     title="{{ title }}"
 
      {% if add_par_text %}
         {{ add_par_text }}
@@ -12,7 +12,7 @@
      >
 
     {% if icon %}
-      <i data-feather={{ icon }}></i>
+      <i data-feather="{{ icon }}"></i>
     {% endif %}
 
     {{ text }}

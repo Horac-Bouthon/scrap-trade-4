@@ -1,13 +1,11 @@
 {% load i18n %}
 
 
-{% trans 'Download' as title %}
+{% trans 'Download document' as title %}
 {% with icon='download' %}
+
   {% with cls='btn-icon-noborder btn-outline-primary' %}
-    {% with add_par_text=' download' %}
-
-      {% include 'doc_repo/__btn.html' %}
-
-    {% endwith %}
+    {% include 'doc_repo/__btn.html' %}
   {% endwith %}
+  
 {% endwith %}
