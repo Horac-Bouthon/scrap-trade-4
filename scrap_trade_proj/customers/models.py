@@ -87,7 +87,7 @@ class ProjectCustomUser(AbstractBaseUser, PermissionsMixin):
     
 import uuid
 import django.utils.timezone as django_timezone  # Always use django timezones
-from django.url import reverse  # For making reset urls
+from django.urls import reverse  # For making reset urls
 
 class PasswordResetLink(models.Model):
     """

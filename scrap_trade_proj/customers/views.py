@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from customers.admin import UserCreationForm, UserRestCreationForm
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
@@ -11,6 +10,7 @@ from django.contrib.auth.mixins import (
 )
 from django.urls import reverse_lazy, reverse
 from .forms import (
+    UserRestCreationForm,
     UserUpdateForm,
     ProfileUpdateForm,
     CustomerEmailUpdateForm,
@@ -796,30 +796,6 @@ def log_out(request):
     messages.success(request, _('You have been logged out'))
     return redirect('user-login')
 
-
-
-# @todo; When we know if we even need a register view, what permissions does that have??
-def register(request):
-    proj = Project.objects.all().first()
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST,
-                request.FILES,
-                instance=request.POST,
-        )
-        if form.is_valid():
-            form.save()
-            success_message = _('Your account has been created! You are now able to log in.')
-            messages.success(request, success_message)
-            return redirect('project-home')
-    else:
-        form = UserCreationForm()
-    title2 = tr.pgettext('customer-register-title', 'register')
-    context = {
-        'form': form,
-        'title': title2,
-        'project': proj,
-    }
-    return render(request, 'customers/user_register.html', context)
 
 
 @login_required
