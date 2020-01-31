@@ -771,23 +771,25 @@ def customer_tran_update(request, pk, lang):
 
 
 def log_in(request):
-    proj = Project.objects.all().first()
-    if request.method == 'POST':
+    
+    if request.method == 'GET':
+        form = AuthenticationForm()
+    
+    elif request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user_f = form.get_user()
             login(request, user_f)
             messages.success(request, _('Successfully logged in'))
+            if 'next' in request.POST:
+                return redirect(request.POST['next'])
             if user_f.customer:
                 return redirect('ah-customer-auction', user_f.customer.pk)
             return redirect('project-customer-home')
-    else:
-        form = AuthenticationForm()
-    title2 = tr.pgettext('customer-login-title', 'Login')
+        
     context = {
         'form': form,
-        'title': title2,
-        'project': proj,
+        'title': tr.pgettext('customer-login-title', 'Login'),
     }
     return render(request, 'customers/login.html', context)
 
