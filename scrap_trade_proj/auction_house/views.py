@@ -16,13 +16,13 @@ from .modules.auction import (
     answer_add_state,
     get_waiting_offers,
     get_auction_list_control_obj,
-    send_via_ntf,
 )
+from .modules.ntf_support import send_ntf_from_state
+
 from state_wf.models import (
     Step,
     StepState,
 )
-from notification.modules import ntf_manager
 
 from .decorators import (
     # @todo; Add `permissions.py` to this app and simplify auth
@@ -312,11 +312,11 @@ def ah_offers_change_state(request, pk, pk2, pk3):
             for answer in my_answers.all():
                 answer_add_state(answer, state_send, request.user)
 
-        message = ntf_manager.NtfMessage()
-        message.reciver_list.append(('tbrown.wolf@ubk.cz', 'cz'))
-        f_context = Context()
-        f_context['place'] = 'view - ah_offers_change_state()'
-        send_via_ntf(request, message, f_context)
+        if set_state.send_ntf:
+            context = Context()
+            context['place'] = 'auction_house.view - ah_offers_change_state()'
+            context['item'] = offer
+            send_ntf_from_state(request, set_state, context)
 
         success_message = _('Your offer has change the state!')
         messages.success(request, success_message)

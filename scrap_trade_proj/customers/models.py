@@ -95,10 +95,25 @@ class ProjectCustomUser(AbstractBaseUser, PermissionsMixin):
 
 class UserProfile(models.Model):
     """ Additiona information for user """
-    user = models.OneToOneField(ProjectCustomUser, on_delete=models.CASCADE,
-                    verbose_name=tr.pgettext_lazy('UserProfile user', 'user'))
-    image = models.ImageField(default="default-user.jpg", upload_to='profile_pics',
-                        verbose_name=tr.pgettext_lazy('UserProfile image', 'image'))
+    user = models.OneToOneField(
+        ProjectCustomUser,
+        on_delete=models.CASCADE,
+        verbose_name=tr.pgettext_lazy('UserProfile user', 'user'),
+        help_text=tr.pgettext_lazy('UserProfile definition','Link to patern object'),
+    )
+    language = models.CharField(
+        default=settings.LANGUAGE_CODE,
+        verbose_name=tr.pgettext_lazy('UserProfile user', "language"),
+        help_text=tr.pgettext_lazy('UserProfile definition','Set the language to communicate with the user'),
+        max_length=15,
+        choices=settings.LANGUAGES,
+    )
+    image = models.ImageField(
+        default="default-user.jpg",
+        upload_to='profile_pics',
+        verbose_name=tr.pgettext_lazy('UserProfile image', 'image'),
+        help_text=tr.pgettext_lazy('UserProfile definition','Here you can add an image to the profile'),
+    )
     open_id = models.ForeignKey(
         OpenId,
         on_delete=models.CASCADE,
@@ -162,9 +177,13 @@ class CustomerEstablishments(models.Model):
 
 
 class CustomerEmail(models.Model):
-    customer_email = models.EmailField(max_length=255, verbose_name=tr.pgettext_lazy('Customer definition', 'email address'),
-                    help_text=tr.pgettext_lazy('Customer definition', "Required: 150 characters or fewer. Letters, digits and @/./+/-/_ only."),
-                    null=True, blank=True,)
+    customer_email = models.EmailField(
+        max_length=255,
+        verbose_name=tr.pgettext_lazy('Customer definition', 'email address'),
+        help_text=tr.pgettext_lazy('Customer definition', "Required: 150 characters or fewer. Letters, digits and @/./+/-/_ only."),
+        null=True,
+        blank=True,
+    )
     customer = models.ForeignKey(
         'Customer',
         on_delete=models.CASCADE,
@@ -172,8 +191,28 @@ class CustomerEmail(models.Model):
         help_text=tr.pgettext_lazy('CustomerEmail definition','Link to Customer'),
         null=True, blank=True,
     )
-    is_admin_adr = models.BooleanField(default=False, verbose_name=_('admin address'),
-                    help_text=_("Mark special addresses to send additional administration messages. "))
+    is_private_adr = models.BooleanField(
+        default=False,
+        verbose_name=_('Private address'),
+        help_text=_("This address will not be included in the info. ")
+    )
+    is_admin_adr = models.BooleanField(
+        default=False,
+        verbose_name=_('Admin address'),
+        help_text=_("Mark special addresses to send additional administration messages. ")
+    )
+    is_business_adr = models.BooleanField(
+        default=False,
+        verbose_name=_('Business address'),
+        help_text=_("Business messages will be sent to this address")
+    )
+    language = models.CharField(
+        default=settings.LANGUAGE_CODE,
+        verbose_name=tr.pgettext_lazy('UserProfile user', "language"),
+        help_text=tr.pgettext_lazy('UserProfile definition','Set the language to communicate with the user'),
+        max_length=15,
+        choices=settings.LANGUAGES,
+    )
 
     class Meta:
         verbose_name = tr.pgettext_lazy('CustomerEmail definition', 'Customer email')
@@ -345,6 +384,20 @@ class Customer(TranslatableModel):
         lang = tr.get_language()
         return self.translated('short_description', default=None, language=lang, fallback=True)
 
+    #--- ntf_support
+    def add_emails(self, ntf_message, admin=False, business=False):
+        for email in self.customeremail_set.all():
+            if admin:
+                if email.is_admin_adr:
+                    ntf_message.reciver_list.append((email.customer_email, email.language))
+                    continue
+            if business:
+                if email.is_business_adr:
+                    ntf_message.reciver_list.append((email.customer_email, email.language))
+                    continue
+            if admin == False and business == False:
+                ntf_message.reciver_list.append((email.customer_email, email.language))
+        return ntf_message
 
 class CustomerTranslation(get_translation_model(Customer, "customer")):
     customer_description =  models.TextField(

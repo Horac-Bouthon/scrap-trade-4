@@ -7,13 +7,13 @@ import uuid
 class OwnerDescription:
 
     def __init__(self,
-                 par_url_key,
-                 par_desc='Owner',
-                 par_obj_pk=None,
+                 url_key,
+                 desc='Owner',
+                 obj_pk=None,
                  ):
-        self.url_key = par_url_key
-        self.obj_pk = par_obj_pk
-        self.desc = par_desc
+        self.url_key = url_key
+        self.obj_pk = obj_pk
+        self.desc = desc
 
     def __repr__(self):
         return "OwnerDescription('{}', '{}', {})"\

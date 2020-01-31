@@ -9,7 +9,6 @@ from state_wf.models import (
     Step,
     StepState,
 )
-from notification.modules import ntf_manager
 
 from django.utils.translation import gettext_lazy as _
 from django.utils import translation as tr
@@ -233,43 +232,3 @@ def get_auction_list_control_obj(customer, data_offer, data_answers):
     )
     ret_val.append(obj_answers)
     return ret_val
-
-def send_via_ntf(request, ntf_message, fail_context):
-    if not ntf_manager.send(ntf_message):
-        fail_context['orig'] = repr(ntf_message)
-        allert_poweruser_ntf_failure(request, fail_context)
-
-
-
-def allert_poweruser_ntf_failure(request, context):
-    print('allert_poweruser_ntf_failure')
-    context['url'] = request.build_absolute_uri()
-    context['user_mail'] = request.user.email
-    if request.user.customer is None:
-        context['user_cust'] = _('Not set')
-    else:
-        context['user_cust'] = request.user.customer.customer_name
-
-    message = ntf_manager.NtfMessage()
-    message.set_from_template('ntf_failur','en')
-    message.context = context
-    message.reciver_list.clear()
-    message = add_poweruser_to_ntf(message)
-    ntf_manager.send(message)
-    return
-
-
-def add_poweruser_to_ntf(ntf_message):
-    for user in ProjectCustomUser.objects.all():
-        if user.has_perm("customers.is_poweruser"):
-            ntf_message.reciver_list.append(user.email)
-    return ntf_message
-
-def add_admin_from_customer_to_ntf(ntf_message, customer):
-    for user in customer.projectcustomuser_set.all():
-        if user.has_perm("customers.is_customer_admin"):
-            ntf_message.reciver_list.append(user.email)
-    for email in customer.customeremail_set.all():
-        if user.is_admin_adr:
-            ntf_message.reciver_list.append(email.customer_email)
-    return ntf_message

@@ -21,6 +21,10 @@ class InlineEdit:
         # Individual entry data
         self.entries = []
         for entry in KW['set']():
+            if 'documents' in KW:
+                url_docs = reverse(KW['documents'], kwargs={'oid': str(entry.open_id.int_id)})
+            else:
+                url_docs = ""
             entry_context = {
                 'data': entry,
                 'filled_form': KW['form'](instance=entry),
@@ -29,8 +33,7 @@ class InlineEdit:
                 'url_update': reverse(KW['update'],
                                       kwargs={'pk': KW['owner'].pk,
                                               'pk2': entry.pk}),
-                'url_docs': reverse(KW['documents'],
-                                      kwargs={'oid': str(entry.open_id.int_id)}),
+                'url_docs': url_docs,
             }
             if 'view_through_template' in KW:
                 # The data will go through a template

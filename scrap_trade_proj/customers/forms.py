@@ -22,7 +22,7 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['image']
+        fields = ['language', 'image']
 
 
 class CustomerDescriptionUpdateForm(forms.ModelForm):
@@ -34,7 +34,7 @@ class CustomerDescriptionUpdateForm(forms.ModelForm):
 class CustomerEmailUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomerEmail
-        fields = ['customer_email']
+        fields = ['customer_email','is_private_adr','is_admin_adr','is_business_adr','language']
 
 
 class CustomerWebUpdateForm(forms.ModelForm):
