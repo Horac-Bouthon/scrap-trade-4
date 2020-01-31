@@ -144,7 +144,7 @@
       
       <form method="POST"
             action="{% url 'user-login' %}"
-            style="position: relative; max-width: 30rem"
+            style="position: relative; max-width: 24rem"
             class="bg-light rounded shadow
                     m-auto align-self-center p-4">
         {% csrf_token %}
@@ -166,22 +166,37 @@
           </legend>
           
           {{ form_login|crispy }}
+          
+        </fieldset>
 
-          <button class="btn btn-primary mt-3 text-center"
+
+        <div class="d-flex mt-2">
+          {# Login -- Submit button #}
+          <button class="btn btn-primary text-center"
                   type="submit">  
             {% trans "Login" context 'login form submit button' %}
           </button>
-
-
-          <aside class="px-2 d-none d-md-block">
-            <hr/>
-            <p class="small font-weight-bold font-italic text-muted
-                      mx-5 m-0">
-              {% trans 'Tip: You can press the Escape key to toggle the login menu with your keyboard only!' context 'login form tip' %}
-            </p>
-          </aside>
           
-        </fieldset>
+          {# Forgot your password? Reset button #}
+          <p class="px-2 mb-3
+                    small text-right
+                    flex-fill align-self-center">
+            <a href="{% url 'user-reset-request' %}">
+              {% trans "Forgot your password?" %}
+            </a>
+          </p>  
+        </div>
+
+
+        {# Tip #}
+        <aside class="mt-4 pt-2 border-top
+                      d-none d-md-block">
+          <p class="small font-weight-bold font-italic text-muted
+                    px-3 m-0">
+            {% trans 'Tip: You can press the Escape key to toggle the login menu with your keyboard only!' context 'login form tip' %}
+          </p>
+        </aside>
+        
       </form>
       
     </div>

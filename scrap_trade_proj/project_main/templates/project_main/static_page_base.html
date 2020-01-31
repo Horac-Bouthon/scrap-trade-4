@@ -40,13 +40,16 @@
       
       {# Form feedback messages #}
       {% if messages %}
-        <div class="d-flex justify-content-center 
-                    message-wrap">
-            {% for message in messages %}
-              <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-              </div>
-            {% endfor %}
+        <div class="d-flex justify-content-center">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}
+                        m-2"
+                 style="max-width: 32rem;">
+              
+              {{ message }}
+              
+            </div>
+          {% endfor %}
         </div>
       {% endif %}
         

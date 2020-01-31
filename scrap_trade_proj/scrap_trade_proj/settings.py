@@ -84,6 +84,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
 
+                # Add the first project reference to the context of every page 
                 'project_main.context_processors.project',
             ],
         },

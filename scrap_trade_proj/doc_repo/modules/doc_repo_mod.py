@@ -21,7 +21,7 @@ class OwnerDescription:
 
     def __str__(self):
         return "{} {} {} {}"\
-            .format(self.pk, self.url_key, url.desc, self.obj_pk)
+            .format(self.obj_pk, self.url_key, self.desc, self.obj_pk)
 
     @property
     def url_command(self):

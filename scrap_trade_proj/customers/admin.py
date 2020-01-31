@@ -49,38 +49,6 @@ class UserCreationForm(forms.ModelForm):
         return user
 
 
-class UserRestCreationForm(forms.ModelForm):
-    """A form for creating new users. Includes all the required
-    fields, plus a repeated password."""
-    password1 = forms.CharField(label=_('Password'), widget=forms.PasswordInput, help_text=_("Enter password"))
-    password2 = forms.CharField(label=_('Password confirmation'), widget=forms.PasswordInput, help_text=_("Confirm password"))
-
-    class Meta:
-        model = ProjectCustomUser
-        fields = ('email', 'name', 'groups')
-
-    def clean_password2(self):
-        # Check that the two password entries match
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError(_("Passwords don't match"))
-        return password2
-
-    def save(self, commit=True):
-        # Save the provided password in hashed format
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password1"])
-        if commit:
-            user.save()
-        return user
-
-    def __init__(self, *args, **kwargs):
-        super(UserRestCreationForm, self).__init__(*args, **kwargs)
-        qs = Group.objects.filter(name = 'customer_admin') | Group.objects.filter(name = 'customer_worker')
-        self.fields['groups'].queryset = qs.order_by("name")
-
-
 class UserChangeForm(forms.ModelForm):
     """A form for updating users. Includes all the fields on
     the user, but replaces the password field with admin's

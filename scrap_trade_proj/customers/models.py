@@ -5,7 +5,6 @@ from django.contrib.auth.models import BaseUserManager
 from django.conf import settings
 from django.urls import reverse
 from PIL import Image
-import os
 
 from django.utils.translation import gettext_lazy as _
 from django.utils import translation as tr
@@ -15,83 +14,135 @@ from translatable.models import TranslatableModel, get_translation_model
 from project_main.models import Project
 from integ.models import OpenId
 
-# Create your models here.
-class ProjectCustomUserManager(BaseUserManager):
-    """Helps Django work with custom user model """
-
-    def create_user(self, name, email, password=None, customer=None):
-        """ Create new custom user object """
-        if not email:
-            raise ValueError(_('User must have an email address.'))
-        email = self.normalize_email(email)
-        proj = Project.objects.all().first()
-        print('project>')
-        print(proj)
-        if customer is not None:
-            user = self.model(email=email, name=name, customer=customer, project=proj)
-        else:
-            user = self.model(email=email, name=name, project=proj)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, name, email, password):
-        """ Create and saves new super custom user object """
-        user = self.create_user(name, email, password)
-        user.is_superuser = True
-        user.is_staff = True
-        user.save(using=self._db)
-        return user
-
 
 class ProjectCustomUser(AbstractBaseUser, PermissionsMixin):
     """ basic user for admin AND customer base users """
-    email = models.EmailField(max_length=255, verbose_name=_('email address'), unique=True,
-                    help_text=_("Required: 150 characters or fewer. Letters, digits and @/./+/-/_ only."))
-    name = models.CharField(max_length=255, verbose_name=_('user name'), help_text=_("User identification"))
-    is_active = models.BooleanField(default=True, verbose_name=_('active user'), help_text=_("User can log in"))
-    is_staff = models.BooleanField(default=False, verbose_name=_('access admin tools'),
-                    help_text=_("User can access administration tools"))
-    customer = models.ForeignKey(
-        'Customer',
-        on_delete=models.CASCADE,
-        verbose_name=tr.pgettext_lazy('ProjectCustomUser definition', 'Customer'),
-        help_text=tr.pgettext_lazy('ProjectCustomUser definition','Link to Customer'),
-        null=True, blank=True,
-    )
-    project = models.ForeignKey(
-        Project,
-        on_delete=models.SET_NULL,
-        verbose_name=tr.pgettext_lazy('ProjectCustomUser definition', 'Project'),
-        help_text=tr.pgettext_lazy('ProjectCustomUser definition','Link to Project'),
-        null=True, blank=True,
-    )
-
-    objects = ProjectCustomUserManager()
+    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
+    
+    objects = BaseUserManager()  # @todo; Why do we need to say this??
+    
+    email = models.EmailField(
+        unique=True,
+        max_length=255, 
+        verbose_name=_('email address'), 
+        help_text=_("This acts as the username when logging in.")
+        # @todo; Add an explanation that this email will recieve a one-time link to the password reset page.
+    )
+    name = models.CharField(
+        max_length=255, 
+        verbose_name=_('Name'),
+        help_text=_("Only informational.")
+    )
+        
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name=_('Is Active'), 
+        help_text=_("User can log into the website and isn't blocked.")
+    )
+    is_staff = models.BooleanField(
+        default=False, 
+        verbose_name=_('access admin tools'),
+        help_text=_("User can access administration tools")
+    )
+    
+    customer = models.ForeignKey(
+        'Customer',
+        null=True, 
+        blank=True,
+        on_delete=models.CASCADE,
+        
+        verbose_name=tr.pgettext_lazy(
+            'ProjectCustomUser definition', 'Customer'),
+        help_text=tr.pgettext_lazy(
+            'ProjectCustomUser definition', 'Link to Customer'),
+    )
+    project = models.ForeignKey(  # @todo; Causes NoneType errors if removed
+        Project,
+        null=True, blank=True,
+        on_delete=models.SET_NULL,
+        
+        verbose_name=tr.pgettext_lazy(
+            'ProjectCustomUser definition', 'Project'),
+        help_text=tr.pgettext_lazy(
+            'ProjectCustomUser definition','Link to Project'),
+    )
 
     class Meta:
-        verbose_name = tr.pgettext_lazy('ProjectCustomUser definition', 'User')
-        verbose_name_plural = tr.pgettext_lazy('ProjectCustomUser definition', 'Users')
+        verbose_name = tr.pgettext_lazy(
+            'ProjectCustomUser definition', 'User')
+        verbose_name_plural = tr.pgettext_lazy(
+            'ProjectCustomUser definition', 'Users')
         permissions = (
             ('is_poweruser', 'custom -- poweruser'),
             ('is_customer_admin', 'custom -- customer-admin'),
             ('is_customer_user', 'custom -- customer-user'),
         )
 
-    def get_full_name(self):
-        """ Used to get users full name """
-        return self.name
-
-    def get_short_name(self):
-        """ Used to get users short name """
-        return self.name
-
     def __str__(self):
         """ Used to get object in string presentation """
         return self.email
 
+    
+import uuid
+import django.utils.timezone as django_timezone  # Always use django timezones
+from django.urls import reverse  # For making reset urls
+
+class PasswordResetLink(models.Model):
+    """
+    A link with an expiration datetime that allows a user
+    to reset their password, if they know this object's ID.
+    """
+    
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+    for_user = models.ForeignKey(
+        'ProjectCustomUser',
+        on_delete=models.CASCADE,  # Delete links if user is deleted
+    )
+    used = models.DateTimeField(
+        blank=True, null=True
+    )
+        
+    def make_expiry_datetime_from_now():
+        # Use this as a static method. Django migrate doesn't like 
+        # @staticmethod and fails to serialize if present.
+        VALID_FOR = django_timezone.timedelta(
+            hours=48
+        )
+        # @todo; Expose `VALID_FOR` of password links to be used for user information
+        return django_timezone.now() + VALID_FOR
+    
+    valid_until = models.DateTimeField(
+        default = make_expiry_datetime_from_now  # Callable func, not value!
+    )
+    
+    def is_not_valid_anymore(self):
+        expired = django_timezone.now() > self.valid_until
+        used_already = self.used is not None
+        return expired or used_already
+    
+    
+    def send_to_user(self):
+        # Make a URL link out of the id
+        url = reverse('user-reset', kwargs={'uuid': self.id})
+        full_url = 'localhost:8000%s' % url  # @todo; @production; Make the url respect the production server's domain and don't forget to use HTTPS!
+        print(' >>>>>>>>>>>>>> PASSWORD RESET URL <<<<<<<<<<<<<<< ')
+        print(full_url)  # @todo; @production; Get rid of password reset console prints
+    
+    def reset_password(self, new_password):
+        user = self.for_user
+        user.set_password(new_password)
+        user.save()
+        # Make the link unusable for repeated password changes
+        # and note when somebody changed their password.
+        self.used = django_timezone.now()
+        self.save()
+
+   
 
 class UserProfile(models.Model):
     """ Additiona information for user """
@@ -116,11 +167,15 @@ class UserProfile(models.Model):
     )
     open_id = models.ForeignKey(
         OpenId,
-        on_delete=models.CASCADE,
-        verbose_name=tr.pgettext_lazy('UserProfile definition', 'Open id'),
-        help_text=tr.pgettext_lazy('UserProfile definition','Link to integration key'),
         related_name='my_user_profs',
-        null=True, blank=True,
+        null=True, 
+        blank=True,
+        on_delete=models.CASCADE,
+        
+        verbose_name=tr.pgettext_lazy(
+            'UserProfile definition', 'Open id'),
+        help_text=tr.pgettext_lazy(
+            'UserProfile definition','Link to integration key'),
     )
 
     class Meta:

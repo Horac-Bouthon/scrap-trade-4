@@ -1,13 +1,15 @@
 {% load i18n %}
 
 
-{% trans 'Detail' as title %}
-{% with icon='crosshair' %}
-  {% with cls='btn-icon-noborder btn-outline-primary' %}
-    {% with add_par_text='target="_blank"' %}
+{% trans 'Open document in a new tab' as title %}
+{% with icon='external-link' %}
+  
+  {% with add_par_text='target="_blank"' %}
 
+    {% with cls='btn-icon-noborder btn-outline-primary' %}
       {% include 'doc_repo/__btn.html' %}
-
     {% endwith %}
+
   {% endwith %}
+  
 {% endwith %}
