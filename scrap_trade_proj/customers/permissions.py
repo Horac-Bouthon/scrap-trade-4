@@ -20,6 +20,8 @@ from .models import Customer
 
 # Simple testing function, for additional context conditionals
 def test_user_belong_customer(user, customer):
+    if not user.is_authenticated: 
+        return False
     belong = customer == user.customer
     power = user.has_perm("customers.is_poweruser")
     return belong or power
@@ -32,7 +34,6 @@ class UserBelongCustomer(UserPassesTestMixin):
     
 # Django decorator, for view functions
 def user_belong_customer(function): 
-    @login_required
     def wrap(request, *args, **kwargs):
         customer = Customer.objects.filter(id = kwargs['pk']).first()
         if test_user_belong_customer(request.user, customer):
@@ -46,6 +47,8 @@ def user_belong_customer(function):
 
 
 def test_can_edit_customer(user, customer): 
+    if not user.is_authenticated: 
+        return False
     belong = customer == user.customer
     admin = user.has_perm('customers.is_customer_admin')
     power = user.has_perm("customers.is_poweruser")
@@ -57,7 +60,6 @@ class CanEditCustomer(UserPassesTestMixin):
         return test_can_edit_customer(self.request.user, customer)
     
 def can_edit_customer(function):
-    @login_required
     def wrap(request, *args, **kwargs):
         customer = Customer.objects.filter(id = kwargs['pk']).first()
         if test_can_edit_customer(request.user, customer):
@@ -71,6 +73,8 @@ def can_edit_customer(function):
 
 
 def test_poweruser(user):
+    if not user.is_authenticated: 
+        return False
     return user.has_perm('customers.is_poweruser')
 
 class Poweruser(PermissionRequiredMixin): 
