@@ -60,8 +60,8 @@ class AhOffer(models.Model):
     offered_to = models.ManyToManyField(
         Customer,
         verbose_name=tr.pgettext_lazy('AhOffer definition', 'Offered to'),
-        help_text=tr.pgettext_lazy('AhOffer definition','List of customers who received the offer'),
-        related_name="receive_offers",
+        help_text=tr.pgettext_lazy('AhOffer definition','List of customers who recieved the offer'),
+        related_name="recieve_offers",
         blank=True,
     )
     delivery_date = models.DateField(

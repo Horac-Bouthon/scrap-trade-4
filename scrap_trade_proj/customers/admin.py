@@ -15,7 +15,8 @@ from customers.models import (ProjectCustomUser,
     BasicPhoneCategory,
     BasicPhoneCategoryTranslation,
     CustomerBankAccount,
-    CustomerTranslation
+    CustomerTranslation,
+    PasswordResetLink,
 )
 
 from django.utils.translation import gettext_lazy as _
@@ -131,3 +132,4 @@ admin.site.register(CustomerBankAccount)
 admin.site.register(CustomerTranslation)
 
 admin.site.register(Permission)
+admin.site.register(PasswordResetLink)

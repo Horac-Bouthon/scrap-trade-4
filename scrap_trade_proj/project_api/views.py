@@ -32,7 +32,7 @@ class EvaluateAuctionApiView(APIView):
         serializer = serializers.EvaluateAuctionSeralizer(data=request.data)
         if serializer.is_valid():
             start = serializer.data.get('start')
-            make_auctions(start)
+            make_auctions(request, start)
             message = 'Run at {0}'.format(start)
             return Response({'message': message})
         else:

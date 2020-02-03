@@ -9,7 +9,10 @@ from state_wf.models import (
     Step,
     StepState,
 )
+from .ntf_support import send_ntf_from_state
+from customers.modules.ntf_support import send_by_template
 
+from django.template import Context
 from django.utils.translation import gettext_lazy as _
 from django.utils import translation as tr
 
@@ -75,7 +78,7 @@ def resurect_auction(par_offer):
         set_a.save()
     return
 
-def set_auction(par_offer):
+def set_auction(request, par_offer):
     print('from second: {} must be set / {}'.format(par_offer, par_offer.auction_date))
     # kill not confirmed Answers
     state_obj = StepState.objects.get(state_key='answer_canceled')
@@ -97,20 +100,35 @@ def set_auction(par_offer):
         answer_add_state(lucky_one, state_obj, None)
         lucky_one.is_bound = True
         lucky_one.save()
+        # send report
+        if state_obj.send_ntf:
+            context = Context()
+            context['place'] = 'modules.auction - set_auction()'
+            context['item'] = lucky_one
+            send_ntf_from_state(request, state_obj, context)
         # unbound others
         state_obj = StepState.objects.get(state_key='answer_closed')
         for unlucky_one in fiter_by_state(par_offer.answers, 'answer_confirmed'):
             print('close {}'.format(unlucky_one))
             answer_add_state(unlucky_one, state_obj, None)
+            context = Context()
+            context['place'] = 'modules.auction - set_auction() - closed'
+            context['offer_description'] = par_offer.description
+            send_by_template(request, context, unlucky_one.owner, 'auction_ended', False, True)
+
     else:
         # cancel offer - no anwers
         print('cancel - no answers - {}'.format(par_offer))
         # kill offer
         state_obj = StepState.objects.get(state_key='offer_canceled')
         offer_add_state(par_offer, state_obj, None)
+        context = Context()
+        context['place'] = 'modules.auction - set_auction() - no answers'
+        context['offer_description'] = par_offer.description
+        send_by_template(request, context, par_offer.owner, 'offer_no_answers', False, True)
 
 
-def make_auctions(par_ref_dt):
+def make_auctions(request, par_ref_dt):
     dt_ref = parse_datetime(par_ref_dt)
     if not is_aware(dt_ref):
         dt_ref = make_aware(dt_ref)
@@ -121,7 +139,7 @@ def make_auctions(par_ref_dt):
         if not is_aware(auction_dt):
             auction_dt = make_aware(auction_dt)
         if auction_dt <= dt_ref:
-            set_auction(offer)
+            set_auction(request, offer)
         else:
             print('{} is waiting / {}'.format(offer, offer.auction_date))
 
@@ -188,8 +206,7 @@ def customer_answer_create(customer, offer, user, data):
         n_a_l.save()
 
 def get_waiting_offers(par_customer):
-    #ret_offers = par_customer.receive_offers.filter(is_confirmed = True)
-    ret_offers = fiter_by_state(par_customer.receive_offers.all(), 'offer_confirmed')
+    ret_offers = fiter_by_state(par_customer.recieve_offers.all(), 'offer_confirmed')
     for answer in par_customer.owned_answers.all():
         ret_offers = ret_offers.exclude(id = answer.ah_offer.pk)
     return ret_offers.order_by("-pk")

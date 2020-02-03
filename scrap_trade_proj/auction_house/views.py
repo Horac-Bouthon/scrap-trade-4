@@ -343,12 +343,22 @@ def ah_answer_change_state(request, pk, pk2, pk3):
         if set_state.state_key == 'answer_accepted':
             state_send = StepState.objects.get(state_key = 'offer_accepted')
             offer_add_state(answer.ah_offer, state_send, request.user)
+            if state_send.send_ntf:
+                context = Context()
+                context['place'] = 'auction_house.view - ah_answer_change_state() - answer_accepted'
+                context['item'] = answer.ah_offer
+                send_ntf_from_state(request, state_send, context)
         if set_state.state_key == 'answer_closed':
             state_send = StepState.objects.get(state_key = 'offer_ready_to_close')
             offer_add_state(answer.ah_offer, state_send, request.user)
+            if state_send.send_ntf:
+                context = Context()
+                context['place'] = 'auction_house.view - ah_answer_change_state() - answer_closed'
+                context['item'] = answer.ah_offer
+                send_ntf_from_state(request, state_send, context)
         if set_state.state_key == 'answer_canceled' and answer.is_bound:
             resurect_auction(answer.ah_offer)
-            set_auction(answer.ah_offer)
+            set_auction(request, answer.ah_offer)
         success_message = _('Your answer has change the state!')
         messages.success(request, success_message)
         return redirect('ah-customer-auction', pk)
@@ -535,7 +545,6 @@ def ah_answer_line_update_total(request, pk, pk2):
             sum = 0
             answer = AhAnswer.objects.filter(id = pk).first()
             for line in answer.my_lines.all():
-                print(line.pk)
                 sum += line.total_price
             answer.total_price = sum
             answer.save()

@@ -11,6 +11,7 @@ from .models import (
     ProjectCustomUser,
     CustomerTranslation,
 )
+from django.contrib.auth.models import Group
 
 
 from django.utils.translation import gettext as _
@@ -46,19 +47,19 @@ class PasswordResetRequest(forms.Form):
         help_text=_(("Enter the email address used for logging in to "
                      "your account. ")),
     )
-    
+
 
 class PasswordReset(forms.Form):
-    
+
     new_password = forms.CharField(
         widget=forms.PasswordInput,
-        help_text=_("Enter a new password for yor account.")
+        help_text=_("Enter a new password for your account.")
     )
     password_confirmation = forms.CharField(
         widget=forms.PasswordInput,
         help_text=_("Repeat the same password.")
     )
-    
+
     def clean(self, *args, **kwargs):
         # Validate 'required'-ness
         super().clean()
