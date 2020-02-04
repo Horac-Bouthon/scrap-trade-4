@@ -411,6 +411,7 @@ section.superuser, div.superuser {
   padding-left: 6px;
   margin-left: 2px;
   border-left: 5px solid transparent;
+  border-radius: 5px;  /* a small detail */
 }
 section.poweruser, div.poweruser {
   border-color: var(--poweruser);
@@ -419,7 +420,17 @@ section.superuser, div.superuser {
   border-color: var(--superuser);
 }
 
-
+.page-superuser,
+.page-poweruser {
+  border: 0 solid transparent;
+  border-width: 0 7px;
+}
+.page-poweruser {
+  border-color: var(--poweruser);
+}
+.page-superuser {
+  border-color: var(--superuser);
+}
 
 
 

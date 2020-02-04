@@ -3,11 +3,12 @@
 
 {% block content %}
 
-  {% include 'project_main/__content-header.html' %}
-  
-  <section class="container py-3">
-    <div class="border overflow-hidden rounded shadow">
-      <div class="overflow-auto max-height-visible">
+  <div class="page-poweruser">
+    
+    {% include 'project_main/__content-header.html' %}
+    
+    <section class="container">
+      <div class="table-wrap max-height-visible">
         <table>
           <tr>
             <th>{% trans "ID" %}</th>
@@ -50,8 +51,8 @@
           {% endfor %}
         </table>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 {% endblock content %}
 
 {% block spec_action %}
