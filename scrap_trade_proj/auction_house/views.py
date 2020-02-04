@@ -1,9 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.urls import reverse_lazy
-from django.template import Context
-from django.db.models import Q
-from datetime import datetime
 from django.urls import reverse_lazy, reverse
 
 from .modules.auction import (
@@ -16,11 +12,10 @@ from .modules.auction import (
     answer_add_state,
     get_waiting_offers,
     get_auction_list_control_obj,
+    ntf_send_from_view,
 )
-from .modules.ntf_support import send_ntf_from_state
 
 from state_wf.models import (
-    Step,
     StepState,
 )
 
@@ -44,7 +39,6 @@ from .models import (
 from customers.models import (
     Customer,
 )
-from project_main.models import Project
 
 from .forms import (
     AhOfferLineUpdateForm,
@@ -313,10 +307,12 @@ def ah_offers_change_state(request, pk, pk2, pk3):
                 answer_add_state(answer, state_send, request.user)
 
         if set_state.send_ntf:
-            context = Context()
-            context['place'] = 'auction_house.view - ah_offers_change_state()'
-            context['item'] = offer
-            send_ntf_from_state(request, set_state, context)
+            ntf_send_from_view(
+                request=request,
+                state=set_state,
+                place='auction_house.view - ah_offers_change_state()',
+                item=offer,
+            )
 
         success_message = _('Your offer has change the state!')
         messages.success(request, success_message)
@@ -344,18 +340,22 @@ def ah_answer_change_state(request, pk, pk2, pk3):
             state_send = StepState.objects.get(state_key = 'offer_accepted')
             offer_add_state(answer.ah_offer, state_send, request.user)
             if state_send.send_ntf:
-                context = Context()
-                context['place'] = 'auction_house.view - ah_answer_change_state() - answer_accepted'
-                context['item'] = answer.ah_offer
-                send_ntf_from_state(request, state_send, context)
+                ntf_send_from_view(
+                    request=request,
+                    state=state_send,
+                    place='auction_house.view - ah_answer_change_state() - answer_accepted',
+                    item=answer.ah_offer,
+                )
         if set_state.state_key == 'answer_closed':
             state_send = StepState.objects.get(state_key = 'offer_ready_to_close')
             offer_add_state(answer.ah_offer, state_send, request.user)
             if state_send.send_ntf:
-                context = Context()
-                context['place'] = 'auction_house.view - ah_answer_change_state() - answer_closed'
-                context['item'] = answer.ah_offer
-                send_ntf_from_state(request, state_send, context)
+                ntf_send_from_view(
+                    request=request,
+                    state=state_send,
+                    place='auction_house.view - ah_answer_change_state() - answer_closed',
+                    item=answer.ah_offer,
+                )
         if set_state.state_key == 'answer_canceled' and answer.is_bound:
             resurect_auction(answer.ah_offer)
             set_auction(request, answer.ah_offer)

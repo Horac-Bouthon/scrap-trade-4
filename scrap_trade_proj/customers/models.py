@@ -4,7 +4,6 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 from django.conf import settings
 from django.urls import reverse
-from django.template import Context
 from django.contrib.auth.models import Group
 from PIL import Image
 
@@ -15,7 +14,7 @@ from translatable.models import TranslatableModel, get_translation_model
 
 from project_main.models import Project
 from integ.models import OpenId
-from notification.modules.ntf_support import send_by_template_to_address
+from notification.modules import ntf_manager
 
 class ProjectCustomUser(AbstractBaseUser, PermissionsMixin):
     """ basic user for admin AND customer base users """
@@ -135,10 +134,10 @@ class PasswordResetLink(models.Model):
         full_url = request.build_absolute_uri(url)
         print(' >>>>>>>>>>>>>> PASSWORD RESET URL <<<<<<<<<<<<<<< ')
         print(full_url)  # @todo; @production; Get rid of password reset console prints
-        context = Context()
+        context = NftContext()
         context['access_url'] = full_url
         address_obj = (self.for_user.email, self.for_user.userprofile.language)
-        send_by_template_to_address(request, context, address_obj, 'set_password')
+        ntf_manager.send_by_template_to_address(request, context, address_obj, 'set_password')
 
     def reset_password(self, new_password):
         user = self.for_user

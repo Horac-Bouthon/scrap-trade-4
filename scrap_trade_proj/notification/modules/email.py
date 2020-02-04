@@ -5,7 +5,6 @@ from notification.models import NtfSetup
 from email.message import EmailMessage
 
 def send(obj):
-    print('email.send')
     notification = NtfSetup.objects.all().first()
     EMAIL_ADDRESS = notification.sender_user
     EMAIL_PASSWORD = notification.sender_password

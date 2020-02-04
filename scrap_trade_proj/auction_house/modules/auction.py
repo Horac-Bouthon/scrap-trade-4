@@ -6,24 +6,24 @@ from auction_house.models import (
 )
 
 from state_wf.models import (
-    Step,
     StepState,
 )
-from .ntf_support import send_ntf_from_state
-from customers.modules.ntf_support import send_by_template
+from notification.modules import ntf_manager
+from project_main.models import Project
 
-from django.template import Context
+from django.urls import reverse
+from notification.modules import ntf_manager
 from django.utils.translation import gettext_lazy as _
 from django.utils import translation as tr
 
 from customers.models import (
     Customer,
-    ProjectCustomUser,
 )
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import is_aware, make_aware
 from datetime import date
 from datetime import datetime
+
 
 
 class AuctionSection:
@@ -102,19 +102,26 @@ def set_auction(request, par_offer):
         lucky_one.save()
         # send report
         if state_obj.send_ntf:
-            context = Context()
-            context['place'] = 'modules.auction - set_auction()'
-            context['item'] = lucky_one
-            send_ntf_from_state(request, state_obj, context)
+            ntf_send_from_view(
+                request=request,
+                state=state_obj,
+                place='modules.auction - set_auction()',
+                item=lucky_one,
+            )
         # unbound others
         state_obj = StepState.objects.get(state_key='answer_closed')
         for unlucky_one in fiter_by_state(par_offer.answers, 'answer_confirmed'):
             print('close {}'.format(unlucky_one))
             answer_add_state(unlucky_one, state_obj, None)
-            context = Context()
-            context['place'] = 'modules.auction - set_auction() - closed'
-            context['offer_description'] = par_offer.description
-            send_by_template(request, context, unlucky_one.owner, 'auction_ended', False, True)
+            ntf_send_from_auction(
+                request=request,
+                place='modules.auction - set_auction() - closed',
+                offer_description=par_offer.description,
+                customer=unlucky_one.owner,
+                template='auction_ended',
+                admins=False,
+                business=True,
+            )
 
     else:
         # cancel offer - no anwers
@@ -122,10 +129,15 @@ def set_auction(request, par_offer):
         # kill offer
         state_obj = StepState.objects.get(state_key='offer_canceled')
         offer_add_state(par_offer, state_obj, None)
-        context = Context()
-        context['place'] = 'modules.auction - set_auction() - no answers'
-        context['offer_description'] = par_offer.description
-        send_by_template(request, context, par_offer.owner, 'offer_no_answers', False, True)
+        ntf_send_from_auction(
+            request=request,
+            place='modules.auction - set_auction() - no answers',
+            offer_description=par_offer.description,
+            customer=par_offer.owner,
+            template='offer_no_answers',
+            admins=False,
+            business=True,
+        )
 
 
 def make_auctions(request, par_ref_dt):
@@ -249,3 +261,116 @@ def get_auction_list_control_obj(customer, data_offer, data_answers):
     )
     ret_val.append(obj_answers)
     return ret_val
+
+#--------------- notification ntf_support
+
+def send_ntf_from_state(request, state, context):
+    f_context = context.clone_context()
+    #--- settings
+    ret_val = True
+    if 'item' in context:
+        item = context['item']
+    else:
+        item = None
+    #--- set context
+    context['app_name'] = Project.objects.all().first().project_name
+    #--- state depending
+    #--- offer_confirmed
+    if state.state_key == 'offer_confirmed':
+        if type(item).__name__ != 'AhOffer':
+            return False
+        mess_list = list()
+        for customer in item.offered_to.all():
+            cust_url = request.build_absolute_uri(reverse('ah-customer-answers-create', args=[customer.pk, item.pk]))
+            message = ntf_create_from_auction(
+                template=state.ntf_template,
+                context=context.clone_context(),
+                cust_url=cust_url,
+                customer=customer,
+                admins=False,
+                business=True,
+            )
+            mess_list.append(message)
+        ret_val = ntf_manager.send_via_ntf(request, mess_list, f_context)
+    #---- answer_successful
+    if state.state_key == 'answer_successful':
+        if type(item).__name__ != 'AhAnswer':
+            return False
+        customer = item.owner
+        cust_url = request.build_absolute_uri(reverse('ah-answer-detail', args=[item.pk]))
+        message = ntf_create_from_auction(
+            template=state.ntf_template,
+            context=context.clone_context(),
+            cust_url=cust_url,
+            customer=customer,
+            admins=False,
+            business=True,
+        )
+        ret_val = ntf_manager.send_via_ntf(request, message, f_context)
+    #---- offer_accepted
+    if state.state_key == 'offer_accepted':
+        if type(item).__name__ != 'AhOffer':
+            return False
+        customer = item.owner
+        cust_url = request.build_absolute_uri(reverse('ah-offer-detail', args=[item.pk]))
+        message = ntf_create_from_auction(
+            template=state.ntf_template,
+            context=context.clone_context(),
+            cust_url=cust_url,
+            customer=customer,
+            admins=False,
+            business=True,
+        )
+        ret_val = ntf_manager.send_via_ntf(request, message, f_context)
+    #---- offer_ready_to_close
+    if state.state_key == 'offer_ready_to_close':
+        if type(item).__name__ != 'AhOffer':
+            return False
+        customer = item.owner
+        cust_url = request.build_absolute_uri(reverse('ah-offer-detail', args=[item.pk]))
+        message = ntf_create_from_auction(
+            template=state.ntf_template,
+            context=context.clone_context(),
+            cust_url=cust_url,
+            customer=customer,
+            admins=False,
+            business=True,
+        )
+        ret_val = ntf_manager.send_via_ntf(request, message, f_context)
+    return ret_val
+
+def ntf_send_from_view(request, state, place='No where', item=None):
+    context = ntf_manager.NtfContext()
+    context['place'] = place
+    context['item'] = item
+    send_ntf_from_state(request, state, context)
+    return
+
+def ntf_send_from_auction(
+    request,
+    place='No where',
+    offer_description="app",
+    customer=None,
+    template='fallback',
+    admins=False,
+    business=False,
+    ):
+    context = ntf_manager.NtfContext()
+    context['place'] = place
+    context['offer_description'] = offer_description
+    ntf_manager.send_by_template(request, context, customer, template, admins, business)
+
+def ntf_create_from_auction(
+    template='fallback',
+    context=None,
+    cust_url='Not set',
+    customer=None,
+    admins=False,
+    business=False,
+    ):
+    message = ntf_manager.NtfMessage()
+    message.template = template
+    message.context = context
+    message.context['access_url'] = cust_url
+    message = customer.add_emails(message, False, True)
+    return message

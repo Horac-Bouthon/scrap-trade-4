@@ -1,4 +1,5 @@
 from notification.models import MessTemp, MessTempTranslation
+from state_wf.models import StepState
 
 #-----------------  fallback
 r0 = MessTemp.objects.filter(temp_key='fallback')
@@ -315,6 +316,11 @@ if r2.count() < 1:
     )
     t_cs_2.save()
 
+    state = StepState.objects.filter(state_key = 'offer_confirmed').first()
+    state.send_ntf = True
+    state.ntf_template = new_2
+    state.save()
+
 #-----------------  report_success
 r3 = MessTemp.objects.filter(temp_key='report_success')
 if r3.count() < 1:
@@ -471,6 +477,11 @@ if r3.count() < 1:
     )
     t_cs_3.save()
 
+    state = StepState.objects.filter(state_key = 'answer_successful').first()
+    state.send_ntf = True
+    state.ntf_template = new_3
+    state.save()
+
 #-----------------  offer_accepted
 r4 = MessTemp.objects.filter(temp_key='offer_accepted')
 if r4.count() < 1:
@@ -597,6 +608,11 @@ if r4.count() < 1:
     )
     t_cs_4.save()
 
+    state = StepState.objects.filter(state_key = 'offer_accepted').first()
+    state.send_ntf = True
+    state.ntf_template = new_4
+    state.save()
+
 #-----------------  offer_ready_to_close
 r5 = MessTemp.objects.filter(temp_key='offer_ready_to_close')
 if r5.count() < 1:
@@ -722,6 +738,11 @@ if r5.count() < 1:
         language = 'cs'
     )
     t_cs_5.save()
+
+    state = StepState.objects.filter(state_key = 'offer_ready_to_close').first()
+    state.send_ntf = True
+    state.ntf_template = new_5
+    state.save()
 
 #-----------------  auction_ended
 r6 = MessTemp.objects.filter(temp_key='auction_ended')

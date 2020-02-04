@@ -3,6 +3,22 @@ from notification.models import NtfSetup, MessTemp
 from django.utils import translation as tr
 from django.template import Context
 from django.template import Template
+from project_main.models import Project
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
+from django.utils import translation as tr
+from customers import models as mc
+
+
+#--------------------  clases
+class NtfContext(Context):
+    def clone_context(self):
+        clone = NtfContext()
+        for dict_i in self:
+            for key in dict_i:
+                clone[key] = self[key]
+        return clone
+
 
 class NtfMessage:
 
@@ -12,7 +28,7 @@ class NtfMessage:
             body_type='text',
             body="",
             template="",
-            context=Context(),
+            context=NtfContext(),
             sender="",
             reciver_list=None,
             is_mail_list=False,
@@ -77,6 +93,22 @@ class NtfMessage:
         )
         return new_obj
 
+#-------------------------------- functions`
+def send_via_ntf(request, object, fail_context):
+    fail_context['orig'] = repr(object)
+    if not send(object):
+        allert_poweruser_ntf_failure(request, fail_context)
+
+def send_by_template_to_address(request, context, address_obj, temp_key):
+    context['app_name'] = Project.objects.all().first().project_name
+    f_context = context.clone_context()
+    message = NtfMessage()
+    message.template = temp_key
+    message.context = context
+    message.reciver_list.append(address_obj)
+    ret_val = send_via_ntf(request, message, f_context)
+    return
+
 def send(ntf_message_man):
     notification = NtfSetup.objects.all().first()
     ret_val = True
@@ -84,9 +116,35 @@ def send(ntf_message_man):
         ret_val = email.send(ntf_message_man)
     return ret_val
 
-def send_msg_list(ntf_list):
-    notification = NtfSetup.objects.all().first()
-    ret_val = True
-    if notification.serve_email:
-        ret_val = email.send_list(ntf_list)
-    return ret_val
+def allert_poweruser_ntf_failure(request, context):
+    context['app_name'] = Project.objects.all().first().project_name
+    context['url'] = request.build_absolute_uri()
+    context['user_mail'] = request.user.email
+    if request.user.customer is None:
+        context['user_cust'] = _('Not set')
+    else:
+        context['user_cust'] = request.user.customer.customer_name
+
+    message = NtfMessage()
+    message.template = 'ntf_failur'
+    message.context = context
+    message.reciver_list.clear()
+    message = add_poweruser_to_ntf(message)
+    send(message)
+    return
+
+def send_by_template(request, context, customer, temp_key, admin, business):
+    context['app_name'] = Project.objects.all().first().project_name
+    f_context = context.clone_context()
+    message = NtfMessage()
+    message.template = temp_key
+    message.context = context
+    message = customer.add_emails(message, admin, business)
+    ret_val = send_via_ntf(request, message, f_context)
+    return
+
+def add_poweruser_to_ntf(ntf_message):
+    for user in mc.ProjectCustomUser.objects.all():
+        if user.has_perm("customers.is_poweruser"):
+            ntf_message.reciver_list.append((user.email, user.userprofile.language))
+    return ntf_message
