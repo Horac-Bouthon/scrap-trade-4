@@ -1,0 +1,16 @@
+
+{# Text to show as content where there are no things to list. #}
+
+{# REQUIRES PASSED ARGUMENT: `count` #}
+
+
+{% load i18n %}
+
+{% if check.count == 0 %}
+  <div class="font-weight-bold big text-center
+              py-1">
+    
+    {% trans "No entries." %}
+    
+  </div>
+{% endif %}

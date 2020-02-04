@@ -87,7 +87,12 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
+        
         offer = kwargs.get('object')
+        
+        offer.refresh_total_price()  # @todo; Pricey redundant call!
+        
+        state_key = offer.actual_state.state_key
         
         context.update({
             'my_answers': fiter_by_state(
@@ -99,19 +104,8 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
             
             'bound_answers': offer.answers.filter(is_bound = True),
             
-            'state_new': StepState.objects.get(
-                state_key='offer_new'),
-            'state_confirmed': StepState.objects.get(
-                state_key='offer_confirmed'),
-            'state_accepted': StepState.objects.get(
-                state_key='offer_accepted'),
-            'state_ready_to_close': StepState.objects.get(
-                state_key='offer_ready_to_close'),
-            'state_closed': StepState.objects.get(
-                state_key='offer_closed'),
+            'state': state_key.replace('offer_', ''),  # Trim for readability
         })
-        
-        offer.refresh_total_price()
         
         button_list = [
             {
@@ -127,8 +121,7 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
                 'icon': 'file-text',
             }
         ]
-        if offer.actual_state in [context['state_new'], 
-                                  context['state_ready_to_close']]:
+        if state_key in ['offer_new','offer_ready_to_close']:
             button_list.append({
                 'text': _("Edit offer"),
                 'href': reverse('ah-offer-customer-update', 

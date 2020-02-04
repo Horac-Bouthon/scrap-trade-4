@@ -328,6 +328,20 @@ table .btn-icon-only {
   text-align: center;
 }
 
+/* Usage: Mark td with class, wrap icons into an extra div */
+
+table td.iconwrap {
+  padding: 0;
+}
+table td.iconwrap > div {
+  padding: 3px 0;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 4rem;
+  margin: auto;
+  justify-content: center;
+}
+
 
 
 /**********

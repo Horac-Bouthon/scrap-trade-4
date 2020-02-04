@@ -170,12 +170,11 @@
                 </a>
               {% endif %}
 
-              {% block spec_action %}
-              {% endblock spec_action %}
-              <div class="border-top my-2"></div>
-              {% block site_list %}
-              {% endblock site_list %}
-              {# @todo; Delete button-commenting elements in side-panel after testing #}       
+              
+              {% block spec_action %} {% endblock spec_action %}
+              {% block site_list %} {% endblock site_list %}
+              {# @todo; Delete button blocks in side-panel after testing #}
+              
             {% else %}
 
               {# Login form #}
