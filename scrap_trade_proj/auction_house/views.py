@@ -121,7 +121,7 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
                 'icon': 'arrow-left',
                 'type': 'secondary'
             }, {
-                'text': _("Offer documents"),
+                'text': _("Documents"),
                 'href': reverse('doc-repo-dokument-list', 
                                 kwargs={'oid': offer.open_id.int_id}),
                 'icon': 'file-text',
@@ -165,20 +165,12 @@ class AhOfferUpdateView(Poweruser, UpdateView):
     ]
 
 
-class AhOfferCustomerUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class AhOfferCustomerUpdateView(UserBelongOffer, UpdateView):
     model = AhOffer
     fields = [
         'description', 'delivery_date', 'auction_date',
     ]
     template_name = 'auction_house/ahoffer_customer_form.html'
-
-    def test_func(self):
-        offer = self.get_object()
-        customer = offer.owner
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
 
 
 class AhOfferDeletelView(Poweruser, DeleteView):
@@ -244,7 +236,7 @@ def ah_offer_line_create(request, pk):
     return render(request, 'auction_house/offer_line_form.html', context)
 
 
-class AhDeletelOfferLine(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class AhDeletelOfferLine(UserPassesTestMixin, DeleteView):
     model = AhOfferLine
 
     def delete(self, *args, **kwargs):
@@ -256,11 +248,8 @@ class AhDeletelOfferLine(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return reverse_lazy('ah-offer-detail',  kwargs={'pk': self.offer_pk})
 
     def test_func(self):
-        customer = self.get_object().offer.owner
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
+        offer = self.get_object().offer
+        return test_user_belong_offer(request.user, offer)
 
 
 #--------------------------------
@@ -413,17 +402,9 @@ class AhAnswerListView(Poweruser, ListView):
     ordering = ['-pk']
 
 
-class AhAnswerDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class AhAnswerDetailView(UserBelongAnswer, DetailView):
     model = AhAnswer
     template_name = 'auction_house/ahanswer_detail.html'
-
-    def test_func(self):
-        answer = self.get_object()
-        customer = answer.owner
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
@@ -451,20 +432,12 @@ class AhAnswerUpdateView(Poweruser, UpdateView):
     
 
 
-class AhAnswerCustomerUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class AhAnswerCustomerUpdateView(UserBelongAnswer, UpdateView):
     model = AhAnswer
     fields = [
         'description',
     ]
     template_name = 'auction_house/ahanswer_customer_form.html'
-
-    def test_func(self):
-        offer = self.get_object()
-        customer = offer.owner
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
 
 
 class AhAnswerDeletelView(Poweruser, DeleteView):

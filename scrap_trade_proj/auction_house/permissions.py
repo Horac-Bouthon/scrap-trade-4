@@ -10,18 +10,15 @@ from django.contrib.auth.mixins import (
 from django.core.exceptions import PermissionDenied
 
 
-from customers.permissions import test_poweruser
+from customers.permissions import test_poweruser, test_user_belong_customer
 from .models import AhOffer, AhAnswer
 
 
 
 
 def test_user_belong_offer(user, offer):  # Test func
-    if not user.is_authenticated: 
-        return False
-    belong = offer.owner == user.customer
-    power = test_poweruser(user)
-    return belong or power or user.is_superuser
+    customer = offer.owner
+    return test_user_belong_customer(user, customer)
 
 class UserBelongOffer(UserPassesTestMixin):  # Interface
     def test_func(self):
@@ -43,11 +40,9 @@ def user_belong_offer(function):  # Decorator
 
 
 def test_user_belong_answer(user, answer):  # Test func
-    if not user.is_authenticated: 
-        return False
-    belong = answer.owner == user.customer
-    power = test_poweruser(user)
-    return belong or power or user.is_superuser
+    customer = answer.owner
+    return user_belong_customer(user, customer)
+
 
 class UserBelongAnswer(UserPassesTestMixin):  # Interface
     def test_func(self):
