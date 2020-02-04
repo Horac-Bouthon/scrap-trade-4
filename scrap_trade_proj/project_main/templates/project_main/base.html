@@ -123,13 +123,13 @@
                     
                     {% if user.is_superuser %}
                       <br/>
-                      <span class="text-danger font-weight-bold">
+                      <span class="text-superuser font-weight-bold">
                         Superuser
                       </span>
                     {% endif %}
-                    {% if 'customers.is_superuser' in perms %}
+                    {% if 'customers.is_poweruser' in perms %}
                       <br/>
-                      <span class="text-danger font-weight-bold">
+                      <span class="text-poweruser font-weight-bold">
                         Poweruser
                       </span>
                     {% endif %}
@@ -150,29 +150,26 @@
 
               
               {% if user.is_superuser %}
-                <span>Superuser</span>
                 <a class="mb-2
-                          btn btn-secondary"
+                          btn btn-superuser"
                    href="/admin" target="_blank">
                   {% trans "Administration tools" context "right-navbar" %}
                 </a>
               {% endif %}
               
               {% if "customers.is_poweruser" in perms %}
-                <span>Poweruser</span>
                 <a class="mb-2
-                          btn btn-secondary"
+                          btn btn-poweruser"
                    href="{% url 'ah-offer-list' %}">
                   {% trans "Offer list" context "right-navbar" %}
                 </a>
                 <a class="mb-2
-                          btn btn-secondary"
+                          btn btn-poweruser"
                    href="{% url 'ah-answer-list' %}">
                   {% trans "Answer list" context "right-navbar" %}
                 </a>
               {% endif %}
 
-              <span>Contextual</span>
               {% block spec_action %}
               {% endblock spec_action %}
               <div class="border-top my-2"></div>

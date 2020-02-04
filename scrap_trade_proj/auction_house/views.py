@@ -19,16 +19,22 @@ from state_wf.models import (
     Step,
     StepState,
 )
-from .decorators import (
-    # @todo; Add `permissions.py` to this app and simplify auth
-    user_belong_offer, 
-    user_corespond_customer, 
-    user_belong_answer,
-)
-from customers.decorators import user_belong_customer
 
+
+
+from customers.permissions import (
+    test_poweruser, Poweruser, poweruser,
+    test_user_belong_customer, UserBelongCustomer, user_belong_customer,
+)
+from .permissions import (
+    test_user_belong_offer, UserBelongOffer, user_belong_offer, 
+    test_user_belong_answer, UserBelongAnswer, user_belong_answer, 
+)
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
+
+
+
 from .models import (
     AhOffer,
     AhOfferLine,
@@ -60,53 +66,103 @@ from django.views.generic import (
     DeleteView,
 )
 
-class AhOfferListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class AhOfferListView(Poweruser, ListView):
     model = AhOffer
     template_name = 'auction_house/ahoffer_list.html'
     context_object_name = 'offers'
     ordering = ['-pk']
-    permission_required = 'customers.is_poweruser'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['content_header'] = {
+            'title': _('Offer list'),
+            'desc': _('A list of all offers in the application.'),
+        }
+        return context
 
 
-class AhOfferDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+
+class AhOfferDetailView(UserBelongOffer, DetailView):
     model = AhOffer
-
-    def test_func(self):
-        offer = self.get_object()
-        customer = offer.owner
-        co1 = self.request.user.is_superuser
-        co2 = self.request.user.has_perm('customers.is_poweruser')
-        co3 = self.request.user.customer == customer
-        return co1 or co2 or co3
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
-        object = kwargs.get('object')
-        context['my_answers'] = fiter_by_state(object.answers, 'answer_confirmed').order_by('-total_price')[:5]
-        context['bound_answers'] = object.answers.filter(is_bound = True)
-        context['answers_total'] = fiter_by_state(object.answers, 'answer_confirmed').count()
-        context['state_new'] = StepState.objects.get(state_key='offer_new')
-        context['state_confirmed'] = StepState.objects.get(state_key='offer_confirmed')
-        context['state_accepted'] = StepState.objects.get(state_key='offer_accepted')
-        context['state_ready_to_close'] = StepState.objects.get(state_key='offer_ready_to_close')
-        context['state_closed'] = StepState.objects.get(state_key='offer_closed')
-
-        object.refresh_total_price()
+        offer = kwargs.get('object')
+        
+        context.update({
+            'my_answers': fiter_by_state(
+                offer.answers, 'answer_confirmed'
+            ).order_by('-total_price')[:5],
+            'answers_total': fiter_by_state(
+                offer.answers, 'answer_confirmed'
+            ).count(),
+            
+            'bound_answers': offer.answers.filter(is_bound = True),
+            
+            'state_new': StepState.objects.get(
+                state_key='offer_new'),
+            'state_confirmed': StepState.objects.get(
+                state_key='offer_confirmed'),
+            'state_accepted': StepState.objects.get(
+                state_key='offer_accepted'),
+            'state_ready_to_close': StepState.objects.get(
+                state_key='offer_ready_to_close'),
+            'state_closed': StepState.objects.get(
+                state_key='offer_closed'),
+        })
+        
+        offer.refresh_total_price()
+        
+        button_list = [
+            {
+                'text': _("Auction"),
+                'href': reverse('ah-customer-auction', 
+                                kwargs={'pk': offer.owner.pk}),
+                'icon': 'arrow-left',
+                'type': 'secondary'
+            }, {
+                'text': _("Offer documents"),
+                'href': reverse('doc-repo-dokument-list', 
+                                kwargs={'oid': offer.open_id.int_id}),
+                'icon': 'file-text',
+            }
+        ]
+        if offer.actual_state in [context['state_new'], 
+                                  context['state_ready_to_close']]:
+            button_list.append({
+                'text': _("Edit offer"),
+                'href': reverse('ah-offer-customer-update', 
+                                kwargs={'pk': offer.pk}),
+                'icon': 'edit-3',
+            })
+        if test_poweruser(self.request.user):
+            button_list.append({
+                'text': _("Edit offer"),
+                'href': reverse('ah-offer-update', 
+                                kwargs={'pk': offer.pk}),
+                'icon': 'edit-3',
+                'type': 'poweruser',
+            })
+        context['content_header'] = {
+            'title': offer.description + ' | ' + _("Offer"),
+            'desc': _("Offer detail view."),
+            'button_list': button_list
+        }
 
         return context
+
 
 class AhOfferInfoView(LoginRequiredMixin, DetailView):
     model = AhOffer
     template_name = 'auction_house/ahoffer_info.html'
 
 
-class AhOfferUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class AhOfferUpdateView(Poweruser, UpdateView):
     model = AhOffer
     fields = ['description', 'delivery_date', 'auction_date',
         'minimal_total_price', 'auction_url', 'auction_start',
         'auction_end', 'offered_to',
     ]
-    permission_required = 'customers.is_poweruser'
 
 
 class AhOfferCustomerUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -125,14 +181,14 @@ class AhOfferCustomerUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateV
         return co1 or co2 or co3
 
 
-class AhOfferDeletelView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class AhOfferDeletelView(Poweruser, DeleteView):
     model = AhOffer
-    permission_required = 'customers.is_poweruser'
     success_url = reverse_lazy('ah-offer-list')
+
 
 #--------------------------------
 
-@login_required()
+
 @user_belong_offer
 def ah_offer_line_update(request, pk, pk2):
     offer = AhOffer.objects.filter(id = pk).first()
@@ -157,7 +213,7 @@ def ah_offer_line_update(request, pk, pk2):
     }
     return render(request, 'auction_house/offer_line_form.html', context)
 
-@login_required()
+
 @user_belong_offer
 def ah_offer_line_create(request, pk):
     offer = AhOffer.objects.filter(id = pk).first()
@@ -213,7 +269,6 @@ class AhMatClassDetailView(LoginRequiredMixin, DetailView):
     model = AhMatClass
 
 #-------------------------------- ah_customer_auction
-@login_required()
 @user_belong_customer
 def ah_customer_auction(request, pk):
     customer = Customer.objects.get(id = pk)
@@ -239,7 +294,7 @@ def ah_customer_auction(request, pk):
                                 kwargs={'pk': customer.pk}),
                 'icon': 'plus', 
             }, { 
-                'text': _("Edit customer info"),
+                'text': _("Edit customer info"),  # @todo; Add permission for customer info edit button
                 'href': reverse('project-customer-detail', 
                                 kwargs={'pk': customer.pk}),
                 'icon': 'edit-3', 
@@ -250,7 +305,7 @@ def ah_customer_auction(request, pk):
     return render(request, 'auction_house/customer_auction.html', context)
 
 
-@login_required()
+
 @user_belong_customer
 def ah_customer_offers_create(request, pk):
     customer = Customer.objects.filter(id = pk).first()
@@ -278,7 +333,7 @@ def ah_customer_offers_create(request, pk):
     return render(request, 'auction_house/ahoffer_customer_new.html', context)
 
 
-@login_required()
+
 @user_belong_customer
 def ah_customer_offers_by_state_key(request, pk, sk):
     customer = Customer.objects.filter(id = pk).first()
@@ -292,7 +347,7 @@ def ah_customer_offers_by_state_key(request, pk, sk):
     }
     return render(request, 'auction_house/customer_offer_list.html', context)
 
-@login_required()
+
 @user_belong_customer
 def ah_offers_change_state(request, pk, pk2, pk3):
     customer = Customer.objects.filter(id = pk).first()
@@ -319,7 +374,7 @@ def ah_offers_change_state(request, pk, pk2, pk3):
     }
     return render(request, 'auction_house/ahoffer_change_state.html', context)
 
-@login_required()
+
 @user_belong_customer
 def ah_answer_change_state(request, pk, pk2, pk3):
     customer = Customer.objects.filter(id = pk).first()
@@ -351,12 +406,11 @@ def ah_answer_change_state(request, pk, pk2, pk3):
     return render(request, 'auction_house/ahanswer_change_state.html', context)
 
 #-------------------------------- answer views
-class AhAnswerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class AhAnswerListView(Poweruser, ListView):
     model = AhAnswer
     template_name = 'auction_house/ahanswer_list.html'
     context_object_name = 'answers'
     ordering = ['-pk']
-    permission_required = 'customers.is_poweruser'
 
 
 class AhAnswerDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
@@ -386,7 +440,7 @@ class AhAnswerDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         return context
 
 
-class AhAnswerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class AhAnswerUpdateView(Poweruser, UpdateView):
     model = AhAnswer
     fields = [
         'description',
@@ -394,7 +448,7 @@ class AhAnswerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
         'ah_offer',
         'is_bound',
     ]
-    permission_required = 'customers.is_poweruser'
+    
 
 
 class AhAnswerCustomerUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -413,13 +467,12 @@ class AhAnswerCustomerUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
         return co1 or co2 or co3
 
 
-class AhAnswerDeletelView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class AhAnswerDeletelView(Poweruser, DeleteView):
     model = AhAnswer
-    permission_required = 'customers.is_poweruser'
     success_url = reverse_lazy('ah-answer-list')
 
 
-@login_required()
+
 @user_belong_customer
 def ah_customer_answer_waiting_offers(request, pk):
     customer = Customer.objects.filter(id = pk).first()
@@ -433,7 +486,7 @@ def ah_customer_answer_waiting_offers(request, pk):
     return render(request, 'auction_house/customer_waiting_list.html', context)
 
 
-@login_required()
+
 @user_belong_customer
 def ah_customer_answer_by_state_key(request, pk, sk):
     customer = Customer.objects.filter(id = pk).first()
@@ -447,7 +500,7 @@ def ah_customer_answer_by_state_key(request, pk, sk):
     }
     return render(request, 'auction_house/customer_answer_list.html', context)
 
-@login_required()
+
 @user_belong_customer
 def ah_customer_answer_create(request, pk, pk2):
     customer = Customer.objects.filter(id = pk).first()
@@ -473,7 +526,7 @@ def ah_customer_answer_create(request, pk, pk2):
     }
     return render(request, 'auction_house/ahanswer_customer_new.html', context)
 
-@login_required()
+
 @user_belong_answer
 def ah_answer_line_update_ppu(request, pk, pk2):
     answer = AhAnswer.objects.filter(id = pk).first()
@@ -486,6 +539,7 @@ def ah_answer_line_update_ppu(request, pk, pk2):
             answer_line = AhAnswerLine.objects.filter(id = pk2).first()
             answer_line.total_price = answer_line.ppu * answer_line.offer_line.amount
             answer_line.save()
+            #todo; Aggregates :: Sum()
             sum = 0
             answer = AhAnswer.objects.filter(id = pk).first()
             for line in answer.my_lines.all():
@@ -507,7 +561,7 @@ def ah_answer_line_update_ppu(request, pk, pk2):
     }
     return render(request, 'auction_house/answer_line_form.html', context)
 
-@login_required()
+
 @user_belong_answer
 def ah_answer_line_update_total(request, pk, pk2):
     answer = AhAnswer.objects.filter(id = pk).first()
@@ -543,8 +597,8 @@ def ah_answer_line_update_total(request, pk, pk2):
     }
     return render(request, 'auction_house/answer_line_form.html', context)
 
-@login_required()
-@permission_required('customers.is_poweruser')
+
+@poweruser
 def ah_offer_step_create(request, pk):
     offer = AhOffer.objects.get(id = pk)
     customer = offer.owner
@@ -575,8 +629,8 @@ def ah_offer_step_create(request, pk):
     }
     return render(request, 'auction_house/ah_step_new.html', context)
 
-@login_required()
-@permission_required('customers.is_poweruser')
+
+@poweruser
 def ah_answer_step_create(request, pk):
     answer = AhAnswer.objects.get(id = pk)
     customer = answer.owner
