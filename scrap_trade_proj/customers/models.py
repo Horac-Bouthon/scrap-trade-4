@@ -130,11 +130,8 @@ class PasswordResetLink(models.Model):
     def send_to_user(self, request):
         # Make a URL link out of the id
         url = reverse('user-reset', kwargs={'uuid': self.id})
-        #full_url = 'localhost:8000%s' % url  # @todo; @production; Make the url respect the production server's domain and don't forget to use HTTPS!
         full_url = request.build_absolute_uri(url)
-        print(' >>>>>>>>>>>>>> PASSWORD RESET URL <<<<<<<<<<<<<<< ')
-        print(full_url)  # @todo; @production; Get rid of password reset console prints
-        context = NftContext()
+        context = ntf_manager.NtfContext()
         context['access_url'] = full_url
         address_obj = (self.for_user.email, self.for_user.userprofile.language)
         ntf_manager.send_by_template_to_address(request, context, address_obj, 'set_password')
