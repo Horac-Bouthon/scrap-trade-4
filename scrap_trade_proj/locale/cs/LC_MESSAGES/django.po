@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-24 11:32+0100\n"
+"POT-Creation-Date: 2020-02-04 17:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,7 +56,7 @@ msgstr "Datum aukce:"
 #: auction_house/templates/auction_house/customer_answer_list.html:24
 #: auction_house/templates/auction_house/customer_offer_list.html:24
 #: auction_house/templates/auction_house/customer_waiting_list.html:24
-#: customers/models.py:238
+#: customers/models.py:338
 #: doc_repo/templates/doc_repo/doc_repo_doc_list.html:30
 msgid "Description"
 msgstr "Popis"
@@ -117,7 +117,7 @@ msgstr "Nabídnuto"
 
 #: auction_house/models.py:63
 msgctxt "AhOffer definition"
-msgid "List of customers who received the offer"
+msgid "List of customers who recieved the offer"
 msgstr "Zákazníci, kterým byla nabídka postoupena"
 
 #: auction_house/models.py:74
@@ -171,15 +171,15 @@ msgid "From this time is auction URL closed"
 msgstr "Od tohoto okamžiku je URL aukce uzavřeno"
 
 #: auction_house/models.py:109 auction_house/models.py:191
-#: auction_house/models.py:315 customers/models.py:105 customers/models.py:149
-#: customers/models.py:315 doc_repo/models.py:118
+#: auction_house/models.py:315 customers/models.py:182 customers/models.py:225
+#: customers/models.py:415 doc_repo/models.py:118
 msgctxt "UserProfile definition"
 msgid "Open id"
 msgstr "Open id"
 
 #: auction_house/models.py:110 auction_house/models.py:192
-#: auction_house/models.py:316 customers/models.py:106 customers/models.py:150
-#: customers/models.py:316 doc_repo/models.py:119
+#: auction_house/models.py:316 customers/models.py:184 customers/models.py:226
+#: customers/models.py:416 doc_repo/models.py:119
 msgctxt "UserProfile definition"
 msgid "Link to integration key"
 msgstr "Odkaz na integrační klíč"
@@ -408,15 +408,15 @@ msgctxt "AhAnswerLine definition"
 msgid "Answer lines"
 msgstr "Řádky odpovědi"
 
-#: auction_house/modules/auction.py:208
+#: auction_house/modules/auction.py:238
 msgid "Offers:"
 msgstr "Nabídky:"
 
-#: auction_house/modules/auction.py:214
+#: auction_house/modules/auction.py:244
 msgid "Wating offers"
 msgstr "Čekající nabídky"
 
-#: auction_house/modules/auction.py:229
+#: auction_house/modules/auction.py:259
 msgid "Answers:"
 msgstr "Odpovědi:"
 
@@ -610,7 +610,7 @@ msgstr "Vytvořeno"
 
 #: auction_house/templates/auction_house/ahanswer_detail.html:144
 #: auction_house/templates/auction_house/ahoffer_detail.html:242
-#: customers/templates/customers/user_profile.html:27 customers/views.py:124
+#: customers/templates/customers/user_profile.html:27 customers/views.py:131
 #: doc_repo/templates/doc_repo/__btn-icon-doc.html:4
 msgid "Documents"
 msgstr "Dokumenty"
@@ -742,14 +742,6 @@ msgstr "Minimální cena za jednotku:"
 msgid "Send"
 msgstr "Odeslat"
 
-#: auction_house/templates/auction_house/customer_auction.html:40
-msgid "Create new offer"
-msgstr "Vytvořit novou nabídku"
-
-#: auction_house/templates/auction_house/customer_auction.html:43
-msgid "Set customer"
-msgstr "Upravit zákazníka"
-
 #: auction_house/templates/auction_house/customer_waiting_list.html:41
 msgid "Click to view the offer"
 msgstr "Použijte k prohlédnutí nabídky"
@@ -762,163 +754,193 @@ msgstr "Použijte k prohlédnutí vlastníka nabídky"
 msgid "Click to create answer"
 msgstr "Použijte k vytvoření nové odpovědi"
 
-#: auction_house/views.py:140 auction_house/views.py:467
-#: auction_house/views.py:504
+#: auction_house/views.py:145 auction_house/views.py:517
+#: auction_house/views.py:551
 msgid "Your line has been updated!"
 msgstr "Váše řádka byla změněna!"
 
-#: auction_house/views.py:146
+#: auction_house/views.py:151
 msgctxt "ah_offer_line_update-title"
 msgid "update-line"
 msgstr "řádka-nastavení"
 
-#: auction_house/views.py:170 auction_house/views.py:238
+#: auction_house/views.py:175 auction_house/views.py:265
 msgid "Your offer has been added!"
 msgstr "Váše nabídka byla přidána!"
 
-#: auction_house/views.py:176
+#: auction_house/views.py:181
 msgctxt "ah_offer_line_create-title"
 msgid "create-offer"
 msgstr "nabídka-vytvoření"
 
-#: auction_house/views.py:217
+#: auction_house/views.py:222
 msgctxt "ah_customer_auction-title"
 msgid "customer-auction"
 msgstr "aukce zákazníka"
 
-#: auction_house/views.py:244
+#: auction_house/views.py:230
+#: project_main/templates/project_main/__header.html:61
+msgid "Auction"
+msgstr "Aukce"
+
+#: auction_house/views.py:231
+msgid "Auction homepage"
+msgstr "Domácí strana aukce"
+
+#: auction_house/views.py:233 customers/models.py:410 customers/views.py:94
+#: customers/views.py:117
+msgid "Customer logo"
+msgstr "Zákazníkovo logo"
+
+#: auction_house/views.py:236
+msgid "Create new offer"
+msgstr "Vytvořit novou nabídku"
+
+#: auction_house/views.py:241
+msgid "Edit customer info"
+msgstr "Upravit informace o zákazníkovi"
+
+#: auction_house/views.py:271
 msgctxt "ah_customer_offers_create-title"
 msgid "create-offer"
 msgstr "nabídka-vytvoření"
 
-#: auction_house/views.py:257
+#: auction_house/views.py:284
 msgctxt "ah_customer_offer_by_state_key-title"
 msgid "offers-by-state"
 msgstr "nabídky-dle-stavu"
 
-#: auction_house/views.py:281
+#: auction_house/views.py:317
 msgid "Your offer has change the state!"
 msgstr "Váše nabídka změnila stav!"
 
-#: auction_house/views.py:285
+#: auction_house/views.py:321
 msgctxt "ah_offers_change_state-title"
 msgid "offer-state"
 msgstr "nabídka-stav"
 
-#: auction_house/views.py:312
+#: auction_house/views.py:362
 msgid "Your answer has change the state!"
 msgstr "Váš odpověď změnila stav!"
 
-#: auction_house/views.py:316
+#: auction_house/views.py:366
 msgctxt "ah_answer_change_state-title"
 msgid "offer-state"
 msgstr "nabídka-stav"
 
-#: auction_house/views.py:398
+#: auction_house/views.py:448
 msgctxt "ah_customer_answer_waiting_offers-title"
 msgid "offers_waiting"
 msgstr "nabídky-čekající"
 
-#: auction_house/views.py:401
+#: auction_house/views.py:451
 msgid "waiting offer"
 msgstr "čekající nabídky"
 
-#: auction_house/views.py:412
+#: auction_house/views.py:462
 msgctxt "ah_customer_answer_by_state_key-title"
 msgid "answers-by-state"
 msgstr "nabídky-dle-stavu"
 
-#: auction_house/views.py:433
+#: auction_house/views.py:483
 msgid "Your answer has been added!"
 msgstr "Váš odpověď byla přidána!"
 
-#: auction_house/views.py:439
+#: auction_house/views.py:489
 msgctxt "ah_customer_answer_create-title"
 msgid "create-answer"
 msgstr "odpověď-vytvoření"
 
-#: auction_house/views.py:473 auction_house/views.py:510
+#: auction_house/views.py:523 auction_house/views.py:557
 msgctxt "ah_answer_line_update-title"
 msgid "update-line"
 msgstr "řádka-změny"
 
-#: auction_house/views.py:534 auction_house/views.py:566
+#: auction_house/views.py:581 auction_house/views.py:613
 msgid "Step has been added!"
 msgstr "Byl přidán krok!"
 
-#: auction_house/views.py:540
+#: auction_house/views.py:587
 msgctxt "ah_offer_step_create-title"
 msgid "create-step"
 msgstr "vytvořit-krok"
 
-#: auction_house/views.py:572
+#: auction_house/views.py:619
 msgctxt "ah_answer_step_create-title"
 msgid "create-step"
 msgstr "vytvořit-krok"
 
-#: customers/admin.py:28 customers/admin.py:55
+#: customers/admin.py:29
 msgid "Password"
 msgstr "Heslo"
 
-#: customers/admin.py:28 customers/admin.py:55
+#: customers/admin.py:29
 msgid "Enter password"
 msgstr "Vložte heslo"
 
-#: customers/admin.py:29 customers/admin.py:56
+#: customers/admin.py:30
 msgid "Password confirmation"
 msgstr "Ověření hesla"
 
-#: customers/admin.py:29 customers/admin.py:56
+#: customers/admin.py:30
 msgid "Confirm password"
 msgstr "Opětovným zadáním ověřte heslo."
 
-#: customers/admin.py:40 customers/admin.py:67
+#: customers/admin.py:41 customers/forms.py:35
 msgid "Passwords don't match"
 msgstr "Hesla nesouhlasí."
 
-#: customers/admin.py:130 customers/admin.py:141 project_main/admin.py:14
+#: customers/admin.py:99 customers/admin.py:110 project_main/admin.py:14
 #: state_wf/admin.py:13
 msgid "Translation"
 msgstr "Překlad"
 
-#: customers/admin.py:131 customers/admin.py:142 project_main/admin.py:15
+#: customers/admin.py:100 customers/admin.py:111 project_main/admin.py:15
 #: state_wf/admin.py:14
 msgid "Translations"
 msgstr "Překlady"
 
-#: customers/models.py:25
-msgid "User must have an email address."
-msgstr "Uživatel musí mít e-mailovou adresu"
+#: customers/forms.py:56
+msgid "Enter a new password for your account."
+msgstr "Vložte nové heslo pro váš účet"
 
-#: customers/models.py:49
+#: customers/forms.py:60
+msgid "Repeat the same password."
+msgstr "Zopakujte nové heslo"
+
+#: customers/forms.py:70
+msgid "The passwords don't match. Please try writing them again."
+msgstr "Hesla se neshodují. Prosím, zopakovat ještě jednou."
+
+#: customers/models.py:30
 msgid "email address"
 msgstr "e-mail adresa"
 
-#: customers/models.py:50
-msgid "Required: 150 characters or fewer. Letters, digits and @/./+/-/_ only."
-msgstr "Minimálně 150 znaku. Pouze písmena, čísla a @/./+/-/_"
+#: customers/models.py:31
+msgid "This acts as the username when logging in."
+msgstr "Toto slouží jako jméno uživatele při přihlašování."
 
-#: customers/models.py:51
-msgid "user name"
-msgstr "uživatelské jméno"
+#: customers/models.py:36
+msgid "Name"
+msgstr "Jméno"
 
-#: customers/models.py:51
-msgid "User identification"
-msgstr "identifikace uživatele"
+#: customers/models.py:37
+msgid "Only informational."
+msgstr "Jen pro informaci."
 
-#: customers/models.py:52
-msgid "active user"
-msgstr "aktivní uživatel"
+#: customers/models.py:42
+msgid "Is Active"
+msgstr "Je aktivní"
 
-#: customers/models.py:52
-msgid "User can log in"
-msgstr "uživatel se může přihlásit"
+#: customers/models.py:43
+msgid "User can log into the website and isn't blocked."
+msgstr "Uživatel se může přihlásit na webovou stránku a není blokovaný."
 
-#: customers/models.py:53
+#: customers/models.py:47
 msgid "access admin tools"
 msgstr "admin nástroje"
 
-#: customers/models.py:54
+#: customers/models.py:48
 msgid "User can access administration tools"
 msgstr "uživatel má přístup na administrativní nástroje"
 
@@ -927,17 +949,17 @@ msgctxt "ProjectCustomUser definition"
 msgid "Customer"
 msgstr "Zákazník"
 
-#: customers/models.py:59
+#: customers/models.py:60
 msgctxt "ProjectCustomUser definition"
 msgid "Link to Customer"
 msgstr "Odkaz na zákazníka"
 
-#: customers/models.py:65
+#: customers/models.py:68
 msgctxt "ProjectCustomUser definition"
 msgid "Project"
 msgstr "Projekt"
 
-#: customers/models.py:66
+#: customers/models.py:70
 msgctxt "ProjectCustomUser definition"
 msgid "Link to Project"
 msgstr "Odkaz na projekt"
@@ -947,335 +969,367 @@ msgctxt "ProjectCustomUser definition"
 msgid "User"
 msgstr "Uživatel"
 
-#: customers/models.py:76
+#: customers/models.py:77
 msgctxt "ProjectCustomUser definition"
 msgid "Users"
 msgstr "uživatelé"
 
-#: customers/models.py:99
+#: customers/models.py:158
 msgctxt "UserProfile user"
 msgid "user"
 msgstr "uživatel"
 
-#: customers/models.py:101
+#: customers/models.py:159
+msgctxt "UserProfile definition"
+msgid "Link to pattern object"
+msgstr "Odkaz klíčový objekt"
+
+#: customers/models.py:163 customers/models.py:272
+msgctxt "UserProfile user"
+msgid "language"
+msgstr "Jazyk"
+
+#: customers/models.py:164 customers/models.py:273
+msgctxt "UserProfile definition"
+msgid "Set the language to communicate with the user"
+msgstr "Nastavte jazyk pro komunikaci s uživatelem"
+
+#: customers/models.py:171
 msgctxt "UserProfile image"
 msgid "image"
 msgstr "obrázek"
 
-#: customers/models.py:112
+#: customers/models.py:172
+msgctxt "UserProfile definition"
+msgid "Here you can add an image to the profile"
+msgstr "Zde můžete přidat obrázek k profilu"
+
+#: customers/models.py:188
 msgctxt "UserProfile definition"
 msgid "User Profile"
 msgstr "uživateský profil"
 
-#: customers/models.py:113
+#: customers/models.py:189
 msgctxt "UserProfile definition"
 msgid "User Profiles"
 msgstr "uživatelské profily"
 
-#: customers/models.py:127
+#: customers/models.py:203
 msgid "Establishment"
 msgstr "Provozovna"
 
-#: customers/models.py:128
+#: customers/models.py:204
 msgid "Establishment name"
 msgstr "Jméno provozovny"
 
-#: customers/models.py:129
+#: customers/models.py:205
 msgid "Street"
 msgstr "Ulice"
 
-#: customers/models.py:130
+#: customers/models.py:206
 msgid "Street in address"
 msgstr "Ulice v adrese"
 
-#: customers/models.py:131
+#: customers/models.py:207
 msgid "House"
 msgstr "Č.P."
 
-#: customers/models.py:132
+#: customers/models.py:208
 msgid "House number in address"
 msgstr "Číslo popisné domu"
 
-#: customers/models.py:133
+#: customers/models.py:209
 msgid "City"
 msgstr "Město"
 
-#: customers/models.py:134
+#: customers/models.py:210
 msgid "City name in address"
 msgstr "Jméno města v adrese"
 
-#: customers/models.py:135
+#: customers/models.py:211
 msgid "ZIP"
 msgstr "PSČ"
 
-#: customers/models.py:136
+#: customers/models.py:212
 msgid "ZIP code in address"
 msgstr "Poštovní směrovací číslo v adrese"
 
-#: customers/models.py:137
+#: customers/models.py:213
 msgid "headquarter"
 msgstr "Sídlo"
 
-#: customers/models.py:138
+#: customers/models.py:214
 msgid "Mark customers headquarter. "
 msgstr "Označení sídla zákazníka"
 
-#: customers/models.py:142
+#: customers/models.py:218
 msgctxt "CustomerEstablishments definition"
 msgid "Customer"
 msgstr "Zákazník"
 
-#: customers/models.py:143
+#: customers/models.py:219
 msgctxt "CustomerEstablishments definition"
 msgid "Link to Customer"
 msgstr "Odkaz na zákazníka"
 
-#: customers/models.py:156
+#: customers/models.py:232
 msgctxt "CustomerEstablishments definition"
 msgid "Establishment"
 msgstr "Provozovna"
 
-#: customers/models.py:157
+#: customers/models.py:233
 msgctxt "CustomerEstablishments definition"
 msgid "Establishments"
 msgstr "Provozovny"
 
-#: customers/models.py:160
+#: customers/models.py:236
 msgctxt "CustomerAddress __str__"
 msgid "establishment"
 msgstr "provozovna"
 
-#: customers/models.py:165
+#: customers/models.py:243
 msgctxt "Customer definition"
 msgid "email address"
 msgstr "e-mail adresa"
 
-#: customers/models.py:166
+#: customers/models.py:244
 msgctxt "Customer definition"
 msgid "Required: 150 characters or fewer. Letters, digits and @/./+/-/_ only."
 msgstr "Minimálně 150 znaku. Pouze písmena, čísla a @/./+/-/_"
 
-#: customers/models.py:171 customers/models.py:196 customers/models.py:272
+#: customers/models.py:251 customers/models.py:296 customers/models.py:372
 msgctxt "CustomerEmail definition"
 msgid "Customer"
 msgstr "Zákazník"
 
-#: customers/models.py:172 customers/models.py:197 customers/models.py:273
+#: customers/models.py:252 customers/models.py:297 customers/models.py:373
 msgctxt "CustomerEmail definition"
-msgid "Link to Customer"
-msgstr "Odkaz na zákazníka"
-
-#: customers/models.py:175
-msgid "admin address"
-msgstr "administrátorská adresa"
-
-#: customers/models.py:176
-msgid "Mark special addresses to send additional administration messages. "
-msgstr ""
-"Označuje adresy, kam se take automaticky odesílají zprávy pro administrátora"
-
-#: customers/models.py:179
-msgctxt "CustomerEmail definition"
-msgid "Customer email"
-msgstr "E-mail zákazníka"
-
-#: customers/models.py:180
-msgctxt "CustomerEmail definition"
-msgid "Customer emails"
-msgstr "E-maily zákazníka"
-
-#: customers/models.py:183 customers/models.py:282 customers/models.py:326
-msgid "address"
-msgstr "adresa"
-
-#: customers/models.py:187 customers/models.py:188
-msgid "Account number"
-msgstr "Číslo účtu"
-
-#: customers/models.py:189
-msgid "Bank ID"
-msgstr "Identifikace banky"
-
-#: customers/models.py:190
-msgid "National identification of the bank"
-msgstr "Vnitrostátní identifikace banky"
-
-#: customers/models.py:191
-msgid "IBAN"
-msgstr "IBAN"
-
-#: customers/models.py:192
-msgid "International account identification"
-msgstr "Mezináridní inentifikace účtu"
-
-#: customers/models.py:200
-msgid "Prefered account"
-msgstr "Preferovaný účet"
-
-#: customers/models.py:201
-msgid "Preferably use this account."
-msgstr "Přednostně používat tento účet"
-
-#: customers/models.py:204
-msgctxt "CustomerBankAccount definition"
-msgid "Customer bank account"
-msgstr "Bankovní účet zákazníka"
-
-#: customers/models.py:205
-msgctxt "CustomerBankAccount definition"
-msgid "Customer bank accounts"
-msgstr "Bankovní účty zákazníka"
-
-#: customers/models.py:214
-msgctxt "BasicPhoneCategory definition"
-msgid "Type"
-msgstr "Typ"
-
-#: customers/models.py:215
-msgctxt "BasicPhoneCategory definition"
-msgid "Phone category type"
-msgstr "Typ kategorie telefonu"
-
-#: customers/models.py:221
-msgctxt "BasicPhoneCategory definition"
-msgid "Phone category"
-msgstr "Kategorie telefonu"
-
-#: customers/models.py:222
-msgctxt "BasicPhoneCategory definition"
-msgid "Phone categories"
-msgstr "Kategorie telefonu"
-
-#: customers/models.py:236
-msgid "Customer phone"
-msgstr "Telefon"
-
-#: customers/models.py:237
-msgid "Customer phone number"
-msgstr "Telefonní číslo"
-
-#: customers/models.py:239
-msgid "Phone description"
-msgstr "Popis telefonu"
-
-#: customers/models.py:245
-msgctxt "CustomerPhone definition"
-msgid "Phone category"
-msgstr "Kategorie telefonu"
-
-#: customers/models.py:246
-msgctxt "CustomerPhone definition"
-msgid "Category of the phone"
-msgstr "Kategorie do které je telefon zařazen."
-
-#: customers/models.py:251
-msgctxt "CustomerPhone definition"
-msgid "Customer"
-msgstr "Zákazník"
-
-#: customers/models.py:252
-msgctxt "CustomerPhone definition"
 msgid "Link to Customer"
 msgstr "Odkaz na zákazníka"
 
 #: customers/models.py:257
+msgid "Private address"
+msgstr "Skrytá adresa"
+
+#: customers/models.py:258
+msgid "This address will not be included in the info. "
+msgstr "Tato adresa nebude zahrnuta do přístupných informací"
+
+#: customers/models.py:262
+msgid "Admin address"
+msgstr "Administrátorská adresa"
+
+#: customers/models.py:263
+msgid "Mark special addresses to send additional administration messages. "
+msgstr ""
+"Označuje adresy, kam se take automaticky odesílají zprávy pro administrátora"
+
+#: customers/models.py:267
+msgid "Business address"
+msgstr "Obchodní adresa"
+
+#: customers/models.py:268
+msgid "Business messages will be sent to this address"
+msgstr "Na tuto adresu budou zasílány obchodní zprávy"
+
+#: customers/models.py:279
+msgctxt "CustomerEmail definition"
+msgid "Customer email"
+msgstr "E-mail zákazníka"
+
+#: customers/models.py:280
+msgctxt "CustomerEmail definition"
+msgid "Customer emails"
+msgstr "E-maily zákazníka"
+
+#: customers/models.py:283 customers/models.py:382 customers/models.py:426
+msgid "address"
+msgstr "adresa"
+
+#: customers/models.py:287 customers/models.py:288
+msgid "Account number"
+msgstr "Číslo účtu"
+
+#: customers/models.py:289
+msgid "Bank ID"
+msgstr "Identifikace banky"
+
+#: customers/models.py:290
+msgid "National identification of the bank"
+msgstr "Vnitrostátní identifikace banky"
+
+#: customers/models.py:291
+msgid "IBAN"
+msgstr "IBAN"
+
+#: customers/models.py:292
+msgid "International account identification"
+msgstr "Mezináridní inentifikace účtu"
+
+#: customers/models.py:300
+msgid "Prefered account"
+msgstr "Preferovaný účet"
+
+#: customers/models.py:301
+msgid "Preferably use this account."
+msgstr "Přednostně používat tento účet"
+
+#: customers/models.py:304
+msgctxt "CustomerBankAccount definition"
+msgid "Customer bank account"
+msgstr "Bankovní účet zákazníka"
+
+#: customers/models.py:305
+msgctxt "CustomerBankAccount definition"
+msgid "Customer bank accounts"
+msgstr "Bankovní účty zákazníka"
+
+#: customers/models.py:314
+msgctxt "BasicPhoneCategory definition"
+msgid "Type"
+msgstr "Typ"
+
+#: customers/models.py:315
+msgctxt "BasicPhoneCategory definition"
+msgid "Phone category type"
+msgstr "Typ kategorie telefonu"
+
+#: customers/models.py:321
+msgctxt "BasicPhoneCategory definition"
+msgid "Phone category"
+msgstr "Kategorie telefonu"
+
+#: customers/models.py:322
+msgctxt "BasicPhoneCategory definition"
+msgid "Phone categories"
+msgstr "Kategorie telefonu"
+
+#: customers/models.py:336
+msgid "Customer phone"
+msgstr "Telefon"
+
+#: customers/models.py:337
+msgid "Customer phone number"
+msgstr "Telefonní číslo"
+
+#: customers/models.py:339
+msgid "Phone description"
+msgstr "Popis telefonu"
+
+#: customers/models.py:345
+msgctxt "CustomerPhone definition"
+msgid "Phone category"
+msgstr "Kategorie telefonu"
+
+#: customers/models.py:346
+msgctxt "CustomerPhone definition"
+msgid "Category of the phone"
+msgstr "Kategorie do které je telefon zařazen."
+
+#: customers/models.py:351
+msgctxt "CustomerPhone definition"
+msgid "Customer"
+msgstr "Zákazník"
+
+#: customers/models.py:352
+msgctxt "CustomerPhone definition"
+msgid "Link to Customer"
+msgstr "Odkaz na zákazníka"
+
+#: customers/models.py:357
 msgctxt "CustomerEmail definition"
 msgid "Customer phone"
 msgstr "Zákazníkův Telefon"
 
-#: customers/models.py:258
+#: customers/models.py:358
 msgctxt "CustomerEmail definition"
 msgid "Customer phones"
 msgstr "Zákazníkovy Telefony"
 
-#: customers/models.py:266
+#: customers/models.py:366
 msgid "Customer web"
 msgstr "Webstránka zákazníka"
 
-#: customers/models.py:267
+#: customers/models.py:367
 msgid "Customers website URL"
 msgstr "URL stránky zánazníka"
 
-#: customers/models.py:278
+#: customers/models.py:378
 msgctxt "CustomerWeb definition"
 msgid "Customer website"
 msgstr "Webstránka zákazníka"
 
-#: customers/models.py:279
+#: customers/models.py:379
 msgctxt "CustomerWeb definition"
 msgid "Customer websites"
 msgstr "Webstránky zákazníka"
 
-#: customers/models.py:287
+#: customers/models.py:387
 msgid "Customer name"
 msgstr "Jméno zákazníka"
 
-#: customers/models.py:288
+#: customers/models.py:388
 msgid "Customer identification"
 msgstr "Identifikace zákazníka"
 
-#: customers/models.py:291
+#: customers/models.py:391
 msgid "Registration number"
 msgstr "IČO"
 
-#: customers/models.py:292
+#: customers/models.py:392
 msgid "Customer registration number"
 msgstr "Identifikační číslo zákazníka"
 
-#: customers/models.py:296
+#: customers/models.py:396
 msgid "VAT"
 msgstr "DIČ"
 
-#: customers/models.py:297
+#: customers/models.py:397
 msgid "Customer VAT number"
 msgstr "Daňová identifikace zákazníka"
 
-#: customers/models.py:303
+#: customers/models.py:403
 msgctxt "Customer image"
 msgid "Background"
 msgstr "Pozadí"
 
-#: customers/models.py:304
+#: customers/models.py:404
 msgid "Image to fill customers web page background"
 msgstr "Obrázek pro nastavení pozadí stránek zákazníka"
 
-#: customers/models.py:309
+#: customers/models.py:409
 msgctxt "Customer image"
 msgid "Logo"
 msgstr "Logo"
 
-#: customers/models.py:310 customers/views.py:90 customers/views.py:114
-msgid "Customer logo"
-msgstr "Zákazníkovo logo"
-
-#: customers/models.py:322
+#: customers/models.py:422
 msgctxt "Customer definition"
 msgid "Customer"
 msgstr "Zákazník"
 
-#: customers/models.py:323
+#: customers/models.py:423
 msgctxt "Customer definition"
 msgid "Customers"
 msgstr "Zákazníci"
 
-#: customers/models.py:351
+#: customers/models.py:465
 msgid "Customer description"
 msgstr "Popis zákazníka"
 
-#: customers/models.py:352
+#: customers/models.py:466
 msgid "Text to describe the Customer extensively."
 msgstr "Text podrobně popisující zákazníka"
 
-#: customers/models.py:358
+#: customers/models.py:472
 msgid "Short description"
 msgstr "Krátký popis"
 
-#: customers/models.py:359
+#: customers/models.py:473
 msgid "Short text to describe the Customer."
 msgstr "Text který krátce popisuje zákazníka"
 
 #: customers/templates/customers/customer_confirm_delete.html:11
-#: customers/views.py:118
+#: customers/views.py:123
 msgid "Delete Customer"
 msgstr "Smazat zákazníka"
 
@@ -1333,23 +1387,23 @@ msgstr "Upravit překlady"
 msgid "Description:"
 msgstr "Popis:"
 
-#: customers/templates/customers/customer_info.html:33 customers/views.py:154
+#: customers/templates/customers/customer_info.html:33 customers/views.py:158
 msgid "Establishments:"
 msgstr "Provozovny:"
 
-#: customers/templates/customers/customer_info.html:47 customers/views.py:136
+#: customers/templates/customers/customer_info.html:47 customers/views.py:140
 msgid "E-mails:"
 msgstr "E-maily:"
 
-#: customers/templates/customers/customer_info.html:59 customers/views.py:145
+#: customers/templates/customers/customer_info.html:59 customers/views.py:149
 msgid "Websites:"
 msgstr "Webové stránky"
 
-#: customers/templates/customers/customer_info.html:71 customers/views.py:166
+#: customers/templates/customers/customer_info.html:71 customers/views.py:170
 msgid "Phones:"
 msgstr "Telefonní čísla:"
 
-#: customers/templates/customers/customer_info.html:86 customers/views.py:177
+#: customers/templates/customers/customer_info.html:86 customers/views.py:181
 msgid "Bank accounts:"
 msgstr "Bankovní spojení:"
 
@@ -1363,7 +1417,6 @@ msgid "View detailed customer info"
 msgstr "Podrobné informace o zákazníkovi"
 
 #: customers/templates/customers/customer_list.html:47
-#: doc_repo/templates/doc_repo/__btn-icon-detail.html:4
 msgid "Detail"
 msgstr "Podrobnosti"
 
@@ -1451,7 +1504,7 @@ msgstr "Odkaz na stránku"
 msgid "E-mail:"
 msgstr "E-mail:"
 
-#: customers/templates/customers/login.html:20
+#: customers/templates/customers/login.html:27
 #: project_main/templates/project_main/__footer.html:22
 #: project_main/templates/project_main/__header.html:164
 #: project_main/templates/project_main/base.html:190
@@ -1459,16 +1512,38 @@ msgctxt "login_template"
 msgid "Log In"
 msgstr "Přihlašení"
 
-#: customers/templates/customers/login.html:28
-#: project_main/templates/project_main/__header.html:172
+#: customers/templates/customers/login.html:39
+#: project_main/templates/project_main/__header.html:177
 msgctxt "login form submit button"
 msgid "Login"
 msgstr "Přihlásit se"
+
+#: customers/templates/customers/login.html:47
+#: project_main/templates/project_main/__header.html:185
+msgid "Forgot your password?"
+msgstr "Zapoměli jste heslo?"
 
 #: customers/templates/customers/projectcustomuser_active.html:17
 #: customers/templates/customers/projectcustomuser_form.html:17
 msgid "User:"
 msgstr "Uživatel:"
+
+#: customers/templates/customers/reset_password.html:25
+msgid "Reset a forgotten password"
+msgstr "Nastavte si zapomenuté heslo"
+
+#: customers/templates/customers/reset_password.html:30
+msgctxt "reset forgotten password user"
+msgid "For user:"
+msgstr "Pro uživatele:"
+
+#: customers/templates/customers/reset_password.html:46
+msgid "Send a password reset link to this email"
+msgstr "Odešlete odkaz pro nastavení hesla na tento email."
+
+#: customers/templates/customers/reset_password.html:59
+msgid "Change password"
+msgstr "Změnit heslo"
 
 #: customers/templates/customers/user_profile.html:19
 msgid "Profile info"
@@ -1490,165 +1565,199 @@ msgstr "Máte již účet?"
 msgid "Please Log In"
 msgstr "přihlašte se, prosím"
 
-#: customers/views.py:66
+#: customers/views.py:70
 msgid "Customer list"
 msgstr "Seznam zákazníků"
 
-#: customers/views.py:67
+#: customers/views.py:71
 msgid "A list of all signed up customers using the website."
 msgstr "Seznam všech přihlášených zákazníků používajících webové stránky."
 
-#: customers/views.py:71
+#: customers/views.py:75
 msgid "Add New Customer"
 msgstr "Přidat zákazníka"
 
-#: customers/views.py:88
+#: customers/views.py:92
 msgid "Detailed customer information"
 msgstr "Podrobné informace o zákazníkovi"
 
-#: customers/views.py:94
+#: customers/views.py:98
 msgid "Edit Customer"
 msgstr "Upravit zákazníka"
 
-#: customers/views.py:111
+#: customers/views.py:114
 msgid "Edit"
 msgstr "Upravit"
 
-#: customers/views.py:112
+#: customers/views.py:115
 msgid "Edit customer details"
 msgstr "Upravit podrobnosti zákazníka"
 
-#: customers/views.py:223
+#: customers/views.py:227
 msgid "Your e-mail has been updated!"
 msgstr "Váš e-mail byl změněn!"
 
-#: customers/views.py:229
+#: customers/views.py:233
 msgctxt "customer_email_update-title"
 msgid "update-email"
 msgstr "email-nastavení"
 
-#: customers/views.py:249
+#: customers/views.py:253
 msgid "Your e-mail has been added!"
 msgstr "Váš e-mail byl přidán!"
 
-#: customers/views.py:255
+#: customers/views.py:259
 msgctxt "customer_email_update-title"
 msgid "create-email"
 msgstr "email-vytvoření"
 
-#: customers/views.py:292
+#: customers/views.py:296
 msgid "Your web url has been added!"
 msgstr "Váš odkaz na stránku byl přidán!"
 
-#: customers/views.py:298 customers/views.py:364
+#: customers/views.py:302 customers/views.py:368
 msgctxt "customer_web_update-title"
 msgid "create-phone"
 msgstr "telefon-vytvoření"
 
-#: customers/views.py:315
+#: customers/views.py:319
 msgid "Your web url has been updated!"
 msgstr "Váš odkaz na stránku byl změněn!"
 
-#: customers/views.py:321
+#: customers/views.py:325
 msgctxt "customer_web_update-title"
 msgid "update-web"
 msgstr "web-nastavení"
 
-#: customers/views.py:358 customers/views.py:422
+#: customers/views.py:362 customers/views.py:426
 msgid "Your phone has been added!"
 msgstr "Váše telefonní číslo bylo přidáno!"
 
-#: customers/views.py:382
+#: customers/views.py:386
 msgid "Your phone has been updated!"
 msgstr "Váš telefonní číslo bylo změněno!"
 
-#: customers/views.py:388
+#: customers/views.py:392
 msgctxt "customer_phone_update-title"
 msgid "update-phone"
 msgstr "telefon-nastavení"
 
-#: customers/views.py:428
+#: customers/views.py:432
 msgctxt "customer_bank_create-title"
 msgid "create-bank-account"
 msgstr "vytvořit-účet"
 
-#: customers/views.py:446
+#: customers/views.py:450
 msgid "Your bank account has been updated!"
 msgstr "Váš účet byl změněn!"
 
-#: customers/views.py:452
+#: customers/views.py:456
 msgctxt "customer_bank_update-title"
 msgid "update-bank"
 msgstr "nastavení-provozovna"
 
-#: customers/views.py:490 customers/views.py:563
+#: customers/views.py:494
 msgid "Your establishment has been added!"
 msgstr "Váše provozovna byla přidána!"
 
-#: customers/views.py:496
+#: customers/views.py:500
 msgctxt "customer_est_create-title"
 msgid "create-establishment"
 msgstr "vytvořit-provozovnu"
 
-#: customers/views.py:514
+#: customers/views.py:518
 msgid "Your establishment has been updated!"
 msgstr "Váše provozovna byla změněna!"
 
-#: customers/views.py:520
+#: customers/views.py:524
 msgctxt "customer_bank_update-title"
 msgid "update-establishment"
 msgstr "aktualizace-provozovny"
 
-#: customers/views.py:570
+#: customers/views.py:574
+msgid "The user has been created. "
+msgstr "Zákazník byl vytvořen"
+
+#: customers/views.py:575
+msgid ""
+"An email with a link for setting a new password has been sent to the user's "
+"address."
+msgstr ""
+"Na adresu uživatele byl odeslán e-mail s odkazem pro nastavení nového hesla"
+
+#: customers/views.py:576
+msgid "This link is valid for 48 hours from now."
+msgstr "Odkaz je aktivní v průběhu 48 hodin od tohoto okamžiku."
+
+#: customers/views.py:583
 msgctxt "customer_user_create-title"
 msgid "create-user"
 msgstr "uživatel-vytvoření"
 
-#: customers/views.py:588
+#: customers/views.py:626
+msgid "A reset link has been sent to the email address. "
+msgstr "Na e-mailovou adresu byl odeslán odkaz pro obnovení hesla."
+
+#: customers/views.py:627
+msgid ""
+"If you didn't recieve any email, make sure that your address has been typed "
+"correctly "
+msgstr ""
+"Pokud jste neobdrželi e-mail, ujistěte se, že vaše adresa byla správně "
+"napsána"
+
+#: customers/views.py:628
+msgid " and that the message wasn't marked as spam. "
+msgstr "a že zpráva nebyla označena jako spam."
+
+#: customers/views.py:652
+msgid "The password reset link is either invalid or expired."
+msgstr "Odešlete odkaz pro nastavení hesla na tento email."
+
+#: customers/views.py:674
+msgid "You have successfully changed your password. "
+msgstr "Úspěšně jste změnili své heslo."
+
+#: customers/views.py:675
+msgid "You can now use the new password to log into your account."
+msgstr "Nyní můžete použít nové heslo pro přihlášení do vašeho účtu."
+
+#: customers/views.py:699
 msgid "User has been updated!"
 msgstr "Zákazník byl změněn!"
 
-#: customers/views.py:594
+#: customers/views.py:705
 msgctxt "customer_user_update-title"
 msgid "update-user"
 msgstr "uživatel-nastavení"
 
-#: customers/views.py:636
+#: customers/views.py:747
 msgid "Your translation has been updated!"
 msgstr "Váš překlad byl změněn!"
 
-#: customers/views.py:642
+#: customers/views.py:753
 msgctxt "customer_tran_update-title"
 msgid "update-translation"
 msgstr "úprava-překladu"
 
-#: customers/views.py:662
+#: customers/views.py:776
 msgid "Successfully logged in"
 msgstr "Úspěšně přihlášeno"
 
-#: customers/views.py:668
+#: customers/views.py:785
 msgctxt "customer-login-title"
 msgid "Login"
 msgstr "Přihlásit se"
 
-#: customers/views.py:678
+#: customers/views.py:791
 msgid "You have been logged out"
 msgstr "Byli jste odhlášeni."
 
-#: customers/views.py:693
-msgid "Your account has been created! You are now able to log in."
-msgstr "Váš účet byl vytvořen. Teď se můžete přihlásit."
-
-#: customers/views.py:698
-msgctxt "customer-register-title"
-msgid "register"
-msgstr "registrace"
-
-#: customers/views.py:719
+#: customers/views.py:808
 msgid "Your account has been updated!"
 msgstr "Váš účet byl změněn!"
 
-#: customers/views.py:726
+#: customers/views.py:815
 msgctxt "customer-user-profile-title"
 msgid "user-profile"
 msgstr "uživateský profil"
@@ -1738,9 +1847,14 @@ msgctxt "Document definition"
 msgid "Documents"
 msgstr "Dokumenty"
 
+#: doc_repo/templates/doc_repo/__btn-icon-detail.html:4
+msgid "Open document in a new tab"
+msgstr "Otevře dokoment v nové záložce"
+
 #: doc_repo/templates/doc_repo/__btn-icon-download.html:4
-msgid "Download"
-msgstr "Stáhnout"
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:51
+msgid "Download document"
+msgstr "Stáhnout dokument"
 
 #: doc_repo/templates/doc_repo/doc_repo_doc_form.html:27
 msgid "Add document:"
@@ -1753,10 +1867,6 @@ msgstr "Dokument"
 #: doc_repo/templates/doc_repo/doc_repo_doc_list.html:37
 msgid "Document detail"
 msgstr "Podrobnosti dokumentu"
-
-#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:51
-msgid "Download document"
-msgstr "Stáhnout dokument"
 
 #: doc_repo/templates/doc_repo/document_confirm_delete.html:21
 msgid "Delete document"
@@ -1778,20 +1888,20 @@ msgstr "Zpět"
 msgid "Add Document"
 msgstr "Přidat Dokument"
 
-#: doc_repo/views.py:136
+#: doc_repo/views.py:109
 msgid "Document has been added!"
 msgstr "Dokument byl přidán!"
 
-#: doc_repo/views.py:142
+#: doc_repo/views.py:115
 msgctxt "doc_repo_document_create-title"
 msgid "create-document"
 msgstr "vytvořit-dokument"
 
-#: doc_repo/views.py:161
+#: doc_repo/views.py:134
 msgid "Document has been updated!"
 msgstr "Dokument byl úspěšně změněn!"
 
-#: doc_repo/views.py:167
+#: doc_repo/views.py:140
 msgctxt "doc_repo_document_modify-title"
 msgid "update-document"
 msgstr "dokumet-úprava"
@@ -1813,6 +1923,121 @@ msgstr "Open id"
 msgctxt "OpenId definition"
 msgid "Open ids"
 msgstr "Open id"
+
+#: notification/admin.py:10 notification/admin.py:11
+msgid "Message template"
+msgstr "Předloha zprávy"
+
+#: notification/models.py:15
+msgid "Send emails"
+msgstr "Zasílat emaily"
+
+#: notification/models.py:16
+msgid "Can send emails."
+msgstr "Mohu odesílat emaily."
+
+#: notification/models.py:20
+msgid "Send SMS"
+msgstr "Zasílat SMS"
+
+#: notification/models.py:21
+msgid "Can send SMS."
+msgstr "Mohu odesílat SMS"
+
+#: notification/models.py:24
+msgid "Smtp addrerss"
+msgstr "Adresa SMTP"
+
+#: notification/models.py:25
+msgid "URL to connect to SMTP server."
+msgstr "URL pro připojení SMTP serveru"
+
+#: notification/models.py:32
+msgid "Smtp port"
+msgstr "SMTP port"
+
+#: notification/models.py:33
+msgid "Port to connect to SMTP server."
+msgstr "Port pro připojení SMTP serveru"
+
+#: notification/models.py:40
+msgid "Connect SSL"
+msgstr "Připojit přes SSL"
+
+#: notification/models.py:41
+msgid "Use SSL connection."
+msgstr "Použít SSL připojení"
+
+#: notification/models.py:45
+msgid "Smtp user"
+msgstr "Uživatel SMTP"
+
+#: notification/models.py:46
+msgid "User to connect SMTP server."
+msgstr "Uživatel pro připojení SMTP serveru"
+
+#: notification/models.py:52
+msgid "Smtp user password"
+msgstr "Heslo uživatele SMTP"
+
+#: notification/models.py:53
+msgid "User password to connect SMTP server."
+msgstr "Heslo uživatele pro připojení SMTP serveru"
+
+#: notification/models.py:59 notification/models.py:60
+msgctxt "NtfSetup definition"
+msgid "NtfSetup"
+msgstr "NtfSetup"
+
+#: notification/models.py:73
+msgctxt "MessTemp definition"
+msgid "Template key"
+msgstr "Klíč předlohy"
+
+#: notification/models.py:74
+msgctxt "MessTemp definition"
+msgid "Key to identify the template"
+msgstr "Klíč identifikující předlohu"
+
+#: notification/models.py:82
+msgctxt "MessTemp definition"
+msgid "Template type"
+msgstr "Typ předlohy"
+
+#: notification/models.py:83
+msgctxt "MessTemp definition"
+msgid "Template type (text/html)"
+msgstr "Typ předlohy (text/html)"
+
+#: notification/models.py:90
+msgctxt "MessTemp definition"
+msgid "Message Template"
+msgstr "Předloha zprávy"
+
+#: notification/models.py:91
+msgctxt "MessTemp definition"
+msgid "Message Templates"
+msgstr "Předlohy zpráv"
+
+#: notification/models.py:111
+msgid "Subject"
+msgstr "Předmět"
+
+#: notification/models.py:112
+msgid "Message subject."
+msgstr "Předmět zprávy"
+
+#: notification/models.py:119
+msgid "Body"
+msgstr "Tělo"
+
+#: notification/models.py:120
+msgid "Message body (playn-text/html)."
+msgstr "Tělo zprávy (playn-text/html)"
+
+#: notification/modules/ntf_manager.py:124
+msgid "Not set"
+msgstr "Není přiřazen"
 
 #: project_main/models.py:12 project_main/models.py:13
 msgid "Project name"
@@ -1923,8 +2148,8 @@ msgid "Delete item"
 msgstr "Odstranit položku"
 
 #: project_main/templates/project_main/__btn-icon-edit.html:4
-msgid "Edit item"
-msgstr "Upravit položku"
+msgid "Edit document description"
+msgstr "Upravit popis dokumentu"
 
 #: project_main/templates/project_main/__footer.html:30
 #: project_main/templates/project_main/__header.html:26
@@ -1948,10 +2173,6 @@ msgstr "Odhásit se"
 msgid "Homepage"
 msgstr "Domovská stránka"
 
-#: project_main/templates/project_main/__header.html:61
-msgid "Auction"
-msgstr "Aukce"
-
 #: project_main/templates/project_main/__header.html:88
 msgctxt "base-navbar"
 msgid "Customer List"
@@ -1961,7 +2182,7 @@ msgstr "Seznam Zákazníků"
 msgid "My Auction"
 msgstr "Moje aukce"
 
-#: project_main/templates/project_main/__header.html:180
+#: project_main/templates/project_main/__header.html:196
 msgctxt "login form tip"
 msgid ""
 "Tip: You can press the Escape key to toggle the login menu with your "
@@ -2046,7 +2267,7 @@ msgctxt "contacts-title2"
 msgid "contacts"
 msgstr "kontakty"
 
-#: state_wf/models.py:25 state_wf/models.py:26 state_wf/models.py:65
+#: state_wf/models.py:25 state_wf/models.py:26 state_wf/models.py:79
 msgctxt "StepState definition"
 msgid "State"
 msgstr "Stav"
@@ -2101,129 +2322,145 @@ msgstr "Tlačítko s upozorněním"
 msgid "Show starting button like alert. "
 msgstr "Zobrazí tlačítko s upozorněním"
 
-#: state_wf/models.py:66
+#: state_wf/models.py:64
+msgid "Send notification"
+msgstr "Poslat upozornění"
+
+#: state_wf/models.py:65
+msgid "Send notification if this state is activated. "
+msgstr "Odeslat upozornění, pokud je stav aktivován."
+
+#: state_wf/models.py:70
+msgid "Template"
+msgstr "Předloha"
+
+#: state_wf/models.py:71
+msgid "Notification template used to generate message"
+msgstr "Předloha upozornění použitá pro generování zprávy"
+
+#: state_wf/models.py:80
 msgctxt "StepState definition"
 msgid "States"
 msgstr "Stavy"
 
-#: state_wf/models.py:109
+#: state_wf/models.py:123
 msgid "State name"
 msgstr "Jméno stavu"
 
-#: state_wf/models.py:110
+#: state_wf/models.py:124
 msgid "Display name of state."
 msgstr "Jméno stavu k zobrazení"
 
-#: state_wf/models.py:117
+#: state_wf/models.py:131
 msgid "State name plural"
 msgstr "Jméno stavu možné"
 
-#: state_wf/models.py:118
+#: state_wf/models.py:132
 msgid "Display name of state in plural."
 msgstr "Jméno stavu v množném čísle"
 
-#: state_wf/models.py:125
+#: state_wf/models.py:139
 msgid "State description"
 msgstr "Popis stavu"
 
-#: state_wf/models.py:126
+#: state_wf/models.py:140
 msgid "Short description."
 msgstr "Krátký popis"
 
-#: state_wf/models.py:133
+#: state_wf/models.py:147
 msgid "State button text"
 msgstr "Text tlačítka stavu"
 
-#: state_wf/models.py:134
+#: state_wf/models.py:148
 msgid "Activating button text."
 msgstr "Text aktivačního tlačítka stavu"
 
-#: state_wf/models.py:141
+#: state_wf/models.py:155
 msgid "State template title"
 msgstr "Nadpis šablony stavu"
 
-#: state_wf/models.py:142
+#: state_wf/models.py:156
 msgid "Template title text."
 msgstr "Text nadpisu šablony"
 
-#: state_wf/models.py:149
+#: state_wf/models.py:163
 msgid "State template question"
 msgstr "Otázka šablony stavu"
 
-#: state_wf/models.py:150
+#: state_wf/models.py:164
 msgid "Template text to query state change."
 msgstr "Text s dotazem na změnu stavu ze šablony"
 
-#: state_wf/models.py:156
+#: state_wf/models.py:170
 msgid "State template text"
 msgstr "Text šablony stavu"
 
-#: state_wf/models.py:157
+#: state_wf/models.py:171
 msgid "Text to describe the state change."
 msgstr "Text popisující změnu stavu"
 
-#: state_wf/models.py:163
+#: state_wf/models.py:177
 msgid "State template confirm button"
 msgstr "Potvrzovací tlačítko šablony stavu"
 
-#: state_wf/models.py:164
+#: state_wf/models.py:178
 msgid "Template state confirmation button text."
 msgstr "Text tlačítka potvrzujícího změnu stavu v šabloně"
 
-#: state_wf/models.py:171
+#: state_wf/models.py:185
 msgid "State template cancel button"
 msgstr "Rušící tlačítko šablony stavu"
 
-#: state_wf/models.py:172
+#: state_wf/models.py:186
 msgid "Template state cancel button text."
 msgstr "Text tlačítka rušícího změnu stavu v šabloně"
 
-#: state_wf/models.py:184
+#: state_wf/models.py:198
 msgctxt "Step definition"
 msgid "State"
 msgstr "Stav"
 
-#: state_wf/models.py:185
+#: state_wf/models.py:199
 msgctxt "Step definition"
 msgid "Link to step state"
 msgstr "Odkaz stav kroku"
 
-#: state_wf/models.py:192
+#: state_wf/models.py:206
 msgctxt "Step definition"
 msgid "Offer"
 msgstr "Nabídka"
 
-#: state_wf/models.py:193
+#: state_wf/models.py:207
 msgctxt "Step definition"
 msgid "Link to offer"
 msgstr "Odkaz na nabídku"
 
-#: state_wf/models.py:200
+#: state_wf/models.py:214
 msgctxt "Step definition"
 msgid "Answer"
 msgstr "Odpověď"
 
-#: state_wf/models.py:201
+#: state_wf/models.py:215
 msgctxt "Step definition"
 msgid "Link to answer"
 msgstr "Odkaz na odpověď"
 
-#: state_wf/models.py:208
+#: state_wf/models.py:222
 msgctxt "Step definition"
 msgid "Created by"
 msgstr "Vytvořil"
 
-#: state_wf/models.py:209
+#: state_wf/models.py:223
 msgctxt "Step definition"
 msgid "Link to creator"
 msgstr "Odkaz na tvůrce"
 
-#: state_wf/models.py:216
+#: state_wf/models.py:230
 msgctxt "Step definition"
 msgid "Step"
 msgstr "Krok"
 
-#: state_wf/models.py:217
+#: state_wf/models.py:231
 msgctxt "Step definition"
 msgid "Steps"
 msgstr "Kroky"

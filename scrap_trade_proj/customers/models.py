@@ -4,6 +4,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 from django.conf import settings
 from django.urls import reverse
+from django.contrib.auth.models import Group
 from PIL import Image
 
 from django.utils.translation import gettext_lazy as _
@@ -13,46 +14,46 @@ from translatable.models import TranslatableModel, get_translation_model
 
 from project_main.models import Project
 from integ.models import OpenId
-
+from notification.modules import ntf_manager
 
 class ProjectCustomUser(AbstractBaseUser, PermissionsMixin):
     """ basic user for admin AND customer base users """
-    
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
-    
+
     objects = BaseUserManager()  # @todo; Why do we need to say this??
-    
+
     email = models.EmailField(
         unique=True,
-        max_length=255, 
-        verbose_name=_('email address'), 
+        max_length=255,
+        verbose_name=_('email address'),
         help_text=_("This acts as the username when logging in.")
         # @todo; Add an explanation that this email will recieve a one-time link to the password reset page.
     )
     name = models.CharField(
-        max_length=255, 
+        max_length=255,
         verbose_name=_('Name'),
         help_text=_("Only informational.")
     )
-        
+
     is_active = models.BooleanField(
         default=True,
-        verbose_name=_('Is Active'), 
+        verbose_name=_('Is Active'),
         help_text=_("User can log into the website and isn't blocked.")
     )
     is_staff = models.BooleanField(
-        default=False, 
+        default=False,
         verbose_name=_('access admin tools'),
         help_text=_("User can access administration tools")
     )
-    
+
     customer = models.ForeignKey(
         'Customer',
-        null=True, 
+        null=True,
         blank=True,
         on_delete=models.CASCADE,
-        
+
         verbose_name=tr.pgettext_lazy(
             'ProjectCustomUser definition', 'Customer'),
         help_text=tr.pgettext_lazy(
@@ -62,7 +63,7 @@ class ProjectCustomUser(AbstractBaseUser, PermissionsMixin):
         Project,
         null=True, blank=True,
         on_delete=models.SET_NULL,
-        
+
         verbose_name=tr.pgettext_lazy(
             'ProjectCustomUser definition', 'Project'),
         help_text=tr.pgettext_lazy(
@@ -84,7 +85,7 @@ class ProjectCustomUser(AbstractBaseUser, PermissionsMixin):
         """ Used to get object in string presentation """
         return self.email
 
-    
+
 import uuid
 import django.utils.timezone as django_timezone  # Always use django timezones
 from django.urls import reverse  # For making reset urls
@@ -94,7 +95,7 @@ class PasswordResetLink(models.Model):
     A link with an expiration datetime that allows a user
     to reset their password, if they know this object's ID.
     """
-    
+
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
@@ -106,33 +107,35 @@ class PasswordResetLink(models.Model):
     used = models.DateTimeField(
         blank=True, null=True
     )
-        
+
     def make_expiry_datetime_from_now():
-        # Use this as a static method. Django migrate doesn't like 
+        # Use this as a static method. Django migrate doesn't like
         # @staticmethod and fails to serialize if present.
         VALID_FOR = django_timezone.timedelta(
             hours=48
         )
         # @todo; Expose `VALID_FOR` of password links to be used for user information
         return django_timezone.now() + VALID_FOR
-    
+
     valid_until = models.DateTimeField(
         default = make_expiry_datetime_from_now  # Callable func, not value!
     )
-    
+
     def is_not_valid_anymore(self):
         expired = django_timezone.now() > self.valid_until
         used_already = self.used is not None
         return expired or used_already
-    
-    
-    def send_to_user(self):
+
+
+    def send_to_user(self, request):
         # Make a URL link out of the id
         url = reverse('user-reset', kwargs={'uuid': self.id})
-        full_url = 'localhost:8000%s' % url  # @todo; @production; Make the url respect the production server's domain and don't forget to use HTTPS!
-        print(' >>>>>>>>>>>>>> PASSWORD RESET URL <<<<<<<<<<<<<<< ')
-        print(full_url)  # @todo; @production; Get rid of password reset console prints
-    
+        full_url = request.build_absolute_uri(url)
+        context = ntf_manager.NtfContext()
+        context['access_url'] = full_url
+        address_obj = (self.for_user.email, self.for_user.userprofile.language)
+        ntf_manager.send_by_template_to_address(request, context, address_obj, 'set_password')
+
     def reset_password(self, new_password):
         user = self.for_user
         user.set_password(new_password)
@@ -142,21 +145,36 @@ class PasswordResetLink(models.Model):
         self.used = django_timezone.now()
         self.save()
 
-   
+
 
 class UserProfile(models.Model):
     """ Additiona information for user """
-    user = models.OneToOneField(ProjectCustomUser, on_delete=models.CASCADE,
-                    verbose_name=tr.pgettext_lazy('UserProfile user', 'user'))
-    image = models.ImageField(default="default-user.jpg", upload_to='profile_pics',
-                        verbose_name=tr.pgettext_lazy('UserProfile image', 'image'))
+    user = models.OneToOneField(
+        ProjectCustomUser,
+        on_delete=models.CASCADE,
+        verbose_name=tr.pgettext_lazy('UserProfile user', 'user'),
+        help_text=tr.pgettext_lazy('UserProfile definition','Link to pattern object'),
+    )
+    language = models.CharField(
+        default=settings.LANGUAGE_CODE,
+        verbose_name=tr.pgettext_lazy('UserProfile user', "language"),
+        help_text=tr.pgettext_lazy('UserProfile definition','Set the language to communicate with the user'),
+        max_length=15,
+        choices=settings.LANGUAGES,
+    )
+    image = models.ImageField(
+        default="default-user.jpg",
+        upload_to='profile_pics',
+        verbose_name=tr.pgettext_lazy('UserProfile image', 'image'),
+        help_text=tr.pgettext_lazy('UserProfile definition','Here you can add an image to the profile'),
+    )
     open_id = models.ForeignKey(
         OpenId,
         related_name='my_user_profs',
-        null=True, 
+        null=True,
         blank=True,
         on_delete=models.CASCADE,
-        
+
         verbose_name=tr.pgettext_lazy(
             'UserProfile definition', 'Open id'),
         help_text=tr.pgettext_lazy(
@@ -217,9 +235,13 @@ class CustomerEstablishments(models.Model):
 
 
 class CustomerEmail(models.Model):
-    customer_email = models.EmailField(max_length=255, verbose_name=tr.pgettext_lazy('Customer definition', 'email address'),
-                    help_text=tr.pgettext_lazy('Customer definition', "Required: 150 characters or fewer. Letters, digits and @/./+/-/_ only."),
-                    null=True, blank=True,)
+    customer_email = models.EmailField(
+        max_length=255,
+        verbose_name=tr.pgettext_lazy('Customer definition', 'email address'),
+        help_text=tr.pgettext_lazy('Customer definition', "Required: 150 characters or fewer. Letters, digits and @/./+/-/_ only."),
+        null=True,
+        blank=True,
+    )
     customer = models.ForeignKey(
         'Customer',
         on_delete=models.CASCADE,
@@ -227,8 +249,28 @@ class CustomerEmail(models.Model):
         help_text=tr.pgettext_lazy('CustomerEmail definition','Link to Customer'),
         null=True, blank=True,
     )
-    is_admin_adr = models.BooleanField(default=False, verbose_name=_('admin address'),
-                    help_text=_("Mark special addresses to send additional administration messages. "))
+    is_private_adr = models.BooleanField(
+        default=False,
+        verbose_name=_('Private address'),
+        help_text=_("This address will not be included in the info. ")
+    )
+    is_admin_adr = models.BooleanField(
+        default=False,
+        verbose_name=_('Admin address'),
+        help_text=_("Mark special addresses to send additional administration messages. ")
+    )
+    is_business_adr = models.BooleanField(
+        default=False,
+        verbose_name=_('Business address'),
+        help_text=_("Business messages will be sent to this address")
+    )
+    language = models.CharField(
+        default=settings.LANGUAGE_CODE,
+        verbose_name=tr.pgettext_lazy('UserProfile user', "language"),
+        help_text=tr.pgettext_lazy('UserProfile definition','Set the language to communicate with the user'),
+        max_length=15,
+        choices=settings.LANGUAGES,
+    )
 
     class Meta:
         verbose_name = tr.pgettext_lazy('CustomerEmail definition', 'Customer email')
@@ -400,6 +442,20 @@ class Customer(TranslatableModel):
         lang = tr.get_language()
         return self.translated('short_description', default=None, language=lang, fallback=True)
 
+    #--- ntf_support
+    def add_emails(self, ntf_message, admin=False, business=False):
+        for email in self.customeremail_set.all():
+            if admin:
+                if email.is_admin_adr:
+                    ntf_message.reciver_list.append((email.customer_email, email.language))
+                    continue
+            if business:
+                if email.is_business_adr:
+                    ntf_message.reciver_list.append((email.customer_email, email.language))
+                    continue
+            if admin == False and business == False:
+                ntf_message.reciver_list.append((email.customer_email, email.language))
+        return ntf_message
 
 class CustomerTranslation(get_translation_model(Customer, "customer")):
     customer_description =  models.TextField(

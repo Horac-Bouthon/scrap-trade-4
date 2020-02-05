@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'state_wf.apps.StateWfConfig',
     'integ.apps.IntegConfig',
     'doc_repo.apps.DocRepoConfig',
+    'notification.apps.NotificationConfig',
 
     'crispy_forms',
     'rest_framework',

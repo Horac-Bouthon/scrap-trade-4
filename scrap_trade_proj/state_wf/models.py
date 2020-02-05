@@ -14,7 +14,7 @@ from auction_house.models import AhOffer, AhAnswer
 from customers.models import (
     ProjectCustomUser,
 )
-
+from notification.models import MessTemp
 
 # Create your models here.
 
@@ -58,6 +58,20 @@ class StepState(TranslatableModel):
         default=False,
         verbose_name=_('Alert button'),
         help_text=_("Show starting button like alert. ")
+    )
+    send_ntf = models.BooleanField(
+        default=False,
+        verbose_name=_('Send notification'),
+        help_text=_("Send notification if this state is activated. ")
+    )
+    ntf_template = models.ForeignKey(
+        MessTemp,
+        on_delete=models.SET_NULL,
+        verbose_name=_('Template'),
+        help_text=_('Notification template used to generate message'),
+        related_name="connected_states",
+        null=True,
+        blank=True,
     )
 
 

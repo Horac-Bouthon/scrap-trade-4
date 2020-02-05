@@ -11,6 +11,7 @@ from .models import (
     ProjectCustomUser,
     CustomerTranslation,
 )
+from django.contrib.auth.models import Group
 
 
 from django.utils.translation import gettext as _
@@ -46,19 +47,19 @@ class PasswordResetRequest(forms.Form):
         help_text=_(("Enter the email address used for logging in to "
                      "your account. ")),
     )
-    
+
 
 class PasswordReset(forms.Form):
-    
+
     new_password = forms.CharField(
         widget=forms.PasswordInput,
-        help_text=_("Enter a new password for yor account.")
+        help_text=_("Enter a new password for your account.")
     )
     password_confirmation = forms.CharField(
         widget=forms.PasswordInput,
         help_text=_("Repeat the same password.")
     )
-    
+
     def clean(self, *args, **kwargs):
         # Validate 'required'-ness
         super().clean()
@@ -80,7 +81,7 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['image']
+        fields = ['language', 'image']
 
 
 class CustomerDescriptionUpdateForm(forms.ModelForm):
@@ -92,7 +93,7 @@ class CustomerDescriptionUpdateForm(forms.ModelForm):
 class CustomerEmailUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomerEmail
-        fields = ['customer_email']
+        fields = ['customer_email','is_private_adr','is_admin_adr','is_business_adr','language']
 
 
 class CustomerWebUpdateForm(forms.ModelForm):

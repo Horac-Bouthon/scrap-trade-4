@@ -20,6 +20,8 @@ from .forms import (
     CustomerEstUpdateForm,
     CustomerUserUpdateForm,
     CustomerTranUpdateForm,
+    PasswordReset,
+    PasswordResetRequest,
 )
 from .models import (
     Customer,
@@ -32,7 +34,9 @@ from .models import (
     CustomerTranslation,
     BasicPhoneCategoryTranslation,
     ProjectCustomUser,
+    PasswordResetLink,
 )
+
 from project_main.models import Project
 from customers.modules.customer_mod import InlineEdit
 from integ.models import (
@@ -112,7 +116,7 @@ class CustomerDetailView(CanEditCustomer, DetailView):
             'image': { 'src': customer.customer_logo.url,
                        'alt': _('Customer logo') },
         }
-        
+
         button_list = []
         if test_poweruser(self.request.user):
             button_list.append({
@@ -120,7 +124,7 @@ class CustomerDetailView(CanEditCustomer, DetailView):
                 'href': reverse('project-customer-delete',
                                 kwargs={'pk': customer.pk}),
                 'icon': 'trash-2', 'type': 'danger',
-            })  
+            })
         if customer.open_id:
             oid = str(customer.open_id.int_id)
             button_list.append({
@@ -546,7 +550,7 @@ def customer_user_create(request, pk):
     customer = Customer.objects.filter(id = pk).first()
 
     if request.method == 'POST':
-        
+
         form = UserRestCreationForm(request.POST)
         if form.is_valid():
             new_user = customer.projectcustomuser_set.create(
@@ -556,25 +560,22 @@ def customer_user_create(request, pk):
             )
             for group in form.cleaned_data['groups']:
                 new_user.groups.add(group)
-        
+
             # Setting the user's password...
             new_user.set_unusable_password()
+            # Send the user into the DB.
+            new_user.save()
             password_link = PasswordResetLink(
                 for_user = new_user
             )
-            password_link.send_to_user()
-            
-            # Send the user into the DB.
-            new_user.save()
-            
-            messages.success(
-                # @todo; For user create message, use variables in the translation with user's name, email address and a variable for the actual expiry time
-                request, _((
-                    "The user has been created. An email with a link "
-                    "for setting a new password has been sent to the user's "
-                    "address. This link is valid for 48 hours from now. "
-                ))
-            )
+            password_link.save()
+            password_link.send_to_user(request)
+
+            msg = _("The user has been created. ") + ' ' +\
+            _("An email with a link for setting a new password has been sent to the user's address.") + ' ' +\
+            _("This link is valid for 48 hours from now.")
+            # @todo; For user create message, use variables in the translation with user's name, email address and a variable for the actual expiry time
+            messages.success(request, msg)
             return redirect('project-customer-detail', pk)
     else:
         form = UserRestCreationForm()
@@ -587,109 +588,101 @@ def customer_user_create(request, pk):
     }
     return render(request, 'customers/projectcustomuser_form.html', context)
 
-    
 
-from .models import PasswordResetLink
-from .forms import PasswordReset, PasswordResetRequest
 
-def request_password_reset_link(request): 
+def request_password_reset_link(request):
     """
-    View used for asking for a password reset link with entering 
-    the username. GET presents the form, POST invokes sending 
+    View used for asking for a password reset link with entering
+    the username. GET presents the form, POST invokes sending
     the email, if it corresponds to ~some~ user in the system.
     """
-    
+
     if request.method == 'GET':
         empty_form = PasswordResetRequest()
         return render(request, 'customers/reset_password.html', {
             'request_form': empty_form
         })
-    
+
     elif request.method == 'POST':
-        
+
         filled_form = PasswordResetRequest(request.POST)
         if filled_form.is_valid():
             email = filled_form.cleaned_data['email']
-            try: 
+            try:
                 user = ProjectCustomUser.objects.get(email=email)
             except Exception:
                 # Do nothing. We don't want hackers to know that the user
-                # doesn't exist. 
+                # doesn't exist.
                 pass
-            
-            # Register the link, make the link's id 
+
+            # Register the link, make the link's id
             new_link = PasswordResetLink(for_user=user)
             new_link.save()
-            new_link.send_to_user()
-        
+            new_link.send_to_user(request)
+
         # Return the same success message regardless of whether the user
         # is valid or not. This is a security measure to not allow
         # bots to know if the user exists or not by spamming this page.
-        messages.success(request, _((
-            "A reset link has been sent to the email address. "
-            "If you didn't recieve any email, make sure that your "
-            "address has been typed correctly and that the message "
-            "wasn't marked as spam. "
-        )))
+        msg = _("A reset link has been sent to the email address. ") + ' ' +\
+        _("If you didn't recieve any email, make sure that your address has been typed correctly ") + ' ' +\
+        _(" and that the message wasn't marked as spam. ")
+        messages.success(request, msg)
         return redirect('user-login')
 
 
-def reset_password(request, uuid): 
+def reset_password(request, uuid):
     """
     Target of the reset password link. This is what you'll get
-    when clicking on the reset link. GET presents the form to 
+    when clicking on the reset link. GET presents the form to
     enter the new password, POST validates the form and changes
     the user's password.
     """
 
     # Always validate the link
     pass_reset_link = None
-    try: 
+    try:
         pass_reset_link = PasswordResetLink.objects.get(id=uuid)
+        print('pass_reset_link = {}'.format(pass_reset_link))
         if pass_reset_link.is_not_valid_anymore():
             pass_reset_link = None
     except Exception:
         pass_reset_link = None
-            
+
     if pass_reset_link == None:
-        messages.warning(request, _(( 
-            "The password reset link is either "
-            "invalid or expired." 
-        )))
+        msg = _("The password reset link is either invalid or expired.")
+        messages.warning(request, msg)
         return redirect('user-login')
-    
-    
+
+
     if request.method == 'GET' and pass_reset_link:
         # Construct a form for changing the password (2 passwords)
         return render(request, 'customers/reset_password.html', {
             'password_form': PasswordReset(),
             'for_user': pass_reset_link.for_user,
         })
-    
+
     elif request.method == 'POST':
         filled_form = PasswordReset(request.POST)
-        
+
         if filled_form.is_valid() and pass_reset_link:
             # Re-set the password
             pass_reset_link.reset_password(
                 filled_form.cleaned_data['new_password']
             )
-            messages.success(
-                request, _((
-                    "You have successfully changed your password. "
-                    "You can now use the new password to log into "
-                    "your account."
-                ))
-            )
+            #------------ CLEAN models
+            pass_reset_link.delete()
+            msg = _("You have successfully changed your password. ") + ' ' +\
+            _("You can now use the new password to log into your account.")
+            messages.success(request, msg)
             return redirect('user-login')
-        
+
         else:
-            # Reload; error messages are added to the filled form 
+            # Reload; error messages are added to the filled form
             # by the form validation itself.
             return render(request, 'customers/reset_password.html', {
                 'password_form': filled_form
             })
-    
+
 
 
 

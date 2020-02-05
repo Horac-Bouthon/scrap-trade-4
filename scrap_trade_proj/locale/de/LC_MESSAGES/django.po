@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-24 11:32+0100\n"
+"POT-Creation-Date: 2020-02-04 17:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,7 @@ msgstr "Auktionstermin:"
 #: auction_house/templates/auction_house/customer_answer_list.html:24
 #: auction_house/templates/auction_house/customer_offer_list.html:24
 #: auction_house/templates/auction_house/customer_waiting_list.html:24
-#: customers/models.py:238
+#: customers/models.py:338
 #: doc_repo/templates/doc_repo/doc_repo_doc_list.html:30
 msgid "Description"
 msgstr "Beschreibung"
@@ -116,7 +116,7 @@ msgstr "Angeboten zu"
 
 #: auction_house/models.py:63
 msgctxt "AhOffer definition"
-msgid "List of customers who received the offer"
+msgid "List of customers who recieved the offer"
 msgstr "Liste der Kunden, die das Angebot erhalten haben"
 
 #: auction_house/models.py:74
@@ -170,15 +170,15 @@ msgid "From this time is auction URL closed"
 msgstr "Ab dieser Zeit ist die Auktions-URL geschlossen"
 
 #: auction_house/models.py:109 auction_house/models.py:191
-#: auction_house/models.py:315 customers/models.py:105 customers/models.py:149
-#: customers/models.py:315 doc_repo/models.py:118
+#: auction_house/models.py:315 customers/models.py:182 customers/models.py:225
+#: customers/models.py:415 doc_repo/models.py:118
 msgctxt "UserProfile definition"
 msgid "Open id"
 msgstr "Open id"
 
 #: auction_house/models.py:110 auction_house/models.py:192
-#: auction_house/models.py:316 customers/models.py:106 customers/models.py:150
-#: customers/models.py:316 doc_repo/models.py:119
+#: auction_house/models.py:316 customers/models.py:184 customers/models.py:226
+#: customers/models.py:416 doc_repo/models.py:119
 msgctxt "UserProfile definition"
 msgid "Link to integration key"
 msgstr "Link zum integrationsschlüssel"
@@ -407,15 +407,15 @@ msgctxt "AhAnswerLine definition"
 msgid "Answer lines"
 msgstr "Antwort Satzen"
 
-#: auction_house/modules/auction.py:208
+#: auction_house/modules/auction.py:238
 msgid "Offers:"
 msgstr "Angebote:"
 
-#: auction_house/modules/auction.py:214
+#: auction_house/modules/auction.py:244
 msgid "Wating offers"
 msgstr "Wartende Angebote"
 
-#: auction_house/modules/auction.py:229
+#: auction_house/modules/auction.py:259
 msgid "Answers:"
 msgstr "Antworten:"
 
@@ -609,7 +609,7 @@ msgstr "Erstellt am"
 
 #: auction_house/templates/auction_house/ahanswer_detail.html:144
 #: auction_house/templates/auction_house/ahoffer_detail.html:242
-#: customers/templates/customers/user_profile.html:27 customers/views.py:124
+#: customers/templates/customers/user_profile.html:27 customers/views.py:131
 #: doc_repo/templates/doc_repo/__btn-icon-doc.html:4
 msgid "Documents"
 msgstr "Documente"
@@ -741,14 +741,6 @@ msgstr "Minimaler Stückpreis:"
 msgid "Send"
 msgstr "Senden"
 
-#: auction_house/templates/auction_house/customer_auction.html:40
-msgid "Create new offer"
-msgstr "Neues Angebot erstellen"
-
-#: auction_house/templates/auction_house/customer_auction.html:43
-msgid "Set customer"
-msgstr "Kunden Bearbeiten"
-
 #: auction_house/templates/auction_house/customer_waiting_list.html:41
 msgid "Click to view the offer"
 msgstr "Aktivieren, um das Angebot anzuzeigen"
@@ -761,164 +753,196 @@ msgstr "Aktivieren, um dem Besitzer von antwort anzuzeigen"
 msgid "Click to create answer"
 msgstr "Aktivieren, um die Antwort zu erstellen  "
 
-#: auction_house/views.py:140 auction_house/views.py:467
-#: auction_house/views.py:504
+#: auction_house/views.py:145 auction_house/views.py:517
+#: auction_house/views.py:551
 msgid "Your line has been updated!"
 msgstr "Ihr Satz wurde aktualisiert!"
 
-#: auction_house/views.py:146
+#: auction_house/views.py:151
 msgctxt "ah_offer_line_update-title"
 msgid "update-line"
 msgstr "update-satz"
 
-#: auction_house/views.py:170 auction_house/views.py:238
+#: auction_house/views.py:175 auction_house/views.py:265
 msgid "Your offer has been added!"
 msgstr "Ihr Angebot wurde Hinzugefügt!"
 
-#: auction_house/views.py:176
+#: auction_house/views.py:181
 msgctxt "ah_offer_line_create-title"
 msgid "create-offer"
 msgstr "angebot-erstellen"
 
-#: auction_house/views.py:217
+#: auction_house/views.py:222
 msgctxt "ah_customer_auction-title"
 msgid "customer-auction"
 msgstr "Kunden-Auktion"
 
-#: auction_house/views.py:244
+#: auction_house/views.py:230
+#: project_main/templates/project_main/__header.html:61
+msgid "Auction"
+msgstr "Auktion"
+
+#: auction_house/views.py:231
+msgid "Auction homepage"
+msgstr "Auktion homepage"
+
+#: auction_house/views.py:233 customers/models.py:410 customers/views.py:94
+#: customers/views.py:117
+msgid "Customer logo"
+msgstr "Kunden Logo"
+
+#: auction_house/views.py:236
+msgid "Create new offer"
+msgstr "Neues Angebot erstellen"
+
+#: auction_house/views.py:241
+msgid "Edit customer info"
+msgstr "Kunden-info Bearbeiten"
+
+#: auction_house/views.py:271
 msgctxt "ah_customer_offers_create-title"
 msgid "create-offer"
 msgstr "angebot-erstellen"
 
-#: auction_house/views.py:257
+#: auction_house/views.py:284
 msgctxt "ah_customer_offer_by_state_key-title"
 msgid "offers-by-state"
 msgstr "angebote-nach-zustand"
 
-#: auction_house/views.py:281
+#: auction_house/views.py:317
 msgid "Your offer has change the state!"
 msgstr "Ihr Angebot hat den Zustand ändern!"
 
-#: auction_house/views.py:285
+#: auction_house/views.py:321
 msgctxt "ah_offers_change_state-title"
 msgid "offer-state"
 msgstr "angebot-zustand"
 
-#: auction_house/views.py:312
+#: auction_house/views.py:362
 msgid "Your answer has change the state!"
 msgstr "Ihre Antwort hat den Zustand ändern!"
 
-#: auction_house/views.py:316
+#: auction_house/views.py:366
 msgctxt "ah_answer_change_state-title"
 msgid "offer-state"
 msgstr "angebot-zustand"
 
-#: auction_house/views.py:398
+#: auction_house/views.py:448
 msgctxt "ah_customer_answer_waiting_offers-title"
 msgid "offers_waiting"
 msgstr "wartende-angebote"
 
-#: auction_house/views.py:401
+#: auction_house/views.py:451
 msgid "waiting offer"
 msgstr "Wartende Angebote"
 
-#: auction_house/views.py:412
+#: auction_house/views.py:462
 msgctxt "ah_customer_answer_by_state_key-title"
 msgid "answers-by-state"
 msgstr "antworten-nach-zustand"
 
-#: auction_house/views.py:433
+#: auction_house/views.py:483
 msgid "Your answer has been added!"
 msgstr "Ihre web-url wurde Hinzugefügt!"
 
-#: auction_house/views.py:439
+#: auction_house/views.py:489
 msgctxt "ah_customer_answer_create-title"
 msgid "create-answer"
 msgstr "antwort-erstellen"
 
-#: auction_house/views.py:473 auction_house/views.py:510
+#: auction_house/views.py:523 auction_house/views.py:557
 msgctxt "ah_answer_line_update-title"
 msgid "update-line"
 msgstr "update-satz"
 
-#: auction_house/views.py:534 auction_house/views.py:566
+#: auction_house/views.py:581 auction_house/views.py:613
 msgid "Step has been added!"
 msgstr "Schritt wurde Hinzugefügt!"
 
-#: auction_house/views.py:540
+#: auction_house/views.py:587
 msgctxt "ah_offer_step_create-title"
 msgid "create-step"
 msgstr "schritt-erstellen"
 
-#: auction_house/views.py:572
+#: auction_house/views.py:619
 msgctxt "ah_answer_step_create-title"
 msgid "create-step"
 msgstr "schritt-erstellen"
 
-#: customers/admin.py:28 customers/admin.py:55
+#: customers/admin.py:29
 msgid "Password"
 msgstr "Passwort"
 
-#: customers/admin.py:28 customers/admin.py:55
+#: customers/admin.py:29
 msgid "Enter password"
 msgstr "Passwort eingeben"
 
-#: customers/admin.py:29 customers/admin.py:56
+#: customers/admin.py:30
 msgid "Password confirmation"
 msgstr "Passwort-Bestätigung"
 
-#: customers/admin.py:29 customers/admin.py:56
+#: customers/admin.py:30
 msgid "Confirm password"
 msgstr "Bestätigen Sie dem Passwort"
 
-#: customers/admin.py:40 customers/admin.py:67
+#: customers/admin.py:41 customers/forms.py:35
 msgid "Passwords don't match"
 msgstr "Passwörter passen nicht zusammen"
 
-#: customers/admin.py:130 customers/admin.py:141 project_main/admin.py:14
+#: customers/admin.py:99 customers/admin.py:110 project_main/admin.py:14
 #: state_wf/admin.py:13
 msgid "Translation"
 msgstr "Übersetzung"
 
-#: customers/admin.py:131 customers/admin.py:142 project_main/admin.py:15
+#: customers/admin.py:100 customers/admin.py:111 project_main/admin.py:15
 #: state_wf/admin.py:14
 msgid "Translations"
 msgstr "Übersetzungen"
 
-#: customers/models.py:25
-msgid "User must have an email address."
-msgstr "Benutzer muss eine E-Mail-Adresse haben."
+#: customers/forms.py:56
+msgid "Enter a new password for your account."
+msgstr "Geben Sie ein neues Passwort für Ihr Konto ein."
 
-#: customers/models.py:49
+#: customers/forms.py:60
+msgid "Repeat the same password."
+msgstr "Wiederholen Sie das gleiche Passwort."
+
+#: customers/forms.py:70
+msgid "The passwords don't match. Please try writing them again."
+msgstr ""
+"Die Passwörter Stimmen nicht überein. Versuchen Sie bitte Passwörte wieder "
+"zu schreiben."
+
+#: customers/models.py:30
 msgid "email address"
 msgstr "E-Mail-Adresse"
 
-#: customers/models.py:50
-msgid "Required: 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+#: customers/models.py:31
+msgid "This acts as the username when logging in."
+msgstr "Dies fungiert als Benutzername beim anmelden."
+
+#: customers/models.py:36
+msgid "Name"
+msgstr "Name"
+
+#: customers/models.py:37
+msgid "Only informational."
+msgstr "Nur informativ."
+
+#: customers/models.py:42
+msgid "Is Active"
+msgstr "Ist Aktiv"
+
+#: customers/models.py:43
+msgid "User can log into the website and isn't blocked."
 msgstr ""
-"Erforderlich: 150 Zeichen oder weniger. Nur Buchstaben, Ziffern und @/./+/-/_"
+"Der Benutzer kann sich auf der website anmelden und ist nicht blockiert."
 
-#: customers/models.py:51
-msgid "user name"
-msgstr "Benutzername"
-
-#: customers/models.py:51
-msgid "User identification"
-msgstr "Benutzeridentifikation"
-
-#: customers/models.py:52
-msgid "active user"
-msgstr "aktiver Benutzer"
-
-#: customers/models.py:52
-msgid "User can log in"
-msgstr "Benutzer kann sich anmelden"
-
-#: customers/models.py:53
+#: customers/models.py:47
 msgid "access admin tools"
 msgstr "Zugriff auf admin-tools"
 
-#: customers/models.py:54
+#: customers/models.py:48
 msgid "User can access administration tools"
 msgstr "Benutzer können auf Administrationstools zugreifen"
 
@@ -927,17 +951,17 @@ msgctxt "ProjectCustomUser definition"
 msgid "Customer"
 msgstr "Kunde"
 
-#: customers/models.py:59
+#: customers/models.py:60
 msgctxt "ProjectCustomUser definition"
 msgid "Link to Customer"
 msgstr "Link zum Kunden"
 
-#: customers/models.py:65
+#: customers/models.py:68
 msgctxt "ProjectCustomUser definition"
 msgid "Project"
 msgstr "Projekt"
 
-#: customers/models.py:66
+#: customers/models.py:70
 msgctxt "ProjectCustomUser definition"
 msgid "Link to Project"
 msgstr "Link zum Projekt"
@@ -947,337 +971,369 @@ msgctxt "ProjectCustomUser definition"
 msgid "User"
 msgstr "Benutzer"
 
-#: customers/models.py:76
+#: customers/models.py:77
 msgctxt "ProjectCustomUser definition"
 msgid "Users"
 msgstr "Benutzers"
 
-#: customers/models.py:99
+#: customers/models.py:158
 msgctxt "UserProfile user"
 msgid "user"
 msgstr "Benutzer"
 
-#: customers/models.py:101
+#: customers/models.py:159
+msgctxt "UserProfile definition"
+msgid "Link to pattern object"
+msgstr "Link zum musterobjekt"
+
+#: customers/models.py:163 customers/models.py:272
+msgctxt "UserProfile user"
+msgid "language"
+msgstr "Sprache"
+
+#: customers/models.py:164 customers/models.py:273
+msgctxt "UserProfile definition"
+msgid "Set the language to communicate with the user"
+msgstr "Legen Sie die Sprache fest, um mit dem Benutzer zu kommunizieren"
+
+#: customers/models.py:171
 msgctxt "UserProfile image"
 msgid "image"
 msgstr "Bild"
 
-#: customers/models.py:112
+#: customers/models.py:172
+msgctxt "UserProfile definition"
+msgid "Here you can add an image to the profile"
+msgstr "Hier können Sie dem Profil ein Bild hinzufügen"
+
+#: customers/models.py:188
 msgctxt "UserProfile definition"
 msgid "User Profile"
 msgstr "Benutzerprofil"
 
-#: customers/models.py:113
+#: customers/models.py:189
 msgctxt "UserProfile definition"
 msgid "User Profiles"
 msgstr "Benutzerprofile"
 
-#: customers/models.py:127
+#: customers/models.py:203
 msgid "Establishment"
 msgstr "Einrichtung"
 
-#: customers/models.py:128
+#: customers/models.py:204
 msgid "Establishment name"
 msgstr "Einrichtungs name"
 
-#: customers/models.py:129
+#: customers/models.py:205
 msgid "Street"
 msgstr "Straße"
 
-#: customers/models.py:130
+#: customers/models.py:206
 msgid "Street in address"
 msgstr "Straße in der Adresse"
 
-#: customers/models.py:131
+#: customers/models.py:207
 msgid "House"
 msgstr "Hausnummer"
 
-#: customers/models.py:132
+#: customers/models.py:208
 msgid "House number in address"
 msgstr "Hausnummer in Adresse"
 
-#: customers/models.py:133
+#: customers/models.py:209
 msgid "City"
 msgstr "Stadt"
 
-#: customers/models.py:134
+#: customers/models.py:210
 msgid "City name in address"
 msgstr "Stadt name Adresse"
 
-#: customers/models.py:135
+#: customers/models.py:211
 msgid "ZIP"
 msgstr "Postleitzahl"
 
-#: customers/models.py:136
+#: customers/models.py:212
 msgid "ZIP code in address"
 msgstr "Postleitzahl in Adresse"
 
-#: customers/models.py:137
+#: customers/models.py:213
 msgid "headquarter"
 msgstr "Firmensitz"
 
-#: customers/models.py:138
+#: customers/models.py:214
 msgid "Mark customers headquarter. "
 msgstr "name des Firmensitzes"
 
-#: customers/models.py:142
+#: customers/models.py:218
 msgctxt "CustomerEstablishments definition"
 msgid "Customer"
 msgstr "Kunde"
 
-#: customers/models.py:143
+#: customers/models.py:219
 msgctxt "CustomerEstablishments definition"
 msgid "Link to Customer"
 msgstr "Link zum Kunden"
 
-#: customers/models.py:156
+#: customers/models.py:232
 msgctxt "CustomerEstablishments definition"
 msgid "Establishment"
 msgstr "Einrichtung"
 
-#: customers/models.py:157
+#: customers/models.py:233
 msgctxt "CustomerEstablishments definition"
 msgid "Establishments"
 msgstr "Einrichtung"
 
-#: customers/models.py:160
+#: customers/models.py:236
 msgctxt "CustomerAddress __str__"
 msgid "establishment"
 msgstr "Einrichtung"
 
-#: customers/models.py:165
+#: customers/models.py:243
 msgctxt "Customer definition"
 msgid "email address"
 msgstr "E-Mail-Adresse"
 
-#: customers/models.py:166
+#: customers/models.py:244
 msgctxt "Customer definition"
 msgid "Required: 150 characters or fewer. Letters, digits and @/./+/-/_ only."
 msgstr ""
 "Erforderlich: 150 Zeichen oder weniger. Nur Buchstaben, Ziffern und @/./+/-/_"
 
-#: customers/models.py:171 customers/models.py:196 customers/models.py:272
+#: customers/models.py:251 customers/models.py:296 customers/models.py:372
 msgctxt "CustomerEmail definition"
 msgid "Customer"
 msgstr "Kunde"
 
-#: customers/models.py:172 customers/models.py:197 customers/models.py:273
+#: customers/models.py:252 customers/models.py:297 customers/models.py:373
 msgctxt "CustomerEmail definition"
 msgid "Link to Customer"
 msgstr "Link zum Kunden"
 
-#: customers/models.py:175
-msgid "admin address"
-msgstr "admin-Adresse"
+#: customers/models.py:257
+msgid "Private address"
+msgstr "Private Adresse"
 
-#: customers/models.py:176
+#: customers/models.py:258
+msgid "This address will not be included in the info. "
+msgstr "Diese Adresse wird nicht in der info enthalten sein."
+
+#: customers/models.py:262
+msgid "Admin address"
+msgstr "Admin-Adresse"
+
+#: customers/models.py:263
 msgid "Mark special addresses to send additional administration messages. "
 msgstr ""
 "An diese spezielle Adressen werden zusätzliche administrationsmeldungen "
 "gesendet."
 
-#: customers/models.py:179
+#: customers/models.py:267
+msgid "Business address"
+msgstr "Geschäftsadresse"
+
+#: customers/models.py:268
+msgid "Business messages will be sent to this address"
+msgstr "Business-Nachrichten werden an diese Adresse gesendet"
+
+#: customers/models.py:279
 msgctxt "CustomerEmail definition"
 msgid "Customer email"
 msgstr "Kunden-E-Mail"
 
-#: customers/models.py:180
+#: customers/models.py:280
 msgctxt "CustomerEmail definition"
 msgid "Customer emails"
 msgstr "Kunden-E-Mails"
 
-#: customers/models.py:183 customers/models.py:282 customers/models.py:326
+#: customers/models.py:283 customers/models.py:382 customers/models.py:426
 msgid "address"
 msgstr "Adresse"
 
-#: customers/models.py:187 customers/models.py:188
+#: customers/models.py:287 customers/models.py:288
 msgid "Account number"
 msgstr "Kontonummer"
 
-#: customers/models.py:189
+#: customers/models.py:289
 msgid "Bank ID"
 msgstr "Bank-ID"
 
-#: customers/models.py:190
+#: customers/models.py:290
 msgid "National identification of the bank"
 msgstr "Nationale Identifikation der Bank"
 
-#: customers/models.py:191
+#: customers/models.py:291
 msgid "IBAN"
 msgstr "IBAN"
 
-#: customers/models.py:192
+#: customers/models.py:292
 msgid "International account identification"
 msgstr "Internationale Kontokennung"
 
-#: customers/models.py:200
+#: customers/models.py:300
 msgid "Prefered account"
 msgstr "Bevorzugtes Konto"
 
-#: customers/models.py:201
+#: customers/models.py:301
 msgid "Preferably use this account."
 msgstr "Vorzugsweise dieses Konto verwenden."
 
-#: customers/models.py:204
+#: customers/models.py:304
 msgctxt "CustomerBankAccount definition"
 msgid "Customer bank account"
 msgstr "Kunden Bankkonto"
 
-#: customers/models.py:205
+#: customers/models.py:305
 msgctxt "CustomerBankAccount definition"
 msgid "Customer bank accounts"
 msgstr "Kunden Bankkonten"
 
-#: customers/models.py:214
+#: customers/models.py:314
 msgctxt "BasicPhoneCategory definition"
 msgid "Type"
 msgstr "Typ"
 
-#: customers/models.py:215
+#: customers/models.py:315
 msgctxt "BasicPhoneCategory definition"
 msgid "Phone category type"
 msgstr "Telefon Kategorie Typ"
 
-#: customers/models.py:221
+#: customers/models.py:321
 msgctxt "BasicPhoneCategory definition"
 msgid "Phone category"
 msgstr "Telefon Kategorie"
 
-#: customers/models.py:222
+#: customers/models.py:322
 msgctxt "BasicPhoneCategory definition"
 msgid "Phone categories"
 msgstr "Telefon Kategories"
 
-#: customers/models.py:236
+#: customers/models.py:336
 msgid "Customer phone"
 msgstr "Kunden Telefon"
 
-#: customers/models.py:237
+#: customers/models.py:337
 msgid "Customer phone number"
 msgstr "Kundentelefonnummer"
 
-#: customers/models.py:239
+#: customers/models.py:339
 msgid "Phone description"
 msgstr "Telefon Beschreibung"
 
-#: customers/models.py:245
+#: customers/models.py:345
 msgctxt "CustomerPhone definition"
 msgid "Phone category"
 msgstr "Telefon Kategorie"
 
-#: customers/models.py:246
+#: customers/models.py:346
 msgctxt "CustomerPhone definition"
 msgid "Category of the phone"
 msgstr "Kategorie des Telefons"
 
-#: customers/models.py:251
+#: customers/models.py:351
 msgctxt "CustomerPhone definition"
 msgid "Customer"
 msgstr "Kunde"
 
-#: customers/models.py:252
+#: customers/models.py:352
 msgctxt "CustomerPhone definition"
 msgid "Link to Customer"
 msgstr "Link zum Kunden"
 
-#: customers/models.py:257
+#: customers/models.py:357
 msgctxt "CustomerEmail definition"
 msgid "Customer phone"
 msgstr "Kunden Telefon"
 
-#: customers/models.py:258
+#: customers/models.py:358
 msgctxt "CustomerEmail definition"
 msgid "Customer phones"
 msgstr "Kunden Telefonen"
 
-#: customers/models.py:266
+#: customers/models.py:366
 msgid "Customer web"
 msgstr "Kunden Seite"
 
-#: customers/models.py:267
+#: customers/models.py:367
 msgid "Customers website URL"
 msgstr "Kunden website-URL"
 
-#: customers/models.py:278
+#: customers/models.py:378
 msgctxt "CustomerWeb definition"
 msgid "Customer website"
 msgstr "Kunden Seite"
 
-#: customers/models.py:279
+#: customers/models.py:379
 msgctxt "CustomerWeb definition"
 msgid "Customer websites"
 msgstr "Kunden Seiten"
 
-#: customers/models.py:287
+#: customers/models.py:387
 msgid "Customer name"
 msgstr "Benutzername"
 
-#: customers/models.py:288
+#: customers/models.py:388
 msgid "Customer identification"
 msgstr "Benutzeridentifikation"
 
-#: customers/models.py:291
+#: customers/models.py:391
 msgid "Registration number"
 msgstr "Registrierungsnummer"
 
-#: customers/models.py:292
+#: customers/models.py:392
 msgid "Customer registration number"
 msgstr "Kunden Registriernummer"
 
-#: customers/models.py:296
+#: customers/models.py:396
 msgid "VAT"
 msgstr "Steuernummer"
 
-#: customers/models.py:297
+#: customers/models.py:397
 msgid "Customer VAT number"
 msgstr "Kunden Steuer-Nummer"
 
-#: customers/models.py:303
+#: customers/models.py:403
 msgctxt "Customer image"
 msgid "Background"
 msgstr "Hintergrund"
 
-#: customers/models.py:304
+#: customers/models.py:404
 msgid "Image to fill customers web page background"
 msgstr "Bild zu füllen Kunden Webseite hintergrund"
 
-#: customers/models.py:309
+#: customers/models.py:409
 msgctxt "Customer image"
 msgid "Logo"
 msgstr "Logo"
 
-#: customers/models.py:310 customers/views.py:90 customers/views.py:114
-msgid "Customer logo"
-msgstr "Kunden Logo"
-
-#: customers/models.py:322
+#: customers/models.py:422
 msgctxt "Customer definition"
 msgid "Customer"
 msgstr "Kunde"
 
-#: customers/models.py:323
+#: customers/models.py:423
 msgctxt "Customer definition"
 msgid "Customers"
 msgstr "Kunden"
 
-#: customers/models.py:351
+#: customers/models.py:465
 msgid "Customer description"
 msgstr "Kunden-Beschreibung"
 
-#: customers/models.py:352
+#: customers/models.py:466
 msgid "Text to describe the Customer extensively."
 msgstr "Text, um den Kunden ausführlich zu beschreiben."
 
-#: customers/models.py:358
+#: customers/models.py:472
 msgid "Short description"
 msgstr "Kurzbeschreibung"
 
-#: customers/models.py:359
+#: customers/models.py:473
 msgid "Short text to describe the Customer."
 msgstr "Kurzer text zur Beschreibung des Kunden."
 
 #: customers/templates/customers/customer_confirm_delete.html:11
-#: customers/views.py:118
+#: customers/views.py:123
 msgid "Delete Customer"
 msgstr "Kunden Löschen"
 
@@ -1335,23 +1391,23 @@ msgstr "Übersetzungen Bearbeiten"
 msgid "Description:"
 msgstr "Beschreibung:"
 
-#: customers/templates/customers/customer_info.html:33 customers/views.py:154
+#: customers/templates/customers/customer_info.html:33 customers/views.py:158
 msgid "Establishments:"
 msgstr "Einrichtungen:"
 
-#: customers/templates/customers/customer_info.html:47 customers/views.py:136
+#: customers/templates/customers/customer_info.html:47 customers/views.py:140
 msgid "E-mails:"
 msgstr "E-Mails:"
 
-#: customers/templates/customers/customer_info.html:59 customers/views.py:145
+#: customers/templates/customers/customer_info.html:59 customers/views.py:149
 msgid "Websites:"
 msgstr "Website:"
 
-#: customers/templates/customers/customer_info.html:71 customers/views.py:166
+#: customers/templates/customers/customer_info.html:71 customers/views.py:170
 msgid "Phones:"
 msgstr "Telefone:"
 
-#: customers/templates/customers/customer_info.html:86 customers/views.py:177
+#: customers/templates/customers/customer_info.html:86 customers/views.py:181
 msgid "Bank accounts:"
 msgstr "Bankkonten:"
 
@@ -1365,7 +1421,6 @@ msgid "View detailed customer info"
 msgstr "Detaillierte Kundeninformationen anzeigen"
 
 #: customers/templates/customers/customer_list.html:47
-#: doc_repo/templates/doc_repo/__btn-icon-detail.html:4
 msgid "Detail"
 msgstr "Detail"
 
@@ -1453,7 +1508,7 @@ msgstr "Web-url"
 msgid "E-mail:"
 msgstr "E-Mail:"
 
-#: customers/templates/customers/login.html:20
+#: customers/templates/customers/login.html:27
 #: project_main/templates/project_main/__footer.html:22
 #: project_main/templates/project_main/__header.html:164
 #: project_main/templates/project_main/base.html:190
@@ -1461,16 +1516,38 @@ msgctxt "login_template"
 msgid "Log In"
 msgstr "Melden Sie sich an"
 
-#: customers/templates/customers/login.html:28
-#: project_main/templates/project_main/__header.html:172
+#: customers/templates/customers/login.html:39
+#: project_main/templates/project_main/__header.html:177
 msgctxt "login form submit button"
 msgid "Login"
 msgstr "Anmelden"
+
+#: customers/templates/customers/login.html:47
+#: project_main/templates/project_main/__header.html:185
+msgid "Forgot your password?"
+msgstr "Passwort vergessen?"
 
 #: customers/templates/customers/projectcustomuser_active.html:17
 #: customers/templates/customers/projectcustomuser_form.html:17
 msgid "User:"
 msgstr "Benutzer:"
+
+#: customers/templates/customers/reset_password.html:25
+msgid "Reset a forgotten password"
+msgstr "Passwort zurücksetzen"
+
+#: customers/templates/customers/reset_password.html:30
+msgctxt "reset forgotten password user"
+msgid "For user:"
+msgstr "Für Benutzer:"
+
+#: customers/templates/customers/reset_password.html:46
+msgid "Send a password reset link to this email"
+msgstr "Einen Passwort-reset-link zu dieser E-Mail senden"
+
+#: customers/templates/customers/reset_password.html:59
+msgid "Change password"
+msgstr "Passwort ändern"
 
 #: customers/templates/customers/user_profile.html:19
 msgid "Profile info"
@@ -1492,165 +1569,200 @@ msgstr "Haben Sie Bereits Ein Konto?"
 msgid "Please Log In"
 msgstr "Bitte Anmelden"
 
-#: customers/views.py:66
+#: customers/views.py:70
 msgid "Customer list"
 msgstr "Kundenliste"
 
-#: customers/views.py:67
+#: customers/views.py:71
 msgid "A list of all signed up customers using the website."
 msgstr "Eine Liste aller angemeldeten Kunden, die die website nutzen."
 
-#: customers/views.py:71
+#: customers/views.py:75
 msgid "Add New Customer"
 msgstr "Neue Kunden Hinzufügen"
 
-#: customers/views.py:88
+#: customers/views.py:92
 msgid "Detailed customer information"
 msgstr "Detaillierte Kundeninformationen"
 
-#: customers/views.py:94
+#: customers/views.py:98
 msgid "Edit Customer"
 msgstr "Kunden Bearbeiten"
 
-#: customers/views.py:111
+#: customers/views.py:114
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: customers/views.py:112
+#: customers/views.py:115
 msgid "Edit customer details"
 msgstr "Bearbeiten der Kundendaten"
 
-#: customers/views.py:223
+#: customers/views.py:227
 msgid "Your e-mail has been updated!"
 msgstr "Ihre e-mail wurde aktualisiert!"
 
-#: customers/views.py:229
+#: customers/views.py:233
 msgctxt "customer_email_update-title"
 msgid "update-email"
 msgstr "update-E-Mail"
 
-#: customers/views.py:249
+#: customers/views.py:253
 msgid "Your e-mail has been added!"
 msgstr "Ihre e-mail wurde Hinzugefügt!"
 
-#: customers/views.py:255
+#: customers/views.py:259
 msgctxt "customer_email_update-title"
 msgid "create-email"
 msgstr "E-Mail-erstellen"
 
-#: customers/views.py:292
+#: customers/views.py:296
 msgid "Your web url has been added!"
 msgstr "Ihre web-url wurde Hinzugefügt!"
 
-#: customers/views.py:298 customers/views.py:364
+#: customers/views.py:302 customers/views.py:368
 msgctxt "customer_web_update-title"
 msgid "create-phone"
 msgstr "telefonnummer -erstellen"
 
-#: customers/views.py:315
+#: customers/views.py:319
 msgid "Your web url has been updated!"
 msgstr "Ihre web-url wurde aktualisiert!"
 
-#: customers/views.py:321
+#: customers/views.py:325
 msgctxt "customer_web_update-title"
 msgid "update-web"
 msgstr "update-web"
 
-#: customers/views.py:358 customers/views.py:422
+#: customers/views.py:362 customers/views.py:426
 msgid "Your phone has been added!"
 msgstr "Ihre Telefonnummer wurde Hinzugefügt!"
 
-#: customers/views.py:382
+#: customers/views.py:386
 msgid "Your phone has been updated!"
 msgstr "Ihr Telefonnummer wurde aktualisiert!"
 
-#: customers/views.py:388
+#: customers/views.py:392
 msgctxt "customer_phone_update-title"
 msgid "update-phone"
 msgstr "update-telefonnummer "
 
-#: customers/views.py:428
+#: customers/views.py:432
 msgctxt "customer_bank_create-title"
 msgid "create-bank-account"
 msgstr "bankkonto-erstellen"
 
-#: customers/views.py:446
+#: customers/views.py:450
 msgid "Your bank account has been updated!"
 msgstr "Ihr Konto wurde aktualisiert!"
 
-#: customers/views.py:452
+#: customers/views.py:456
 msgctxt "customer_bank_update-title"
 msgid "update-bank"
 msgstr "update-bank"
 
-#: customers/views.py:490 customers/views.py:563
+#: customers/views.py:494
 msgid "Your establishment has been added!"
 msgstr "Ihre Einrichtung wurde Hinzugefügt!"
 
-#: customers/views.py:496
+#: customers/views.py:500
 msgctxt "customer_est_create-title"
 msgid "create-establishment"
 msgstr "einrichtung-erstellen"
 
-#: customers/views.py:514
+#: customers/views.py:518
 msgid "Your establishment has been updated!"
 msgstr "Ihre Einrichtung wurde aktualisiert!"
 
-#: customers/views.py:520
+#: customers/views.py:524
 msgctxt "customer_bank_update-title"
 msgid "update-establishment"
 msgstr "update-einrichtung"
 
-#: customers/views.py:570
+#: customers/views.py:574
+msgid "The user has been created. "
+msgstr "Benutzer wurde aktualisiert!"
+
+#: customers/views.py:575
+msgid ""
+"An email with a link for setting a new password has been sent to the user's "
+"address."
+msgstr ""
+"Eine E-Mail mit einem link zum festlegen eines neuen Passworts wurde an die "
+"Adresse des Benutzers gesendet"
+
+#: customers/views.py:576
+msgid "This link is valid for 48 hours from now."
+msgstr "Dieser link ist ab sofort für 48 Stunden gültig."
+
+#: customers/views.py:583
 msgctxt "customer_user_create-title"
 msgid "create-user"
 msgstr "benutzer-erstellen"
 
-#: customers/views.py:588
+#: customers/views.py:626
+msgid "A reset link has been sent to the email address. "
+msgstr "Ein reset-link wurde an die E-Mail-Adresse gesendet."
+
+#: customers/views.py:627
+msgid ""
+"If you didn't recieve any email, make sure that your address has been typed "
+"correctly "
+msgstr ""
+"Wenn Sie keine E-Mail erhalten haben, stellen Sie sicher, dass Ihre Adresse "
+"korrekt eingegeben wurde"
+
+#: customers/views.py:628
+msgid " and that the message wasn't marked as spam. "
+msgstr "und dass die Nachricht nicht als Spam markiert ist."
+
+#: customers/views.py:652
+msgid "The password reset link is either invalid or expired."
+msgstr "Die Passwort-reset-link ist entweder ungültig oder abgelaufen"
+
+#: customers/views.py:674
+msgid "You have successfully changed your password. "
+msgstr "Sie haben Ihr Passwort erfolgreich geändert."
+
+#: customers/views.py:675
+msgid "You can now use the new password to log into your account."
+msgstr "Mit dem neuen Passwort können Sie sich nun in Ihr Konto einloggen."
+
+#: customers/views.py:699
 msgid "User has been updated!"
 msgstr "Benutzer wurde aktualisiert!"
 
-#: customers/views.py:594
+#: customers/views.py:705
 msgctxt "customer_user_update-title"
 msgid "update-user"
 msgstr "update-benutzer"
 
-#: customers/views.py:636
+#: customers/views.py:747
 msgid "Your translation has been updated!"
 msgstr "Ihre übersetzung wurde aktualisiert!"
 
-#: customers/views.py:642
+#: customers/views.py:753
 msgctxt "customer_tran_update-title"
 msgid "update-translation"
 msgstr "update-übersetzung"
 
-#: customers/views.py:662
+#: customers/views.py:776
 msgid "Successfully logged in"
 msgstr "Erfolgreich eingeloggt"
 
-#: customers/views.py:668
+#: customers/views.py:785
 msgctxt "customer-login-title"
 msgid "Login"
 msgstr "Anmelden"
 
-#: customers/views.py:678
+#: customers/views.py:791
 msgid "You have been logged out"
 msgstr "Sie wurden ausgeloggt"
 
-#: customers/views.py:693
-msgid "Your account has been created! You are now able to log in."
-msgstr "Ihr Konto wurde erstellt! Sie können sich jetzt anmelden."
-
-#: customers/views.py:698
-msgctxt "customer-register-title"
-msgid "register"
-msgstr "registrieren"
-
-#: customers/views.py:719
+#: customers/views.py:808
 msgid "Your account has been updated!"
 msgstr "Ihr Konto wurde aktualisiert!"
 
-#: customers/views.py:726
+#: customers/views.py:815
 msgctxt "customer-user-profile-title"
 msgid "user-profile"
 msgstr "Benutzerprofil"
@@ -1740,9 +1852,14 @@ msgctxt "Document definition"
 msgid "Documents"
 msgstr "Dokumente"
 
+#: doc_repo/templates/doc_repo/__btn-icon-detail.html:4
+msgid "Open document in a new tab"
+msgstr "Dokument in einem neuen tab öffnen"
+
 #: doc_repo/templates/doc_repo/__btn-icon-download.html:4
-msgid "Download"
-msgstr "Herunterladen"
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:51
+msgid "Download document"
+msgstr "Dokument herunterladen"
 
 #: doc_repo/templates/doc_repo/doc_repo_doc_form.html:27
 msgid "Add document:"
@@ -1755,10 +1872,6 @@ msgstr "Dokument"
 #: doc_repo/templates/doc_repo/doc_repo_doc_list.html:37
 msgid "Document detail"
 msgstr "Dokument detail"
-
-#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:51
-msgid "Download document"
-msgstr "Dokument herunterladen"
 
 #: doc_repo/templates/doc_repo/document_confirm_delete.html:21
 msgid "Delete document"
@@ -1780,20 +1893,20 @@ msgstr "Zurück"
 msgid "Add Document"
 msgstr "Dokument Hinzufügen"
 
-#: doc_repo/views.py:136
+#: doc_repo/views.py:109
 msgid "Document has been added!"
 msgstr "Dokument wurde Hinzugefügt!"
 
-#: doc_repo/views.py:142
+#: doc_repo/views.py:115
 msgctxt "doc_repo_document_create-title"
 msgid "create-document"
 msgstr "dokument-erstellen"
 
-#: doc_repo/views.py:161
+#: doc_repo/views.py:134
 msgid "Document has been updated!"
 msgstr "Dokument wurde aktualisiert!"
 
-#: doc_repo/views.py:167
+#: doc_repo/views.py:140
 msgctxt "doc_repo_document_modify-title"
 msgid "update-document"
 msgstr "update-dokument"
@@ -1815,6 +1928,121 @@ msgstr "Open id"
 msgctxt "OpenId definition"
 msgid "Open ids"
 msgstr "Open id"
+
+#: notification/admin.py:10 notification/admin.py:11
+msgid "Message template"
+msgstr "Nachricht Vorlage"
+
+#: notification/models.py:15
+msgid "Send emails"
+msgstr "Emails senden"
+
+#: notification/models.py:16
+msgid "Can send emails."
+msgstr "Kann E-Mails senden."
+
+#: notification/models.py:20
+msgid "Send SMS"
+msgstr "Send SMS"
+
+#: notification/models.py:21
+msgid "Can send SMS."
+msgstr "Kann SMS senden."
+
+#: notification/models.py:24
+msgid "Smtp addrerss"
+msgstr "SMTP Adresse"
+
+#: notification/models.py:25
+msgid "URL to connect to SMTP server."
+msgstr "URL zum verbinden mit SMTP-server."
+
+#: notification/models.py:32
+msgid "Smtp port"
+msgstr "SMTP port"
+
+#: notification/models.py:33
+msgid "Port to connect to SMTP server."
+msgstr "Port zum verbinden mit SMTP-server."
+
+#: notification/models.py:40
+msgid "Connect SSL"
+msgstr "SSL-Verbindung"
+
+#: notification/models.py:41
+msgid "Use SSL connection."
+msgstr "Die SSL-Verbindung verwenden."
+
+#: notification/models.py:45
+msgid "Smtp user"
+msgstr "SMTP-Benutzer"
+
+#: notification/models.py:46
+msgid "User to connect SMTP server."
+msgstr "Benutzer zum verbinden mit SMTP-server."
+
+#: notification/models.py:52
+msgid "Smtp user password"
+msgstr "SMTP-Benutzer-Passwort"
+
+#: notification/models.py:53
+msgid "User password to connect SMTP server."
+msgstr "Benutzer Passwort SMTP-server zu verbinden."
+
+#: notification/models.py:59 notification/models.py:60
+msgctxt "NtfSetup definition"
+msgid "NtfSetup"
+msgstr "NtfSetup"
+
+#: notification/models.py:73
+msgctxt "MessTemp definition"
+msgid "Template key"
+msgstr "Vorlage Schlüssel"
+
+#: notification/models.py:74
+msgctxt "MessTemp definition"
+msgid "Key to identify the template"
+msgstr "Schlüssel zur Identifizierung der Vorlage"
+
+#: notification/models.py:82
+msgctxt "MessTemp definition"
+msgid "Template type"
+msgstr "Vorlagentyp"
+
+#: notification/models.py:83
+msgctxt "MessTemp definition"
+msgid "Template type (text/html)"
+msgstr "Vorlagentyp (text/html)."
+
+#: notification/models.py:90
+msgctxt "MessTemp definition"
+msgid "Message Template"
+msgstr "Nachricht Vorlage"
+
+#: notification/models.py:91
+msgctxt "MessTemp definition"
+msgid "Message Templates"
+msgstr "Nachrichtenvorlagen"
+
+#: notification/models.py:111
+msgid "Subject"
+msgstr "Subject"
+
+#: notification/models.py:112
+msgid "Message subject."
+msgstr "Betreffent"
+
+#: notification/models.py:119
+msgid "Body"
+msgstr "Nachrichtentext"
+
+#: notification/models.py:120
+msgid "Message body (playn-text/html)."
+msgstr "Nachrichtentext (text/html)."
+
+#: notification/modules/ntf_manager.py:124
+msgid "Not set"
+msgstr "Nicht gesetzt"
 
 #: project_main/models.py:12 project_main/models.py:13
 msgid "Project name"
@@ -1925,8 +2153,8 @@ msgid "Delete item"
 msgstr "Element löschen"
 
 #: project_main/templates/project_main/__btn-icon-edit.html:4
-msgid "Edit item"
-msgstr "Element Bearbeiten"
+msgid "Edit document description"
+msgstr "Beschreibung des Dokuments Bearbeiten"
 
 #: project_main/templates/project_main/__footer.html:30
 #: project_main/templates/project_main/__header.html:26
@@ -1950,10 +2178,6 @@ msgstr "Abmelden"
 msgid "Homepage"
 msgstr "Homepage"
 
-#: project_main/templates/project_main/__header.html:61
-msgid "Auction"
-msgstr "Auktion"
-
 #: project_main/templates/project_main/__header.html:88
 msgctxt "base-navbar"
 msgid "Customer List"
@@ -1963,7 +2187,7 @@ msgstr "Kundenliste"
 msgid "My Auction"
 msgstr "Meine Auktion"
 
-#: project_main/templates/project_main/__header.html:180
+#: project_main/templates/project_main/__header.html:196
 msgctxt "login form tip"
 msgid ""
 "Tip: You can press the Escape key to toggle the login menu with your "
@@ -2048,7 +2272,7 @@ msgctxt "contacts-title2"
 msgid "contacts"
 msgstr "kontakte"
 
-#: state_wf/models.py:25 state_wf/models.py:26 state_wf/models.py:65
+#: state_wf/models.py:25 state_wf/models.py:26 state_wf/models.py:79
 msgctxt "StepState definition"
 msgid "State"
 msgstr "Zustand"
@@ -2103,129 +2327,145 @@ msgstr "Alarm-Taste"
 msgid "Show starting button like alert. "
 msgstr "Startknopf wie Alarm anzeigen."
 
-#: state_wf/models.py:66
+#: state_wf/models.py:64
+msgid "Send notification"
+msgstr "Benachrichtigung senden"
+
+#: state_wf/models.py:65
+msgid "Send notification if this state is activated. "
+msgstr "Benachrichtigung senden, wenn dieser Zustand aktiviert ist."
+
+#: state_wf/models.py:70
+msgid "Template"
+msgstr "Vorlage"
+
+#: state_wf/models.py:71
+msgid "Notification template used to generate message"
+msgstr "Benachrichtigungsvorlage zum generieren von Nachrichten"
+
+#: state_wf/models.py:80
 msgctxt "StepState definition"
 msgid "States"
 msgstr "Zustande"
 
-#: state_wf/models.py:109
+#: state_wf/models.py:123
 msgid "State name"
 msgstr "Zustand name"
 
-#: state_wf/models.py:110
+#: state_wf/models.py:124
 msgid "Display name of state."
 msgstr "Name des Zustand zu anzeigen."
 
-#: state_wf/models.py:117
+#: state_wf/models.py:131
 msgid "State name plural"
 msgstr "Zustand, name im plural"
 
-#: state_wf/models.py:118
+#: state_wf/models.py:132
 msgid "Display name of state in plural."
 msgstr "Name des Zustandes im plural zu anzeigen."
 
-#: state_wf/models.py:125
+#: state_wf/models.py:139
 msgid "State description"
 msgstr "Zustandbeschreibung"
 
-#: state_wf/models.py:126
+#: state_wf/models.py:140
 msgid "Short description."
 msgstr "Kurzbeschreibung"
 
-#: state_wf/models.py:133
+#: state_wf/models.py:147
 msgid "State button text"
 msgstr "Zustand-Taste text"
 
-#: state_wf/models.py:134
+#: state_wf/models.py:148
 msgid "Activating button text."
 msgstr "Aktivierungs Knopf Text"
 
-#: state_wf/models.py:141
+#: state_wf/models.py:155
 msgid "State template title"
 msgstr "Zustand Vorlage Titel"
 
-#: state_wf/models.py:142
+#: state_wf/models.py:156
 msgid "Template title text."
 msgstr "Vorlage Titeltext."
 
-#: state_wf/models.py:149
+#: state_wf/models.py:163
 msgid "State template question"
 msgstr "Zustand Vorlage Frage"
 
-#: state_wf/models.py:150
+#: state_wf/models.py:164
 msgid "Template text to query state change."
 msgstr "Vorlagentext, um Zustandsänderung abzufragen."
 
-#: state_wf/models.py:156
+#: state_wf/models.py:170
 msgid "State template text"
 msgstr "Zustand Vorlagen-text"
 
-#: state_wf/models.py:157
+#: state_wf/models.py:171
 msgid "Text to describe the state change."
 msgstr "Text zur Beschreibung der Zustandsänderung."
 
-#: state_wf/models.py:163
+#: state_wf/models.py:177
 msgid "State template confirm button"
 msgstr "Zustand-Vorlage bestätigen-Taste"
 
-#: state_wf/models.py:164
+#: state_wf/models.py:178
 msgid "Template state confirmation button text."
 msgstr "Vorlage Zustand Bestätigungs-Taste text."
 
-#: state_wf/models.py:171
+#: state_wf/models.py:185
 msgid "State template cancel button"
 msgstr "Zustand-Vorlage abbrechen-Taste"
 
-#: state_wf/models.py:172
+#: state_wf/models.py:186
 msgid "Template state cancel button text."
 msgstr "Vorlage Zustand Abbrechen-Taste text."
 
-#: state_wf/models.py:184
+#: state_wf/models.py:198
 msgctxt "Step definition"
 msgid "State"
 msgstr "Zustand"
 
-#: state_wf/models.py:185
+#: state_wf/models.py:199
 msgctxt "Step definition"
 msgid "Link to step state"
 msgstr "Link zum Schritt-Zustand"
 
-#: state_wf/models.py:192
+#: state_wf/models.py:206
 msgctxt "Step definition"
 msgid "Offer"
 msgstr "Angebot"
 
-#: state_wf/models.py:193
+#: state_wf/models.py:207
 msgctxt "Step definition"
 msgid "Link to offer"
 msgstr "Link zum Angebot"
 
-#: state_wf/models.py:200
+#: state_wf/models.py:214
 msgctxt "Step definition"
 msgid "Answer"
 msgstr "Antwort"
 
-#: state_wf/models.py:201
+#: state_wf/models.py:215
 msgctxt "Step definition"
 msgid "Link to answer"
 msgstr "Link zur Antwort"
 
-#: state_wf/models.py:208
+#: state_wf/models.py:222
 msgctxt "Step definition"
 msgid "Created by"
 msgstr "Erstellt von"
 
-#: state_wf/models.py:209
+#: state_wf/models.py:223
 msgctxt "Step definition"
 msgid "Link to creator"
 msgstr "Link zum Schöpfer"
 
-#: state_wf/models.py:216
+#: state_wf/models.py:230
 msgctxt "Step definition"
 msgid "Step"
 msgstr "Schritt"
 
-#: state_wf/models.py:217
+#: state_wf/models.py:231
 msgctxt "Step definition"
 msgid "Steps"
 msgstr "Schritte"

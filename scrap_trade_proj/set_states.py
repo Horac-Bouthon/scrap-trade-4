@@ -12,7 +12,6 @@ if r0.count() < 1:
         is_alert_button = False,
     )
     new_0.save()
-    new_0.save()
     t_en_0 = StepStateTranslation(
         state_name = "New offer",
         state_name_plural = "New offers",

@@ -1,7 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.db.models import Q
-from datetime import datetime
 from django.urls import reverse_lazy, reverse
 
 from .modules.auction import (
@@ -14,12 +12,12 @@ from .modules.auction import (
     answer_add_state,
     get_waiting_offers,
     get_auction_list_control_obj,
-)
-from state_wf.models import (
-    Step,
-    StepState,
+    ntf_send_from_view,
 )
 
+from state_wf.models import (
+    StepState,
+)
 
 
 from customers.permissions import (
@@ -45,7 +43,6 @@ from .models import (
 from customers.models import (
     Customer,
 )
-from project_main.models import Project
 
 from .forms import (
     AhOfferLineUpdateForm,
@@ -263,27 +260,27 @@ def ah_customer_auction(request, pk):
         'customer': customer,
         'auc_obj': auc_obj,
     }
-    
+
     context['content_header'] = {
         'title': customer.customer_name + ' | ' + _('Auction'),
         'desc': _('Auction homepage'),
-        'image': { 'src': customer.customer_logo.url, 
+        'image': { 'src': customer.customer_logo.url,
                    'alt': _('Customer logo') },
         'button_list': [
             {
-                'text': _("Create new offer"), 
-                'href': reverse('ah-customer-create-offers', 
+                'text': _("Create new offer"),
+                'href': reverse('ah-customer-create-offers',
                                 kwargs={'pk': customer.pk}),
                 'icon': 'plus', 
             }, { 
                 'text': _("Edit customer info"),  # @todo; Add permission for customer info edit button
                 'href': reverse('project-customer-detail', 
                                 kwargs={'pk': customer.pk}),
-                'icon': 'edit-3', 
-            }   
+                'icon': 'edit-3',
+            }
         ]
     }
-    
+
     return render(request, 'auction_house/customer_auction.html', context)
 
 
@@ -343,6 +340,15 @@ def ah_offers_change_state(request, pk, pk2, pk3):
             my_answers = fiter_by_state(offer.answers, 'answer_confirmed')
             for answer in my_answers.all():
                 answer_add_state(answer, state_send, request.user)
+
+        if set_state.send_ntf:
+            ntf_send_from_view(
+                request=request,
+                state=set_state,
+                place='auction_house.view - ah_offers_change_state()',
+                item=offer,
+            )
+
         success_message = _('Your offer has change the state!')
         messages.success(request, success_message)
         return redirect('ah-customer-auction', pk)
@@ -368,12 +374,26 @@ def ah_answer_change_state(request, pk, pk2, pk3):
         if set_state.state_key == 'answer_accepted':
             state_send = StepState.objects.get(state_key = 'offer_accepted')
             offer_add_state(answer.ah_offer, state_send, request.user)
+            if state_send.send_ntf:
+                ntf_send_from_view(
+                    request=request,
+                    state=state_send,
+                    place='auction_house.view - ah_answer_change_state() - answer_accepted',
+                    item=answer.ah_offer,
+                )
         if set_state.state_key == 'answer_closed':
             state_send = StepState.objects.get(state_key = 'offer_ready_to_close')
             offer_add_state(answer.ah_offer, state_send, request.user)
+            if state_send.send_ntf:
+                ntf_send_from_view(
+                    request=request,
+                    state=state_send,
+                    place='auction_house.view - ah_answer_change_state() - answer_closed',
+                    item=answer.ah_offer,
+                )
         if set_state.state_key == 'answer_canceled' and answer.is_bound:
             resurect_auction(answer.ah_offer)
-            set_auction(answer.ah_offer)
+            set_auction(request, answer.ah_offer)
         success_message = _('Your answer has change the state!')
         messages.success(request, success_message)
         return redirect('ah-customer-auction', pk)
@@ -542,10 +562,7 @@ def ah_answer_line_update_total(request, pk, pk2):
             answer_line.save()
             sum = 0
             answer = AhAnswer.objects.filter(id = pk).first()
-            print(answer)
-            print(answer.my_lines.count())
             for line in answer.my_lines.all():
-                print(line.pk)
                 sum += line.total_price
             answer.total_price = sum
             answer.save()
