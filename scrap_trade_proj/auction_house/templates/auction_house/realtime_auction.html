@@ -1,0 +1,205 @@
+
+{% extends 'project_main/base.html' %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}  
+  
+  {% if arrival == 'too_soon' %}
+
+    <section class="container">
+      <dl class="h5 py-5 
+                 mx-md-4 mx-lg-5">
+        
+        <h4 class="mb-4 font-weight-bold">
+          {% trans "This auction has not started yet." %}
+        </h4>
+        
+        <dt>{% trans "Auction is starting at: " %}</dt>
+        <dd>{{ start_datetime }}</dd>
+      </dl>
+    </section>
+
+
+
+    
+
+  {% elif arrival == 'too_late' %}
+
+    <section class="container">
+      <dl class="h5 py-5 
+                 mx-md-4 mx-lg-5">
+        
+        <h4 class="mb-4 font-weight-bold">
+          {% trans "This auction has already ended." %}
+        </h4>
+      </dl>
+    </section>
+
+    {# @todo; Get some info about the auction? Description at least? #}
+
+
+
+  
+  {% elif arrival == 'ok' %}
+
+    {% include 'project_main/__content-header.html' %}
+
+    <section class="container">
+
+      <dl>
+        <h4>{% trans "Auction details" %}</h4>
+
+        <div class="d-flex">
+          <dl>
+            <dt>{% trans 'Minimal total price:' %}</dt>
+            <dd>{{ object.minimal_total_price }}</dd>
+          </dl>
+          <dl>
+            <dt>{% trans 'Delivery date:' %}</dt>
+            <dd>{{ object.auction_date }}</dd>
+          </dl>
+        </div>
+
+      </dl>
+
+      <div class="d-flex">
+        
+        <section class="flex-fill">
+          <h4 class="section-header">
+            {% trans "Add a bid" %}
+          </h4>
+
+          <form method="POST">
+            {% csrf_token %}
+            <div class="pb-2">
+              <label for="Amount"
+                     class="m-0">
+                {% trans "Amount" %}
+              </label>
+              <input type="text"
+                     name="amount" id="Amount"
+                     value=""
+                     class="form-control"/>
+              <small>{% trans "How much do you wish to bid?" %}</small>
+            </div>
+
+            <div>
+              <button type="submit"
+                      class="btn btn-primary mb-2">
+                <i data-feather="check-circle"></i>
+                {% trans "Place a bid" %}
+              </button>
+              
+              <button type="button"
+                      class="btn btn-warning float-right"
+                      onclick="location.reload()">
+                <span class="mr-1">
+                  {% trans "Refresh bid list" %}
+                </span>
+                <i data-feather="refresh-cw"></i>
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="ml-3">
+          <h4 class="section-header m-0">
+            {% trans "Best bids" %}
+          </h4>
+
+          <ul class="bid__list">
+
+            <li class="bid__item bid__item--best bid__item--owned">
+              <div class="bid__amount">
+                1200
+              </div>
+              <div class="bid__time">
+                13:30
+              </div>
+            </li>
+
+            <li class="bid__item">
+              <div class="bid__amount">
+                290
+              </div>
+              <div class="bid__time">
+                10:30
+              </div>
+            </li>
+
+            
+            <li class="bid__item bid__item--owned">
+              <div class="bid__amount">
+                150
+              </div>
+              <div class="bid__time">
+                11:30
+              </div>
+            </li>
+
+            
+            <li class="bid__item">
+              <div class="bid__amount">
+                130
+              </div>
+              <div class="bid__time">
+                12:30
+              </div>
+            </li>
+            
+            
+          </ul>
+        </section>
+
+        
+      </div>
+      
+    </section>
+
+    <style>
+     .bid__list {
+         padding-left: 0;
+         list-style: none;
+     }
+     .bid__item {
+         padding: 0.25rem 1.5rem;
+         margin: 0.5rem 0;
+
+         background: white;
+         border: 1px solid #dee2e6;
+         border-radius: 0.25rem;
+         box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+         
+         display: flex;
+         align-items: center;
+     }
+     .bid__time {
+         color: #6c757d;
+         text-align: right;
+         width: 3rem;
+         margin-top: 10px;  /* slight off-center */
+     }
+     .bid__amount {
+         text-align: right;
+         font-weight: bold;
+         font-size: 2.5rem;
+         line-height: 1.15em;
+         
+         padding-right: 0.25rem;
+
+         flex: 1 1 auto; /* flex-fill */
+     }
+     .bid__item--best {
+         background: #ff5;
+     }
+     .bid__item--owned {
+         color: var(--orange);
+     }
+    </style>
+    
+  {% endif %}
+
+{% endblock content %}

@@ -643,3 +643,31 @@ def ah_answer_step_create(request, pk):
         'update_url': 'ah-answer-update',
     }
     return render(request, 'auction_house/ah_step_new.html', context)
+
+
+
+## REALTIME AUCTION
+import django.utils.timezone as django_timezone
+
+@login_required
+def realtime_auction(request): 
+    
+    offer = AhOffer.objects.first()  #mock
+    
+    context = {
+        'offer': offer, 'object': offer,
+        'content_header': {
+            'title': offer.description,
+            'desc': _("Realtime auction"),
+            'image': { 'src': offer.owner.customer_logo.url,
+                       'alt': _('Customer logo') },
+        },
+    }
+    
+    mock = {  #mock
+        'arrival': 'ok',
+        'start_datetime': django_timezone.now(),
+    }
+    context.update(mock)
+    
+    return render(request, 'auction_house/realtime_auction.html', context)
