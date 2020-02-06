@@ -33,27 +33,23 @@
 
 
     {# Backgrounds corresponding to page #}
-    {% if object.offer.owner.customer_background %}
-      <style>
-       body {
-           background-image: url("{{ object.offer.owner.customer_background.url }}");
-       }
-      </style>
-    
-    {% elif object.owner.customer_background %} {# = Viewing customer's offers #}
-      <style>
-       body {
-           background-image: url("{{ object.owner.customer_background.url }}");
-       }
-      </style>
-    {% elif customer.customer_background %} {# = Viewing customer pages #}
-      <style>
-       body {
-           background-image: url("{{ customer.customer_background.url }}");
-       }
-      </style>
-    {% endif %}
+    <style> body {
 
+      {% if object.offer.owner.customer_background %} {# = At offer line #}
+        background-image: url("{{ object.offer.owner.customer_background.url }}");
+        
+      {% elif object.owner.customer_background %} {# = At customer's offers #}
+        background-image: url("{{ object.owner.customer_background.url }}");
+        
+      {% elif customer.customer_background %} {# = At customer pages #}
+        background-image: url("{{ customer.customer_background.url }}");
+        
+      {% elif project %}  {# Anywhere else #}
+        background-image: url("{{ project.project_background.url }}");
+        
+      {% endif %}
+      
+     } </style>
     
     {# Additional page-local styles #}
     {% block page-style %} {% endblock %}
