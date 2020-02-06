@@ -16,17 +16,25 @@
           {{ form|crispy }}
         </fieldset>
         <div class="form-group">
-          {% trans "Update" as var_add %}
-          <button class="btn btn-outline-info" type="submit">{{ var_add }}</button>
-          {% trans "Cancel" as var_cancel %}
-          {% if object.pk %}
-            <a class="btn btn-outline-secondary" href="{% url 'project-customer-detail' object.pk %}">{{ var_cancel }}</a>
-          {% else %}
-            <a class="btn btn-outline-secondary" href="{% url 'project-customer-home' %}">{{ var_cancel }}</a>
-          {% endif %}
-          {% trans "Edit translations" as var_tran %}
+
+          {% include 'project_main/__btn-submit-save.html' %}
+          
+          <a class="btn btn-outline-secondary"
+             {% if object.pk %}
+             href="{% url 'project-customer-detail' object.pk %}"
+             {% else %}
+             href="{% url 'project-customer-home' %}"
+             {% endif %}
+          >  
+            {% trans "Cancel" %}
+          </a>
+          
           {% get_current_language as LANGUAGE_CODE %}
-          <a class="btn btn-outline-secondary float-right" href="{% url 'project-customer-tran' object.pk LANGUAGE_CODE %}">{{ var_tran }}</a>
+          <a class="btn btn-outline-secondary float-right"
+             href="{% url 'project-customer-tran' object.pk LANGUAGE_CODE %}">
+            {% trans "Edit translations" %}
+          </a>
+          
         </div>
       </form>
     </div>

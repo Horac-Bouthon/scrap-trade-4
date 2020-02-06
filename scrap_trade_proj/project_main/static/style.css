@@ -328,8 +328,9 @@ table .btn-icon-only {
   text-align: center;
 }
 
-/* Usage: Mark td with class, wrap icons into an extra div */
 
+/* Table cells with icons.
+   USAGE: Mark td with class, wrap icons into an extra div */
 table td.iconwrap {
   padding: 0;
 }

@@ -1,0 +1,21 @@
+
+{% load i18n %}
+
+{% if href %}
+  <a href="{{ href }}"
+     type="button"
+     class="btn btn-info
+           {{ cls }}">
+    
+    <i data-feather="file-text"></i>
+
+    {% trans "Documents" %}
+    
+  </a>
+
+      
+{% elif debug %}
+  <div class="debug-error p-3">
+    Attribute `href` was not supplied to the document button.
+  </div>
+{% endif %}
