@@ -331,10 +331,10 @@ table .btn-icon-only {
 
 /* Table cells with icons.
    USAGE: Mark td with class, wrap icons into an extra div */
-table td.iconwrap {
+table td.icon-wrap {
   padding: 0;
 }
-table td.iconwrap > div {
+table td.icon-wrap > div {
   padding: 3px 0;
   display: flex;
   flex-wrap: wrap;

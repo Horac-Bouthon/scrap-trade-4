@@ -7,7 +7,7 @@ from .modules.auction import (
     set_auction,
     customer_offer_create,
     offer_add_state,
-    fiter_by_state,
+    filter_by_state,
     customer_answer_create,
     answer_add_state,
     get_waiting_offers,
@@ -92,10 +92,10 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
         state_key = offer.actual_state.state_key
         
         context.update({
-            'my_answers': fiter_by_state(
+            'my_answers': filter_by_state(
                 offer.answers, 'answer_confirmed'
             ).order_by('-total_price')[:5],
-            'answers_total': fiter_by_state(
+            'answers_total': filter_by_state(
                 offer.answers, 'answer_confirmed'
             ).count(),
             
@@ -312,17 +312,34 @@ def ah_customer_offers_create(request, pk):
     return render(request, 'auction_house/ahoffer_customer_new.html', context)
 
 
+from django.shortcuts import get_object_or_404
 
 @user_belong_customer
 def ah_customer_offers_by_state_key(request, pk, sk):
-    customer = Customer.objects.filter(id = pk).first()
-    title2 = tr.pgettext('ah_customer_offer_by_state_key-title', 'offers-by-state')
-    selected_state = StepState.objects.filter(state_key = sk).first()
+    
+    customer = get_object_or_404(Customer, id=pk)
+    selected_state = get_object_or_404(StepState, state_key = sk)
+    filtered_offers = filter_by_state(customer.owned_offers, sk).order_by('-pk')
+    
+    translated_state_key = selected_state.get_state_name_plural()
+    
     context = {
-        'title': title2,
-        'selection': selected_state.get_state_name_plural(),
-        'customer': customer,
-        'offer_list': fiter_by_state(customer.owned_offers, sk).order_by('-pk'),
+        'offer_list': filtered_offers,
+        
+        'content_header': {
+            'title': "%s (%s)" % (translated_state_key, 
+                                  customer.customer_name),
+            'desc': _("List of offers"),
+            'image': { 'src': customer.customer_logo.url,
+                       'alt': _('Customer logo') },
+            'button_list': [{
+                'text': _('Auction'),
+                'href': reverse('ah-customer-auction', 
+                                kwargs={'pk': customer.pk}),
+                'icon': 'arrow-left',
+                'type': 'secondary', 
+            }],
+        },
     }
     return render(request, 'auction_house/customer_offer_list.html', context)
 
@@ -337,7 +354,7 @@ def ah_offers_change_state(request, pk, pk2, pk3):
         offer_add_state(offer, set_state, request.user)
         if set_state.state_key == 'offer_canceled':
             state_send = StepState.objects.get(state_key = 'answer_canceled')
-            my_answers = fiter_by_state(offer.answers, 'answer_confirmed')
+            my_answers = filter_by_state(offer.answers, 'answer_confirmed')
             for answer in my_answers.all():
                 answer_add_state(answer, state_send, request.user)
 
@@ -482,7 +499,7 @@ def ah_customer_answer_by_state_key(request, pk, sk):
         'title': title2,
         'selection': selected_state.get_state_name_plural(),
         'customer': customer,
-        'answer_list': fiter_by_state(customer.owned_answers, sk).order_by('-pk'),
+        'answer_list': filter_by_state(customer.owned_answers, sk).order_by('-pk'),
     }
     return render(request, 'auction_house/customer_answer_list.html', context)
 

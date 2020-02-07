@@ -72,7 +72,7 @@
             </td>
             <td>{{ line.amount }} {{ line.mat_class.measurement_unit }}</td>
             <td>{{ line.minimal_ppu }}</td>
-            <td class="iconwrap">
+            <td class="icon-wrap">
               <div>
                 {% url 'doc-repo-dokument-list' line.open_id.int_id as href %}
                 {% include 'doc_repo/__btn-icon-doc.html' %}
