@@ -6,11 +6,11 @@
 
 
 {% block content %}
-  
+
   {% include 'project_main/__content-header.html' %}
-  
+
   <section class="container">
-    
+
     <div class="media-body">
       <h2 class="customer-name">{{ object.customer_name }}</h2>
       <form class="" method="POST" enctype="multipart/form-data">
@@ -21,7 +21,7 @@
         <div class="form-group">
 
           {% include 'project_main/__btn-submit-save.html' %}
-          
+
           <a class="btn btn-outline-secondary"
              href="{% url 'ah-customer-auction' customer.pk %}">
             {% trans "Cancel" %}
@@ -29,7 +29,6 @@
         </div>
       </form>
     </div>
-  </article>
 {% endblock content %}
 
 {% block spec_action %}

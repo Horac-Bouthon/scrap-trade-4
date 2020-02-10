@@ -25,12 +25,11 @@
     </dl>
     <div class="d-flex">
       <dl>
-        <dt>{% trans 'Auction date:' %}</dt>
-        <dd>{{ offer.auction_date }}</dd>
+        {% include 'auction_house/__auction_date.html' with data=offer %}
       </dl>
       <dl>
         <dt>{% trans 'Delivery date:' %}</dt>
-        <dd>{{ offer.auction_date }}</dd>
+        <dd>{{ offer.auction_date|date:"d.m.Y" }}</dd>
       </dl>
     </div>
     <dl>
