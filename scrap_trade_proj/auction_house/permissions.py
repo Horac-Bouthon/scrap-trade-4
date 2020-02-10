@@ -41,7 +41,7 @@ def user_belong_offer(function):  # Decorator
 
 def test_user_belong_answer(user, answer):  # Test func
     customer = answer.owner
-    return user_belong_customer(user, customer)
+    return test_user_belong_customer(user, customer)
 
 
 class UserBelongAnswer(UserPassesTestMixin):  # Interface
