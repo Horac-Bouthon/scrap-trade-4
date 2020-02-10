@@ -702,7 +702,7 @@ def realtime_auction(request):
         'offer': offer, 'object': offer,
         'content_header': {
             'title': offer.description,
-            'desc': _("Realtime auction"),
+            'desc': _("Online auction"),
             'image': { 'src': offer.owner.customer_logo.url,
                        'alt': _('Customer logo') },
         },
