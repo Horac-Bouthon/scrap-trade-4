@@ -67,9 +67,9 @@ if r1.count() < 1:
     )
     t_en_1.save()
     t_de_1 = StepStateTranslation(
-        state_name = "Angebot zur Genehmigung berei stellent",
-        state_name_plural = "Angebote zur Genehmigung bereit stellen",
-        state_description = "angebot zur genehmigung bereit stellen",
+        state_name = "Angebot zur Genehmigung berei",
+        state_name_plural = "Angebote zur Genehmigung bereit",
+        state_description = "angebot zur genehmigung bereit",
         state_button_text = "Angebot zur Genehmigung bereit stellen",
         state_template_title = "Angebot bereit stellen",
         state_template_question = 'Sind Sie sicher, Sie wollen das Angebot zur Genehmigung bereit stellen',
