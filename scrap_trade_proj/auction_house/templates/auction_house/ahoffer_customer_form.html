@@ -46,19 +46,16 @@
           {% endfor %}
         </div>
         <div class="form-group">
-          {% trans "Update" as var_add %}
-          <button class="btn btn-outline-info" type="submit">{{ var_add }}</button>
-          {% trans "Cancel" as var_cancel %}
-          <a class="btn btn-outline-secondary" href="{% url 'ah-offer-detail' object.pk %}">{{ var_cancel }}</a>
+
+          {% include 'project_main/__btn-submit-save.html' %}
+          
+          <a class="btn btn-outline-secondary"
+             href="{% url 'ah-offer-detail' object.pk %}">
+            {% trans "Cancel" %}
+          </a>
+          
         </div>
       </form>
     </div>
   </article>
 {% endblock content %}
-
-{% block spec_action %}
-{% if user.is_authenticated and user.is_superuser %}
-    {% trans "Administration tools" as var_admin context "right-navbar" %}
-    <a class="nav-item nav-link btn btn-outline-secondary right-column-button" href="/admin">{{ var_admin }}</a>
-{% endif %}
-{% endblock spec_action %}

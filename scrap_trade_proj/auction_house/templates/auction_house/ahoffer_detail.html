@@ -4,6 +4,7 @@
 
 {% block content %}
 
+<<<<<<< HEAD
     <article class="media content-section">
       <a href="{% url 'project-customer-info' object.owner.pk %}" target="_blank">
         <img class="rounded-circle customer-logo" src="{{ object.owner.customer_logo.url }}">
@@ -81,170 +82,250 @@
                    {{ line.description }}
                   </a>
                 {% else %}
+=======
+  {% include 'project_main/__content-header.html' %}
+
+  <section class="container">
+
+    <dl>
+      <dt>{% trans "Status:" %}</dt>
+      <dd>{{ object.actual_state.act_state_name }}</dd>
+    </dl>
+    <div class="d-flex">
+      <dl>
+        <dt>{% trans 'Auction date:' %}</dt>
+        <dd>{{ object.auction_date }}</dd>
+      </dl>
+      <dl>
+        <dt>{% trans 'Delivery date:' %}</dt>
+        <dd>{{ object.auction_date }}</dd>
+      </dl>
+    </div>
+    <dl>
+      <dt>{% trans 'Minimal total price:' %}</dt>
+      <dd>{{ object.minimal_total_price }}</dd>
+    </dl>
+    
+    
+    <h4 class="section-header">
+      {% trans "Offer Lines" %}
+      
+      {% if state == 'new' %}
+        {% url 'ah-offer-line-create' object.pk as href %}
+        {% with icon='plus' cls='btn-icon-only btn-outline-primary border-0'%}
+          {% include 'project_main/__btn.html' %}
+        {% endwith %}
+      {% endif %}
+    </h4>    
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>{% trans "ID" %}</th>
+          <th>{% trans "Description" %}</th>
+          <th>{% trans "Material class" %}</th>
+          <th>{% trans "Amount" %}</th>
+          <th>{% trans "Price" %}</th>
+          <th>{# icons #}</th>
+        </tr>
+        
+        {% trans "Click to update line" as update_line_title %}
+        {% for line in object.lines.all %}
+          <tr>
+            <td>{{ line.id }}</td>
+            <td>
+              {% if state == 'new' %}
+                <a href="{% url 'ah-offer-line-update' object.pk line.pk %}"
+                   title="{{ update_line_title }}">
+>>>>>>> 26e24a9969981cf73bd9012edde5e9b776e2ec2a
                   {{ line.description }}
-                {% endif %}
-              </td>
-              <td class="td_lines table_lines">
-                <a class="table_lines" href="{% url 'ah-mat-class-detail' line.mat_class.id %}" data-toggle="tooltip" data-placement="top" title="{{ line.mat_class.act_mat_class_description }}" target="_blank">
-                 {{ line.mat_class.act_display_name }}
                 </a>
-              </td>
-              <td class="td_lines table_lines"> {{ line.amount }} {{ line.mat_class.measurement_unit }} </td>
-              <td class="td_lines table_lines"> {{ line.minimal_ppu }}</td>
-              <td class="td_lines table_lines">
-                <div class="">
-                  {% url 'doc-repo-dokument-list' line.open_id.int_id as href %}
-                  {% include 'doc_repo/__btn-icon-doc.html' %}
-                </div>
-                {% if object.actual_state == state_new %}
-                  <div class="">
-                    {% url 'ah-offer-line-delete' line.id as href %}
-                    {% include 'project_main/__btn-icon-delete.html' %}
-                  </div>
+              {% else %}
+                {{ line.description }}
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'ah-mat-class-detail' line.mat_class.id %}"
+                 title="{{ line.mat_class.act_mat_class_description }}"
+                 target="_blank">
+                {{ line.mat_class.act_display_name }}
+              </a>
+            </td>
+            <td>{{ line.amount }} {{ line.mat_class.measurement_unit }}</td>
+            <td>{{ line.minimal_ppu }}</td>
+            <td class="icon-wrap">
+              <div>
+                {% url 'doc-repo-dokument-list' line.open_id.int_id as href %}
+                {% include 'doc_repo/__btn-icon-doc.html' %}
+                
+                {% if state == 'new' %}
+                  {% url 'ah-offer-line-delete' line.id as href %}
+                  {% include 'project_main/__btn-icon-delete.html' %}
                 {% endif %}
-              </td>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+
+      {% include 'project_main/__no-entries.html' with check=object.lines.all %}
+      
+    </div>
+
+
+    
+    {% if state == 'confirmed' %}
+      {% if my_answers.count > 0 %}
+        
+        <h4 class="section-header">
+          {% trans "Answers" %}
+          <span class="badge-pill badge-primary">
+            {{ answers_total }}
+          </span>
+        </h4>
+
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>{% trans "ID" %}</th>
+              <th>{% trans "Total price" %}</th>
             </tr>
+            {% for answer in  my_answers %}
+              <tr>
+                <td>{{ answer.id }}</td>
+                <td>{{ answer.total_price }}</td>
+              </tr>
             {% endfor %}
           </table>
+        </div>
+        
+      {% endif %}
+    {% endif %}
 
-          {% if object.actual_state == state_confirmed%}
-            {% if my_answers.count > 0 %}
-              <p></p>
-              {% trans "Answers" as var_answers_header %}
-              <h5 class="customer-title">
-                {{ var_answers_header }} ({{ answers_total }})
-              </h5>
-              <table class="table_lines">
-                <tr class="table_lines">
-                  {% trans "ID" as var_o_n %}
-                  <th class="th_lines table_lines">{{ var_o_n }}</th>
-                  {% trans "Total price" as var_des %}
-                  <th class="th_lines table_lines">{{ var_des }}</th>
-                </tr>
-                {% trans "Click to update line" as var_hint3 %}
-                {% for answer in  my_answers %}
-                  <tr class="table_lines">
-                    <td class="td_lines table_lines"> {{ answer.id }} </td>
-                    <td class="td_lines table_lines">
-                        {{ answer.total_price }}
-                    </td>
-                  </tr>
-                {% endfor %}
-              </table>
-            {% endif %}
+
+    {# List bound answers #}
+    {% if state == 'accepted' or state == 'ready_to_close' or state == 'closed' %}
+      
+      {% if bound_answers.count > 0 %}
+        {% for answer in bound_answers %}
+
+          <dl>
+            <h4>
+              {% trans "Answer by" %} {{ answer.owner.customer_name }}
+            </h4>
+
+            {# Answer info #}
+            <div class="d-flex">
+              <div class="fill-flex">
+                <dd>{% trans "Description" %}</dd>
+                <dt>{{ answer.description }}</dt>
+                
+                <dd>{% trans "Status" %}</dd>
+                <dt>{{ answer.actual_state.act_state_name }}</dt>
+                
+                <dd>{% trans "Answer total:" %}</dd>
+                <dt>{{ answer.total_price }}</dt>
+              </div>
+              <div>
+                <a href="{% url 'project-customer-info' answer.owner.pk %}"
+                   target="_blank">
+                  <img class="rounded-circle customer-logo"
+                       src="{{ answer.owner.customer_logo.url }}">
+                </a>
+              </div>
+            </div>
+          </dl>
+
+          {# Documents #}
+          {% if answer.open_id.get_docs.count > 0 %}
+            <dl>
+              <dd>{% trans "Answer documents" %}</dd>
+              {% include 'doc_repo/__object_docs.html' with object=answer %}
+            </dl>
           {% endif %}
-          {% if object.actual_state == state_accepted or object.actual_state == state_ready_to_close or object.actual_state == state_closed %}
-            {% if bound_answers.count > 0 %}
-              {% for answer in  bound_answers %}
-`                <p></p>
-                {% trans "Answer" as var_answer_header %}
-                <h5 class="customer-title">
-                  {{ var_answer_header }}
-                </h5>
 
-
-                <h5>
-                  <a class=""
-                    href="{% url 'project-customer-info' answer.owner.pk %}" target="_blank">
-                    <img class="rounded-circle customer-logo" src="{{ answer.owner.customer_logo.url }}">
-                    {{ answer.owner.customer_name }}
-                  </a>
-                </h5>
-                <h2 class="customer-name">{{ answer.description }}</h2>
-                <p>
-                  {% trans "Status:" as var_status %}
-                  <span class="customer-detail-content-highlighite">{{ var_status }} </span>
-                  <span class="customer-detail-content">{{ answer.actual_state.act_state_name }}</span>
-                </p>
-                <p>
-                  {% trans "Answer total:" as var_at %}
-                  <span class="customer-detail-content-highlighite">{{ var_at }} </span>
-                  <span class="customer-detail-content">{{ answer.total_price }}</span>
-                </p>
-                <p/>
-                {% if answer.my_lines.all.count > 0 %}
-                  <table class="table_lines">
-                    <tr class="table_lines">
-                      {% trans "ID" as var_o_n %}
-                      <th class="th_lines table_lines">{{ var_o_n }}</th>
-                      {% trans "Description" as var_offer_des %}
-                      <th class="th_lines table_lines">{{ var_offer_des }}</th>
-                      {% trans "Material class" as var_mc %}
-                      <th class="th_lines table_lines">{{ var_mc }}</th>
-                      {% trans "Amount" as var_crea %}
-                      <th class="th_lines table_lines">{{ var_crea }}</th>
-                      {% trans "Price per unit" as var_ppu %}
-                      <th class="th_lines table_lines">{{ var_ppu }}</th>
-                      {% trans "Price total" as var_line_total %}
-                      <th class="th_lines table_lines">{{ var_line_total }}</th>
-                    </tr>
-                    {% for line in  answer.my_lines.all %}
-                      <tr class="table_lines">
-                        <td class="td_lines table_lines"> {{ line.id }} </td>
-                        <td class="td_lines table_lines">
-                          {{ line.offer_line.description }}
-                        </td>
-                        <td class="td_lines table_lines">
-                            {{ line.offer_line.mat_class.act_display_name }}
-                        </td>
-                        <td class="td_lines table_lines"> {{ line.offer_line.amount }} {{ line.offer_line.mat_class.measurement_unit }} </td>
-                        <td class="td_lines table_lines">
-                            {{ line.ppu }}
-                        </td>
-                        <td class="td_lines table_lines">
-                            {{ line.total_price }}
-                        </td>
-                      </tr>
-                    {% endfor %} <!-- answer.my_lines.all -->
-                  </table>
-                  {% if answer.open_id.get_docs.count > 0 %}
-                    <div class="">
-                      <p></p>
-                      {% trans "Answer documents" as var_docs %}
-                      <h5 class="">{{ var_docs }}</h5>
-                      {% include 'doc_repo/__object_docs.html' with object=answer %}
-                    </div>
-                  {% endif %}
-
-                {% endif %} <!-- answer.my_lines.all.count > 0 -->
-              {% endfor %} <!-- bounut answers -->
-`           {% endif %} <!-- bound_answers.count > 0 -->
-          {% endif %} <!-- accepted, ready to close, closed -->
-        {% endif %} <!-- object.lines.all.count > 0 -->
-        {% if "customers.is_poweruser" in perms %}
-          <div class="">
-            <p></p>
-            {% trans "State history" as var_state_history %}
-            <h5 class="customer-title">
-              {{ var_state_history }}
-            </h5>
-            <table class="table_lines">
-              <tr class="table_lines">
-                {% trans "ID" as var_o_n %}
-                <th class="th_lines table_lines">{{ var_o_n }}</th>
-                {% trans "State" as var_state %}
-                <th class="th_lines table_lines">{{ var_state }}</th>
-                {% trans "Create by" as var_created_by %}
-                <th class="th_lines table_lines">{{ var_created_by }}</th>
-                {% trans "Create at" as var_created_at %}
-                <th class="th_lines table_lines">{{ var_created_at }}</th>
+          {# List bound answer's lines #}
+          <dl>
+            <dd>{% trans "Lines:" %}</dd>
+          </dl>
+          <div class="table-wrap">
+            <table>
+              <tr>
+                <th>{% trans "ID" %}</th>
+                <th>{% trans "Description" %}</th>
+                <th>{% trans "Material class" %}</th>
+                <th>{% trans "Amount" %}</th>
+                <th>{% trans "Price per unit" %}</th>
+                <th>{% trans "Price total" %}</th>
               </tr>
+<<<<<<< HEAD
               {% for step in object.get_steps %}
                 <tr class="table_lines">
                   <td class="td_lines table_lines"> {{ step.id }} </td>
                   <td class="td_lines table_lines"> {{ step.state.act_state_name }} </td>
                   <td class="td_lines table_lines"> {{ step.changed_by.name }} </td>
                   <td class="td_lines table_lines"> {{ step.created_at|date:"d.m.Y" }} {{ step.created_at|time:"H:i" }}</td>
+=======
+              {% for line in answer.my_lines.all %}
+                <tr>
+                  <td>{{ line.id }}</td>
+                  <td>{{ line.offer_line.description }}</td>
+                  <td>{{ line.offer_line.mat_class.act_display_name }}</td>
+                  <td>
+                    {{ line.offer_line.amount }}
+                    {{ line.offer_line.mat_class.measurement_unit }}
+                  </td>
+                  <td>{{ line.ppu }}</td>
+                  <td>{{ line.total_price }}</td>
+>>>>>>> 26e24a9969981cf73bd9012edde5e9b776e2ec2a
                 </tr>
-              {% endfor %} <!-- object.get_steps -->
+              {% endfor %}
             </table>
+            
+            {% include 'project_main/__no-entries.html' with check=answer.my_lines.all %}
+            
           </div>
+<<<<<<< HEAD
         {% endif %} <!-- "customers.is_poweruser" in perms -->
       </div>
     </article>
+=======
+          
+        {% endfor %} {# bound answers #}
+        
+      {% endif %} {# bound_answers.count > 0 #}
+    {% endif %} {# accepted, ready to close, closed #}
+    
+    {% if "customers.is_poweruser" in perms %}
+      <section class="poweruser">
+        
+        <h4 class="section-header">
+          {% trans "State history" %}
+        </h4>
 
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>{% trans "ID" %}</th>
+              <th>{% trans "State" %}</th>
+              <th>{% trans "Created by" %}</th>
+              <th>{% trans "Created at" %}</th>
+            </tr>
+            {% for step in object.get_steps %}
+              <tr>
+                <td> {{ step.id }} </td>
+                <td> {{ step.state.act_state_name }} </td>
+                <td> {{ step.changed_by.name }} </td>
+                <td> {{ step.created_at }} </td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+        
+      </section>
+    {% endif %}
+>>>>>>> 26e24a9969981cf73bd9012edde5e9b776e2ec2a
+
+    
+  </section>
 
 {% endblock content %}
-
-{% block spec_action %}
-{% endblock spec_action %}

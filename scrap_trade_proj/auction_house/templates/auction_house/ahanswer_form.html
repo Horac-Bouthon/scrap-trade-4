@@ -53,10 +53,13 @@
           {% endfor %}
         </div>
         <div class="form-group">
-          {% trans "Update" as var_add %}
-          <button class="btn btn-outline-info" type="submit">{{ var_add }}</button>
-          {% trans "Cancel" as var_cancel %}
-          <a class="btn btn-outline-secondary" href="{% url 'ah-answer-detail' object.pk %}">{{ var_cancel }}</a>
+
+          {% include 'project_main/__btn-submit-save.html' %}
+          
+          <a class="btn btn-outline-secondary"
+             href="{% url 'ah-answer-detail' object.pk %}">
+            {% trans "Cancel" %}
+          </a>
         </div>
       </form>
     </div>

@@ -75,6 +75,7 @@ class CustomerList(LoginRequiredMixin, ListView):
                 'text': _("Add New Customer"),
                 'href': reverse('project-customer-new'),
                 'icon': 'plus',
+                'type': 'poweruser',
             }]
         return context
 

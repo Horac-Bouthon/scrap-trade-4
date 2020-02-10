@@ -81,6 +81,7 @@ def resurect_auction(par_offer):
         set_a.save()
     return
 
+<<<<<<< HEAD
 def offer_no_answers(request, par_offer):
     # cancel offer - no anwers
     print('cancel - no answers - {}'.format(par_offer))
@@ -108,6 +109,17 @@ def start_auction(request, par_offer):
     print('Start auction: {} at {}'.format(par_offer, par_offer.auction_start))
     kill_new_answers(par_offer)
     my_answers = fiter_by_state(par_offer.answers, 'answer_confirmed')
+=======
+def set_auction(request, par_offer):
+    print('from second: {} must be set / {}'.format(par_offer, par_offer.auction_date))
+    # kill not confirmed Answers
+    state_obj = StepState.objects.get(state_key='answer_canceled')
+    new_answers = filter_by_state(par_offer.answers, 'answer_new')
+    for kill_answer in new_answers:
+        print('kill answer = {}'.format(kill_answer))
+        answer_add_state(kill_answer, state_obj, None)
+    my_answers = filter_by_state(par_offer.answers, 'answer_confirmed')
+>>>>>>> 26e24a9969981cf73bd9012edde5e9b776e2ec2a
     if my_answers.count() > 0 :
         state_in_auction = StepState.objects.get(state_key='offer_in_auction')
         offer_add_state(par_offer, state_in_auction, None)
@@ -171,7 +183,11 @@ def set_auction(request, par_offer, par_answer_state):
             )
         # unbound others
         state_obj = StepState.objects.get(state_key='answer_closed')
+<<<<<<< HEAD
         for unlucky_one in fiter_by_state(par_offer.answers, par_answer_state):
+=======
+        for unlucky_one in filter_by_state(par_offer.answers, 'answer_confirmed'):
+>>>>>>> 26e24a9969981cf73bd9012edde5e9b776e2ec2a
             print('close {}'.format(unlucky_one))
             answer_add_state(unlucky_one, state_obj, None)
             ntf_send_from_auction(
@@ -193,7 +209,7 @@ def make_auctions(request, par_ref_dt):
     if not is_aware(dt_ref):
         dt_ref = make_aware(dt_ref)
     print('make auction at {}'.format(dt_ref))
-    my_offers = fiter_by_state(AhOffer.objects.all(), 'offer_confirmed')
+    my_offers = filter_by_state(AhOffer.objects.all(), 'offer_confirmed')
     for offer in my_offers:
         auction_dt = datetime.combine(offer.auction_date, datetime.min.time())
         if not is_aware(auction_dt):
@@ -252,7 +268,7 @@ def customer_offer_create(customer, user, data):
     new_state = StepState.objects.filter(state_key='offer_new').first()
     offer_add_state(new, new_state, user)
 
-def fiter_by_state(p_data, p_state_key):
+def filter_by_state(p_data, p_state_key):
     state = StepState.objects.get(state_key = p_state_key)
     id_set = [x.id for x in p_data.all() if x.is_equal_state(state)]
     return p_data.filter(id__in = id_set)
@@ -289,7 +305,7 @@ def customer_answer_create(request, customer, offer, user, data):
         n_a_l.save()
 
 def get_waiting_offers(par_customer):
-    ret_offers = fiter_by_state(par_customer.recieve_offers.all(), 'offer_confirmed')
+    ret_offers = filter_by_state(par_customer.recieve_offers.all(), 'offer_confirmed')
     for answer in par_customer.owned_answers.all():
         ret_offers = ret_offers.exclude(id = answer.ah_offer.pk)
     return ret_offers.order_by("-pk")
@@ -300,7 +316,7 @@ def get_auction_list_control_obj(customer, data_offer, data_answers):
     for state in StepState.get_group_members(1):
         obj_line = AuctionLine(
             state.get_state_name_plural(),
-            fiter_by_state(data_offer, state.state_key).count(),
+            filter_by_state(data_offer, state.state_key).count(),
             state.state_key,
             'ah-customer-state-offers',
         )
@@ -321,7 +337,7 @@ def get_auction_list_control_obj(customer, data_offer, data_answers):
     for state in StepState.get_group_members(2):
         obj_line = AuctionLine(
             state.get_state_name_plural(),
-            fiter_by_state(data_answers, state.state_key).count(),
+            filter_by_state(data_answers, state.state_key).count(),
             state.state_key,
             'ah-customer-state-answers',
         )

@@ -209,11 +209,15 @@ a.article-title:hover {
 dl {
   --leftpad: 0.5rem;
   padding-left: var(--leftpad);
+  padding-right: var(--leftpad);  /* For better centering */
 }
-dl > h4 {
+.d-flex > dl {  /* Inline info */
+  margin-bottom: .4em;  /* magic */
+}
+dl h4 {
   margin-left: calc(-1 * var(--leftpad));
 }
-dl > h4,
+dl h4,
 .section-header {
   border-bottom: 1px solid var(--border);
 }
@@ -222,13 +226,15 @@ dl ul {
   /* ...Same styles as bootstrap's ".list-unstyled" */
   padding-left: 1em;
 }
-dl > h4 > a.btn,
-dl > h4 > button.btn {
+dl h4 > a.btn,
+dl h4 > button.btn,
+.section-header > a.btn,
+.section-header > button.btn {
   /* Buttons next to the headings need a slight nudge */
   position: relative;
   top: -0.2em;
 }
-dl > dt {
+dl dt {
   /* Key */
   display: block;
 
@@ -238,7 +244,7 @@ dl > dt {
   font-weight: initial;
   line-height: 1.05em;
 }
-dl > dd {
+dl dd {
   /* Value */
   display: block;
 
@@ -277,8 +283,14 @@ dl > dd {
    Use classes as sparsely as possible to avoid having to control
    classes by passing data to the filters. */
 
-/* Use a wrapper with Bootstrap to make it scrollable, bordered,
-   rounded corners etc. */
+/* Use this wrapper to make it responsive and prettier */
+.table-wrap {
+  width: 100%;  /* expand as much as possible */
+  overflow: auto;  /* scroll if needed */
+  
+  border-radius: .25rem !important;
+  box-shadow: 0 .25rem .5rem rgba(0,0,0,.125) !important;
+}
 
 table {
   min-width: 100%;
@@ -314,6 +326,21 @@ table td:not(:last-child) {
 
 table .btn-icon-only {
   text-align: center;
+}
+
+
+/* Table cells with icons.
+   USAGE: Mark td with class, wrap icons into an extra div */
+table td.icon-wrap {
+  padding: 0;
+}
+table td.icon-wrap > div {
+  padding: 3px 0;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 4rem;
+  margin: auto;
+  justify-content: center;
 }
 
 
@@ -366,6 +393,61 @@ table .btn-icon-only {
 .max-height-visible {
   max-height: 80vh;
 }
+
+/* Classes for visually denoting the security level 
+   of a component. */
+:root {
+  --poweruser: #A35229;
+  --superuser: #EE4C4C;
+}
+.btn-poweruser {
+  color: white !important;
+  background: var(--poweruser);
+}
+.btn-superuser {
+  color: white !important;
+  background: var(--superuser);
+}
+
+.text-poweruser {
+  color: var(--poweruser);
+}
+.text-superuser {
+  color: var(--superuser);
+}
+
+section.poweruser, div.poweruser,
+section.superuser, div.superuser {
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+  margin-top: 0.6em;
+  margin-bottom: 0.6em;
+  
+  padding-left: 6px;
+  margin-left: 2px;
+  border-left: 5px solid transparent;
+  border-radius: 5px;  /* a small detail */
+}
+section.poweruser, div.poweruser {
+  border-color: var(--poweruser);
+}
+section.superuser, div.superuser {
+  border-color: var(--superuser);
+}
+
+.page-superuser,
+.page-poweruser {
+  border: 0 solid transparent;
+  border-width: 0 7px;
+}
+.page-poweruser {
+  border-color: var(--poweruser);
+}
+.page-superuser {
+  border-color: var(--superuser);
+}
+
+
 
 .doc_list {
   table-layout: fixed;
