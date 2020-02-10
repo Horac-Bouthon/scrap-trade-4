@@ -5,99 +5,119 @@
 
 
 {% block content %}
-  <article class="media content-section">
-    <a href="{% url 'project-customer-info' customer.pk %}" target="_blank">
-      <img class="rounded-circle customer-logo" src="{{ customer.customer_logo.url }}">
-    </a>
-    <div class="media-body">
-      <h2 class="customer-name">{{ object.customer_name }}</h2>
-      {% trans "Offer" as var_offer %}
-      <h5>{{ var_offer }}</h5>
-        <h3 class="customer-name">{{ offer.description }}</h3>
-        <p>
-          {% trans "Status:" as var_status %}
-          <span class="customer-detail-content-highlighit">{{ var_status }} </span>
-          <span class="customer-detail-content">{{ offer.actual_state.act_state_name }}</span>
-        </p>
-        <p>
-          {% trans "Auction date:" as var_auction %}
-          <span class="customer-detail-content-highlighite">{{ var_auction }} </span>
-          <span class="customer-detail-content">{{ offer.auction_date }}</span>
-        </p>
-        <p>
-          {% trans "Delivery date:" as var_delivery %}
-          <span class="customer-detail-content-highlighite">{{ var_delivery }} </span>
-          <span class="customer-detail-content">{{ offer.delivery_date }}</span>
-        </p>
-        <p>
-          {% trans "Minimal price:" as var_min_price %}
-          <span class="customer-detail-content-highlighite">{{ var_min_price }} </span>
-          <span class="customer-detail-content">{{ offer.minimal_total_price }}</span>
-        </p>
-        <p/>
-        {% if offer.lines.all.count > 0 %}
-          <table class="table_lines">
-            <tr class="table_lines">
-              {% trans "ID" as var_o_n %}
-              <th class="th_lines table_lines">{{ var_o_n }}</th>
-              {% trans "Description" as var_des %}
-              <th class="th_lines table_lines">{{ var_des }}</th>
-              {% trans "Material class" as var_mc %}
-              <th class="th_lines table_lines">{{ var_mc }}</th>
-              {% trans "Amount" as var_crea %}
-              <th class="th_lines table_lines">{{ var_crea }}</th>
-              {% trans "Minimal unit price" as var_crea %}
-              <th class="th_lines table_lines">{{ var_crea }}</th>
-            </tr>
-            {% trans "Click to update line" as var_hint3 %}
-            {% for line in  offer.lines.all %}
-              <tr class="table_lines">
-                <td class="td_lines table_lines"> {{ line.id }} </td>
-                <td class="td_lines table_lines">{{ line.description }}</td>
-                <td class="td_lines table_lines">
-                  <a class="table_lines" href="{% url 'ah-mat-class-detail' line.mat_class.id %}" data-toggle="tooltip" data-placement="top" title="{{ line.mat_class.act_mat_class_description }}" target="_blank">
-                   {{ line.mat_class.act_display_name }}
-                  </a>
-                </td>
-                <td class="td_lines table_lines"> {{ line.amount }} {{ line.mat_class.measurement_unit }} </td>
-                <td class="td_lines table_lines"> {{ line.minimal_ppu }} </td>
-              </tr>
-              {% if line.open_id.get_docs.count > 0 %}
-                <tr class="table_lines">
-                  <td class="td_lines table_lines" colspan="4">
-                    {% include 'doc_repo/__object_docs.html' with object=line %}
-                  </td>
-                </tr>
-              {% endif %}
-            {% endfor %}
-          </table>
-          {% if offer.open_id.get_docs.count > 0 %}
-            <div class="">
-              <p></p>
-              {% trans "Offers documents" as var_docs %}
-              <h5 class="">{{ var_docs }}</h5>
-              {% include 'doc_repo/__object_docs.html' with object=offer %}
-            </div>
-          {% endif %}
-        {% endif %}
-      <p/>
-      {% trans "New answer" as var_new_answer %}
-      <h5>{{ var_new_answer }}</h5>
-      <form class="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <fieldset class="form-group">
-          {{ form|crispy }}
-        </fieldset>
-        <div class="form-group">
-          {% trans "Create" as var_add %}
-          <button class="btn btn-outline-info" type="submit">{{ var_add }}</button>
-          {% trans "Cancel" as var_cancel %}
-          <a class="btn btn-outline-secondary" href="{% url 'ah-customer-auction' customer.pk %}">{{ var_cancel }}</a>
-        </div>
-      </form>
-    </div>
-  </article>
-{% endblock content %}
 
-{% block spec_action %}
-{% endblock spec_action %}
+  {% include 'project_main/__content-header.html' %}
+  
+  <section class="container">
+    
+    <h2>{{ object.customer_name }}</h2>
+    
+
+    <dl>
+      <h4>{% trans "Offer" %}</h4>
+
+      <dt>{% trans "Offer description:" %}</dt>
+      <dd>{{ offer.description }}</dd>
+    </dl>
+    <dl>
+      <dt>{% trans "Status:" %}</dt>
+      <dd>{{ offer.actual_state.act_state_name }}</dd>
+    </dl>
+    <div class="d-flex">
+      <dl>
+        <dt>{% trans 'Auction date:' %}</dt>
+        <dd>{{ offer.auction_date }}</dd>
+      </dl>
+      <dl>
+        <dt>{% trans 'Delivery date:' %}</dt>
+        <dd>{{ offer.auction_date }}</dd>
+      </dl>
+    </div>
+    <dl>
+      <dt>{% trans 'Minimal total price:' %}</dt>
+      <dd>{{ offer.minimal_total_price }}</dd>
+    </dl>
+
+    <dl>
+      <h4>
+        {% trans "Offer lines" %}
+        <span class="text-muted small">
+          ({{ offer.lines.all.count }})
+        </span>
+      </h4>
+      
+      <div class="table-wrap">
+        <table>
+          <tr>
+            <th>{% trans "ID" %}</th>
+            <th>{% trans "Description" %}</th>
+            <th>{% trans "Material class" %}</th>
+            <th>{% trans "Amount" %}</th>
+            <th>{% trans "Minimal unit price" %}</th>
+          </tr>
+          
+          {% for line in offer.lines.all %}
+            <tr>
+              <td>{{ line.id }}</td>
+              <td>{{ line.description }}</td>
+              <td>
+                <a href="{% url 'ah-mat-class-detail' line.mat_class.id %}"
+                   title="{{ line.mat_class.act_mat_class_description }}"
+                   target="_blank">
+                  {{ line.mat_class.act_display_name }}
+                </a>
+              </td>
+              <td>{{ line.amount }} {{ line.mat_class.measurement_unit }}</td>
+              <td>{{ line.minimal_ppu }}</td>
+            </tr>
+            {% if line.open_id.get_docs.count > 0 %}
+              <tr>
+                <td colspan="4">
+                  {% include 'doc_repo/__object_docs.html' with object=line %}
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+          
+        </table>
+        {% include 'project_main/__no-entries.html' with check=offer.lines.all %}
+      </div>
+    </dl>
+    
+    {% if offer.open_id.get_docs.count > 0 %}
+      <div class="">
+        <p></p>
+        {% trans "Offers documents" as var_docs %}
+        <h5 class="">{{ var_docs }}</h5>
+        {% include 'doc_repo/__object_docs.html' with object=offer %}
+      </div>
+    {% endif %}
+
+
+    <dl>
+      <h4>{% trans "New answer" %}</h4>
+      <form method="POST">
+        {% csrf_token %}
+        
+        <fieldset>
+          
+          {{ form|crispy }}
+          
+          <button class="btn btn-primary"
+                  type="submit">
+            <i data-feather="plus"></i>
+            {% trans "Make a New Answer" %}
+          </button>
+          <a class="btn btn-secondary"
+             href="{% url 'ah-customer-auction' customer.pk %}">
+            <i data-feather="x"></i>
+            {% trans "Cancel" %}
+          </a>
+          
+        </fieldset>
+
+      </form>
+    </dl>
+  </section>
+  
+{% endblock content %}

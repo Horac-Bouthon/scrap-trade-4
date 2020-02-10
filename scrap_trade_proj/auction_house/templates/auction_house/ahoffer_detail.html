@@ -7,24 +7,24 @@
   {% include 'project_main/__content-header.html' %}
 
   <section class="container">
-
+    
     <dl>
       <dt>{% trans "Status:" %}</dt>
-      <dd>{{ object.actual_state.act_state_name }}</dd>
+      <dd>{{ offer.actual_state.act_state_name }}</dd>
     </dl>
     <div class="d-flex">
       <dl>
         <dt>{% trans 'Auction date:' %}</dt>
-        <dd>{{ object.auction_date }}</dd>
+        <dd>{{ offer.auction_date }}</dd>
       </dl>
       <dl>
         <dt>{% trans 'Delivery date:' %}</dt>
-        <dd>{{ object.auction_date }}</dd>
+        <dd>{{ offer.auction_date }}</dd>
       </dl>
     </div>
     <dl>
       <dt>{% trans 'Minimal total price:' %}</dt>
-      <dd>{{ object.minimal_total_price }}</dd>
+      <dd>{{ offer.minimal_total_price }}</dd>
     </dl>
     
 
@@ -33,13 +33,13 @@
         {% trans "Offer Lines" %}
         
         {% if state == 'new' %}
-          {% url 'ah-offer-line-create' object.pk as href %}
+          {% url 'ah-offer-line-create' offer.pk as href %}
           {% with icon='plus' cls='btn-icon-only btn-outline-primary border-0'%}
             {% include 'project_main/__btn.html' %}
           {% endwith %}
         {% endif %}
       </h4>    
-      <div class="table-wrap">
+      <div class="table-wrap max-height-visible">
         <table>
           <tr>
             <th>{% trans "ID" %}</th>
@@ -51,12 +51,12 @@
           </tr>
           
           {% trans "Click to update line" as update_line_title %}
-          {% for line in object.lines.all %}
+          {% for line in offer.lines.all %}
             <tr>
               <td>{{ line.id }}</td>
               <td>
                 {% if state == 'new' %}
-                  <a href="{% url 'ah-offer-line-update' object.pk line.pk %}"
+                  <a href="{% url 'ah-offer-line-update' offer.pk line.pk %}"
                      title="{{ update_line_title }}">
                     {{ line.description }}
                   </a>
@@ -88,7 +88,7 @@
           {% endfor %}
         </table>
 
-        {% include 'project_main/__no-entries.html' with check=object.lines.all %}
+        {% include 'project_main/__no-entries.html' with check=offer.lines.all %}
         
       </div>
     </dl>
@@ -103,7 +103,7 @@
           </span>
         </h4>
 
-        <div class="table-wrap">
+        <div class="table-wrap max-height-visible">
           <table>
             <tr>
               <th>{% trans "ID" %}</th>
@@ -116,7 +116,8 @@
               </tr>
             {% endfor %}
           </table>
-          {% include 'project_main/__no-entries.html' with check=object.lines.all %}
+          
+          {% include 'project_main/__no-entries.html' with check=my_answers.all %}
         </div>
       </dl>
     {% endif %}
@@ -167,7 +168,7 @@
           <dl>
             <dd>{% trans "Lines:" %}</dd>
           </dl>
-          <div class="table-wrap">
+          <div class="table-wrap max-height-visible">
             <table>
               <tr>
                 <th>{% trans "ID" %}</th>
@@ -208,7 +209,7 @@
           {% trans "State history" %}
         </h4>
 
-        <div class="table-wrap">
+        <div class="table-wrap max-height-visible">
           <table>
             <tr>
               <th>{% trans "ID" %}</th>
@@ -216,7 +217,7 @@
               <th>{% trans "Created by" %}</th>
               <th>{% trans "Created at" %}</th>
             </tr>
-            {% for step in object.get_steps %}
+            {% for step in offer.get_steps %}
               <tr>
                 <td> {{ step.id }} </td>
                 <td> {{ step.state.act_state_name }} </td>

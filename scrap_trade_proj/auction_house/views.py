@@ -96,7 +96,10 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
         
         offer.refresh_total_price()  # @todo; Pricey redundant call!
                 
-        context['customer'] = offer.owner
+        context.update({
+            'offer': offer,
+            'customer': offer.owner,
+        })
         
         context.update({
             'my_answers': filter_by_state(
