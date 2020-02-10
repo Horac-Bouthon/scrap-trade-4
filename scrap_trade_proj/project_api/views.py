@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from . import serializers
 from rest_framework import status
 
-from auction_house.modules.auction import make_auctions
+from auction_house.modules.auction import make_auctions, online_manager
 
 class HelloApiView(APIView):
     def get(self, request, format=None):
@@ -33,7 +33,27 @@ class EvaluateAuctionApiView(APIView):
         if serializer.is_valid():
             start = serializer.data.get('start')
             make_auctions(request, start)
-            message = 'Run at {0}'.format(start)
+            message = 'Evaluation run at {0}'.format(start)
+            return Response({'message': message})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class OnlineAuctionApiView(APIView):
+    serializer_class = serializers.OnlineAuctionSeralizer
+    def get(self, request, format=None):
+        an_apiview = [
+            'Uses HTTP methods as functions (get, post, patch, put, delete)',
+            'Its similar to traditional Django view',
+            'Gives most control over your logic',
+            'Is maped manualy to URLs'
+        ]
+        return Response({'message': 'Send events here!', 'an_apiview': an_apiview})
+    def post(self, request):
+        serializer = serializers.OnlineAuctionSeralizer(data=request.data)
+        if serializer.is_valid():
+            start = serializer.data.get('start')
+            online_manager(request, start)
+            message = 'Online manager run at {0}'.format(start)
             return Response({'message': message})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

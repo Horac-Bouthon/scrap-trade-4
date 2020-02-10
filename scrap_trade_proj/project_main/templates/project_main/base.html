@@ -12,13 +12,13 @@
     <meta charset="utf-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <!-- Icons: Feather -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    
-    
+
+
     <!-- My styles -->
     <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css">
 
@@ -39,7 +39,7 @@
            background-image: url("{{ object.offer.owner.customer_background.url }}");
        }
       </style>
-    
+
     {% elif object.owner.customer_background %} {# = Viewing customer's offers #}
       <style>
        body {
@@ -54,7 +54,7 @@
       </style>
     {% endif %}
 
-    
+
     {# Additional page-local styles #}
     {% block page-style %} {% endblock %}
 
@@ -62,11 +62,11 @@
   <body>
 
     {% include 'project_main/__header.html' %}
-    
+
     <div class="container pb-5">
       <div class="row">
         <main class="col-lg-9 mb-5">
-          
+
           {# Form feedback messages #}
           {% if messages %}
             {% for message in messages %}
@@ -82,15 +82,15 @@
               {# Content inserted by templates extending the base #}
             {% endblock content %}
           </div>
-          
+
         </main>
 
-        
+
         <aside class="col-lg-3">
-          
+
           <div class="bg-light rounded p-3
                       d-flex flex-column">
-            
+
             {% if user.is_authenticated %}
 
               {# Basic user info #}
@@ -120,7 +120,7 @@
                     {% endif %}
                     <br/>
                     {{ user.email }}
-                    
+
                     {% if user.is_superuser %}
                       <br/>
                       <span class="text-danger font-weight-bold">
@@ -136,19 +136,19 @@
                   </p>
                 </div>
               </section>
-              
+
               {# Buttons to other sections #}
               <a class="mb-2 btn btn-outline-primary"
                  href="{% url 'user-profile' %}">
                 {% trans "Edit Profile" context "base-navbar" %}
               </a>
-              <a class="mb-2 
+              <a class="mb-2
                         btn btn-outline-primary"
                  href="{% url 'user-logout' %}">
                 {% trans "Log Out" context "base-navbar" %}
               </a>
 
-              
+
               {% if user.is_superuser %}
                 <span>Superuser</span>
                 <a class="mb-2
@@ -157,13 +157,18 @@
                   {% trans "Administration tools" context "right-navbar" %}
                 </a>
               {% endif %}
-              
+
               {% if "customers.is_poweruser" in perms %}
                 <span>Poweruser</span>
                 <a class="mb-2
                           btn btn-secondary"
                    href="{% url 'ah-offer-list' %}">
                   {% trans "Offer list" context "right-navbar" %}
+                </a>
+                <a class="mb-2
+                          btn btn-secondary"
+                   href="{% url 'ah-offer-list-accept' %}">
+                  {% trans "Offers for approval" context "right-navbar" %}
                 </a>
                 <a class="mb-2
                           btn btn-secondary"
@@ -178,20 +183,20 @@
               <div class="border-top my-2"></div>
               {% block site_list %}
               {% endblock site_list %}
-              {# @todo; Delete button-commenting elements in side-panel after testing #}       
+              {# @todo; Delete button-commenting elements in side-panel after testing #}
             {% else %}
 
               {# Login form #}
               <form class="login-form" method="POST">
                 {% csrf_token %}
-                
+
                 <fieldset class="form-group">
                   <legend class="border-bottom mb-4">
                     {% trans "Log In" context 'login_template' %}
                   </legend>
                   {{ form_login|crispy }}
                 </fieldset>
-                
+
                 <div class="form-group">
                   <button class="btn btn-outline-info"
                           type="submit">
@@ -199,32 +204,32 @@
                   </button>
                 </div>
               </form>
-              
+
             {% endif %}
 
           </div>
         </aside>
 
-        
+
       </div>
     </div>
 
-    
+
     <script>
      feather.replace()  // Trigger icon replacement
     </script>
-    
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   </body>
-  
+
   <!-- My Javascript -->
   <script src="{% static 'script.js' %}"></script>
 
   <!-- Page-local scripts -->
   {% block page_scripts %} {% endblock %}
-  
+
 </html>

@@ -309,6 +309,13 @@ class AhAnswer(models.Model):
         related_name="last_changed_answers",
     )
     changed_at = models.DateTimeField(auto_now=True,)
+    auction_url = models.URLField(
+        max_length=200,
+        verbose_name=tr.pgettext_lazy('AhAnswer definition', 'Auction URL'),
+        help_text=tr.pgettext_lazy('AhAnswer definition','Online auction url'),
+        null=True,
+        blank=True,
+    )
     open_id = models.ForeignKey(
         OpenId,
         on_delete=models.CASCADE,

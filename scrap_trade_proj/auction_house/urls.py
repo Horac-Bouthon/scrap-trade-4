@@ -14,11 +14,15 @@ from . views import (
     AhAnswerDetailView,
     AhAnswerUpdateView,
     AhAnswerCustomerUpdateView,
+    AhOfferListForAcceptView,
 )
 
 
 urlpatterns = [
     path('power/offer_list/', AhOfferListView.as_view(), name='ah-offer-list'),
+
+    path('power/offer_list_accept/', AhOfferListForAcceptView.as_view(), name='ah-offer-list-accept'),
+
     path('power/answer_list/', AhAnswerListView.as_view(), name='ah-answer-list'),
     path('power/<int:pk>/offer_detail', AhOfferDetailView.as_view(), name='ah-offer-detail'),
     path('power/<int:pk>/offer_update', AhOfferUpdateView.as_view(), name='ah-offer-update'),

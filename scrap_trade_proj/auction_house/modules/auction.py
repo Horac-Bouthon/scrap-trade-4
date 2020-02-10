@@ -21,8 +21,11 @@ from customers.models import (
 )
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import is_aware, make_aware
-from datetime import date
-from datetime import datetime
+from datetime import (
+    date,
+    datetime,
+    timedelta,
+)
 
 
 
@@ -78,15 +81,73 @@ def resurect_auction(par_offer):
         set_a.save()
     return
 
-def set_auction(request, par_offer):
-    print('from second: {} must be set / {}'.format(par_offer, par_offer.auction_date))
-    # kill not confirmed Answers
-    state_obj = StepState.objects.get(state_key='answer_canceled')
+def offer_no_answers(request, par_offer):
+    # cancel offer - no anwers
+    print('cancel - no answers - {}'.format(par_offer))
+    # kill offer
+    state_obj = StepState.objects.get(state_key='offer_canceled')
+    offer_add_state(par_offer, state_obj, None)
+    ntf_send_from_auction(
+        request=request,
+        place='modules.auction - set_auction() - no answers',
+        offer_description=par_offer.description,
+        customer=par_offer.owner,
+        template='offer_no_answers',
+        admins=False,
+        business=True,
+    )
+
+def kill_new_answers(par_offer):
     new_answers = fiter_by_state(par_offer.answers, 'answer_new')
     for kill_answer in new_answers:
         print('kill answer = {}'.format(kill_answer))
         answer_add_state(kill_answer, state_obj, None)
+    return
+
+def start_auction(request, par_offer):
+    print('Start auction: {} at {}'.format(par_offer, par_offer.auction_start))
+    kill_new_answers(par_offer)
     my_answers = fiter_by_state(par_offer.answers, 'answer_confirmed')
+    if my_answers.count() > 0 :
+        state_in_auction = StepState.objects.get(state_key='offer_in_auction')
+        offer_add_state(par_offer, state_in_auction, None)
+        state_a_auction = StepState.objects.get(state_key='answer_in_auction')
+        ntf_send_from_auction(
+            request=request,
+            place='modules.auction - start_auction() - offer',
+            offer_description=par_offer.description,
+            customer=par_offer.owner,
+            template='auction_started',
+            admins=False,
+            business=True,
+            set_url=par_offer.auction_url,
+        )
+        mess_list = list()
+        context = ntf_manager.NtfContext()
+        context['place'] = 'modules.auction - start_auction() - answers'
+        context['offer_description'] = par_offer.description
+        for answer in my_answers:
+            answer_add_state(answer, state_a_auction, None)
+            message = ntf_create_from_auction(
+                template='auction_started',
+                context=context.clone_context(),
+                cust_url=answer.auction_url,
+                customer=answer.owner,
+                admins=False,
+                business=True,
+            )
+            mess_list.append(message)
+        ntf_manager.send_via_ntf(request, mess_list, context)
+    else:
+        offer_no_answers(request, par_offer)
+    return
+
+def set_auction(request, par_offer, par_answer_state):
+    print('from second: {} must be set / {}'.format(par_offer, par_offer.auction_date))
+    state_obj = StepState.objects.get(state_key='answer_canceled')
+    # kill not confirmed Answers
+    kill_new_answers(par_offer)
+    my_answers = fiter_by_state(par_offer.answers, par_answer_state)
     if my_answers.count() > 0 :
         # vyhodnoceni
         print('vyhodnoceni {}'.format(par_offer))
@@ -110,7 +171,7 @@ def set_auction(request, par_offer):
             )
         # unbound others
         state_obj = StepState.objects.get(state_key='answer_closed')
-        for unlucky_one in fiter_by_state(par_offer.answers, 'answer_confirmed'):
+        for unlucky_one in fiter_by_state(par_offer.answers, par_answer_state):
             print('close {}'.format(unlucky_one))
             answer_add_state(unlucky_one, state_obj, None)
             ntf_send_from_auction(
@@ -124,21 +185,8 @@ def set_auction(request, par_offer):
             )
 
     else:
-        # cancel offer - no anwers
-        print('cancel - no answers - {}'.format(par_offer))
-        # kill offer
-        state_obj = StepState.objects.get(state_key='offer_canceled')
-        offer_add_state(par_offer, state_obj, None)
-        ntf_send_from_auction(
-            request=request,
-            place='modules.auction - set_auction() - no answers',
-            offer_description=par_offer.description,
-            customer=par_offer.owner,
-            template='offer_no_answers',
-            admins=False,
-            business=True,
-        )
-
+        offer_no_answers(request, par_offer)
+    return
 
 def make_auctions(request, par_ref_dt):
     dt_ref = parse_datetime(par_ref_dt)
@@ -151,9 +199,28 @@ def make_auctions(request, par_ref_dt):
         if not is_aware(auction_dt):
             auction_dt = make_aware(auction_dt)
         if auction_dt <= dt_ref:
-            set_auction(request, offer)
+            set_auction(request, offer, 'answer_confirmed')
         else:
             print('{} is waiting / {}'.format(offer, offer.auction_date))
+    return
+
+def online_manager(request, par_ref_dt):
+    dt_ref = parse_datetime(par_ref_dt)
+    print('online manager at {}'.format(dt_ref))
+    dt_ref_add_5 = dt_ref + timedelta(minutes=5)
+    #----- evaluate online auctions
+    eval_offers = fiter_by_state(AhOffer.objects.all(), 'offer_in_auction')
+    print('eval_offers = {}'.format(eval_offers))
+    for offer in eval_offers:
+        if offer.auction_end <= dt_ref:
+            set_auction(request, offer, 'answer_in_auction')
+    #----- start online auctions
+    start_offers = fiter_by_state(AhOffer.objects.all(), 'offer_confirmed')
+    print('start_offers = {}'.format(start_offers))
+    for offer in start_offers:
+        if offer.auction_start <= dt_ref_add_5:
+            start_auction(request, offer)
+    return
 
 #-------------------------------- offer views
 def offer_to(par_customer):
@@ -199,7 +266,8 @@ def answer_add_state(answer_obj, state_obj, user):
     )
     answer_obj.save()
 
-def customer_answer_create(customer, offer, user, data):
+def customer_answer_create(request, customer, offer, user, data):
+
     new = AhAnswer(
         description = data['description'],
         owner = customer,
@@ -207,6 +275,9 @@ def customer_answer_create(customer, offer, user, data):
         creator = user,
         changed_by = user,
     )
+    new.save()
+    # TODO: zmenit na skutecnou adresu online aukce
+    new.auction_url = request.build_absolute_uri(reverse('ah-answer-detail', kwargs={'pk': new.id}))
     new.save()
     new_state = StepState.objects.get(state_key='answer_new')
     answer_add_state(new, new_state, user)
@@ -354,10 +425,13 @@ def ntf_send_from_auction(
     template='fallback',
     admins=False,
     business=False,
+    set_url="",
     ):
     context = ntf_manager.NtfContext()
     context['place'] = place
     context['offer_description'] = offer_description
+    if set_url != "":
+        context['access_url'] = set_url
     ntf_manager.send_by_template(request, context, customer, template, admins, business)
 
 def ntf_create_from_auction(

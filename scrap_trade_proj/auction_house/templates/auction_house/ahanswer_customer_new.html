@@ -19,11 +19,14 @@
           <span class="customer-detail-content-highlighit">{{ var_status }} </span>
           <span class="customer-detail-content">{{ offer.actual_state.act_state_name }}</span>
         </p>
+        {% include 'auction_house/__auction_date.html' with data=offer %}
+        <!--
         <p>
           {% trans "Auction date:" as var_auction %}
           <span class="customer-detail-content-highlighite">{{ var_auction }} </span>
           <span class="customer-detail-content">{{ offer.auction_date }}</span>
         </p>
+        -->
         <p>
           {% trans "Delivery date:" as var_delivery %}
           <span class="customer-detail-content-highlighite">{{ var_delivery }} </span>

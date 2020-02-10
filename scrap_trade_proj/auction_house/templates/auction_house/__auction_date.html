@@ -1,0 +1,15 @@
+{% load i18n %}
+
+{% if data.auction_start == None or data.auction_end == None  %}
+  <p>
+    {% trans "Auction date:" as var_auction %}
+    <span class="customer-detail-content-highlighite">{{ var_auction }} </span>
+    <span class="customer-detail-content">{{ data.auction_date }}</span>
+  </p>
+{% else %}
+  <p>
+    {% trans "Auction:" as var_auction %}
+    <span class="customer-detail-content-highlighite">{{ var_auction }} </span>
+    <span class="customer-detail-content">{{ data.auction_start|date:"d.m.Y" }} {{ data.auction_start|time:"H:i" }} - {{ data.auction_end|date:"d.m.Y" }} {{ data.auction_end|time:"H:i" }}</span>
+  </p>
+{% endif %}

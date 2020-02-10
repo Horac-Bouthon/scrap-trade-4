@@ -12,6 +12,12 @@
         {% trans "Back to auction" as var_back %}
         <div class="auction_nav">
           <a class="btn btn-outline-secondary" href="{% url 'ah-customer-auction' object.owner.pk %}">{{ var_back }}</a>
+          {% if object.auction_url != "" %}
+            {% trans "Online auction" as var_a_url %}
+            <a class="btn btn-outline-secondary" href="{{ object.auction_url }}" target="_blank">{{ var_a_url }}</a>
+          {% endif %}
+          {% trans "Documents" as var_doc %}
+          <a class="btn btn-outline-secondary float-right" href="{% url 'doc-repo-dokument-list' object.open_id.int_id %}">{{ var_doc }}</a>
           <p></p>
         </div>
         {% trans "Click to update offer" as var_hint1 %}
@@ -31,15 +37,11 @@
           <span class="customer-detail-content-highlighit">{{ var_status }} </span>
           <span class="customer-detail-content">{{ object.actual_state.act_state_name }}</span>
         </p>
-        <p>
-          {% trans "Auction date:" as var_auction %}
-          <span class="customer-detail-content-highlighite">{{ var_auction }} </span>
-          <span class="customer-detail-content">{{ object.auction_date }}</span>
-        </p>
+        {% include 'auction_house/__auction_date.html' with data=object %}
         <p>
           {% trans "Delivery date:" as var_delivery %}
           <span class="customer-detail-content-highlighite">{{ var_delivery }} </span>
-          <span class="customer-detail-content">{{ object.delivery_date }}</span>
+          <span class="customer-detail-content">{{ object.delivery_date|date:"d.m.Y" }}</span>
         </p>
         <p>
           {% trans "Minimal total price:" as var_min_price %}
@@ -232,16 +234,12 @@
                   <td class="td_lines table_lines"> {{ step.id }} </td>
                   <td class="td_lines table_lines"> {{ step.state.act_state_name }} </td>
                   <td class="td_lines table_lines"> {{ step.changed_by.name }} </td>
-                  <td class="td_lines table_lines"> {{ step.created_at }} </td>
+                  <td class="td_lines table_lines"> {{ step.created_at|date:"d.m.Y" }} {{ step.created_at|time:"H:i" }}</td>
                 </tr>
               {% endfor %} <!-- object.get_steps -->
             </table>
           </div>
         {% endif %} <!-- "customers.is_poweruser" in perms -->
-        <div class="">
-          {% trans "Documents" as var_doc %}
-          <a class="btn btn-outline-secondary float-right" href="{% url 'doc-repo-dokument-list' object.open_id.int_id %}">{{ var_doc }}</a>
-        </div>
       </div>
     </article>
 

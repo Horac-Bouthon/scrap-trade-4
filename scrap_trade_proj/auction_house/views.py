@@ -66,6 +66,16 @@ class AhOfferListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     ordering = ['-pk']
     permission_required = 'customers.is_poweruser'
 
+class AhOfferListForAcceptView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = AhOffer
+    template_name = 'auction_house/ahoffer_list.html'
+    context_object_name = 'offers'
+    ordering = ['-pk']
+    permission_required = 'customers.is_poweruser'
+
+    def get_queryset(self):
+        return fiter_by_state(AhOffer.objects.all(), 'offer_waiting_accept').order_by('-pk')
+        Book.objects.filter(publisher=self.publisher)
 
 class AhOfferDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = AhOffer
@@ -300,10 +310,13 @@ def ah_offers_change_state(request, pk, pk2, pk3):
 
     if request.method == 'POST':
         offer_add_state(offer, set_state, request.user)
+        if set_state.state_key == 'offer_confirmed':
+            # TODO: zmenit na skutecnou adresu online aukce
+            offer.auction_url = request.build_absolute_uri(reverse('ah-offer-detail', kwargs={'pk': offer.id}))
+            offer.save()
         if set_state.state_key == 'offer_canceled':
             state_send = StepState.objects.get(state_key = 'answer_canceled')
-            my_answers = fiter_by_state(offer.answers, 'answer_confirmed')
-            for answer in my_answers.all():
+            for answer in offer.answers.all():
                 answer_add_state(answer, state_send, request.user)
 
         if set_state.send_ntf:
@@ -415,6 +428,7 @@ class AhAnswerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
         'owner',
         'ah_offer',
         'is_bound',
+        'auction_url',
     ]
     permission_required = 'customers.is_poweruser'
 
@@ -479,7 +493,7 @@ def ah_customer_answer_create(request, pk, pk2):
     if request.method == 'POST':
         form = AhAnwserCreateForm(request.POST)
         if form.is_valid():
-            customer_answer_create(customer, offer, user, form.cleaned_data)
+            customer_answer_create(request, customer, offer, user, form.cleaned_data)
             success_message = _('Your answer has been added!')
             messages.success(request, success_message)
             return redirect('ah-customer-auction', pk)
