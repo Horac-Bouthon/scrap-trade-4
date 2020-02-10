@@ -32,7 +32,6 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 
 
-
 from .models import (
     AhOffer,
     AhOfferLine,
@@ -84,9 +83,16 @@ class AhOfferListForAcceptView(LoginRequiredMixin, PermissionRequiredMixin, List
     ordering = ['-pk']
     permission_required = 'customers.is_poweruser'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['content_header'] = {
+            'title': _('Offers waiting for approval'),
+            'desc': _('A list of offers waiting for approval in the application.'),
+        }
+        return context
+
     def get_queryset(self):
-        return fiter_by_state(AhOffer.objects.all(), 'offer_waiting_accept').order_by('-pk')
-        Book.objects.filter(publisher=self.publisher)
+        return filter_by_state(AhOffer.objects.all(), 'offer_waiting_accept').order_by('-pk')
 
 
 class AhOfferDetailView(UserBelongOffer, DetailView):
@@ -142,6 +148,13 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
                                 kwargs={'pk': offer.pk}),
                 'icon': 'edit-3',
                 'type': 'poweruser',
+            })
+        if offer.auction_url != "":
+            button_list.append({
+                'text': _("Online auction"),
+                'href': offer.auction_url,
+                'icon': 'airplay',
+                #'type': 'poweruser',
             })
         context['content_header'] = {
             'title': offer.description + ' | ' + _("Offer"),

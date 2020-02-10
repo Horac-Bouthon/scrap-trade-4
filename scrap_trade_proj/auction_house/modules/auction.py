@@ -97,7 +97,7 @@ def offer_no_answers(request, par_offer):
     )
 
 def kill_new_answers(par_offer):
-    new_answers = fiter_by_state(par_offer.answers, 'answer_new')
+    new_answers = filter_by_state(par_offer.answers, 'answer_new')
     for kill_answer in new_answers:
         print('kill answer = {}'.format(kill_answer))
         answer_add_state(kill_answer, state_obj, None)
@@ -106,7 +106,7 @@ def kill_new_answers(par_offer):
 def start_auction(request, par_offer):
     print('Start auction: {} at {}'.format(par_offer, par_offer.auction_start))
     kill_new_answers(par_offer)
-    my_answers = fiter_by_state(par_offer.answers, 'answer_confirmed')
+    my_answers = filter_by_state(par_offer.answers, 'answer_confirmed')
     if my_answers.count() > 0 :
         state_in_auction = StepState.objects.get(state_key='offer_in_auction')
         offer_add_state(par_offer, state_in_auction, None)
@@ -146,7 +146,7 @@ def set_auction(request, par_offer, par_answer_state):
     state_obj = StepState.objects.get(state_key='answer_canceled')
     # kill not confirmed Answers
     kill_new_answers(par_offer)
-    my_answers = fiter_by_state(par_offer.answers, par_answer_state)
+    my_answers = filter_by_state(par_offer.answers, par_answer_state)
     if my_answers.count() > 0 :
         # vyhodnoceni
         print('vyhodnoceni {}'.format(par_offer))
@@ -170,7 +170,7 @@ def set_auction(request, par_offer, par_answer_state):
             )
         # unbound others
         state_obj = StepState.objects.get(state_key='answer_closed')
-        for unlucky_one in fiter_by_state(par_offer.answers, par_answer_state):
+        for unlucky_one in filter_by_state(par_offer.answers, par_answer_state):
             print('close {}'.format(unlucky_one))
             answer_add_state(unlucky_one, state_obj, None)
             ntf_send_from_auction(
@@ -208,13 +208,13 @@ def online_manager(request, par_ref_dt):
     print('online manager at {}'.format(dt_ref))
     dt_ref_add_5 = dt_ref + timedelta(minutes=5)
     #----- evaluate online auctions
-    eval_offers = fiter_by_state(AhOffer.objects.all(), 'offer_in_auction')
+    eval_offers = filter_by_state(AhOffer.objects.all(), 'offer_in_auction')
     print('eval_offers = {}'.format(eval_offers))
     for offer in eval_offers:
         if offer.auction_end <= dt_ref:
             set_auction(request, offer, 'answer_in_auction')
     #----- start online auctions
-    start_offers = fiter_by_state(AhOffer.objects.all(), 'offer_confirmed')
+    start_offers = filter_by_state(AhOffer.objects.all(), 'offer_confirmed')
     print('start_offers = {}'.format(start_offers))
     for offer in start_offers:
         if offer.auction_start <= dt_ref_add_5:

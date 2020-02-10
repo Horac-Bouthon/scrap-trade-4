@@ -4,7 +4,7 @@
 
 
 from django.contrib.auth.mixins import (
-    UserPassesTestMixin, 
+    UserPassesTestMixin,
     PermissionRequiredMixin,
 )
 from django.core.exceptions import PermissionDenied
@@ -24,7 +24,7 @@ class UserBelongOffer(UserPassesTestMixin):  # Interface
     def test_func(self):
         offer = self.get_object()
         return test_user_belong_offer(self.request.user, offer)
-    
+
 def user_belong_offer(function):  # Decorator
     def wrap(request, *args, **kwargs):
         offer = AhOffer.objects.get(id = kwargs['pk'])
@@ -41,14 +41,14 @@ def user_belong_offer(function):  # Decorator
 
 def test_user_belong_answer(user, answer):  # Test func
     customer = answer.owner
-    return user_belong_customer(user, customer)
+    return test_user_belong_customer(user, customer)
 
 
 class UserBelongAnswer(UserPassesTestMixin):  # Interface
     def test_func(self):
         answer = self.get_object()
         return test_user_belong_answer(self.request.user, answer)
-    
+
 def user_belong_answer(function):  # Decorator
     def wrap(request, *args, **kwargs):
         answer = AhAnswer.objects.get(id = kwargs['pk'])
