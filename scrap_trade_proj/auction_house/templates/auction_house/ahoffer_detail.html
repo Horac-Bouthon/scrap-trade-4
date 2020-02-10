@@ -7,99 +7,37 @@
   {% include 'project_main/__content-header.html' %}
 
   <section class="container">
-    
+
     <dl>
       <dt>{% trans "Status:" %}</dt>
       <dd>{{ offer.actual_state.act_state_name }}</dd>
     </dl>
     <div class="d-flex">
       <dl>
-<<<<<<< HEAD
         {% include 'auction_house/__auction_date.html' with data=object %}
       </dl>
       <dl>
         <dt>{% trans 'Delivery date:' %}</dt>
         <dd>{{ object.delivery_date|date:"d.m.Y" }}</dd>
-=======
-        <dt>{% trans 'Auction date:' %}</dt>
-        <dd>{{ offer.auction_date }}</dd>
-      </dl>
-      <dl>
-        <dt>{% trans 'Delivery date:' %}</dt>
-        <dd>{{ offer.auction_date }}</dd>
->>>>>>> 2d45d98b5dc20b00575a0e203a09ab6299444239
       </dl>
     </div>
     <dl>
       <dt>{% trans 'Minimal total price:' %}</dt>
       <dd>{{ offer.minimal_total_price }}</dd>
     </dl>
-<<<<<<< HEAD
 
-
-    <h4 class="section-header">
-      {% trans "Offer Lines" %}
-
-      {% if state == 'new' %}
-        {% url 'ah-offer-line-create' object.pk as href %}
-        {% with icon='plus' cls='btn-icon-only btn-outline-primary border-0'%}
-          {% include 'project_main/__btn.html' %}
-        {% endwith %}
-      {% endif %}
-    </h4>
-    <div class="table-wrap">
-      <table>
-        <tr>
-          <th>{% trans "ID" %}</th>
-          <th>{% trans "Description" %}</th>
-          <th>{% trans "Material class" %}</th>
-          <th>{% trans "Amount" %}</th>
-          <th>{% trans "Price" %}</th>
-          <th>{# icons #}</th>
-        </tr>
-
-        {% trans "Click to update line" as update_line_title %}
-        {% for line in object.lines.all %}
-          <tr>
-            <td>{{ line.id }}</td>
-            <td>
-              {% if state == 'new' %}
-                <a href="{% url 'ah-offer-line-update' object.pk line.pk %}"
-                   title="{{ update_line_title }}">
-                  {{ line.description }}
-                </a>
-              {% else %}
-                {{ line.description }}
-              {% endif %}
-            </td>
-            <td>
-              <a href="{% url 'ah-mat-class-detail' line.mat_class.id %}"
-                 title="{{ line.mat_class.act_mat_class_description }}"
-                 target="_blank">
-                {{ line.mat_class.act_display_name }}
-              </a>
-            </td>
-            <td>{{ line.amount }} {{ line.mat_class.measurement_unit }}</td>
-            <td>{{ line.minimal_ppu }}</td>
-            <td class="icon-wrap">
-              <div>
-                {% url 'doc-repo-dokument-list' line.open_id.int_id as href %}
-                {% include 'doc_repo/__btn-icon-doc.html' %}
-
-=======
-    
 
     <dl>
       <h4>
         {% trans "Offer Lines" %}
-        
+
         {% if state == 'new' %}
           {% url 'ah-offer-line-create' offer.pk as href %}
           {% with icon='plus' cls='btn-icon-only btn-outline-primary border-0'%}
             {% include 'project_main/__btn.html' %}
           {% endwith %}
         {% endif %}
-      </h4>    
+      </h4>
       <div class="table-wrap max-height-visible">
         <table>
           <tr>
@@ -110,13 +48,12 @@
             <th>{% trans "Price" %}</th>
             <th>{# icons #}</th>
           </tr>
-          
+
           {% trans "Click to update line" as update_line_title %}
           {% for line in offer.lines.all %}
             <tr>
               <td>{{ line.id }}</td>
               <td>
->>>>>>> 2d45d98b5dc20b00575a0e203a09ab6299444239
                 {% if state == 'new' %}
                   <a href="{% url 'ah-offer-line-update' offer.pk line.pk %}"
                      title="{{ update_line_title }}">
@@ -125,17 +62,6 @@
                 {% else %}
                   {{ line.description }}
                 {% endif %}
-<<<<<<< HEAD
-              </div>
-            </td>
-          </tr>
-        {% endfor %}
-      </table>
-
-      {% include 'project_main/__no-entries.html' with check=object.lines.all %}
-
-    </div>
-=======
               </td>
               <td>
                 <a href="{% url 'ah-mat-class-detail' line.mat_class.id %}"
@@ -150,7 +76,7 @@
                 <div>
                   {% url 'doc-repo-dokument-list' line.open_id.int_id as href %}
                   {% include 'doc_repo/__btn-icon-doc.html' %}
-                  
+
                   {% if state == 'new' %}
                     {% url 'ah-offer-line-delete' line.id as href %}
                     {% include 'project_main/__btn-icon-delete.html' %}
@@ -160,23 +86,16 @@
             </tr>
           {% endfor %}
         </table>
->>>>>>> 2d45d98b5dc20b00575a0e203a09ab6299444239
 
         {% include 'project_main/__no-entries.html' with check=offer.lines.all %}
-        
+
       </div>
     </dl>
 
 
     {% if state == 'confirmed' %}
-<<<<<<< HEAD
-      {% if my_answers.count > 0 %}
-
-        <h4 class="section-header">
-=======
       <dl>
         <h4>
->>>>>>> 2d45d98b5dc20b00575a0e203a09ab6299444239
           {% trans "Answers" %}
           <span class="text-muted small">
             ({{ answers_total }})
@@ -196,15 +115,10 @@
               </tr>
             {% endfor %}
           </table>
-          
+
           {% include 'project_main/__no-entries.html' with check=my_answers.all %}
         </div>
-<<<<<<< HEAD
-
-      {% endif %}
-=======
       </dl>
->>>>>>> 2d45d98b5dc20b00575a0e203a09ab6299444239
     {% endif %}
 
 

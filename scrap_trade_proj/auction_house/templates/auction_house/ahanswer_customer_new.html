@@ -5,61 +5,13 @@
 
 
 {% block content %}
-<<<<<<< HEAD
-  <article class="media content-section">
-    <a href="{% url 'project-customer-info' customer.pk %}" target="_blank">
-      <img class="rounded-circle customer-logo" src="{{ customer.customer_logo.url }}">
-    </a>
-    <div class="media-body">
-      <h2 class="customer-name">{{ object.customer_name }}</h2>
-      {% trans "Offer" as var_offer %}
-      <h5>{{ var_offer }}</h5>
-        <h3 class="customer-name">{{ offer.description }}</h3>
-        <p>
-          {% trans "Status:" as var_status %}
-          <span class="customer-detail-content-highlighit">{{ var_status }} </span>
-          <span class="customer-detail-content">{{ offer.actual_state.act_state_name }}</span>
-        </p>
-        {% include 'auction_house/__auction_date.html' with data=offer %}
-        <!--
-        <p>
-          {% trans "Auction date:" as var_auction %}
-          <span class="customer-detail-content-highlighite">{{ var_auction }} </span>
-          <span class="customer-detail-content">{{ offer.auction_date }}</span>
-        </p>
-        -->
-        <p>
-          {% trans "Delivery date:" as var_delivery %}
-          <span class="customer-detail-content-highlighite">{{ var_delivery }} </span>
-          <span class="customer-detail-content">{{ offer.delivery_date }}</span>
-        </p>
-        <p>
-          {% trans "Minimal price:" as var_min_price %}
-          <span class="customer-detail-content-highlighite">{{ var_min_price }} </span>
-          <span class="customer-detail-content">{{ offer.minimal_total_price }}</span>
-        </p>
-        <p/>
-        {% if offer.lines.all.count > 0 %}
-          <table class="table_lines">
-            <tr class="table_lines">
-              {% trans "ID" as var_o_n %}
-              <th class="th_lines table_lines">{{ var_o_n }}</th>
-              {% trans "Description" as var_des %}
-              <th class="th_lines table_lines">{{ var_des }}</th>
-              {% trans "Material class" as var_mc %}
-              <th class="th_lines table_lines">{{ var_mc }}</th>
-              {% trans "Amount" as var_crea %}
-              <th class="th_lines table_lines">{{ var_crea }}</th>
-              {% trans "Minimal unit price" as var_crea %}
-              <th class="th_lines table_lines">{{ var_crea }}</th>
-=======
 
   {% include 'project_main/__content-header.html' %}
-  
+
   <section class="container">
-    
+
     <h2>{{ object.customer_name }}</h2>
-    
+
 
     <dl>
       <h4>{% trans "Offer" %}</h4>
@@ -93,7 +45,7 @@
           ({{ offer.lines.all.count }})
         </span>
       </h4>
-      
+
       <div class="table-wrap">
         <table>
           <tr>
@@ -103,7 +55,7 @@
             <th>{% trans "Amount" %}</th>
             <th>{% trans "Minimal unit price" %}</th>
           </tr>
-          
+
           {% for line in offer.lines.all %}
             <tr>
               <td>{{ line.id }}</td>
@@ -117,7 +69,6 @@
               </td>
               <td>{{ line.amount }} {{ line.mat_class.measurement_unit }}</td>
               <td>{{ line.minimal_ppu }}</td>
->>>>>>> 2d45d98b5dc20b00575a0e203a09ab6299444239
             </tr>
             {% if line.open_id.get_docs.count > 0 %}
               <tr>
@@ -127,12 +78,12 @@
               </tr>
             {% endif %}
           {% endfor %}
-          
+
         </table>
         {% include 'project_main/__no-entries.html' with check=offer.lines.all %}
       </div>
     </dl>
-    
+
     {% if offer.open_id.get_docs.count > 0 %}
       <div class="">
         <p></p>
@@ -147,11 +98,11 @@
       <h4>{% trans "New answer" %}</h4>
       <form method="POST">
         {% csrf_token %}
-        
+
         <fieldset>
-          
+
           {{ form|crispy }}
-          
+
           <button class="btn btn-primary"
                   type="submit">
             <i data-feather="plus"></i>
@@ -162,11 +113,11 @@
             <i data-feather="x"></i>
             {% trans "Cancel" %}
           </a>
-          
+
         </fieldset>
 
       </form>
     </dl>
   </section>
-  
+
 {% endblock content %}
