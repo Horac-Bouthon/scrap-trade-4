@@ -30,9 +30,10 @@
           </a>
           
           {% get_current_language as LANGUAGE_CODE %}
-          <a class="btn btn-outline-secondary float-right"
+          <a class="btn btn-primary float-right"
              href="{% url 'project-customer-tran' object.pk LANGUAGE_CODE %}">
-            {% trans "Edit translations" %}
+            <i data-feather="edit-3"></i>
+            {% trans "Edit translated descriptions" %}
           </a>
           
         </div>
