@@ -41,8 +41,8 @@ class AhOffer(models.Model):
         null=True,
     )
     created_at = models.DateTimeField(
-        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Delivery date'),
-        help_text=tr.pgettext_lazy('AhOffer definition','Date of the delivery'),
+        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Created at'),
+        help_text=tr.pgettext_lazy('AhOffer definition','Date of offer creation'),
         auto_now_add=True,
     )
     changed_by = models.ForeignKey(
@@ -64,15 +64,15 @@ class AhOffer(models.Model):
         related_name="recieve_offers",
         blank=True,
     )
-    delivery_date = models.DateField(
-        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Delivery date'),
-        help_text=tr.pgettext_lazy('AhOffer definition','Date of the delivery'),
-        null=True,
-        blank=True,
-    )
     auction_date = models.DateField(
         verbose_name=tr.pgettext_lazy('AhOffer definition', 'Auction date'),
         help_text=tr.pgettext_lazy('AhOffer definition','Date of auction'),
+        null=True,
+        blank=True,
+    )
+    delivery_date = models.DateField(
+        verbose_name=tr.pgettext_lazy('AhOffer definition', 'Delivery date'),
+        help_text=tr.pgettext_lazy('AhOffer definition','Date of the delivery'),
         null=True,
         blank=True,
     )

@@ -88,19 +88,28 @@ class CustomerInfo(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         customer = self.get_object()
         oid = str(customer.open_id.int_id)
-        context['content_header'] = {
-            'title': customer.customer_name,
-            'desc': _('Detailed customer information'),
-            'image': { 'src': customer.customer_logo.url,
-                       'alt': _('Customer logo') },
-        }
+        
+        button_list = []
         if test_can_edit_customer(self.request.user, customer):
-            context['content_header']['button_list'] = [{
+            button_list.append({
                 'text': _("Edit Customer"),
                 'href': reverse('project-customer-detail',
                                 kwargs={'pk': customer.pk}),
                 'icon': 'edit-3',
-            }]
+            })
+        if test_poweruser(self.request.user):
+            button_list.append({
+                'text': _("To Auction"),
+                'href': reverse('ah-customer-auction', 
+                                kwargs={'pk': customer.pk}),
+                'type': 'poweruser',
+            })
+        
+        context['content_header'] = {
+            'title': customer.customer_name,
+            'desc': _('Detailed customer information'),
+            'button_list': button_list
+        }
 
         return context
 
@@ -114,10 +123,8 @@ class CustomerDetailView(CanEditCustomer, DetailView):
         context['content_header'] = {
             'title': customer.customer_name + ' | ' + _('Edit'),
             'desc': _("Edit customer details"),
-            'image': { 'src': customer.customer_logo.url,
-                       'alt': _('Customer logo') },
         }
-
+        
         button_list = []
         if test_poweruser(self.request.user):
             button_list.append({
@@ -132,7 +139,7 @@ class CustomerDetailView(CanEditCustomer, DetailView):
                 'text': _("Documents"),
                 'href': reverse('doc-repo-dokument-list',
                                 kwargs={'oid': oid}),
-                'icon': 'eye',
+                'icon': 'file-text',
             })
         context['content_header']['button_list'] = button_list
 

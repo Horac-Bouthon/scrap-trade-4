@@ -21,12 +21,21 @@ class AhOfferLineUpdateForm(forms.ModelForm):
 
 
 class AhOfferUpdateForm(forms.ModelForm):
-    delivery_date= forms.DateField(label=_('Delivery date:'), initial=datetime.now(), widget=forms.SelectDateWidget)
-    auction_date= forms.DateField(label=_('Auction date:'), initial=datetime.now(), widget=forms.SelectDateWidget)
-
+    
+    auction_date = forms.DateField(
+        label=_('Auction date:'), 
+        initial=datetime.now(), 
+        widget=forms.SelectDateWidget)
+    
+    delivery_date = forms.DateField(
+        label=_('Delivery date:'), 
+        initial=datetime.now(), 
+        widget=forms.SelectDateWidget)
+    
     class Meta:
         model = AhOffer
         fields = ['description', ]
+
 
 class AhAnwserCreateForm(forms.ModelForm):
     class Meta:

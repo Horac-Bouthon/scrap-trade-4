@@ -47,13 +47,23 @@
                 {% trans "Detail" %}
               </a>
               
-              {% if user.customer == customer or "customers.is_poweruser" in perms %}
-                <a class="btn btn-outline-info btn-sm"
-                   href="{% url 'ah-customer-auction' customer.id %}"
-                   title="{% trans "View my auction page" context "button-tooltip" %}">
-                  {% trans "Auction" context "button-text" %}
-                </a>
+              {% url 'ah-customer-auction' customer.id as href %}
+              {% if user.customer == customer %}
+                
+                {% trans "My Auction" as text %}
+                {% with cls='btn-sm btn-outline-info' %}
+                  {% include 'project_main/__btn.html' %}
+                {% endwith %}
+                
+              {% elif 'customers.is_poweruser' in perms %}
+                
+                {% trans "View Auction" as text %}
+                {% with cls='btn-sm btn-poweruser' %}
+                  {% include 'project_main/__btn.html' %}
+                {% endwith %}
+                
               {% endif %}
+              
             </section>
           </div>
 

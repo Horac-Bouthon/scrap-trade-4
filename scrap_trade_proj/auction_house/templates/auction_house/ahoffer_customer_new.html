@@ -6,10 +6,11 @@
 
 
 {% block content %}
-  <article class="media content-section">
-    <a href="{% url 'project-customer-info' customer.pk %}" target="_blank">
-      <img class="rounded-circle customer-logo" src="{{ customer.customer_logo.url }}">
-    </a>
+  
+  {% include 'project_main/__content-header.html' %}
+  
+  <section class="container">
+    
     <div class="media-body">
       <h2 class="customer-name">{{ object.customer_name }}</h2>
       <form class="" method="POST" enctype="multipart/form-data">
