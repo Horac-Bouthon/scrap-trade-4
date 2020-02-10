@@ -108,8 +108,6 @@ class CustomerInfo(LoginRequiredMixin, DetailView):
         context['content_header'] = {
             'title': customer.customer_name,
             'desc': _('Detailed customer information'),
-            'image': { 'src': customer.customer_logo.url,
-                       'alt': _('Customer logo') },
             'button_list': button_list
         }
 
@@ -125,8 +123,6 @@ class CustomerDetailView(CanEditCustomer, DetailView):
         context['content_header'] = {
             'title': customer.customer_name + ' | ' + _('Edit'),
             'desc': _("Edit customer details"),
-            'image': { 'src': customer.customer_logo.url,
-                       'alt': _('Customer logo') },
         }
         
         button_list = []

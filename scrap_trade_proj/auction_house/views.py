@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 
@@ -63,6 +63,12 @@ from django.views.generic import (
     DeleteView,
 )
 
+
+def get_state(state_key):  #util
+    assert isinstance(state_key, str), "state_key must be a string"
+    return get_object_or_404(StepState, state_key=state_key)
+    
+
 class AhOfferListView(Poweruser, ListView):
     model = AhOffer
     template_name = 'auction_house/ahoffer_list.html'
@@ -86,10 +92,11 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
         context = super(DetailView, self).get_context_data(**kwargs)
         
         offer = kwargs.get('object')
+        state_key = offer.actual_state.state_key
         
         offer.refresh_total_price()  # @todo; Pricey redundant call!
-        
-        state_key = offer.actual_state.state_key
+                
+        context['customer'] = offer.owner
         
         context.update({
             'my_answers': filter_by_state(
@@ -145,6 +152,14 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
 class AhOfferInfoView(LoginRequiredMixin, DetailView):
     model = AhOffer
     template_name = 'auction_house/ahoffer_info.html'
+    
+    def get_context_data(self, **kwargs): 
+        context = super(DetailView, self).get_context_data(**kwargs)
+        
+        owner = kwargs.get('object')
+        context['customer'] = offer.owner
+        
+        return context
 
 
 class AhOfferUpdateView(Poweruser, UpdateView):
@@ -173,8 +188,9 @@ class AhOfferDeletelView(Poweruser, DeleteView):
 
 @user_belong_offer
 def ah_offer_line_update(request, pk, pk2):
-    offer = AhOffer.objects.filter(id = pk).first()
-    offer_line = AhOfferLine.objects.filter(id = pk2).first()
+    
+    offer = get_object_or_404(AhOffer, id = pk)
+    offer_line = get_object_or_404(AhOfferLine, id = pk2)
 
     if request.method == 'POST':
         form = AhOfferLineUpdateForm(request.POST, instance=offer_line)
@@ -198,7 +214,8 @@ def ah_offer_line_update(request, pk, pk2):
 
 @user_belong_offer
 def ah_offer_line_create(request, pk):
-    offer = AhOffer.objects.filter(id = pk).first()
+    
+    offer = get_object_or_404(AhOffer, id = pk)
 
     if request.method == 'POST':
         form = AhOfferLineUpdateForm(request.POST)
@@ -250,7 +267,8 @@ class AhMatClassDetailView(LoginRequiredMixin, DetailView):
 #-------------------------------- ah_customer_auction
 @user_belong_customer
 def ah_customer_auction(request, pk):
-    customer = Customer.objects.get(id = pk)
+    
+    customer = get_object_or_404(Customer, id = pk)
 
     auc_obj = get_auction_list_control_obj(customer, customer.owned_offers, customer.owned_answers)
 
@@ -264,8 +282,7 @@ def ah_customer_auction(request, pk):
     context['content_header'] = {
         'title': customer.customer_name + ' | ' + _('Auction'),
         'desc': _('Auction homepage'),
-        'image': { 'src': customer.customer_logo.url,
-                   'alt': _('Customer logo') },
+        
         'button_list': [
             {
                 'text': _("Create new offer"),
@@ -287,8 +304,9 @@ def ah_customer_auction(request, pk):
 
 @user_belong_customer
 def ah_customer_offers_create(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
-
+    
+    customer = get_object_or_404(Customer, id = pk)
+    
     if request.method == 'POST':
         form = AhOfferUpdateForm(request.POST)
         if form.is_valid():
@@ -297,28 +315,29 @@ def ah_customer_offers_create(request, pk):
                 user = request.user,
                 data = form.cleaned_data
             )
-            success_message = _('Your offer has been added!')
-            messages.success(request, success_message)
+            messages.success(request, 
+                             _('Your offer has been added!'))
             return redirect('ah-customer-auction', pk)
     else:
         form = AhOfferUpdateForm()
 
-    title2 = tr.pgettext('ah_customer_offers_create-title', 'create-offer')
     context = {
+        'content_header': {
+            'title': _("New offer"),
+            'desc': _("Create a new auction offer")
+        },
         'form': form,
-        'title': title2,
         'customer': customer,
     }
     return render(request, 'auction_house/ahoffer_customer_new.html', context)
 
 
-from django.shortcuts import get_object_or_404
 
 @user_belong_customer
 def ah_customer_offers_by_state_key(request, pk, sk):
     
     customer = get_object_or_404(Customer, id=pk)
-    selected_state = get_object_or_404(StepState, state_key = sk)
+    selected_state = get_state(sk)
     filtered_offers = filter_by_state(customer.owned_offers, sk).order_by('-pk')
     
     translated_state_key = selected_state.get_state_name_plural()
@@ -326,18 +345,17 @@ def ah_customer_offers_by_state_key(request, pk, sk):
     context = {
         'offer_list': filtered_offers,
         
+        'customer': customer,
         'content_header': {
             'title': "%s (%s)" % (translated_state_key, 
                                   customer.customer_name),
             'desc': _("List of offers"),
-            'image': { 'src': customer.customer_logo.url,
-                       'alt': _('Customer logo') },
             'button_list': [{
                 'text': _('Auction'),
                 'href': reverse('ah-customer-auction', 
                                 kwargs={'pk': customer.pk}),
                 'icon': 'arrow-left',
-                'type': 'secondary', 
+                'type': 'secondary',
             }],
         },
     }
@@ -346,14 +364,15 @@ def ah_customer_offers_by_state_key(request, pk, sk):
 
 @user_belong_customer
 def ah_offers_change_state(request, pk, pk2, pk3):
-    customer = Customer.objects.filter(id = pk).first()
-    offer = AhOffer.objects.filter(id = pk2).first()
+    
+    customer = get_object_or_404(Customer, id = pk)
+    offer = get_object_or_404(AhOffer, id = pk2)
     set_state = StepState.objects.get(id=pk3)
 
     if request.method == 'POST':
         offer_add_state(offer, set_state, request.user)
         if set_state.state_key == 'offer_canceled':
-            state_send = StepState.objects.get(state_key = 'answer_canceled')
+            state_send = get_state('answer_canceled')
             my_answers = filter_by_state(offer.answers, 'answer_confirmed')
             for answer in my_answers.all():
                 answer_add_state(answer, state_send, request.user)
@@ -382,14 +401,15 @@ def ah_offers_change_state(request, pk, pk2, pk3):
 
 @user_belong_customer
 def ah_answer_change_state(request, pk, pk2, pk3):
-    customer = Customer.objects.filter(id = pk).first()
-    answer = AhAnswer.objects.filter(id = pk2).first()
+    
+    customer = get_object_or_404(Customer, id = pk)
+    answer = get_object_or_404(AhAnswer, id = pk2)
     set_state = StepState.objects.get(id=pk3)
 
     if request.method == 'POST':
         answer_add_state(answer, set_state, request.user)
         if set_state.state_key == 'answer_accepted':
-            state_send = StepState.objects.get(state_key = 'offer_accepted')
+            state_send = get_state('offer_accepted')
             offer_add_state(answer.ah_offer, state_send, request.user)
             if state_send.send_ntf:
                 ntf_send_from_view(
@@ -399,7 +419,7 @@ def ah_answer_change_state(request, pk, pk2, pk3):
                     item=answer.ah_offer,
                 )
         if set_state.state_key == 'answer_closed':
-            state_send = StepState.objects.get(state_key = 'offer_ready_to_close')
+            state_send = get_state('offer_ready_to_close')
             offer_add_state(answer.ah_offer, state_send, request.user)
             if state_send.send_ntf:
                 ntf_send_from_view(
@@ -438,16 +458,19 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
-        object = kwargs.get('object')
-        state_new = StepState.objects.get(state_key='answer_new')
-        state_confirmed = StepState.objects.get(state_key='answer_confirmed')
-        context['state_new'] = state_new
-        context['state_confirmed'] = state_confirmed
-        context['state_successful'] = StepState.objects.get(state_key='answer_successful')
-        context['state_accepted'] = StepState.objects.get(state_key='answer_accepted')
-        context['state_closed'] = StepState.objects.get(state_key='answer_closed')
-        context['state_canceled'] = StepState.objects.get(state_key='answer_canceled')
-        object.refresh_total_price()
+        
+        answer = kwargs.get('object')
+        answer.refresh_total_price()
+        
+        context.update({
+            'state_new': get_state('answer_new'),
+            'state_confirmed': get_state('answer_confirmed'),
+            'state_successful': get_state('answer_successful'),
+            'state_accepted': get_state('answer_accepted'),
+            'state_closed': get_state('answer_closed'),
+            'state_canceled': get_state('answer_canceled'),
+        })
+        
         return context
 
 
@@ -478,7 +501,7 @@ class AhAnswerDeletelView(Poweruser, DeleteView):
 
 @user_belong_customer
 def ah_customer_answer_waiting_offers(request, pk):
-    customer = Customer.objects.filter(id = pk).first()
+    customer = get_object_or_404(Customer, id = pk)
     title2 = tr.pgettext('ah_customer_answer_waiting_offers-title', 'offers_waiting')
     context = {
         'title': title2,
@@ -492,9 +515,9 @@ def ah_customer_answer_waiting_offers(request, pk):
 
 @user_belong_customer
 def ah_customer_answer_by_state_key(request, pk, sk):
-    customer = Customer.objects.filter(id = pk).first()
+    customer = get_object_or_404(Customer, id = pk)
     title2 = tr.pgettext('ah_customer_answer_by_state_key-title', 'answers-by-state')
-    selected_state = StepState.objects.filter(state_key = sk).first()
+    selected_state = get_state(sk)
     context = {
         'title': title2,
         'selection': selected_state.get_state_name_plural(),
@@ -506,8 +529,9 @@ def ah_customer_answer_by_state_key(request, pk, sk):
 
 @user_belong_customer
 def ah_customer_answer_create(request, pk, pk2):
-    customer = Customer.objects.filter(id = pk).first()
-    offer = AhOffer.objects.filter(id = pk2).first()
+    
+    customer = get_object_or_404(Customer, id = pk)
+    offer = get_object_or_404(AhOffer, id = pk2)
     user = request.user
 
     if request.method == 'POST':
@@ -532,8 +556,9 @@ def ah_customer_answer_create(request, pk, pk2):
 
 @user_belong_answer
 def ah_answer_line_update_ppu(request, pk, pk2):
-    answer = AhAnswer.objects.filter(id = pk).first()
-    answer_line = AhAnswerLine.objects.filter(id = pk2).first()
+    
+    answer = get_object_or_404(AhAnswer, id = pk)
+    answer_line = get_object_or_404(AhAnswerLine, id = pk2)
 
     if request.method == 'POST':
         form = AhAnwserLinePpuUpdateForm(request.POST, instance=answer_line)
@@ -567,8 +592,9 @@ def ah_answer_line_update_ppu(request, pk, pk2):
 
 @user_belong_answer
 def ah_answer_line_update_total(request, pk, pk2):
-    answer = AhAnswer.objects.filter(id = pk).first()
-    answer_line = AhAnswerLine.objects.filter(id = pk2).first()
+    
+    answer = get_object_or_404(AhAnswer, id = pk)
+    answer_line = get_object_or_404(AhAnswerLine, id = pk2)
 
     if request.method == 'POST':
         form = AhAnwserLineTotalUpdateForm(request.POST, instance=answer_line)
@@ -600,8 +626,8 @@ def ah_answer_line_update_total(request, pk, pk2):
 
 @poweruser
 def ah_offer_step_create(request, pk):
-    offer = AhOffer.objects.get(id = pk)
-    customer = offer.owner
+    
+    offer = get_object_or_404(AhOffer, id = pk)
 
     if request.method == 'POST':
         form = StepUpdateForm(request.POST)
@@ -623,7 +649,7 @@ def ah_offer_step_create(request, pk):
     context = {
         'form': form,
         'title': title2,
-        'customer': customer,
+        'customer': offer.owner,
         'object': offer,
         'update_url': 'ah-offer-update',
     }
@@ -632,7 +658,7 @@ def ah_offer_step_create(request, pk):
 
 @poweruser
 def ah_answer_step_create(request, pk):
-    answer = AhAnswer.objects.get(id = pk)
+    answer = get_object_or_404(AhAnswer, id = pk)
     customer = answer.owner
 
     if request.method == 'POST':
@@ -673,11 +699,10 @@ def realtime_auction(request):
     
     context = {
         'offer': offer, 'object': offer,
+        'customer': offer.owner,
         'content_header': {
             'title': offer.description,
             'desc': _("Realtime auction"),
-            'image': { 'src': offer.owner.customer_logo.url,
-                       'alt': _('Customer logo') },
         },
     }
     
