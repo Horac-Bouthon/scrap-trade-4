@@ -17,18 +17,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <!-- Icons: Feather -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-<<<<<<< HEAD
-
-
-=======
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
     <style>
      body { font-family: "Noto Sans", sans-serif; }
     </style>
-    
-    
->>>>>>> 26e24a9969981cf73bd9012edde5e9b776e2ec2a
+
+
     <!-- My styles -->
     <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css">
 
@@ -43,49 +38,24 @@
 
 
     {# Backgrounds corresponding to page #}
-<<<<<<< HEAD
-    {% if object.offer.owner.customer_background %}
-      <style>
-       body {
-           background-image: url("{{ object.offer.owner.customer_background.url }}");
-       }
-      </style>
-
-    {% elif object.owner.customer_background %} {# = Viewing customer's offers #}
-      <style>
-       body {
-           background-image: url("{{ object.owner.customer_background.url }}");
-       }
-      </style>
-    {% elif customer.customer_background %} {# = Viewing customer pages #}
-      <style>
-       body {
-           background-image: url("{{ customer.customer_background.url }}");
-       }
-      </style>
-    {% endif %}
-
-
-=======
     <style> body {
 
       {% if object.offer.owner.customer_background %} {# = At offer line #}
         background-image: url("{{ object.offer.owner.customer_background.url }}");
-        
+
       {% elif object.owner.customer_background %} {# = At customer's offers #}
         background-image: url("{{ object.owner.customer_background.url }}");
-        
+
       {% elif customer.customer_background %} {# = At customer pages #}
         background-image: url("{{ customer.customer_background.url }}");
-        
+
       {% elif project %}  {# Anywhere else #}
         background-image: url("{{ project.project_background.url }}");
-        
+
       {% endif %}
-      
+
      } </style>
-    
->>>>>>> 26e24a9969981cf73bd9012edde5e9b776e2ec2a
+
     {# Additional page-local styles #}
     {% block page-style %} {% endblock %}
 
@@ -195,36 +165,17 @@
                   {% trans "Offer list" context "right-navbar" %}
                 </a>
                 <a class="mb-2
-<<<<<<< HEAD
-                          btn btn-secondary"
-                   href="{% url 'ah-offer-list-accept' %}">
-                  {% trans "Offers for approval" context "right-navbar" %}
-                </a>
-                <a class="mb-2
-                          btn btn-secondary"
-=======
                           btn btn-poweruser"
->>>>>>> 26e24a9969981cf73bd9012edde5e9b776e2ec2a
                    href="{% url 'ah-answer-list' %}">
                   {% trans "Answer list" context "right-navbar" %}
                 </a>
               {% endif %}
 
-<<<<<<< HEAD
-              <span>Contextual</span>
-              {% block spec_action %}
-              {% endblock spec_action %}
-              <div class="border-top my-2"></div>
-              {% block site_list %}
-              {% endblock site_list %}
-              {# @todo; Delete button-commenting elements in side-panel after testing #}
-=======
-              
+
               {% block spec_action %} {% endblock spec_action %}
               {% block site_list %} {% endblock site_list %}
               {# @todo; Delete button blocks in side-panel after testing #}
-              
->>>>>>> 26e24a9969981cf73bd9012edde5e9b776e2ec2a
+
             {% else %}
 
               {# Login form #}

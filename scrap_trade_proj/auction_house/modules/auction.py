@@ -80,8 +80,6 @@ def resurect_auction(par_offer):
         set_a.is_bound = False
         set_a.save()
     return
-
-<<<<<<< HEAD
 def offer_no_answers(request, par_offer):
     # cancel offer - no anwers
     print('cancel - no answers - {}'.format(par_offer))
@@ -109,17 +107,6 @@ def start_auction(request, par_offer):
     print('Start auction: {} at {}'.format(par_offer, par_offer.auction_start))
     kill_new_answers(par_offer)
     my_answers = fiter_by_state(par_offer.answers, 'answer_confirmed')
-=======
-def set_auction(request, par_offer):
-    print('from second: {} must be set / {}'.format(par_offer, par_offer.auction_date))
-    # kill not confirmed Answers
-    state_obj = StepState.objects.get(state_key='answer_canceled')
-    new_answers = filter_by_state(par_offer.answers, 'answer_new')
-    for kill_answer in new_answers:
-        print('kill answer = {}'.format(kill_answer))
-        answer_add_state(kill_answer, state_obj, None)
-    my_answers = filter_by_state(par_offer.answers, 'answer_confirmed')
->>>>>>> 26e24a9969981cf73bd9012edde5e9b776e2ec2a
     if my_answers.count() > 0 :
         state_in_auction = StepState.objects.get(state_key='offer_in_auction')
         offer_add_state(par_offer, state_in_auction, None)
@@ -183,11 +170,7 @@ def set_auction(request, par_offer, par_answer_state):
             )
         # unbound others
         state_obj = StepState.objects.get(state_key='answer_closed')
-<<<<<<< HEAD
         for unlucky_one in fiter_by_state(par_offer.answers, par_answer_state):
-=======
-        for unlucky_one in filter_by_state(par_offer.answers, 'answer_confirmed'):
->>>>>>> 26e24a9969981cf73bd9012edde5e9b776e2ec2a
             print('close {}'.format(unlucky_one))
             answer_add_state(unlucky_one, state_obj, None)
             ntf_send_from_auction(

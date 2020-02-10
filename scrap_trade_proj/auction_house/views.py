@@ -25,8 +25,8 @@ from customers.permissions import (
     test_user_belong_customer, UserBelongCustomer, user_belong_customer,
 )
 from .permissions import (
-    test_user_belong_offer, UserBelongOffer, user_belong_offer, 
-    test_user_belong_answer, UserBelongAnswer, user_belong_answer, 
+    test_user_belong_offer, UserBelongOffer, user_belong_offer,
+    test_user_belong_answer, UserBelongAnswer, user_belong_answer,
 )
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
@@ -68,7 +68,7 @@ class AhOfferListView(Poweruser, ListView):
     template_name = 'auction_house/ahoffer_list.html'
     context_object_name = 'offers'
     ordering = ['-pk']
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['content_header'] = {
@@ -94,13 +94,13 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
-        
+
         offer = kwargs.get('object')
-        
+
         offer.refresh_total_price()  # @todo; Pricey redundant call!
-        
+
         state_key = offer.actual_state.state_key
-        
+
         context.update({
             'my_answers': filter_by_state(
                 offer.answers, 'answer_confirmed'
@@ -108,22 +108,22 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
             'answers_total': filter_by_state(
                 offer.answers, 'answer_confirmed'
             ).count(),
-            
+
             'bound_answers': offer.answers.filter(is_bound = True),
-            
+
             'state': state_key.replace('offer_', ''),  # Trim for readability
         })
-        
+
         button_list = [
             {
                 'text': _("Auction"),
-                'href': reverse('ah-customer-auction', 
+                'href': reverse('ah-customer-auction',
                                 kwargs={'pk': offer.owner.pk}),
                 'icon': 'arrow-left',
                 'type': 'secondary'
             }, {
                 'text': _("Documents"),
-                'href': reverse('doc-repo-dokument-list', 
+                'href': reverse('doc-repo-dokument-list',
                                 kwargs={'oid': offer.open_id.int_id}),
                 'icon': 'file-text',
             }
@@ -131,14 +131,14 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
         if state_key in ['offer_new','offer_ready_to_close']:
             button_list.append({
                 'text': _("Edit offer"),
-                'href': reverse('ah-offer-customer-update', 
+                'href': reverse('ah-offer-customer-update',
                                 kwargs={'pk': offer.pk}),
                 'icon': 'edit-3',
             })
         if test_poweruser(self.request.user):
             button_list.append({
                 'text': _("Edit offer"),
-                'href': reverse('ah-offer-update', 
+                'href': reverse('ah-offer-update',
                                 kwargs={'pk': offer.pk}),
                 'icon': 'edit-3',
                 'type': 'poweruser',
@@ -281,10 +281,10 @@ def ah_customer_auction(request, pk):
                 'text': _("Create new offer"),
                 'href': reverse('ah-customer-create-offers',
                                 kwargs={'pk': customer.pk}),
-                'icon': 'plus', 
-            }, { 
+                'icon': 'plus',
+            }, {
                 'text': _("Edit customer info"),  # @todo; Add permission for customer info edit button
-                'href': reverse('project-customer-detail', 
+                'href': reverse('project-customer-detail',
                                 kwargs={'pk': customer.pk}),
                 'icon': 'edit-3',
             }
@@ -326,28 +326,28 @@ from django.shortcuts import get_object_or_404
 
 @user_belong_customer
 def ah_customer_offers_by_state_key(request, pk, sk):
-    
+
     customer = get_object_or_404(Customer, id=pk)
     selected_state = get_object_or_404(StepState, state_key = sk)
     filtered_offers = filter_by_state(customer.owned_offers, sk).order_by('-pk')
-    
+
     translated_state_key = selected_state.get_state_name_plural()
-    
+
     context = {
         'offer_list': filtered_offers,
-        
+
         'content_header': {
-            'title': "%s (%s)" % (translated_state_key, 
+            'title': "%s (%s)" % (translated_state_key,
                                   customer.customer_name),
             'desc': _("List of offers"),
             'image': { 'src': customer.customer_logo.url,
                        'alt': _('Customer logo') },
             'button_list': [{
                 'text': _('Auction'),
-                'href': reverse('ah-customer-auction', 
+                'href': reverse('ah-customer-auction',
                                 kwargs={'pk': customer.pk}),
                 'icon': 'arrow-left',
-                'type': 'secondary', 
+                'type': 'secondary',
             }],
         },
     }
@@ -368,12 +368,7 @@ def ah_offers_change_state(request, pk, pk2, pk3):
             offer.save()
         if set_state.state_key == 'offer_canceled':
             state_send = StepState.objects.get(state_key = 'answer_canceled')
-<<<<<<< HEAD
             for answer in offer.answers.all():
-=======
-            my_answers = filter_by_state(offer.answers, 'answer_confirmed')
-            for answer in my_answers.all():
->>>>>>> 26e24a9969981cf73bd9012edde5e9b776e2ec2a
                 answer_add_state(answer, state_send, request.user)
 
         if set_state.send_ntf:
@@ -478,7 +473,7 @@ class AhAnswerUpdateView(Poweruser, UpdateView):
         'is_bound',
         'auction_url',
     ]
-    
+
 
 
 class AhAnswerCustomerUpdateView(UserBelongAnswer, UpdateView):
@@ -686,10 +681,10 @@ def ah_answer_step_create(request, pk):
 import django.utils.timezone as django_timezone
 
 @login_required
-def realtime_auction(request): 
-    
+def realtime_auction(request):
+
     offer = AhOffer.objects.first()  #mock
-    
+
     context = {
         'offer': offer, 'object': offer,
         'content_header': {
@@ -699,11 +694,11 @@ def realtime_auction(request):
                        'alt': _('Customer logo') },
         },
     }
-    
+
     mock = {  #mock
         'arrival': 'ok',
         'start_datetime': django_timezone.now(),
     }
     context.update(mock)
-    
+
     return render(request, 'auction_house/realtime_auction.html', context)
