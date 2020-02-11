@@ -194,6 +194,28 @@ class AhOfferUpdateView(Poweruser, UpdateView):
         'minimal_total_price', 'auction_url', 'auction_start',
         'auction_end', 'offered_to',
     ]
+    
+    def get_context_data(self, **kwargs):
+        context = super(UpdateView, self).get_context_data(**kwargs)
+        
+        offer = context['object']
+        context.update({
+            'customer': offer.owner,
+            'poweruser': True,
+            'content_header': {
+                'title': ' | '.join([_("Edit offer"),
+                                     offer.description]), 
+                'desc': _("Edit offer as a poweruser."),
+                'button_list': [{
+                    'text': 'Offer',
+                    'icon': 'arrow-left',
+                    'type': 'secondary',
+                    'href': reverse('ah-offer-detail', args=[offer.pk]),
+                }],
+            },
+        })
+        return context
+
 
 
 class AhOfferCustomerUpdateView(UserBelongOffer, UpdateView):
@@ -215,6 +237,12 @@ class AhOfferCustomerUpdateView(UserBelongOffer, UpdateView):
             'title': ' | '.join([offer.description,
                                  _("Edit offer")]),
             'desc': _("Modify the offer's data."),
+            'button_list': [{
+                'text': 'Offer',
+                'icon': 'arrow-left',
+                'type': 'secondary',
+                'href': reverse('ah-offer-detail', args=[offer.pk]),
+            }],
         }
         
         return context
@@ -423,6 +451,8 @@ def ah_offers_change_state(request, pk, pk2, pk3):
     customer = get_object_or_404(Customer, id = pk)
     offer = get_object_or_404(AhOffer, id = pk2)
     set_state = StepState.objects.get(id=pk3)
+    
+    # @todo; Is there any permission checking offer state changes?
 
     if request.method == 'POST':
         offer_add_state(offer, set_state, request.user)
@@ -443,14 +473,12 @@ def ah_offers_change_state(request, pk, pk2, pk3):
                 place='auction_house.view - ah_offers_change_state()',
                 item=offer,
             )
-
+        
         success_message = _('Your offer has change the state!')
         messages.success(request, success_message)
         return redirect('ah-customer-auction', pk)
 
-    title2 = tr.pgettext('ah_offers_change_state-title', 'offer-state')
     context = {
-        'title': title2,
         'customer': customer,
         'offer': offer,
         'state': set_state,
