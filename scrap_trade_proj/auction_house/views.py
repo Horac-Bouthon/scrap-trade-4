@@ -82,23 +82,23 @@ class AhOfferListView(Poweruser, ListView):
         }
         return context
 
-class AhOfferListForAcceptView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class AhOfferListForAcceptView(Poweruser, ListView):
     model = AhOffer
     template_name = 'auction_house/ahoffer_list.html'
     context_object_name = 'offers'
     ordering = ['-pk']
-    permission_required = 'customers.is_poweruser'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['content_header'] = {
             'title': _('Offers waiting for approval'),
-            'desc': _('A list of offers waiting for approval in the application.'),
+            'desc': _(('A list of offers waiting for approval in the application.')),
         }
         return context
 
     def get_queryset(self):
-        return filter_by_state(AhOffer.objects.all(), 'offer_waiting_accept').order_by('-pk')
+        return filter_by_state(
+            AhOffer.objects.all(), 'offer_waiting_accept').order_by('-pk')
 
 
 class AhOfferDetailView(UserBelongOffer, DetailView):
@@ -182,7 +182,7 @@ class AhOfferInfoView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
 
-        owner = kwargs.get('object')
+        offer = kwargs.get('object')
         context['customer'] = offer.owner
 
         return context
@@ -190,7 +190,7 @@ class AhOfferInfoView(LoginRequiredMixin, DetailView):
 
 class AhOfferUpdateView(Poweruser, UpdateView):
     model = AhOffer
-    fields = ['description', 'delivery_date', 'auction_date',
+    fields = ['description', 'auction_date', 'delivery_date',
         'minimal_total_price', 'auction_url', 'auction_start',
         'auction_end', 'offered_to',
     ]
@@ -199,9 +199,25 @@ class AhOfferUpdateView(Poweruser, UpdateView):
 class AhOfferCustomerUpdateView(UserBelongOffer, UpdateView):
     model = AhOffer
     fields = [
-        'description', 'delivery_date', 'auction_date',
+        'description',
+        'auction_date',
+        'delivery_date',
     ]
     template_name = 'auction_house/ahoffer_customer_form.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(UpdateView, self).get_context_data(**kwargs)
+    
+        offer = context['object']
+        context['customer'] = offer.owner
+        
+        context['content_header'] = {
+            'title': ' | '.join([offer.description,
+                                 _("Edit offer")]),
+            'desc': _("Modify the offer's data."),
+        }
+        
+        return context
 
 
 class AhOfferDeletelView(Poweruser, DeleteView):
@@ -223,17 +239,21 @@ def ah_offer_line_update(request, pk, pk2):
         if form.is_valid():
             form.save()
             offer.refresh_total_price()
+            
             success_message = _('Your line has been updated!')
             messages.success(request, success_message)
             return redirect('ah-offer-detail', pk)
     else:
         form = AhOfferLineUpdateForm(instance=offer_line)
-
-    title2 = tr.pgettext('ah_offer_line_update-title', 'update-line')
+    
     context = {
         'form': form,
-        'title': title2,
         'offer': offer,
+        'customer': offer.owner,
+        'content_header': {
+            'title': " | ".join([offer.description, _('Edit line')]),
+            'desc': _('Edit a specific line in the offer.')
+        },
     }
     return render(request, 'auction_house/offer_line_form.html', context)
 
@@ -254,17 +274,27 @@ def ah_offer_line_create(request, pk):
                 offer = offer,
             )
             offer.refresh_total_price()
+            
             success_message = _('Your offer has been added!')
             messages.success(request, success_message)
             return redirect('ah-offer-detail', pk)
     else:
         form = AhOfferLineUpdateForm()
 
-    title2 = tr.pgettext('ah_offer_line_create-title', 'create-offer')
     context = {
         'form': form,
-        'title': title2,
         'offer': offer,
+        'customer': offer.owner,
+        'content_header': {
+            'title': ' | '.join([offer.description, _('Add a line')]),
+            'desc': _("Add a new product for offer."),
+            'button_list': [{
+                'text': 'Offer',
+                'icon': 'arrow-left',
+                'type': 'secondary',
+                'href': reverse('ah-offer-detail', args=[offer.pk]),
+            }],
+        }
     }
     return render(request, 'auction_house/offer_line_form.html', context)
 
@@ -278,7 +308,7 @@ class AhDeletelOfferLine(UserPassesTestMixin, DeleteView):
         return redirect('ah-offer-detail', self.object.offer.pk)
 
     def get_success_url(self):
-        return reverse_lazy('ah-offer-detail',  kwargs={'pk': self.offer_pk})
+        return reverse_lazy('ah-offer-detail',  args=[self.offer_pk])
 
     def test_func(self):
         offer = self.get_object().offer
@@ -296,17 +326,16 @@ def ah_customer_auction(request, pk):
 
     customer = get_object_or_404(Customer, id = pk)
 
-    auc_obj = get_auction_list_control_obj(customer, customer.owned_offers, customer.owned_answers)
+    auc_obj = get_auction_list_control_obj(
+        customer, customer.owned_offers, customer.owned_answers)
 
-    title2 = tr.pgettext('ah_customer_auction-title', 'customer-auction')
     context = {
-        'title': title2,
         'customer': customer,
         'auc_obj': auc_obj,
     }
 
     context['content_header'] = {
-        'title': customer.customer_name + ' | ' + _('Auction'),
+        'title': ' | '.join([customer.customer_name, _('Auction')]),
         'desc': _('Auction homepage'),
 
         'button_list': [
@@ -725,9 +754,9 @@ import django.utils.timezone as django_timezone
 
 @login_required
 def realtime_auction(request):
-
+    
     offer = AhOffer.objects.first()  #mock
-
+    
     context = {
         'offer': offer, 'object': offer,
         'customer': offer.owner,

@@ -1,61 +1,85 @@
 {% extends "project_main/base.html" %}
-{% load static %}
 {% load crispy_forms_tags %}
 {% load i18n %}
 
-{% block content %}
-  <article class="media content-section">
-    <a href="{% url 'project-customer-info' object.owner.pk %}" target="_blank">
-      <img class="rounded-circle customer-logo" src="{{ object.owner.customer_logo.url }}">
-    </a>
-    <div class="media-body">
-      <h2 class="customer-name">{{ object.customer_name }}</h2>
-      <form class="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <fieldset class="form-group">
-          {{ form|crispy }}
-        </fieldset>
-        <div class="form-group">
-          {% for next in object.actual_state.next_states.all %}
-            {% if next.is_alert_button == False and next.manual_set == True %}
-              {% if next.security_level > 0 %}
-                {% if next.security_level == 1  and "customers.is_customer_admin" in perms %}
-                  <a class="btn btn-outline-secondary" href="{% url 'ah-offer-change-state' object.owner.pk object.pk next.pk %}">{{ next.get_actual_state_button }}</a>
-                {% endif %}
-                {% if next.security_level > 1 and "customers.is_poweruser" in perms %}
-                  <a class="btn btn-outline-secondary" href="{% url 'ah-offer-change-state' object.owner.pk object.pk next.pk %}">{{ next.get_actual_state_button }}</a>
-                {% endif %}
-              {% else %}
-                <a class="btn btn-outline-secondary" href="{% url 'ah-offer-change-state' object.owner.pk object.pk next.pk %}">{{ next.get_actual_state_button }}</a>
-              {% endif %}
-            {% endif %}
-          {% endfor %}
-          {% for next in object.actual_state.next_states.all %}
-            {% if next.is_alert_button == True and next.manual_set == True %}
-              {% if next.security_level > 0 %}
-                {% if next.security_level == 1  and "customers.is_customer_admin" in perms %}
-                  <a class="btn btn-outline-danger" href="{% url 'ah-offer-change-state' object.owner.pk object.pk next.pk %}">{{ next.get_actual_state_button }}</a>
-                {% endif %}
-                {% if next.security_level > 1 and "customers.is_poweruser" in perms %}
-                  <a class="btn btn-outline-danger" href="{% url 'ah-offer-change-state' object.owner.pk object.pk next.pk %}">{{ next.get_actual_state_button }}</a>
-                {% endif %}
-              {% else %}
-                <a class="btn btn-outline-danger" href="{% url 'ah-offer-change-state' object.owner.pk object.pk next.pk %}">{{ next.get_actual_state_button }}</a>
-              {% endif %}
-            {% endif %}
-          {% endfor %}
-        </div>
-        <div class="form-group">
 
+{% block content %}
+  
+  {% include 'project_main/__content-header.html' %}
+  
+  
+  <section class="container">
+
+    <div class="mb-3">
+      
+      {% for next in object.actual_state.next_states.all %}
+        {% if next.manual_set == True %}  {# = `next` is settable manually #}
+
+          {# Note: All button hrefs are derived from the state pk #}
+          {% url 'ah-offer-change-state' object.owner.pk object.pk next.pk as btn_href %}
+          
+          {# Proceed to next state #}
+          {% if next.is_alert_button == False %}
+            <a href="{{ btn_href }}"
+
+               {% if next.security_level == 0 %}
+               class="btn btn-primary"
+               {% elif next.security_level == 1 and "customers.is_customer_admin" in perms %}
+               class="btn btn-primary"
+               {% elif next.security_level >= 2 and "customers.is_poweruser" in perms %}
+               class="btn btn-poweruser"
+               {% endif %}
+            >
+              {{ next.get_actual_state_button }}
+            </a>  
+          {% endif %}
+          
+          {# Dangerous actions #}
+          {% if next.is_alert_button == True %}
+            <a href="{{ btn_href }}"
+               
+               {% if next.security_level == 0 %}  
+               class="btn btn-danger"
+               {% elif next.security_level == 1 and "customers.is_customer_admin" in perms %}
+               class="btn btn-danger"
+               {% elif next.security_level >= 2 and "customers.is_poweruser" in perms %}
+               class="btn btn-outline-danger btn-poweruser"
+               {% endif %}
+            >
+              {{ next.get_actual_state_button }}
+            </a>
+          {% endif %}
+          
+        {% endif %}
+      {% endfor %}
+
+      <div class="text-muted small my-1"
+           style="max-width: 36em;">
+        {% trans "Tip: Setting a new state discards any unsaved changes made on this page." %}
+        {% trans "Please make sure to save any changes before changing offer's state." %}
+      </div>
+    </div>
+    
+
+    {# Actual form for editing #}
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      <fieldset>
+        
+        {{ form|crispy }}
+        
+        <div>
           {% include 'project_main/__btn-submit-save.html' %}
           
           <a class="btn btn-outline-secondary"
              href="{% url 'ah-offer-detail' object.pk %}">
             {% trans "Cancel" %}
           </a>
-          
         </div>
-      </form>
-    </div>
-  </article>
+        
+      </fieldset>
+    </form>
+    
+  </section>
 {% endblock content %}
