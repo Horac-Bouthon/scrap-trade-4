@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 import uuid
@@ -62,14 +62,15 @@ class DocumentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 @login_required()
 @user_can_access_owner_obj
 def doc_repo_document_list(request, oid):
-    project = Project.objects.all().first()
-    modify = user_can_modify_open_id(oid, request.user)
-    od = get_owner_desc(oid, modify)
+    
+    can_modify = user_can_modify_open_id(oid, request.user)
+    od = get_owner_desc(oid, can_modify)
+    document_list = get_docs_by_open_id(oid)
+    
     context = {
-        'project': project,
-        'docs': get_docs_by_open_id(oid),
+        'docs': document_list,
         'oid': str(oid),
-        'modify': modify,
+        'modify': can_modify,
         'od': od,
     }
     context['content_header'] = {
@@ -81,14 +82,13 @@ def doc_repo_document_list(request, oid):
         'href': request.build_absolute_uri(od.url_command),
         'icon': 'arrow-left', 'type': 'secondary',
     }]
-    if modify:
-        new_dic = {
+    if can_modify:
+        context['content_header']['button_list'].append({
             'text': _("Add Document"),
             'href': reverse('doc-repo-dokument-create',
                             kwargs={'oid': oid}),
             'icon': 'plus',
-        }
-        context['content_header']['button_list'].append(new_dic)
+        })
 
 
     return render(request, 'doc_repo/doc_repo_doc_list.html', context)
@@ -97,51 +97,60 @@ def doc_repo_document_list(request, oid):
 @login_required()
 @user_can_modify_owner_obj
 def doc_repo_document_create(request, oid):
-    proj = Project.objects.all().first()
+    
     oid_uuid = uuid.UUID(str(oid))
-    obj_oid = OpenId.objects.get(int_id = oid_uuid)
+    obj_oid = get_object_or_404(OpenId, int_id=oid_uuid)
+    
+    if request.method == 'GET':
+        form = DocumentCreateForm()
+        
     if request.method == 'POST':
         form = DocumentCreateForm(request.POST, request.FILES)
         if form.is_valid():
+            # Add the oid to the form before saving
             instance = form.save(commit=False)
             instance.open_id = obj_oid
             instance.save()
+            
             success_message = _('Document has been added!')
             messages.success(request, success_message)
             return redirect('doc-repo-dokument-list', oid)
-    else:
-        form = DocumentCreateForm()
 
-    title2 = tr.pgettext('doc_repo_document_create-title', 'create-document')
     context = {
         'form': form,
-        'title': title2,
-        'project': proj,
-        'oid': oid,
+        'oid': oid,  # @todo; Is the oid needed in the template when it's in the URL and form gets it afterwards?
+        'content_header': {
+            'title': _("Add document"), 
+            'desc': _("Add a document to an object")  # @todo; Do we have a way to know what are we adding the document to?? Can we pass that in a GET attribute so the user knows?
+        }        
     }
     return render(request, 'doc_repo/doc_repo_doc_form.html', context)
+
 
 @login_required()
 @user_can_modify_owner_obj
 def doc_repo_document_modify(request, pk):
-    proj = Project.objects.all().first()
-    doc = Document.objects.get(id = pk)
+    
+    doc = get_object_or_404(Document, id=pk)
     oid = str(doc.open_id.int_id)
+    
+    
+    if request.method == 'GET':
+        form = DocumentUpdateForm(instance=doc)
+        
     if request.method == 'POST':
         form = DocumentUpdateForm(request.POST, instance=doc)
         if form.is_valid():
             form.save()
-            success_message = _('Document has been updated!')
-            messages.success(request, success_message)
+            messages.success(request, _('Document has been updated!'))
             return redirect('doc-repo-dokument-list', oid)
-    else:
-        form = DocumentUpdateForm(instance=doc)
 
-    title2 = tr.pgettext('doc_repo_document_modify-title', 'update-document')
     context = {
         'form': form,
-        'title': title2,
-        'project': proj,
         'oid': oid,
+        'content_header': {
+            'title': _("Modify the document's descriptions"),
+        }
+        
     }
     return render(request, 'doc_repo/doc_repo_doc_form.html', context)

@@ -10,7 +10,10 @@ from .models import (
 class DocumentCreateForm(forms.ModelForm):
     class Meta:
         model = Document
-        fields = ['type', 'doc_name', 'doc_description', 'file']
+        fields = [
+            'file', 'type', 
+            'doc_name', 'doc_description'
+        ]
 
 
 class DocumentUpdateForm(forms.ModelForm):
