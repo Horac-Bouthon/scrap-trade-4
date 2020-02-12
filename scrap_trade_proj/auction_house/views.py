@@ -13,6 +13,7 @@ from .modules.auction import (
     get_waiting_offers,
     get_auction_list_control_obj,
     ntf_send_from_view,
+    OnlineBestBet,
 )
 
 from state_wf.models import (
@@ -144,13 +145,6 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
                 'icon': 'file-text',
             }
         ]
-        if state_key in ['offer_new','offer_ready_to_close']:
-            button_list.append({
-                'text': _("Edit offer"),
-                'href': reverse('ah-offer-customer-update',
-                                kwargs={'pk': offer.pk}),
-                'icon': 'edit-3',
-            })
         if test_poweruser(self.request.user):
             button_list.append({
                 'text': _("Edit offer"),
@@ -159,6 +153,15 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
                 'icon': 'edit-3',
                 'type': 'poweruser',
             })
+        else:
+            if state_key in ['offer_new','offer_ready_to_close']:
+                button_list.append({
+                    'text': _("Edit offer"),
+                    'href': reverse('ah-offer-customer-update',
+                                    kwargs={'pk': offer.pk}),
+                    'icon': 'edit-3',
+                })
+
         if offer.auction_url != "":
             button_list.append({
                 'text': _("Online auction"),
@@ -356,7 +359,6 @@ def ah_customer_offers_create(request, pk):
         'customer': customer,
     }
     return render(request, 'auction_house/ahoffer_customer_new.html', context)
-
 
 
 @user_belong_customer
@@ -582,7 +584,23 @@ def ah_customer_answer_create(request, pk, pk2):
         'customer': customer,
         'offer': offer,
     }
+    context['content_header'] = {
+        'title': customer.customer_name + ' | ' + _('New answer'),
+        'desc': _('Create new answer'),
+
+        'button_list': [
+            {
+                'text': _("Auction"),
+                'href': reverse('ah-customer-auction',
+                                kwargs={'pk': customer.pk}),
+                'icon': 'arrow-left',
+                'type': 'secondary'
+            },
+        ]
+    }
     return render(request, 'auction_house/ahanswer_customer_new.html', context)
+
+
 
 
 @user_belong_answer
@@ -724,23 +742,91 @@ def ah_answer_step_create(request, pk):
 import django.utils.timezone as django_timezone
 
 @login_required
-def realtime_auction(request):
+def realtime_auction(request, pk, pk2):
 
-    offer = AhOffer.objects.first()  #mock
+    offer = AhOffer.objects.get(id = pk)  #mock
+    now = django_timezone.now()
+    best_bits = offer.answers.all().order_by('-total_price')[:4]
+    list_bb = list()
+    answer = AhAnswer.objects.get(id = pk2)
+
+    for index in range(len(best_bits)):
+        str_class = 'bid__item'
+        if index == 0:
+            str_class = str_class + ' bid__item--best'
+        if best_bits[index].id == pk2:
+            str_class = str_class + ' bid__item--owned'
+        obj = OnlineBestBet(
+            best_bits[index].total_price,
+            str_class,
+        )
+        list_bb.append(obj)
+
+    print('best_bits = {}'.format(best_bits))
+    print('list_bb = {}'.format(list_bb))
+
+    if now < offer.auction_start:
+        str_arriv = 'too_soon'
+    elif now > offer.auction_end:
+        str_arriv = 'too_late'
+    elif offer.actual_state == StepState.objects.get(state_key = 'offer_in_auction'):
+        str_arriv = 'ok'
+    else:
+        str_arriv = 'too_soon'
 
     context = {
-        'offer': offer, 'object': offer,
+        'offer': offer, 'object': answer,
+        'answer': answer,
         'customer': offer.owner,
+        'arrival': str_arriv,
         'content_header': {
             'title': offer.description,
             'desc': _("Online auction"),
         },
+        'list_bb': list_bb,
     }
 
-    mock = {  #mock
-        'arrival': 'ok',
-        'start_datetime': django_timezone.now(),
-    }
-    context.update(mock)
+    # 'arrival': 'ok',
+    #mock = {  #mock
+    #    'arrival': 'too_late',
+    #    'start_datetime': django_timezone.now(),
+    #}
+    #context.update(mock)
 
     return render(request, 'auction_house/realtime_auction.html', context)
+
+
+@user_belong_answer
+def ah_answer_online_update_ppu(request, pk, pk2):
+
+    answer = get_object_or_404(AhAnswer, id = pk)
+    answer_line = get_object_or_404(AhAnswerLine, id = pk2)
+
+    if request.method == 'POST':
+        form = AhAnwserLinePpuUpdateForm(request.POST, instance=answer_line)
+        if form.is_valid():
+            form.save()
+            answer_line = AhAnswerLine.objects.filter(id = pk2).first()
+            answer_line.total_price = answer_line.ppu * answer_line.offer_line.amount
+            answer_line.save()
+            #todo; Aggregates :: Sum()
+            sum = 0
+            answer = AhAnswer.objects.filter(id = pk).first()
+            for line in answer.my_lines.all():
+                sum += line.total_price
+            answer.total_price = sum
+            answer.save()
+            success_message = _('Your line has been updated!')
+            messages.success(request, success_message)
+            return redirect('realtime-auction', answer.ah_offer.pk, answer.pk)
+    else:
+        form = AhAnwserLinePpuUpdateForm(instance=answer_line)
+
+    title2 = tr.pgettext('ah_answer_line_update-title', 'update-line')
+    context = {
+        'form': form,
+        'title': title2,
+        'answer': answer,
+        'min_price': answer_line.offer_line.minimal_ppu,
+    }
+    return render(request, 'auction_house/answer_line_form.html', context)

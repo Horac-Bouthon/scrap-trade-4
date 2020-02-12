@@ -51,10 +51,15 @@ urlpatterns = [
     path('customer/<int:pk>/answers_waiting_offers', ah_views.ah_customer_answer_waiting_offers, name='ah-customer-waiting-offers'),
     path('customer/<int:pk>/offer_info', AhOfferInfoView.as_view(), name='ah-offer-info'),
     path('customer/<int:pk>/answers_create/<int:pk2>', ah_views.ah_customer_answer_create, name='ah-customer-answers-create'),
-    
-    
+
+
     #mock
-    path('auction/', 
-         ah_views.realtime_auction, 
+    path('auction/<int:pk>/<int:pk2>/',
+         ah_views.realtime_auction,
          name='realtime-auction'),
+
+    path('auction/<int:pk>/line_ppu/<int:pk2>/',
+         ah_views.ah_answer_online_update_ppu,
+         name='ah-customer-answers-online-ppu'),
+
 ]

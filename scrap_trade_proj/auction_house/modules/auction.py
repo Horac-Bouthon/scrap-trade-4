@@ -66,6 +66,23 @@ class AuctionLine:
     def __str__(self):
         return self.title
 
+class OnlineBestBet:
+
+    def __init__(self,
+                 total_price,
+                 str_class,
+                 ):
+        self.total_price = total_price
+        self.str_class = str_class
+
+    def __repr__(self):
+        return "OnlineBestBet({}, '{}')"\
+            .format(self.total_price, self.str_class)
+
+    def __str__(self):
+        return "{} --- {}')"\
+            .format(self.total_price, self.str_class)
+
 
 def resurect_auction(par_offer):
     print('resurect offer: {}'.format(par_offer))
@@ -275,8 +292,7 @@ def customer_answer_create(request, customer, offer, user, data):
         changed_by = user,
     )
     new.save()
-    # TODO: zmenit na skutecnou adresu online aukce
-    new.auction_url = request.build_absolute_uri(reverse('ah-answer-detail', kwargs={'pk': new.id}))
+    new.auction_url = request.build_absolute_uri(reverse('realtime-auction', kwargs={'pk': offer.id, 'pk2': new.id}))
     new.save()
     new_state = StepState.objects.get(state_key='answer_new')
     answer_add_state(new, new_state, user)

@@ -5,33 +5,33 @@
 {% load crispy_forms_tags %}
 
 
-{% block content %}  
-  
+{% block content %}
+
   {% if arrival == 'too_soon' %}
 
     <section class="container">
-      <dl class="h5 py-5 
+      <dl class="h5 py-5
                  mx-md-4 mx-lg-5">
-        
+
         <h4 class="mb-4 font-weight-bold">
           {% trans "This auction has not started yet." %}
         </h4>
-        
+
         <dt>{% trans "Auction is starting at: " %}</dt>
-        <dd>{{ start_datetime }}</dd>
+        <dd>{{ offer.auction_start|date:"d.m.Y" }} {{ offer.auction_start|time:"H:i" }}</dd>
       </dl>
     </section>
 
 
 
-    
+
 
   {% elif arrival == 'too_late' %}
 
     <section class="container">
-      <dl class="h5 py-5 
+      <dl class="h5 py-5
                  mx-md-4 mx-lg-5">
-        
+
         <h4 class="mb-4 font-weight-bold">
           {% trans "This auction has already ended." %}
         </h4>
@@ -42,7 +42,7 @@
 
 
 
-  
+
   {% elif arrival == 'ok' %}
 
     {% include 'project_main/__content-header.html' %}
@@ -55,25 +55,64 @@
         <div class="d-flex">
           <dl>
             <dt>{% trans 'Minimal total price:' %}</dt>
-            <dd>{{ object.minimal_total_price }}</dd>
+            <dd>{{ offer.minimal_total_price }}</dd>
           </dl>
           <dl>
             <dt>{% trans 'Delivery date:' %}</dt>
-            <dd>{{ object.auction_date }}</dd>
+            <dd>{{ offer.delivery_date|date:"d.m.Y" }}</dd>
+          </dl>
+          <dl>
+            <dt>{% trans 'Auction end:' %}</dt>
+            <dd>{{ offer.auction_end|date:"d.m.Y" }} {{ offer.auction_end|time:"H:i" }}</dd>
           </dl>
         </div>
 
       </dl>
 
       <div class="d-flex">
-        
+
         <section class="flex-fill">
           <h4 class="section-header">
             {% trans "Add a bid" %}
           </h4>
 
+          <div class="">
+            <dl>
+              <dt>{% trans 'Total price:' %}</dt>
+              <dd>{{ answer.total_price }}</dd>
+            </dl>
+          </div>
+
+          <table class="table_lines">
+            <tr class="table_lines">
+              {% trans "Description" as var_offer_des %}
+              <th class="th_lines table_lines">
+              {{ var_offer_des }}
+              </th>
+              {% trans "Amount" as var_amounth %}
+              <th class="th_lines table_lines">{{ var_amounth }}
+              </th>
+              {% trans "Price per unit" as var_ppu %}
+              <th class="th_lines table_lines">{{ var_ppu }}
+              </th>
+            </tr>
+            {% trans "Click to update line" as var_hint3 %}
+            {% for line in  answer.my_lines.all %}
+              <tr class="table_lines">
+                <td class="td_lines table_lines">{{ line.offer_line.description }}</td>
+                <td class="td_lines table_lines"> {{ line.offer_line.amount }} {{ line.offer_line.mat_class.measurement_unit }} </td>
+                <td class="td_lines table_lines">
+                  {% trans "Click to update price per unit" as var_hint3 %}
+                  <a class="table_lines" href="{% url 'ah-customer-answers-online-ppu' answer.pk line.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}"> {{ line.ppu }} </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+
+
           <form method="POST">
             {% csrf_token %}
+            <!--
             <div class="pb-2">
               <label for="Amount"
                      class="m-0">
@@ -85,14 +124,15 @@
                      class="form-control"/>
               <small>{% trans "How much do you wish to bid?" %}</small>
             </div>
-
+            -->
             <div>
+              <!--
               <button type="submit"
                       class="btn btn-primary mb-2">
                 <i data-feather="check-circle"></i>
                 {% trans "Place a bid" %}
               </button>
-              
+              -->
               <button type="button"
                       class="btn btn-warning float-right"
                       onclick="location.reload()">
@@ -112,9 +152,18 @@
 
           <ul class="bid__list">
 
+            {% for item in list_bb%}
+            <li class="{{ item.str_class }}">
+              <div class="bid__amount">
+                {{ item.total_price }}
+              </div>
+            </li>
+            {% endfor %}
+
+            <!--
             <li class="bid__item bid__item--best bid__item--owned">
               <div class="bid__amount">
-                1200
+                {{ best_bit.total_price }}
               </div>
               <div class="bid__time">
                 13:30
@@ -130,7 +179,7 @@
               </div>
             </li>
 
-            
+
             <li class="bid__item bid__item--owned">
               <div class="bid__amount">
                 150
@@ -140,7 +189,7 @@
               </div>
             </li>
 
-            
+
             <li class="bid__item">
               <div class="bid__amount">
                 130
@@ -149,14 +198,15 @@
                 12:30
               </div>
             </li>
-            
-            
+          -->
+
+
           </ul>
         </section>
 
-        
+
       </div>
-      
+
     </section>
 
     <style>
@@ -172,7 +222,7 @@
          border: 1px solid #dee2e6;
          border-radius: 0.25rem;
          box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
-         
+
          display: flex;
          align-items: center;
      }
@@ -187,7 +237,7 @@
          font-weight: bold;
          font-size: 2.5rem;
          line-height: 1.15em;
-         
+
          padding-right: 0.25rem;
 
          flex: 1 1 auto; /* flex-fill */
@@ -199,7 +249,7 @@
          color: var(--orange);
      }
     </style>
-    
+
   {% endif %}
 
 {% endblock content %}

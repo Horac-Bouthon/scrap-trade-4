@@ -142,7 +142,6 @@ class AhOffer(models.Model):
         self.minimal_total_price = total
         self.save()
 
-
 #------------------------  AhOfferLine
 class AhOfferLine(models.Model):
     description = models.CharField(
