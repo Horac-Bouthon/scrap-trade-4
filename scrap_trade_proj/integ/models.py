@@ -24,70 +24,62 @@ class OpenId(models.Model):
 
     def get_as_string(self):
         return str(self.int_id)
-
-    def get_docs(self, max=0):
-        if max > 0:
+    
+    
+    def get_docs(self, max=-1):
+        if max >= 0:
             rv = self.my_docs.all().order_by('-id')[:max]
         else:
             rv = self.my_docs.all().order_by('-id')
         return rv
 
-    def get_docs_1(self):
-        return self.get_docs(1)
-
-    def get_docs_3(self):
-        return self.get_docs(3)
-
-    def get_docs_5(self):
-        return self.get_docs(5)
-
+    
     def get_owner_desc(self, can_modify=False):
-        if self.my_offers.all().count() > 0:
-            if can_modify:
-                str_url_key = 'ah-offer-detail'
-            else:
-                str_url_key = 'ah-offer-info'
-            for offer in self.my_offers.all():
-                return OwnerDescription(str_url_key, offer.description, offer.pk)
-            return None
-        if self.my_offer_lines.all().count() > 0:
-            if can_modify:
-                str_url_key = 'ah-offer-detail'
-            else:
-                str_url_key = 'ah-offer-info'
-            for line in self.my_offer_lines.all():
-                return OwnerDescription(str_url_key, line.description, line.offer.pk)
-            return None
-        if self.my_answers.all().count() > 0:
-            if can_modify:
-                str_url_key = 'ah-answer-detail'
-            else:
-                str_url_key = 'ah-answer-info'
-            for answer in self.my_answers.all():
-                return OwnerDescription(str_url_key, answer.description, answer.pk)
-            return None
-        if self.my_user_profs.all().count() > 0:
-            for profile in self.my_user_profs.all():
-                return OwnerDescription('user-profile', profile.user.email)
-            return None
-        if self.my_estab.all().count() > 0:
-            if can_modify:
-                str_url_key = 'project-customer-detail'
-            else:
-                str_url_key = 'project-customer-info'
-            for est in self.my_estab.all():
-                return OwnerDescription(str_url_key, est.establishment, est.customer.pk)
-            return None
-        if self.my_customers.all().count() > 0:
-            if can_modify:
-                str_url_key = 'project-customer-detail'
-            else:
-                str_url_key = 'project-customer-info'
-            for cust in self.my_customers.all():
-                return OwnerDescription(str_url_key, cust.customer_name, cust.pk)
-            return None
+        """
+        What does this OpenID belong to? Let's try checking
+        all possibilities, one by one.
+        """
+        
+        url_key = 'ah-offer-detail' if can_modify else 'ah-offer-info'
+        offer = self.my_offers.first()
+        if offer:
+            return OwnerDescription(url_key, 
+                                    offer.description, offer.pk)
+        line = self.my_offer_lines.first()
+        if line:
+            return OwnerDescription(url_key, 
+                                    line.description, line.offer.pk)
+        
+        answer = self.my_answers.first()
+        if answer:
+            url_key = 'ah-answer-detail' if can_modify else 'ah-answer-info'
+            return OwnerDescription(url_key,
+                                    answer.description, answer.pk)
+        
+        profile = self.my_user_profs.first()
+        if profile:
+            url_key = 'user-profile'
+            return OwnerDescription(url_key,
+                                    profile.user.email)
+        
+        estab = self.my_estab.first()
+        if estab:
+            url_key = 'project-customer-detail' if can_modify else 'project-customer-info'
+            return OwnerDescription(
+                url_key, 
+                estab.establishment, estab.customer.pk
+            )
+        
+        customer = self.my_customers.first()
+        if customer:
+            url_key = 'project-customer-detail' if can_modify else 'project-customer-info'
+            return OwnerDescription(url_key, 
+                                    customer.customer_name, customer.pk)
+        
+        # The rare case that it doesn't belong to anyone
         return None
 
+    
     def user_can_acces_open_id(self, obj_user):
         if self.my_offers.all().count() > 0:
             for offer in self.my_offers.all():
