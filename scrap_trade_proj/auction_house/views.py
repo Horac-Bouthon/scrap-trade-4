@@ -771,13 +771,14 @@ def ah_answer_step_create(request, pk):
     if request.method == 'POST':
         form = StepUpdateForm(request.POST)
         if form.is_valid():
-            new = Step(
+            new = StepState(
                 state = form.cleaned_data['state'],
                 offer_link = None,
                 answer_link = answer,
                 changed_by = request.user,
             )
             new.save()
+            
             success_message = _('Step has been added!')
             messages.success(request, success_message)
             return redirect('ah-answer-update', pk)
