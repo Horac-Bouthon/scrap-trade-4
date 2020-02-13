@@ -555,7 +555,16 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
 
         answer = kwargs.get('object')
         answer.refresh_total_price()
-
+        
+        state_key = answer.actual_state.state_key
+        
+        context.update({
+            'answer': answer,
+            'customer': answer.owner,  # @todo; Should we show logo of answer owner or the offer owner??
+            'offer': answer.ah_offer,
+            'state': state_key.replace('answer_', ''),
+        })
+        
         context.update({
             'state_new': get_state('answer_new'),
             'state_confirmed': get_state('answer_confirmed'),
@@ -564,6 +573,52 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
             'state_closed': get_state('answer_closed'),
             'state_canceled': get_state('answer_canceled'),
         })
+
+        button_list = [
+            {
+                'text': _("Auction"),
+                'href': reverse('ah-customer-auction',
+                                kwargs={'pk': answer.owner.pk}),
+                'icon': 'arrow-left',
+                'type': 'secondary'
+            }, {
+                'text': _("Documents"),
+                'href': reverse('doc-repo-dokument-list',
+                                kwargs={'oid': answer.open_id.int_id}),
+                'icon': 'file-text',
+            }
+        ]
+    
+        if test_poweruser(self.request.user) or  \
+           state_key in ['answer_new', 'answer_successful', 'answer_accepted']:
+            button_list.append({
+                'text': _("Edit answer"),
+                'href': reverse('ah-answer-customer-update',
+                                kwargs={'pk': answer.pk}),
+                'icon': 'edit-3',
+            })
+        
+        if test_poweruser(self.request.user):
+            button_list.append({
+                'text': _("Edit answer"),
+                'href': reverse('ah-answer-update',
+                                kwargs={'pk': answer.pk}),
+                'icon': 'edit-3',
+                'type': 'poweruser',
+            })
+        if answer.ah_offer.auction_url != "":
+            button_list.append({
+                'href': answer.ah_offer.auction_url,
+                'text': _("Online auction"),
+                'icon': 'airplay',
+                #'type': 'poweruser',
+            })
+        context['content_header'] = {
+            'title': answer.description + ' | ' + _("Answer"),
+            'desc': '%s "%s"' % (_("Detailed view of an answer to:"),
+                               answer.ah_offer.description),
+            'button_list': button_list
+        }
 
         return context
 
@@ -747,6 +802,7 @@ def ah_offer_step_create(request, pk):
                 changed_by = request.user,
             )
             new.save()
+            
             success_message = _('Step has been added!')
             messages.success(request, success_message)
             return redirect('ah-offer-update', pk)

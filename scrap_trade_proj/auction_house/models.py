@@ -124,10 +124,11 @@ class AhOffer(models.Model):
 
     @property
     def actual_state(self):
-        steps = self.my_steps.all().order_by("-created_at")
-        if steps.count() > 0:
-            return steps.first().state
-        return None
+        if self.my_steps.exists():
+            latest_step = self.my_steps.order_by("-created_at").first()
+            return latest_step.state
+        else:
+            return None
 
     def is_equal_state(self, state):
         return (self.actual_state == state)
@@ -337,10 +338,11 @@ class AhAnswer(models.Model):
 
     @property
     def actual_state(self):
-        steps = self.my_steps.all().order_by("-created_at")
-        if steps.count() > 0:
-            return steps.first().state
-        return None
+        if self.my_steps.exists():
+            latest_step = self.my_steps.order_by("-created_at").first()
+            return latest_step.state
+        else:
+            return None
 
     def is_equal_state(self, state):
         return (self.actual_state == state)

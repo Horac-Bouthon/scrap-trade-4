@@ -1,8 +1,6 @@
 {% extends "project_main/base.html" %}
-{% load static %}
 {% load crispy_forms_tags %}
 {% load i18n %}
-
 
 {% block content %}
 
@@ -40,6 +38,9 @@
           </tr>
         {% endfor %}
       </table>
+
+      {% include 'project_main/__no-entries.html' with check=answer_list %}
+      
     </div>
     
   </section>

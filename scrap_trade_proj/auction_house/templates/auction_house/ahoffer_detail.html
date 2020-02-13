@@ -8,24 +8,7 @@
 
   <section class="container">
 
-    <dl>
-      <dt>{% trans "Status:" %}</dt>
-      <dd>{{ offer.actual_state.act_state_name }}</dd>
-    </dl>
-    <div class="d-flex">
-      <dl>
-        {% include 'auction_house/__auction_date.html' with data=object %}
-      </dl>
-      <dl>
-        <dt>{% trans 'Delivery date:' %}</dt>
-        <dd>{{ object.delivery_date|date:"d.m.Y" }}</dd>
-      </dl>
-    </div>
-    <dl>
-      <dt>{% trans 'Minimal total price:' %}</dt>
-      <dd>{{ offer.minimal_total_price }}</dd>
-    </dl>
-
+    {% include 'auction_house/__offer-details.html' %}
 
     <dl>
       <h4>
@@ -159,7 +142,7 @@
         {% endfor %} {# bound answers #}
 
       {% endif %} {# bound_answers.count > 0 #}
-    {% endif %} {# accepted, ready to close, closed #}
+    {% endif %} {# accepted, ready to close, closed #}    
 
     {% if "customers.is_poweruser" in perms %}
       <section class="poweruser">
