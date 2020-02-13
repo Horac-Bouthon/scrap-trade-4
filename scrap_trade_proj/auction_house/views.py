@@ -16,7 +16,8 @@ from .modules.auction import (
 )
 
 from state_wf.models import (
-    StepState,
+    StepState, 
+    Step,
 )
 
 
@@ -771,7 +772,7 @@ def ah_answer_step_create(request, pk):
     if request.method == 'POST':
         form = StepUpdateForm(request.POST)
         if form.is_valid():
-            new = StepState(
+            new = Step(
                 state = form.cleaned_data['state'],
                 offer_link = None,
                 answer_link = answer,
