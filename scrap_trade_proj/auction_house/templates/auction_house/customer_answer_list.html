@@ -5,44 +5,44 @@
 
 
 {% block content %}
-  <article class="media content-section">
-    <a class=""
-      href="{% url 'project-customer-info' customer.pk %}" target="_blank">
-      <img class="rounded-circle customer-logo" src="{{ customer.customer_logo.url }}">
-    </a>
-    <div class="media-body">
-      <h2 class="customer-name">{{ customer.customer_name }} ({{ selection }})</h2>
-      {% trans "Back to auction" as var_back %}
-      <div class="auction_nav">
-        <a class="btn btn-outline-secondary" href="{% url 'ah-customer-auction' customer.pk %}">{{ var_back }}</a>
-        <p></p>
-      </div>
-      <table class="table_offer">
-        <tr class="table_offer">
-          {% trans "ID" as var_o_n %}
-          <th class="th_offer table_offer">{{ var_o_n }}</th>
-          {% trans "Description" as var_des %}
-          <th class="th_offer table_offer">{{ var_des }}</th>
-          {% trans "Creator" as var_crea %}
-          <th class="th_offer table_offer">{{ var_crea }}</th>
-          {% trans "Created at" as var_cre_at %}
-          <th class="th_offer table_offer">{{ var_cre_at }}</th>
+
+  {% include 'project_main/__content-header.html' %}
+  
+  <section class="container">
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>{% trans "ID" %}</th>
+          <th>{% trans "Description" %}</th>
+          <th>{% trans "Creator" %}</th>
+          <th>{% trans "Created at" %}</th>
+          <th>{# icons #}</th>
         </tr>
+        
         {% for answer in answer_list %}
-        <tr class="table_offer">
-          <td class="td_offer table_offer"> {{ answer.pk }} </td>
-          <td class="td_offer table_offer">
-            {% trans "Click to update the offer" as var_hint1 %}
-            <a class="customer-detail-content" href="{% url 'ah-answer-detail' answer.pk %}"
-              data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ answer.description }}</a>
-          </td>
-          <td class="td_offer table_offer"> {{ answer.creator.name }}</td>
-          <td class="td_offer table_offer"> {{ answer.created_at }}</td>
-        </tr>
+          <tr>
+            <td>{{ answer.pk }}</td>
+            <td>{{ answer.description }}</td>
+            <td>{{ answer.creator.name }}</td>
+            <td>{{ answer.created_at }}</td>
+            <td class="icon-wrap">
+              <div>
+                {% url 'ah-answer-detail' answer.pk as href %}
+                {% trans "Click to update the answer" as title %}
+                {% with cls='btn-primary btn-icon-only' %}
+                  {% with icon='edit-3' %}
+                    {% include 'project_main/__btn.html' %}
+                  {% endwith %}
+                {% endwith %}
+              </div>
+            </td>
+          </tr>
         {% endfor %}
       </table>
     </div>
-  </article>
+    
+  </section>
 {% endblock content %}
 
 {% block spec_action %}

@@ -609,14 +609,27 @@ def ah_customer_answer_waiting_offers(request, pk):
 
 @user_belong_customer
 def ah_customer_answer_by_state_key(request, pk, sk):
+    
     customer = get_object_or_404(Customer, id = pk)
-    title2 = tr.pgettext('ah_customer_answer_by_state_key-title', 'answers-by-state')
-    selected_state = get_state(sk)
+    translated_state_key = get_state(sk).get_state_name_plural()
+    filtered_answers = filter_by_state(customer.owned_answers, sk).order_by('-pk')
+    
     context = {
-        'title': title2,
-        'selection': selected_state.get_state_name_plural(),
+        'answer_list': filtered_answers,
+        
         'customer': customer,
-        'answer_list': filter_by_state(customer.owned_answers, sk).order_by('-pk'),
+        'content_header': {
+            'title': "%s (%s)" % (translated_state_key, 
+                                customer.customer_name),
+            'desc': _("List of answers"),
+            'button_list': [{
+                'text': _('Auction'),
+                'href': reverse('ah-customer-auction',
+                                kwargs={'pk': customer.pk}),
+                'icon': 'arrow-left',
+                'type': 'secondary',
+            }],
+        }
     }
     return render(request, 'auction_house/customer_answer_list.html', context)
 
