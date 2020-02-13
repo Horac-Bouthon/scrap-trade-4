@@ -784,9 +784,10 @@ import django.utils.timezone as django_timezone
 def realtime_auction(request):
     
     offer = AhOffer.objects.first()  #mock
+    answer_list = AhAnswer.objects.filter(ah_offer=offer)
     
     context = {
-        'offer': offer, 'object': offer,
+        'offer': offer,
         'customer': offer.owner,
         'content_header': {
             'title': offer.description,
