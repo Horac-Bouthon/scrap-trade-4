@@ -453,14 +453,18 @@ def ah_offers_change_state(request, pk, pk2, pk3):
     set_state = StepState.objects.get(id=pk3)
     
     # @todo; Is there any permission checking offer state changes?
+    
+    if request.method == 'GET':
+        pass  # Don't do anything, just ask for accept -> POST
 
-    if request.method == 'POST':
+    elif request.method == 'POST':
         offer_add_state(offer, set_state, request.user)
+        
         if set_state.state_key == 'offer_confirmed':
             # TODO: zmenit na skutecnou adresu online aukce
             offer.auction_url = request.build_absolute_uri(reverse('ah-offer-detail', kwargs={'pk': offer.id}))
             offer.save()
-        if set_state.state_key == 'offer_canceled':
+        elif set_state.state_key == 'offer_canceled':
             state_send = get_state('answer_canceled')
             my_answers = filter_by_state(offer.answers, 'answer_confirmed')
             for answer in my_answers.all():
@@ -492,8 +496,11 @@ def ah_answer_change_state(request, pk, pk2, pk3):
     customer = get_object_or_404(Customer, id = pk)
     answer = get_object_or_404(AhAnswer, id = pk2)
     set_state = StepState.objects.get(id=pk3)
-
-    if request.method == 'POST':
+    
+    if request.method == 'GET':
+        pass  # Don't do anything, just ask for accept -> POST
+    
+    elif request.method == 'POST':
         answer_add_state(answer, set_state, request.user)
         if set_state.state_key == 'answer_accepted':
             state_send = get_state('offer_accepted')
@@ -505,7 +512,7 @@ def ah_answer_change_state(request, pk, pk2, pk3):
                     place='auction_house.view - ah_answer_change_state() - answer_accepted',
                     item=answer.ah_offer,
                 )
-        if set_state.state_key == 'answer_closed':
+        elif set_state.state_key == 'answer_closed':
             state_send = get_state('offer_ready_to_close')
             offer_add_state(answer.ah_offer, state_send, request.user)
             if state_send.send_ntf:
@@ -515,16 +522,15 @@ def ah_answer_change_state(request, pk, pk2, pk3):
                     place='auction_house.view - ah_answer_change_state() - answer_closed',
                     item=answer.ah_offer,
                 )
-        if set_state.state_key == 'answer_canceled' and answer.is_bound:
+        elif set_state.state_key == 'answer_canceled' and answer.is_bound:
             resurect_auction(answer.ah_offer)
             set_auction(request, answer.ah_offer)
+                
         success_message = _('Your answer has change the state!')
         messages.success(request, success_message)
         return redirect('ah-customer-auction', pk)
 
-    title2 = tr.pgettext('ah_answer_change_state-title', 'offer-state')
     context = {
-        'title': title2,
         'customer': customer,
         'answer': answer,
         'state': set_state,

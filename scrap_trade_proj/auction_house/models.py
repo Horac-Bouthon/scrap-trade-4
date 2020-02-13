@@ -138,7 +138,7 @@ class AhOffer(models.Model):
     def refresh_total_price(self):
         total = 0
         for line in self.lines.all():
-             total = total + (line.amount * line.minimal_ppu)
+            total = total + (line.amount * line.minimal_ppu)
         self.minimal_total_price = total
         self.save()
 
@@ -149,16 +149,12 @@ class AhOfferLine(models.Model):
         max_length=200,
         verbose_name=_('Description'),
         help_text=_("Offers line description"),
-        null=True,
-        blank=True,
     )
     amount =  models.DecimalField(
         max_digits = 10,
         decimal_places = 4,
         verbose_name=tr.pgettext_lazy('AhOfferLine definition', 'Amount'),
         help_text=tr.pgettext_lazy('AhOfferLine definition','Quantity of material'),
-        null=True,
-        blank=True,
     )
     offer = models.ForeignKey(
         'AhOffer',
@@ -166,8 +162,6 @@ class AhOfferLine(models.Model):
         verbose_name=tr.pgettext_lazy('AhOfferLine definition', 'Offer'),
         help_text=tr.pgettext_lazy('AhOfferLine definition','Link to Offer'),
         related_name="lines",
-        null=True,
-        blank=True,
     )
     mat_class = models.ForeignKey(
         'AhMatClass',
@@ -175,8 +169,6 @@ class AhOfferLine(models.Model):
         verbose_name=tr.pgettext_lazy('AhOfferLine definition', 'Material class'),
         help_text=tr.pgettext_lazy('AhOfferLine definition','Link to Material class'),
         related_name="used_lines",
-        null=True,
-        blank=True,
     )
     minimal_ppu =  models.DecimalField(
         max_digits = 7,
@@ -191,7 +183,6 @@ class AhOfferLine(models.Model):
         verbose_name=tr.pgettext_lazy('UserProfile definition', 'Open id'),
         help_text=tr.pgettext_lazy('UserProfile definition','Link to integration key'),
         related_name='my_offer_lines',
-        null=True, blank=True,
     )
 
     class Meta:
