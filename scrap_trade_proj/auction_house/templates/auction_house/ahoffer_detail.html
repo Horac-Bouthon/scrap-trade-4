@@ -90,6 +90,14 @@
         {% include 'project_main/__no-entries.html' with check=offer.lines.all %}
 
       </div>
+
+      {% if state == 'new' %}
+        {% url 'ah-offer-line-create' offer.pk as href %}
+        {% trans "Add a line to offer" as text %}
+        {% with icon='plus' cls='btn-primary my-2' %}
+          {% include 'project_main/__btn.html' %}
+        {% endwith %}
+      {% endif %}
     </dl>
 
 

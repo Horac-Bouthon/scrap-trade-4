@@ -3,96 +3,111 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 
-{% block style %}
-<style>
-  body {
-    {% if project %}
-      background-image: url("{{ project.project_background.url }}");
-    {% else %}
-      background-image: url("/media/default-project-background.jpg");
-    {% endif %}
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-</style>
-{% endblock style %}
-
 
 {% block content %}
+  
   {% include 'project_main/__content-header.html' %}
-  <section class="container">
-    <div class="container">
 
-      <table class="doc_list">
-        <tr>
-          <th class="thumbnail">{% trans "Document" %}</th>
-          <th class="icons"></th>
-          <th class="">{% trans "Description" %}</th>
-        </tr>
-         {% for doc in docs %}
-            <tr class="table_offer" >
-              <td>
-              <!-- thumbnail -->
-                {% if not doc.is_file %}
-                  {% trans "Document detail" as var_hint3 %}
-                  <a class="" href="{{ doc.file.url }}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}" target="_blank">
-                    {% if doc.thumbnail %}
-                      <img class="doc_thumbnail" src="{{ doc.thumbnail.url }}">
+  
+  <section class="container">
+
+
+    <h4 class="section-header mb-4">
+      {% trans "Document list:" %}
+      <span class="text-muted small">
+        ({{ docs.count }})
+      </span>
+    </h4>
+    
+    <ul class="list-unstyled">
+      {% for doc in docs %}
+        <li class="bg-white border rounded shadow-sm
+                   p-3 my-2">
+
+          <div class="d-flex">
+            <div class="align-self-start flex-fill">
+              <dl class="p-0">
+                <dt>{% trans "Document name:" %}</dt>
+                <dd>
+                  {{ doc.doc_name }}
+
+                  <div class="badge badge-primary ml-1">
+                    {% if doc.is_picture %}
+                      {% trans "Picture" %}
+                    {% elif doc.is_pdf %}
+                      PDF
                     {% else %}
-                      {% if doc.is_picture %}
-                        <img class="doc_thumbnail" src="/media/icons/def_picture_icon.png">
-                      {% endif %}
-                      {% if doc.is_pdf %}
-                        <img class="doc_thumbnail" src="/media/icons/def_PDF_icon.png">
-                      {% endif %}
+                      {% trans "File" %}
                     {% endif %}
-                  </a>
-                {% else %}
-                  {% trans "Download document" as var_hint3 %}
-                  <a class="" href="{{ doc.file.url }}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}" download>
-                    <img class="doc_thumbnail" src="/media/icons/def_file_icon.png">
-                  </a>
-                {% endif %}
-                  <div class="">
-                      {{ doc.doc_name }}
                   </div>
-              </td>
-              <!-- icons fields -->
-              <td>
-                {% if not doc.is_file %}
-                  <div class="">
-                    {% with doc.file.url as href %}
-                      {% include 'doc_repo/__btn-icon-detail.html' %}
-                    {% endwith %}
-                  </div>
-                {% endif %}
-                <div class="">
-                  {% with doc.file.url as href %}
-                    {% include 'doc_repo/__btn-icon-download.html' %}
-                  {% endwith %}
-                </div>
-                {% if modify %}
-                  <div class="">
-                    {% url 'doc-repo-dokument-modify' doc.pk as href%}
-                    {% include 'project_main/__btn-icon-edit.html' %}
-                  </div>
-                  <div class="">
-                    {% url 'doc-repo-dokument-delete' doc.pk as href %}
-                    {% include 'project_main/__btn-icon-delete.html' %}
-                  </div>
-                {% endif %}
-              </td>
-              <!-- description -->
-              <td>
-                <div class="">
+                </dd>
+                
+                <dt>{% trans "Description:" %}</dt>
+                <dd class="small">
                   {{ doc.doc_description|linebreaks }}
+                </dd>
+              </dl>
+              
+
+              <section>
+                <div class="mb-1 btn-group">
+                  {% if not doc.is_file %}
+                    <a class="btn btn-outline-primary"
+                       href="{{ doc.file.url }}"
+                       target="_blank">
+                      <i data-feather="external-link"></i>
+                      {% trans "Open in new tab" %}
+                    </a>
+                  {% endif %}
+
+                  <a class="btn btn-outline-primary"
+                     href="{{ doc.file.url }}"
+                     download {# <- Important attribute! #}>
+                    <i data-feather="download"></i>
+                    {% trans "Download" %}
+                  </a>
                 </div>
-              </td>
-            </tr>
-        {% endfor %}
-      </table>
-      <br>
-    </div> <!-- container -->
+                
+                <br/> {# Seperate button groups onto their own lines #}
+                
+                {% if modify %}
+                  <div class="btn-group">
+                    <a class="btn btn-outline-primary"
+                       href="{% url 'doc-repo-dokument-modify' doc.pk %}">
+                      <i data-feather="edit-3"></i>
+                      {% trans "Edit description" %}
+                    </a>
+                    <a class="btn btn-outline-danger"
+                       href="{% url 'doc-repo-dokument-delete' doc.pk %}">
+                      <i data-feather="trash-2"></i>
+                      {% trans "Delete" %}
+                    </a>
+                  </div>
+                {% endif %}
+              </section>
+            </div>
+
+            
+            <div class="align-self-stretch">
+              {# Document thumbnail #}
+              {% if not doc.is_file and doc.thumbnail %}
+                <div class="doc-thumb"
+                     style="background-image: 
+                            url('{{ doc.thumbnail.url }}');">
+                </div>
+              {% else %}
+                <div class="doc-thumb"
+                     style="background-image: 
+                            url('/media/icons/def_file_icon.png');">
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          
+        </li>
+      {% endfor %}
+    </ul>
+
   </section>
 
 {% endblock content %}

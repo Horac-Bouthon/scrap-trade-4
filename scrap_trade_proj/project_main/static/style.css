@@ -187,6 +187,22 @@ a.article-title:hover {
 }
 
 
+/* Additional styles for tips. 
+   (blocks of small text describing quirky functionality) */
+div.tip {
+  /* Small text that you can ignore but can still read */
+  font-size: 90%;
+  color: #5a6a6a;
+  /* Text has to be in a narrow easy-to-read column */
+  max-width: 32em;
+
+  /* Pop the text out with a side-border */
+  border-left: 2px solid #5a6a6a;
+  padding: 0.15rem 0.5rem;
+  margin: 1rem 0;
+}
+
+
 /* Login popup */
 #LOGIN_POPUP {
   position: fixed;
@@ -200,6 +216,19 @@ a.article-title:hover {
 
 #LOGIN_POPUP fieldset > .form-group {
   padding: 0 0.5rem
+}
+
+
+
+/* Document thumbnails */
+.doc-thumb {
+  background-image: none;  /* Set with inline HTML style */
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  width: 120px;
+  height: 100%;
+  min-height: 130px;
 }
 
 
