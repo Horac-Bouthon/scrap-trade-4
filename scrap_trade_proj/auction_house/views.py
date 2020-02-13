@@ -283,6 +283,7 @@ def ah_offer_line_update(request, pk, pk2):
             'title': " | ".join([offer.description, _('Edit line')]),
             'desc': _('Edit a specific line in the offer.')
         },
+        'page_type': 'update',  # Same template is used for update and create
     }
     return render(request, 'auction_house/offer_line_form.html', context)
 
@@ -323,7 +324,8 @@ def ah_offer_line_create(request, pk):
                 'type': 'secondary',
                 'href': reverse('ah-offer-detail', args=[offer.pk]),
             }],
-        }
+        },
+        'page_type': 'create',  # Same template is used for update and create
     }
     return render(request, 'auction_house/offer_line_form.html', context)
 
@@ -563,15 +565,6 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
             'customer': answer.owner,  # @todo; Should we show logo of answer owner or the offer owner??
             'offer': answer.ah_offer,
             'state': state_key.replace('answer_', ''),
-        })
-        
-        context.update({
-            'state_new': get_state('answer_new'),
-            'state_confirmed': get_state('answer_confirmed'),
-            'state_successful': get_state('answer_successful'),
-            'state_accepted': get_state('answer_accepted'),
-            'state_closed': get_state('answer_closed'),
-            'state_canceled': get_state('answer_canceled'),
         })
 
         button_list = [
