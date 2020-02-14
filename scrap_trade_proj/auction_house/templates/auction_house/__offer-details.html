@@ -2,14 +2,38 @@
 
 {% if offer %}
 
+  <div class="d-flex flex-wrap">
+    <dl>
+      <dt>{% trans "Owner:" %}</dt>
+      <dd>{{ offer.owner.customer_name }}</dd>
+    </dl>
+    <dl>
+      <dt>{% trans "Name:" %}</dt>
+      <dd>{{ offer.description }}</dd>
+    </dl>
+  </div>
   
   <dl>
-    <dt>{% trans "Offer owner:" %}</dt>
-    <dd>{{ offer.owner.customer_name }}</dd>
-    
     <dt>{% trans "Status:" %}</dt>
     <dd>{{ offer.actual_state.act_state_name }}</dd>
+
+    {% with state=offer.actual_state.state_key %}    
+      {# @todo; The status needs a tip about what the state actually means #}
+      {# for the user in terms of interaction. We can't let a user get #}
+      {# confused by something like "Why did the button disappear?" #}
+      {# and get a call to support. #}
+      
+      {# This tip text would have to be included in the state model #}
+      {# itself -- including translations. If a new state is made, #}
+      {# we might need the tip text for that, which is not easy to do. #}
+
+      {# That being said, basic tips like (confirmed -> you can't edit) #}
+      {# can be "hard-coded" because their behavior is also hard-coded. #}
+    {% endwith %}
+
+    
   </dl>
+
   
   <div class="d-flex">
     <dl>

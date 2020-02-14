@@ -184,6 +184,7 @@ class AhOfferLine(models.Model):
         verbose_name=tr.pgettext_lazy('UserProfile definition', 'Open id'),
         help_text=tr.pgettext_lazy('UserProfile definition','Link to integration key'),
         related_name='my_offer_lines',
+        null=True, blank=True,
     )
 
     class Meta:
