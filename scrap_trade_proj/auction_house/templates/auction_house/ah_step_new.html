@@ -1,30 +1,39 @@
-.{% extends "project_main/base.html" %}
-{% load static %}
+{% extends "project_main/base.html" %}
 {% load crispy_forms_tags %}
 {% load i18n %}
 
 
 {% block content %}
-  <article class="media content-section">
-    <a href="{% url 'project-customer-info' customer.pk %}" target="_blank">
-      <img class="rounded-circle customer-logo" src="{{ customer.customer_logo.url }}">
-    </a>
-    <div class="media-body">
-      <h2 class="customer-name">{{ offer.description }}</h2>
-      <form class="" method="POST" enctype="multipart/form-data">
+  <div class="page-poweruser">
+  
+    <section class="container pt-3">
+
+      <h4 class="section-header">
+        {% trans "Add a new step to offer" %}
+      </h4>
+      <form method="POST">
         {% csrf_token %}
         <fieldset class="form-group">
+          
           {{ form|crispy }}
-        </fieldset>
-        <div class="form-group">
+          
           {% trans "Create" as var_create %}
           <button class="btn btn-outline-info" type="submit">{{ var_create }}</button>
           {% trans "Cancel" as var_cancel %}
           <a class="btn btn-outline-secondary" href="{% url update_url object.pk %}">{{ var_cancel }}</a>
-        </div>
+
+        </fieldset>
+
       </form>
-    </div>
-  </article>
+      
+      <h4 class="section-header">
+        {% trans "Offer information" %}
+      </h4>
+      {% include 'auction_house/__offer-details.html' with offer=object %}
+
+    </section>
+    
+  </div>
 {% endblock content %}
 
 {% block spec_action %}
