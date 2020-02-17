@@ -603,9 +603,9 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
                 'icon': 'edit-3',
             })
 
-        if answer.ah_offer.auction_url != "":
+        if answer.auction_url != "":
             button_list.append({
-                'href': answer.ah_offer.auction_url,
+                'href': answer.auction_url,
                 'text': _("Online auction"),
                 'icon': 'airplay',
                 #'type': 'poweruser',
