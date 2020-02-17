@@ -73,15 +73,8 @@
 
         <section class="flex-fill">
           <h4 class="section-header">
-            {% trans "Add a bid" %}
+            {% trans "Offer detail" %}
           </h4>
-
-          <div class="">
-            <dl>
-              <dt>{% trans 'Total price:' %}</dt>
-              <dd>{{ answer.total_price }}</dd>
-            </dl>
-          </div>
 
           <table class="table_lines">
             <tr class="table_lines">
@@ -92,21 +85,19 @@
               {% trans "Amount" as var_amounth %}
               <th class="th_lines table_lines">{{ var_amounth }}
               </th>
-              {% trans "Price per unit" as var_ppu %}
+              {% trans "Minimal price per unit" as var_ppu %}
               <th class="th_lines table_lines">{{ var_ppu }}
               </th>
             </tr>
-            {% trans "Click to update line" as var_hint3 %}
-             {% for line_o in  lines_obj %}
-               <tr class="table_lines">
-                 <td class="{{ line_o.str_class }}">{{ line_o.ah_a_line.offer_line.description }}</td>
-                 <td class="{{ line_o.str_class }}"> {{ line_o.ah_a_line.offer_line.amount }} {{ line_o.ah_a_line.offer_line.mat_class.measurement_unit }} </td>
-                 <td class="{{ line_o.str_class }}">
-                   {% trans "Click to update price per unit" as var_hint3 %}
-                   <a class="{{ line_o.str_class }}" href="{% url 'ah-customer-answers-online-ppu' answer.pk line_o.ah_a_line.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}"> {{ line_o.ah_a_line.ppu }} </a>
-                 </td>
-               </tr>
-             {% endfor %}
+            {% for line in  offer.lines.all %}
+              <tr class="table_lines">
+                <td class="td_lines table_lines">{{ line.description }}</td>
+                <td class="td_lines table_lines"> {{ line.amount }} {{ line.mat_class.measurement_unit }} </td>
+                <td class="td_lines table_lines">
+                  {{ line.minimal_ppu }}
+                </td>
+              </tr>
+            {% endfor %}
           </table>
 
 

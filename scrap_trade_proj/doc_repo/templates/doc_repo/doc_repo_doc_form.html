@@ -6,15 +6,15 @@
 {% block content %}
 
   {% include 'project_main/__content-header.html' %}
-  
+
   <section class="container">
-    
+
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       <fieldset>
-        
+
         {{ form|crispy }}
-        
+
         <button class="btn btn-outline-info"
                 type="submit">
           {% trans "Send" %}
@@ -27,7 +27,7 @@
     </form>
 
     <div class="tip">
-      {% trans "Tip: If you'd like to replace the uploaded file, you have to make a new document (and delete this one, if needed)." %}
+      {% trans "Tip: If you'd like to replace the uploaded file, you have to create a new document (and delete this one, if needed)." %}
     </div>
 
   </section>

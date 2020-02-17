@@ -14,6 +14,9 @@ from .modules.auction import (
     get_auction_list_control_obj,
     ntf_send_from_view,
     OnlineBestBet,
+    get_online_info_context,
+    get_online_context,
+    answer_update_ppu,
 )
 
 from state_wf.models import (
@@ -459,8 +462,7 @@ def ah_offers_change_state(request, pk, pk2, pk3):
     if request.method == 'POST':
         offer_add_state(offer, set_state, request.user)
         if set_state.state_key == 'offer_confirmed':
-            # TODO: zmenit na skutecnou adresu online aukce
-            offer.auction_url = request.build_absolute_uri(reverse('ah-offer-detail', kwargs={'pk': offer.id}))
+            offer.auction_url = request.build_absolute_uri(reverse('realtime-auction-info', kwargs={'pk': offer.id}))
             offer.save()
         if set_state.state_key == 'offer_canceled':
             state_send = get_state('answer_canceled')
@@ -670,16 +672,7 @@ def ah_answer_line_update_ppu(request, pk, pk2):
         form = AhAnwserLinePpuUpdateForm(request.POST, instance=answer_line)
         if form.is_valid():
             form.save()
-            answer_line = AhAnswerLine.objects.filter(id = pk2).first()
-            answer_line.total_price = answer_line.ppu * answer_line.offer_line.amount
-            answer_line.save()
-            #todo; Aggregates :: Sum()
-            sum = 0
-            answer = AhAnswer.objects.filter(id = pk).first()
-            for line in answer.my_lines.all():
-                sum += line.total_price
-            answer.total_price = sum
-            answer.save()
+            answer_update_ppu(answer_line)
             success_message = _('Your line has been updated!')
             messages.success(request, success_message)
             return redirect('ah-answer-detail', pk)
@@ -796,60 +789,11 @@ def ah_answer_step_create(request, pk):
 
 
 ## REALTIME AUCTION
-import django.utils.timezone as django_timezone
 
-@login_required
-def realtime_auction(request, pk, pk2):
-
-    offer = AhOffer.objects.get(id = pk)  #mock
-    now = django_timezone.now()
-    best_bits = offer.answers.all().order_by('-total_price')[:4]
-    list_bb = list()
-    answer = AhAnswer.objects.get(id = pk2)
-
-    for index in range(len(best_bits)):
-        str_class = 'bid__item'
-        if index == 0:
-            str_class = str_class + ' bid__item--best'
-        if best_bits[index].id == pk2:
-            str_class = str_class + ' bid__item--owned'
-        obj = OnlineBestBet(
-            best_bits[index].total_price,
-            str_class,
-        )
-        list_bb.append(obj)
-
-    print('best_bits = {}'.format(best_bits))
-    print('list_bb = {}'.format(list_bb))
-
-    if now < offer.auction_start:
-        str_arriv = 'too_soon'
-    elif now > offer.auction_end:
-        str_arriv = 'too_late'
-    elif offer.actual_state == StepState.objects.get(state_key = 'offer_in_auction'):
-        str_arriv = 'ok'
-    else:
-        str_arriv = 'too_soon'
-
-    context = {
-        'offer': offer, 'object': answer,
-        'answer': answer,
-        'customer': offer.owner,
-        'arrival': str_arriv,
-        'content_header': {
-            'title': offer.description,
-            'desc': _("Online auction"),
-        },
-        'list_bb': list_bb,
-    }
-
-    # 'arrival': 'ok',
-    #mock = {  #mock
-    #    'arrival': 'too_late',
-    #    'start_datetime': django_timezone.now(),
-    #}
-    #context.update(mock)
-
+#@login_required
+@user_belong_answer
+def realtime_auction(request, pk2, pk):
+    context = get_online_context(pk2, pk)
     return render(request, 'auction_house/realtime_auction.html', context)
 
 
@@ -863,16 +807,7 @@ def ah_answer_online_update_ppu(request, pk, pk2):
         form = AhAnwserLinePpuUpdateForm(request.POST, instance=answer_line)
         if form.is_valid():
             form.save()
-            answer_line = AhAnswerLine.objects.filter(id = pk2).first()
-            answer_line.total_price = answer_line.ppu * answer_line.offer_line.amount
-            answer_line.save()
-            #todo; Aggregates :: Sum()
-            sum = 0
-            answer = AhAnswer.objects.filter(id = pk).first()
-            for line in answer.my_lines.all():
-                sum += line.total_price
-            answer.total_price = sum
-            answer.save()
+            answer_update_ppu(answer_line)
             success_message = _('Your line has been updated!')
             messages.success(request, success_message)
             return redirect('realtime-auction', answer.ah_offer.pk, answer.pk)
@@ -887,3 +822,8 @@ def ah_answer_online_update_ppu(request, pk, pk2):
         'min_price': answer_line.offer_line.minimal_ppu,
     }
     return render(request, 'auction_house/answer_line_form.html', context)
+
+@login_required
+def realtime_auction_info(request, pk):
+    context = get_online_info_context(pk)
+    return render(request, 'auction_house/realtime_auction_info.html', context)

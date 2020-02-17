@@ -20,7 +20,8 @@ from customers.models import (
     Customer,
 )
 from django.utils.dateparse import parse_datetime
-from django.utils.timezone import is_aware, make_aware
+import django.utils.timezone as django_timezone
+
 from datetime import (
     date,
     datetime,
@@ -82,6 +83,23 @@ class OnlineBestBet:
     def __str__(self):
         return "{} --- {}')"\
             .format(self.total_price, self.str_class)
+
+class OnlineAnswerLine:
+
+    def __init__(self,
+                 ah_a_line,
+                 str_class="",
+                 ):
+        self.ah_a_line = ah_a_line
+        self.str_class = str_class
+
+    def __repr__(self):
+        return "OnlineAnswerLine({}, '{}')"\
+            .format(self.ah_a_line, self.str_class)
+
+    def __str__(self):
+        return "{} --- '{}')"\
+            .format(self.ah_a_line, self.str_class)
 
 
 def resurect_auction(par_offer):
@@ -206,14 +224,14 @@ def set_auction(request, par_offer, par_answer_state):
 
 def make_auctions(request, par_ref_dt):
     dt_ref = parse_datetime(par_ref_dt)
-    if not is_aware(dt_ref):
-        dt_ref = make_aware(dt_ref)
+    if not django_timezone.is_aware(dt_ref):
+        dt_ref = django_timezone.make_aware(dt_ref)
     print('make auction at {}'.format(dt_ref))
     my_offers = filter_by_state(AhOffer.objects.all(), 'offer_confirmed')
     for offer in my_offers:
         auction_dt = datetime.combine(offer.auction_date, datetime.min.time())
-        if not is_aware(auction_dt):
-            auction_dt = make_aware(auction_dt)
+        if not django_timezone.is_aware(auction_dt):
+            auction_dt = django_timezone.make_aware(auction_dt)
         if auction_dt <= dt_ref:
             set_auction(request, offer, 'answer_confirmed')
         else:
@@ -238,7 +256,7 @@ def online_manager(request, par_ref_dt):
             start_auction(request, offer)
     return
 
-#-------------------------------- offer views
+#-------------------------------- house views
 def offer_to(par_customer):
     return Customer.objects.exclude(id = par_customer.pk)
 
@@ -292,7 +310,7 @@ def customer_answer_create(request, customer, offer, user, data):
         changed_by = user,
     )
     new.save()
-    new.auction_url = request.build_absolute_uri(reverse('realtime-auction', kwargs={'pk': offer.id, 'pk2': new.id}))
+    new.auction_url = request.build_absolute_uri(reverse('realtime-auction', kwargs={'pk': new.id, 'pk2': offer.id}))
     new.save()
     new_state = StepState.objects.get(state_key='answer_new')
     answer_add_state(new, new_state, user)
@@ -347,6 +365,109 @@ def get_auction_list_control_obj(customer, data_offer, data_answers):
     )
     ret_val.append(obj_answers)
     return ret_val
+
+def get_online_info_context(pk):
+    offer = AhOffer.objects.get(id = pk)
+    now = django_timezone.now()
+    best_bits = offer.answers.all().order_by('-total_price')[:5]
+    list_bb = list()
+    for index in range(len(best_bits)):
+        str_class = 'bid__item'
+        if index == 0:
+            str_class = str_class + ' bid__item--best'
+        obj = OnlineBestBet(
+            best_bits[index].total_price,
+            str_class,
+        )
+        list_bb.append(obj)
+    if now < offer.auction_start:
+        str_arriv = 'too_soon'
+    elif now > offer.auction_end:
+        str_arriv = 'too_late'
+    elif offer.actual_state == StepState.objects.get(state_key = 'offer_in_auction'):
+        str_arriv = 'ok'
+    else:
+        str_arriv = 'too_soon'
+    context = {
+        'offer': offer, 'object': offer,
+        'customer': offer.owner,
+        'arrival': str_arriv,
+        'content_header': {
+            'title': offer.description,
+            'desc': _("Online auction info"),
+        },
+        'list_bb': list_bb,
+    }
+    return context
+
+def is_best_line(line):
+    ret_val = False
+    offer_line = line.offer_line
+    best = offer_line.answer_lines.all().order_by('-total_price').first()
+    ret_val = (best == line)
+    return ret_val
+
+def answer_line_in_object(answer):
+    ret_list = list()
+    for line in answer.my_lines.all():
+        if is_best_line(line):
+            str_c = "td_lines table_lines bid__item--best"
+        else:
+            str_c = "td_lines table_lines"
+        obj = OnlineAnswerLine(
+            line,
+            str_c,
+        )
+        ret_list.append(obj)
+    return ret_list
+
+def get_online_context(pk2, pk):
+    offer = AhOffer.objects.get(id = pk2)  #mock
+    now = django_timezone.now()
+    best_bits = offer.answers.all().order_by('-total_price')[:5]
+    list_bb = list()
+    answer = AhAnswer.objects.get(id = pk)
+    lines_object = answer_line_in_object(answer)
+    print("lines_object = {}".format(lines_object))
+    for index in range(len(best_bits)):
+        str_class = 'bid__item'
+        if index == 0:
+            str_class = str_class + ' bid__item--best'
+        if best_bits[index].id == pk:
+            str_class = str_class + ' bid__item--owned'
+        obj = OnlineBestBet(
+            best_bits[index].total_price,
+            str_class,
+        )
+        list_bb.append(obj)
+    if now < offer.auction_start:
+        str_arriv = 'too_soon'
+    elif now > offer.auction_end:
+        str_arriv = 'too_late'
+    elif offer.actual_state == StepState.objects.get(state_key = 'offer_in_auction'):
+        str_arriv = 'ok'
+    else:
+        str_arriv = 'too_soon'
+    context = {
+        'offer': offer, 'object': answer,
+        'answer': answer,
+        'customer': answer.owner,
+        'arrival': str_arriv,
+        'content_header': {
+            'title': offer.description,
+            'desc': _("Online auction"),
+        },
+        'list_bb': list_bb,
+        'lines_obj':lines_object,
+    }
+    return context
+
+def answer_update_ppu(answer_line):
+    answer_line.total_price = answer_line.ppu * answer_line.offer_line.amount
+    answer_line.save()
+    answer_line.answer.refresh_total_price()
+    return
+
 
 #--------------- notification ntf_support
 
