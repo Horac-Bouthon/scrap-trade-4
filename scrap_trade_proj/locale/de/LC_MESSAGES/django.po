@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-11 17:00+0100\n"
+"POT-Creation-Date: 2020-02-17 11:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,49 +19,57 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: auction_house/admin.py:17 auction_house/admin.py:18
+#: auction_house/templates/auction_house/__offerlines-table.html:10
 #: auction_house/templates/auction_house/ahanswer_customer_new.html:53
-#: auction_house/templates/auction_house/ahanswer_detail.html:61
-#: auction_house/templates/auction_house/ahoffer_detail.html:46
-#: auction_house/templates/auction_house/ahoffer_detail.html:175
+#: auction_house/templates/auction_house/ahanswer_detail.html:43
+#: auction_house/templates/auction_house/ahoffer_detail.html:118
 #: auction_house/templates/auction_house/ahoffer_info.html:41
 msgid "Material class"
 msgstr "Material Klasse"
 
-#: auction_house/forms.py:26
+#: auction_house/forms.py:27
+msgid "Amount has to be positive"
+msgstr "Betrag muss positiv sein"
+
+#: auction_house/forms.py:35
+msgid "Unit price has to be positive or zero (= no minimum)"
+msgstr "Stückpreis muss positiv oder null sein (=kein minimum)"
+
+#: auction_house/forms.py:44
 #: auction_house/templates/auction_house/__auction_date.html:4
 #: auction_house/templates/auction_house/ahoffer_info.html:23
 msgid "Auction date:"
 msgstr "Auktionstermin:"
 
-#: auction_house/forms.py:31
+#: auction_house/forms.py:49
+#: auction_house/templates/auction_house/__offer-details.html:42
 #: auction_house/templates/auction_house/ahanswer_customer_new.html:31
-#: auction_house/templates/auction_house/ahanswer_detail.html:44
-#: auction_house/templates/auction_house/ahoffer_detail.html:20
 #: auction_house/templates/auction_house/ahoffer_info.html:29
 #: auction_house/templates/auction_house/realtime_auction.html:61
+#: auction_house/templates/auction_house/realtime_auction_info.html:61
 msgid "Delivery date:"
 msgstr "Liefertermin:"
 
-#: auction_house/models.py:22 auction_house/models.py:149
-#: auction_house/models.py:259
+#: auction_house/models.py:22 auction_house/models.py:150
+#: auction_house/models.py:252
+#: auction_house/templates/auction_house/__offerlines-table.html:9
 #: auction_house/templates/auction_house/ahanswer_customer_new.html:52
-#: auction_house/templates/auction_house/ahanswer_detail.html:59
+#: auction_house/templates/auction_house/ahanswer_detail.html:42
 #: auction_house/templates/auction_house/ahanswer_list.html:13
-#: auction_house/templates/auction_house/ahoffer_detail.html:45
-#: auction_house/templates/auction_house/ahoffer_detail.html:139
-#: auction_house/templates/auction_house/ahoffer_detail.html:174
+#: auction_house/templates/auction_house/ahoffer_detail.html:82
+#: auction_house/templates/auction_house/ahoffer_detail.html:117
 #: auction_house/templates/auction_house/ahoffer_info.html:39
 #: auction_house/templates/auction_house/ahoffer_list.html:15
-#: auction_house/templates/auction_house/customer_answer_list.html:24
+#: auction_house/templates/auction_house/customer_answer_list.html:15
 #: auction_house/templates/auction_house/customer_offer_list.html:18
 #: auction_house/templates/auction_house/customer_waiting_list.html:24
-#: auction_house/templates/auction_house/realtime_auction.html:88
+#: auction_house/templates/auction_house/realtime_auction.html:92
+#: auction_house/templates/auction_house/realtime_auction_info.html:81
 #: customers/models.py:335
-#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:30
 msgid "Description"
 msgstr "Beschreibung"
 
-#: auction_house/models.py:23 auction_house/models.py:260
+#: auction_house/models.py:23 auction_house/models.py:253
 msgid "Offers description"
 msgstr "Angebot Beschreibung"
 
@@ -180,15 +188,15 @@ msgctxt "AhOffer definition"
 msgid "From this time is auction URL closed"
 msgstr "Ab dieser Zeit ist die Auktions-URL geschlossen"
 
-#: auction_house/models.py:109 auction_house/models.py:190
-#: auction_house/models.py:321 customers/models.py:179 customers/models.py:222
+#: auction_house/models.py:109 auction_house/models.py:183
+#: auction_house/models.py:314 customers/models.py:179 customers/models.py:222
 #: customers/models.py:412 doc_repo/models.py:118
 msgctxt "UserProfile definition"
 msgid "Open id"
 msgstr "Open id"
 
-#: auction_house/models.py:110 auction_house/models.py:191
-#: auction_house/models.py:322 customers/models.py:181 customers/models.py:223
+#: auction_house/models.py:110 auction_house/models.py:184
+#: auction_house/models.py:315 customers/models.py:181 customers/models.py:223
 #: customers/models.py:413 doc_repo/models.py:119
 msgctxt "UserProfile definition"
 msgid "Link to integration key"
@@ -204,245 +212,325 @@ msgctxt "AhOffer definition"
 msgid "Offers"
 msgstr "Angebote"
 
-#: auction_house/models.py:150
+#: auction_house/models.py:151
 msgid "Offers line description"
 msgstr "Angebot Satz Beschreibung"
 
-#: auction_house/models.py:157
+#: auction_house/models.py:156
 msgctxt "AhOfferLine definition"
 msgid "Amount"
 msgstr "Menge"
 
-#: auction_house/models.py:158
+#: auction_house/models.py:157
 msgctxt "AhOfferLine definition"
 msgid "Quantity of material"
 msgstr "Menge des Materials"
 
-#: auction_house/models.py:165
+#: auction_house/models.py:162
 msgctxt "AhOfferLine definition"
 msgid "Offer"
 msgstr "Angebot"
 
-#: auction_house/models.py:166
+#: auction_house/models.py:163
 msgctxt "AhOfferLine definition"
 msgid "Link to Offer"
 msgstr "Link zum Angebot"
 
-#: auction_house/models.py:174
+#: auction_house/models.py:169
 msgctxt "AhOfferLine definition"
 msgid "Material class"
 msgstr "Material Klasse"
 
-#: auction_house/models.py:175
+#: auction_house/models.py:170
 msgctxt "AhOfferLine definition"
 msgid "Link to Material class"
 msgstr "Link zur Materialklasse"
 
-#: auction_house/models.py:184
+#: auction_house/models.py:177
 msgctxt "AhAnswerLine definition"
 msgid "Minimal price per unit"
 msgstr "Minimaler Preis pro Einheit"
 
-#: auction_house/models.py:185
+#: auction_house/models.py:178
 msgctxt "AhAnswerLine definition"
 msgid "Minimal price for one measurement unit"
 msgstr "Minimaler Preis für eine Maßeinheit"
 
-#: auction_house/models.py:197
+#: auction_house/models.py:190
 msgctxt "AhOffer definition"
 msgid "Offer line"
 msgstr "Angebot Satz"
 
-#: auction_house/models.py:198
+#: auction_house/models.py:191
 msgctxt "AhOffer definition"
 msgid "Offer lines"
 msgstr "Angebot Satzen"
 
-#: auction_house/models.py:211
+#: auction_house/models.py:204
 msgid "Material class name"
 msgstr "Material Klasse name"
 
-#: auction_house/models.py:212
+#: auction_house/models.py:205
 msgid "Name of the material class"
 msgstr "Name der materialklasse"
 
-#: auction_house/models.py:217
+#: auction_house/models.py:210
 msgid "Measurement unit"
 msgstr "Maßeinheit"
 
-#: auction_house/models.py:218
+#: auction_house/models.py:211
 msgid "Units in which material is entered"
 msgstr "Einheiten, in denen material eingegeben wird"
 
-#: auction_house/models.py:223
+#: auction_house/models.py:216
 msgctxt "AhMatClass definition"
 msgid "Material class"
 msgstr "Material Klasse"
 
-#: auction_house/models.py:224
+#: auction_house/models.py:217
 msgctxt "AhMatClass definition"
 msgid "Material classes"
 msgstr "Material Klassen"
 
-#: auction_house/models.py:241
+#: auction_house/models.py:234
 msgid "Material class display name"
 msgstr "Material Klasse display name"
 
-#: auction_house/models.py:242
+#: auction_house/models.py:235
 msgid "Name of the material class for displaying"
 msgstr "Name der materialklasse zur Anzeige"
 
-#: auction_house/models.py:247
+#: auction_house/models.py:240
 msgid "Material class description"
 msgstr "Material Klasse Beschreibung"
 
-#: auction_house/models.py:248
+#: auction_house/models.py:241
 msgid "Text to describe the material class."
 msgstr "Text zur Beschreibung der materialklasse."
 
-#: auction_house/models.py:267
+#: auction_house/models.py:260
 msgctxt "AhAnswer definition"
 msgid "Owner"
 msgstr "Besitzer"
 
-#: auction_house/models.py:268
+#: auction_house/models.py:261
 msgctxt "AhAnswer definition"
 msgid "Link to Owner"
 msgstr "Link zum Besitzer"
 
-#: auction_house/models.py:275
+#: auction_house/models.py:268
 msgctxt "AhAnswer definition"
 msgid "Offer"
 msgstr "Angebot"
 
-#: auction_house/models.py:276
+#: auction_house/models.py:269
 msgctxt "AhAnswer definition"
 msgid "Link to Offer"
 msgstr "Link zum Angebot"
 
-#: auction_house/models.py:283
+#: auction_house/models.py:276
 msgctxt "AhAnswer definition"
 msgid "Total price"
 msgstr "Gesamtpreis"
 
-#: auction_house/models.py:284
+#: auction_house/models.py:277
 msgctxt "AhAnswer definition"
 msgid "Final price for the answer"
 msgstr "Endpreis für die Antwort"
 
-#: auction_house/models.py:290
+#: auction_house/models.py:283
 msgid "Bound"
 msgstr "Gebunden"
 
-#: auction_house/models.py:291
+#: auction_house/models.py:284
 msgid "Mark bound answers. "
 msgstr "Mark gebundene Antworten."
 
-#: auction_house/models.py:296
+#: auction_house/models.py:289
 msgctxt "AhAnswer definition"
 msgid "Creator"
 msgstr "Schöpfer"
 
-#: auction_house/models.py:297
+#: auction_house/models.py:290
 msgctxt "AhAnswer definition"
 msgid "Link to Creator"
 msgstr "Link zum Schöpfer"
 
-#: auction_house/models.py:305
+#: auction_house/models.py:298
 msgctxt "AhAnswer definition"
 msgid "Last change"
 msgstr "Zu letzt geändert"
 
-#: auction_house/models.py:306
+#: auction_house/models.py:299
 msgctxt "AhAnswer definition"
 msgid "Link to user made last change"
 msgstr "Link zum Benutzer, wer Letzte änderung vorgenommen hat"
 
-#: auction_house/models.py:313
+#: auction_house/models.py:306
 msgctxt "AhAnswer definition"
 msgid "Auction URL"
 msgstr "Auktion URL"
 
-#: auction_house/models.py:314
+#: auction_house/models.py:307
 msgctxt "AhAnswer definition"
 msgid "Online auction url"
 msgstr "Url der Online-Auktion"
 
-#: auction_house/models.py:328
+#: auction_house/models.py:321
 msgctxt "AhAnswer definition"
 msgid "Answer"
 msgstr "Antwort"
 
-#: auction_house/models.py:329
+#: auction_house/models.py:322
 msgctxt "AhAnswer definition"
 msgid "Answers"
 msgstr "Antworten"
 
-#: auction_house/models.py:372
+#: auction_house/models.py:366
 msgctxt "AhAnswerLine definition"
 msgid "Price per unit"
 msgstr "Preis pro Einheit"
 
-#: auction_house/models.py:373
+#: auction_house/models.py:367
 msgctxt "AhAnswerLine definition"
 msgid "Price for one measurement unit"
 msgstr "Preis für eine Maßeinheit"
 
-#: auction_house/models.py:379
+#: auction_house/models.py:373
 msgctxt "AhAnswerLine definition"
 msgid "Total price"
 msgstr "Gesamtpreis"
 
-#: auction_house/models.py:380
+#: auction_house/models.py:374
 msgctxt "AhAnswerLine definition"
 msgid "Final price for the line"
 msgstr "Endpreis für eine Linie"
 
-#: auction_house/models.py:385
+#: auction_house/models.py:379
 msgctxt "AhAnswerLine definition"
 msgid "Answer"
 msgstr "Antwort"
 
-#: auction_house/models.py:386
+#: auction_house/models.py:380
 msgctxt "AhAnswerLine definition"
 msgid "Link to Answer"
 msgstr "Link zur Antwort"
 
-#: auction_house/models.py:393
+#: auction_house/models.py:387
 msgctxt "AhAnswerLine definition"
 msgid "Offer line"
 msgstr "Angebot Satz"
 
-#: auction_house/models.py:394
+#: auction_house/models.py:388
 msgctxt "AhAnswerLine definition"
 msgid "Link to line of offer"
 msgstr "Link zum Angebot Satz"
 
-#: auction_house/models.py:400
+#: auction_house/models.py:394
 msgctxt "AhAnswerLine definition"
 msgid "Answer line"
 msgstr "Antwort Satz"
 
-#: auction_house/models.py:401
+#: auction_house/models.py:395
 msgctxt "AhAnswerLine definition"
 msgid "Answer lines"
 msgstr "Antwort Satzen"
 
-#: auction_house/modules/auction.py:324
+#: auction_house/modules/auction.py:342
 msgid "Offers:"
 msgstr "Angebote:"
 
-#: auction_house/modules/auction.py:330
+#: auction_house/modules/auction.py:348
 msgid "Wating offers"
 msgstr "Wartende Angebote"
 
-#: auction_house/modules/auction.py:345
+#: auction_house/modules/auction.py:363
 msgid "Answers:"
 msgstr "Antworten:"
+
+#: auction_house/modules/auction.py:397
+msgid "Online auction info"
+msgstr "Online-Auktion-info"
+
+#: auction_house/modules/auction.py:458 auction_house/views.py:171
+#: auction_house/views.py:610
+msgid "Online auction"
+msgstr "Online-Auktion"
 
 #: auction_house/templates/auction_house/__auction_date.html:7
 msgid "Auction:"
 msgstr "Auktion:"
+
+#: auction_house/templates/auction_house/__offer-details.html:7
+msgid "Owner:"
+msgstr "Besitzer:"
+
+#: auction_house/templates/auction_house/__offer-details.html:11
+msgid "Name:"
+msgstr "Name:"
+
+#: auction_house/templates/auction_house/__offer-details.html:17
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:23
+#: auction_house/templates/auction_house/ahanswer_detail.html:29
+#: auction_house/templates/auction_house/ahoffer_info.html:16
+msgid "Status:"
+msgstr "Status:"
+
+#: auction_house/templates/auction_house/__offer-details.html:48
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:36
+#: auction_house/templates/auction_house/realtime_auction.html:57
+#: auction_house/templates/auction_house/realtime_auction_info.html:57
+msgid "Minimal total price:"
+msgstr "Minimaler Gesamtpreis:"
+
+#: auction_house/templates/auction_house/__offerlines-table.html:8
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:51
+#: auction_house/templates/auction_house/ahanswer_detail.html:41
+#: auction_house/templates/auction_house/ahanswer_detail.html:125
+#: auction_house/templates/auction_house/ahanswer_list.html:11
+#: auction_house/templates/auction_house/ahoffer_detail.html:51
+#: auction_house/templates/auction_house/ahoffer_detail.html:116
+#: auction_house/templates/auction_house/ahoffer_detail.html:157
+#: auction_house/templates/auction_house/ahoffer_info.html:37
+#: auction_house/templates/auction_house/ahoffer_list.html:14
+#: auction_house/templates/auction_house/customer_answer_list.html:14
+#: auction_house/templates/auction_house/customer_offer_list.html:17
+#: auction_house/templates/auction_house/customer_waiting_list.html:22
+msgid "ID"
+msgstr "ID"
+
+#: auction_house/templates/auction_house/__offerlines-table.html:11
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:54
+#: auction_house/templates/auction_house/ahanswer_detail.html:44
+#: auction_house/templates/auction_house/ahoffer_detail.html:119
+#: auction_house/templates/auction_house/ahoffer_info.html:43
+#: auction_house/templates/auction_house/realtime_auction.html:96
+#: auction_house/templates/auction_house/realtime_auction.html:123
+#: auction_house/templates/auction_house/realtime_auction_info.html:85
+#: auction_house/templates/auction_house/realtime_auction_info.html:110
+msgid "Amount"
+msgstr "Menge"
+
+#: auction_house/templates/auction_house/__offerlines-table.html:12
+msgid "Total Min. Price"
+msgstr "Mindestpreis Insgesamt"
+
+#: auction_house/templates/auction_house/__offerlines-table.html:16
+#: auction_house/templates/auction_house/ahoffer_info.html:48
+#: auction_house/templates/auction_house/realtime_auction.html:103
+msgid "Click to update line"
+msgstr "Aktivieren, um das Satz zu Bearbeiten"
+
+#: auction_house/templates/auction_house/__offerlines-table.html:38
+#: auction_house/templates/auction_house/ahoffer_list.html:38
+#: auction_house/templates/auction_house/customer_offer_list.html:33
+#: auction_house/templates/auction_house/customer_waiting_list.html:37
+msgid "Click to update the offer"
+msgstr "Aktivieren, um Angebot zu Bearbeiten"
+
+#: auction_house/templates/auction_house/ah_step_new.html:12
+msgid "Add a new step to offer"
+msgstr "Neuen Schritt zum Gebot hinzufügen"
 
 #: auction_house/templates/auction_house/ah_step_new.html:20
 msgid "Create"
@@ -454,12 +542,12 @@ msgstr "Erstellen"
 #: auction_house/templates/auction_house/ahanswer_customer_new.html:113
 #: auction_house/templates/auction_house/ahanswer_form.html:61
 #: auction_house/templates/auction_house/ahoffer_confirm_delete.html:19
-#: auction_house/templates/auction_house/ahoffer_customer_form.html:54
+#: auction_house/templates/auction_house/ahoffer_customer_form.html:76
 #: auction_house/templates/auction_house/ahoffer_customer_new.html:27
-#: auction_house/templates/auction_house/ahoffer_form.html:59
+#: auction_house/templates/auction_house/ahoffer_form.html:84
 #: auction_house/templates/auction_house/ahofferline_confirm_delete.html:21
 #: auction_house/templates/auction_house/answer_line_form.html:29
-#: auction_house/templates/auction_house/offer_line_form.html:25
+#: auction_house/templates/auction_house/offer_line_form.html:33
 #: customers/templates/customers/customer_confirm_delete.html:19
 #: customers/templates/customers/customer_create.html:20
 #: customers/templates/customers/customer_form.html:29
@@ -476,10 +564,15 @@ msgstr "Erstellen"
 #: customers/templates/customers/email_form.html:24
 #: customers/templates/customers/projectcustomuser_active.html:28
 #: customers/templates/customers/projectcustomuser_form.html:24
-#: doc_repo/templates/doc_repo/doc_repo_doc_form.html:36
+#: doc_repo/templates/doc_repo/doc_repo_doc_form.html:24
 #: doc_repo/templates/doc_repo/document_confirm_delete.html:29
 msgid "Cancel"
 msgstr "Stornieren"
+
+#: auction_house/templates/auction_house/ah_step_new.html:30
+#: auction_house/templates/auction_house/ahanswer_detail.html:14
+msgid "Offer information"
+msgstr "Angebot Informationen"
 
 #: auction_house/templates/auction_house/ahanswer_confirm_delete.html:11
 #: auction_house/templates/auction_house/ahoffer_confirm_delete.html:11
@@ -505,7 +598,7 @@ msgid "Yes, Delete"
 msgstr "Ja, Löschen"
 
 #: auction_house/templates/auction_house/ahanswer_customer_new.html:17
-#: auction_house/views.py:173
+#: auction_house/views.py:177
 msgid "Offer"
 msgstr "Angebot"
 
@@ -513,48 +606,10 @@ msgstr "Angebot"
 msgid "Offer description:"
 msgstr "Angebot Beschreibung:"
 
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:23
-#: auction_house/templates/auction_house/ahanswer_detail.html:38
-#: auction_house/templates/auction_house/ahoffer_detail.html:12
-#: auction_house/templates/auction_house/ahoffer_info.html:16
-msgid "Status:"
-msgstr "Status:"
-
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:36
-#: auction_house/templates/auction_house/ahoffer_detail.html:25
-#: auction_house/templates/auction_house/realtime_auction.html:57
-msgid "Minimal total price:"
-msgstr "Minimaler Gesamtpreis:"
-
 #: auction_house/templates/auction_house/ahanswer_customer_new.html:42
+#: auction_house/templates/auction_house/realtime_auction.html:70
 msgid "Offer lines"
 msgstr "Angebot Satzen"
-
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:51
-#: auction_house/templates/auction_house/ahanswer_detail.html:57
-#: auction_house/templates/auction_house/ahanswer_detail.html:125
-#: auction_house/templates/auction_house/ahanswer_list.html:11
-#: auction_house/templates/auction_house/ahoffer_detail.html:44
-#: auction_house/templates/auction_house/ahoffer_detail.html:108
-#: auction_house/templates/auction_house/ahoffer_detail.html:173
-#: auction_house/templates/auction_house/ahoffer_detail.html:214
-#: auction_house/templates/auction_house/ahoffer_info.html:37
-#: auction_house/templates/auction_house/ahoffer_list.html:14
-#: auction_house/templates/auction_house/customer_answer_list.html:22
-#: auction_house/templates/auction_house/customer_offer_list.html:17
-#: auction_house/templates/auction_house/customer_waiting_list.html:22
-msgid "ID"
-msgstr "ID"
-
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:54
-#: auction_house/templates/auction_house/ahanswer_detail.html:63
-#: auction_house/templates/auction_house/ahoffer_detail.html:47
-#: auction_house/templates/auction_house/ahoffer_detail.html:176
-#: auction_house/templates/auction_house/ahoffer_info.html:43
-#: auction_house/templates/auction_house/realtime_auction.html:92
-#: auction_house/templates/auction_house/realtime_auction.html:119
-msgid "Amount"
-msgstr "Menge"
 
 #: auction_house/templates/auction_house/ahanswer_customer_new.html:55
 msgid "Minimal unit price"
@@ -566,88 +621,89 @@ msgid "Offers documents"
 msgstr "Dokumente-Angebot"
 
 #: auction_house/templates/auction_house/ahanswer_customer_new.html:97
-#: auction_house/views.py:588
+#: auction_house/views.py:716
 msgid "New answer"
 msgstr "Neue Antwort"
 
 #: auction_house/templates/auction_house/ahanswer_customer_new.html:108
-msgid "Make a New Answer"
-msgstr "Machen Sie eine Neue Antwort"
+msgid "Create a New Answer"
+msgstr "Eine neue Antwort erstellen"
 
-#: auction_house/templates/auction_house/ahanswer_detail.html:14
-#: auction_house/templates/auction_house/customer_answer_list.html:15
-#: auction_house/templates/auction_house/customer_waiting_list.html:15
-msgid "Back to auction"
-msgstr "Zurück zur Auktion"
+#: auction_house/templates/auction_house/ahanswer_detail.html:19
+msgid "Answer Information"
+msgstr "Antwort Informationen"
 
-#: auction_house/templates/auction_house/ahanswer_detail.html:18
-#: auction_house/views.py:167 auction_house/views.py:784
-msgid "Online auction"
-msgstr "Online-Auktion"
-
-#: auction_house/templates/auction_house/ahanswer_detail.html:21
-#: auction_house/views.py:142 customers/views.py:139
-#: doc_repo/templates/doc_repo/__btn-icon-doc.html:4
-#: project_main/templates/project_main/__btn-documents.html:12
-msgid "Documents"
-msgstr "Documente"
+#: auction_house/templates/auction_house/ahanswer_detail.html:23
+msgid "You can change the price you bid for each offer line individually."
+msgstr ""
+"Sie können den gebotenen Preis für jede angebotszeile individuell ändern."
 
 #: auction_house/templates/auction_house/ahanswer_detail.html:25
-msgid "Click to update answer"
-msgstr "Aktivieren, um die Antwort zu Bearbeiten"
+msgid ""
+"The unit and total prices for a line and total answer price get recalculated "
+"when one of the values changes."
+msgstr ""
+"Die Einheit - und Gesamtpreise für eine Zeile und gesamtantwortpreis werden "
+"neu berechnet, wenn sich einer der Werte ändert."
 
-#: auction_house/templates/auction_house/ahanswer_detail.html:49
-#: auction_house/templates/auction_house/ahoffer_detail.html:145
-msgid "Answer total:"
+#: auction_house/templates/auction_house/ahanswer_detail.html:32
+msgid "Answer total price:"
 msgstr "Antwort insgesamt:"
 
-#: auction_house/templates/auction_house/ahanswer_detail.html:65
+#: auction_house/templates/auction_house/ahanswer_detail.html:36
+msgid "Answer lines:"
+msgstr "Antwort Satzen:"
+
+#: auction_house/templates/auction_house/ahanswer_detail.html:45
 msgid "Min. unit price"
 msgstr "Min. Einzelpreis"
 
-#: auction_house/templates/auction_house/ahanswer_detail.html:67
-#: auction_house/templates/auction_house/ahoffer_detail.html:177
-#: auction_house/templates/auction_house/realtime_auction.html:95
+#: auction_house/templates/auction_house/ahanswer_detail.html:46
+#: auction_house/templates/auction_house/ahoffer_detail.html:120
+#: auction_house/templates/auction_house/realtime_auction.html:99
 msgid "Price per unit"
 msgstr "Preis pro Einheit"
 
-#: auction_house/templates/auction_house/ahanswer_detail.html:69
-#: auction_house/templates/auction_house/ahoffer_detail.html:178
+#: auction_house/templates/auction_house/ahanswer_detail.html:47
+#: auction_house/templates/auction_house/ahoffer_detail.html:121
 msgid "Price total"
 msgstr "Preis insgesamt"
 
 #: auction_house/templates/auction_house/ahanswer_detail.html:72
-#: auction_house/templates/auction_house/ahoffer_detail.html:52
-#: auction_house/templates/auction_house/ahoffer_info.html:48
-#: auction_house/templates/auction_house/realtime_auction.html:99
-msgid "Click to update line"
-msgstr "Aktivieren, um das Satz zu Bearbeiten"
+msgid "Update price per unit"
+msgstr "Preis pro Einheit setzen"
 
-#: auction_house/templates/auction_house/ahanswer_detail.html:88
-#: auction_house/templates/auction_house/realtime_auction.html:105
-msgid "Click to update price per unit"
-msgstr "Aktivieren, um Preis pro Einheit zu Bearbeiten"
+#: auction_house/templates/auction_house/ahanswer_detail.html:86
+msgid "Update total price"
+msgstr "Gesamtpreis setzen"
 
 #: auction_house/templates/auction_house/ahanswer_detail.html:119
-#: auction_house/templates/auction_house/ahoffer_detail.html:208
+#: auction_house/templates/auction_house/ahoffer_detail.html:151
 msgid "State history"
 msgstr "Zustand Geschichte"
 
-#: auction_house/templates/auction_house/ahanswer_detail.html:127
-#: auction_house/templates/auction_house/ahoffer_detail.html:215
+#: auction_house/templates/auction_house/ahanswer_detail.html:126
+#: auction_house/templates/auction_house/ahoffer_detail.html:158
 msgid "State"
 msgstr "Zustand"
 
-#: auction_house/templates/auction_house/ahanswer_detail.html:129
-msgid "Create by"
+#: auction_house/templates/auction_house/ahanswer_detail.html:127
+#: auction_house/templates/auction_house/ahoffer_detail.html:159
+msgid "Created by"
 msgstr "Erstellt von"
 
-#: auction_house/templates/auction_house/ahanswer_detail.html:131
-msgid "Create at"
+#: auction_house/templates/auction_house/ahanswer_detail.html:128
+#: auction_house/templates/auction_house/ahanswer_list.html:19
+#: auction_house/templates/auction_house/ahoffer_detail.html:160
+#: auction_house/templates/auction_house/ahoffer_list.html:18
+#: auction_house/templates/auction_house/customer_answer_list.html:17
+#: auction_house/templates/auction_house/customer_offer_list.html:20
+#: auction_house/templates/auction_house/customer_waiting_list.html:28
+msgid "Created at"
 msgstr "Erstellt am"
 
 #: auction_house/templates/auction_house/ahanswer_form.html:21
-#: auction_house/templates/auction_house/ahoffer_form.html:19
+#: auction_house/templates/auction_house/ahoffer_form.html:18
 msgid "Add new step"
 msgstr "Neuen Schritt hinzufügen"
 
@@ -659,21 +715,13 @@ msgstr "Besitzer"
 
 #: auction_house/templates/auction_house/ahanswer_list.html:17
 #: auction_house/templates/auction_house/ahoffer_list.html:17
-#: auction_house/templates/auction_house/customer_answer_list.html:26
+#: auction_house/templates/auction_house/customer_answer_list.html:16
 #: auction_house/templates/auction_house/customer_offer_list.html:19
 msgid "Creator"
 msgstr "Schöpfer"
 
-#: auction_house/templates/auction_house/ahanswer_list.html:19
-#: auction_house/templates/auction_house/ahoffer_detail.html:217
-#: auction_house/templates/auction_house/ahoffer_list.html:18
-#: auction_house/templates/auction_house/customer_answer_list.html:28
-#: auction_house/templates/auction_house/customer_offer_list.html:20
-#: auction_house/templates/auction_house/customer_waiting_list.html:28
-msgid "Created at"
-msgstr "Erstellt am"
-
 #: auction_house/templates/auction_house/ahanswer_list.html:27
+#: auction_house/templates/auction_house/customer_answer_list.html:30
 msgid "Click to update the answer"
 msgstr "Aktivieren, um die Antwort zu Bearbeiten"
 
@@ -693,49 +741,58 @@ msgstr "Maßeinheit:"
 msgid "Are you sure, you want to delete the offer"
 msgstr "Sind Sie sicher, Sie möchten das Angebot löschen"
 
-#: auction_house/templates/auction_house/ahoffer_detail.html:32
+#: auction_house/templates/auction_house/ahoffer_customer_form.html:57
+#: auction_house/templates/auction_house/ahoffer_form.html:66
+msgid "Tip: Setting a state discards any unsaved changes made on this page."
+msgstr ""
+"Tipp: Beim festlegen eines Status werden alle ungespeicherten änderungen "
+"auf dieser Seite verworfen."
+
+#: auction_house/templates/auction_house/ahoffer_customer_form.html:58
+#: auction_house/templates/auction_house/ahoffer_form.html:67
+msgid "Please make sure to save any changes before changing offer's state."
+msgstr "Bitte speichern Sie änderungen, bevor Sie den Status des Angebots ändern."
+
+#: auction_house/templates/auction_house/ahoffer_detail.html:15
 msgid "Offer Lines"
 msgstr "Angebot Satzen"
 
-#: auction_house/templates/auction_house/ahoffer_detail.html:48
-#: auction_house/templates/auction_house/ahoffer_info.html:45
-msgid "Price"
-msgstr "Preis"
+#: auction_house/templates/auction_house/ahoffer_detail.html:31
+#: auction_house/templates/auction_house/offer_line_form.html:27
+msgid "Add a line to offer"
+msgstr "Fügen Sie eine Zeile dem Angebot zu"
 
-#: auction_house/templates/auction_house/ahoffer_detail.html:99
+#: auction_house/templates/auction_house/ahoffer_detail.html:42
 msgid "Answers"
 msgstr "Antworten"
 
-#: auction_house/templates/auction_house/ahoffer_detail.html:109
+#: auction_house/templates/auction_house/ahoffer_detail.html:52
 msgid "Total price"
 msgstr "Gesamtpreis"
 
-#: auction_house/templates/auction_house/ahoffer_detail.html:133
+#: auction_house/templates/auction_house/ahoffer_detail.html:76
 msgid "Answer by"
 msgstr "Antwort von"
 
-#: auction_house/templates/auction_house/ahoffer_detail.html:142
+#: auction_house/templates/auction_house/ahoffer_detail.html:85
 msgid "Status"
 msgstr "Status"
 
-#: auction_house/templates/auction_house/ahoffer_detail.html:161
+#: auction_house/templates/auction_house/ahoffer_detail.html:88
+msgid "Answer total:"
+msgstr "Antwort insgesamt:"
+
+#: auction_house/templates/auction_house/ahoffer_detail.html:104
 msgid "Answer documents"
 msgstr "Dokumente-Antwort"
 
-#: auction_house/templates/auction_house/ahoffer_detail.html:168
+#: auction_house/templates/auction_house/ahoffer_detail.html:111
 msgid "Lines:"
 msgstr "Satze:"
 
-#: auction_house/templates/auction_house/ahoffer_detail.html:216
-msgid "Created by"
-msgstr "Erstellt von"
-
-#: auction_house/templates/auction_house/ahoffer_list.html:38
-#: auction_house/templates/auction_house/customer_answer_list.html:35
-#: auction_house/templates/auction_house/customer_offer_list.html:33
-#: auction_house/templates/auction_house/customer_waiting_list.html:37
-msgid "Click to update the offer"
-msgstr "Aktivieren, um Angebot zu Bearbeiten"
+#: auction_house/templates/auction_house/ahoffer_info.html:45
+msgid "Price"
+msgstr "Preis"
 
 #: auction_house/templates/auction_house/ahoffer_list.html:43
 msgid "Click to delete offer"
@@ -746,7 +803,6 @@ msgid "Are you sure, you want to delete offer line"
 msgstr "Sind Sie sicher, Sie möchten angebotssatz löschen"
 
 #: auction_house/templates/auction_house/answer_line_form.html:16
-#: auction_house/templates/auction_house/offer_line_form.html:18
 msgid "Offer line:"
 msgstr "Angebot Satz:"
 
@@ -755,7 +811,6 @@ msgid "Minimal unit price:"
 msgstr "Minimaler Stückpreis:"
 
 #: auction_house/templates/auction_house/answer_line_form.html:27
-#: auction_house/templates/auction_house/offer_line_form.html:23
 #: customers/templates/customers/customer_translation.html:33
 #: customers/templates/customers/customerbankaccount_form.html:20
 #: customers/templates/customers/customerestablishments_form.html:22
@@ -763,9 +818,13 @@ msgstr "Minimaler Stückpreis:"
 #: customers/templates/customers/customerweb_form.html:22
 #: customers/templates/customers/email_form.html:22
 #: customers/templates/customers/projectcustomuser_form.html:22
-#: doc_repo/templates/doc_repo/doc_repo_doc_form.html:32
+#: doc_repo/templates/doc_repo/doc_repo_doc_form.html:20
 msgid "Send"
 msgstr "Senden"
+
+#: auction_house/templates/auction_house/customer_waiting_list.html:15
+msgid "Back to auction"
+msgstr "Zurück zur Auktion"
 
 #: auction_house/templates/auction_house/customer_waiting_list.html:41
 msgid "Click to view the offer"
@@ -779,189 +838,234 @@ msgstr "Aktivieren, um dem Besitzer von antwort anzuzeigen"
 msgid "Click to create answer"
 msgstr "Aktivieren, um die Antwort zu erstellen  "
 
+#: auction_house/templates/auction_house/offer_line_form.html:24
+#: project_main/templates/project_main/__btn-submit-save.html:10
+msgid "Save changes"
+msgstr "Änderungen speichern"
+
 #: auction_house/templates/auction_house/realtime_auction.html:17
+#: auction_house/templates/auction_house/realtime_auction_info.html:17
 msgid "This auction has not started yet."
 msgstr "Diese Auktion hat noch nicht begonnen."
 
 #: auction_house/templates/auction_house/realtime_auction.html:20
+#: auction_house/templates/auction_house/realtime_auction_info.html:20
 msgid "Auction is starting at: "
 msgstr "Auktion beginnt am:"
 
 #: auction_house/templates/auction_house/realtime_auction.html:36
+#: auction_house/templates/auction_house/realtime_auction_info.html:36
 msgid "This auction has already ended."
 msgstr "Diese Auktion ist bereits beendet."
 
 #: auction_house/templates/auction_house/realtime_auction.html:53
+#: auction_house/templates/auction_house/realtime_auction_info.html:53
 msgid "Auction details"
 msgstr "Auktion details"
 
 #: auction_house/templates/auction_house/realtime_auction.html:65
+#: auction_house/templates/auction_house/realtime_auction_info.html:65
 msgid "Auction end:"
 msgstr "Auktionsende:"
 
-#: auction_house/templates/auction_house/realtime_auction.html:76
+#: auction_house/templates/auction_house/realtime_auction.html:80
 msgid "Add a bid"
 msgstr "Gebot hinzufügen"
 
-#: auction_house/templates/auction_house/realtime_auction.html:81
+#: auction_house/templates/auction_house/realtime_auction.html:85
 msgid "Total price:"
 msgstr "Gesamtpreis:"
 
-#: auction_house/templates/auction_house/realtime_auction.html:125
+#: auction_house/templates/auction_house/realtime_auction.html:109
+msgid "Click to update price per unit"
+msgstr "Aktivieren, um Preis pro Einheit zu Bearbeiten"
+
+#: auction_house/templates/auction_house/realtime_auction.html:129
+#: auction_house/templates/auction_house/realtime_auction_info.html:116
 msgid "How much do you wish to bid?"
 msgstr "Wie viel wollen Sie bieten?"
 
-#: auction_house/templates/auction_house/realtime_auction.html:133
+#: auction_house/templates/auction_house/realtime_auction.html:137
+#: auction_house/templates/auction_house/realtime_auction_info.html:124
 msgid "Place a bid"
 msgstr "Gebot abgeben"
 
-#: auction_house/templates/auction_house/realtime_auction.html:140
+#: auction_house/templates/auction_house/realtime_auction.html:144
+#: auction_house/templates/auction_house/realtime_auction_info.html:131
 msgid "Refresh bid list"
 msgstr "Gebotsliste aktualisieren"
 
-#: auction_house/templates/auction_house/realtime_auction.html:150
+#: auction_house/templates/auction_house/realtime_auction.html:154
+#: auction_house/templates/auction_house/realtime_auction_info.html:141
 msgid "Best bids"
 msgstr "Beste Gebote"
 
-#: auction_house/views.py:81
+#: auction_house/templates/auction_house/realtime_auction_info.html:76
+msgid "Offer detail"
+msgstr "Angebot Details"
+
+#: auction_house/templates/auction_house/realtime_auction_info.html:88
+msgid "Minimal price per unit"
+msgstr "Minimaler Preis pro Einheit"
+
+#: auction_house/views.py:85
 msgid "Offer list"
 msgstr "Angebotsliste"
 
-#: auction_house/views.py:82
+#: auction_house/views.py:86
 msgid "A list of all offers in the application."
 msgstr "Eine Liste aller Angebote in der Anwendung."
 
-#: auction_house/views.py:96
+#: auction_house/views.py:99
 msgid "Offers waiting for approval"
 msgstr "Angebote warten auf Genehmigung"
 
-#: auction_house/views.py:97
-msgid "A list of offers waiting for approval in the application."
-msgstr "Eine Liste der Angebote warten auf die Genehmigung in der Anwendung."
-
-#: auction_house/views.py:136 auction_house/views.py:312
-#: auction_house/views.py:382 auction_house/views.py:593
+#: auction_house/views.py:140 auction_house/views.py:375
+#: auction_house/views.py:445 auction_house/views.py:576
+#: auction_house/views.py:680 auction_house/views.py:721
 #: project_main/templates/project_main/__header.html:61
 msgid "Auction"
 msgstr "Auktion"
 
-#: auction_house/views.py:150 auction_house/views.py:159
+#: auction_house/views.py:146 auction_house/views.py:582 customers/views.py:139
+#: doc_repo/templates/doc_repo/__btn-icon-doc.html:4
+#: project_main/templates/project_main/__btn-documents.html:12
+msgid "Documents"
+msgstr "Documente"
+
+#: auction_house/views.py:154 auction_house/views.py:163
+#: auction_house/views.py:213 auction_house/views.py:245
 msgid "Edit offer"
 msgstr "Angebot Bearbeiten"
 
-#: auction_house/views.py:174
+#: auction_house/views.py:178
 msgid "Offer detail view."
 msgstr "Angebot Detailansicht."
 
-#: auction_house/views.py:229 auction_house/views.py:626
-#: auction_house/views.py:661 auction_house/views.py:819
+#: auction_house/views.py:215
+msgid "Edit offer as a poweruser."
+msgstr "Angebot als Poweruser Bearbeiten."
+
+#: auction_house/views.py:246
+msgid "Modify the offer's data."
+msgstr "Ändern Sie die Daten des Angebots."
+
+#: auction_house/views.py:278 auction_house/views.py:745
+#: auction_house/views.py:780 auction_house/views.py:882
 msgid "Your line has been updated!"
 msgstr "Ihr Satz wurde aktualisiert!"
 
-#: auction_house/views.py:235
-msgctxt "ah_offer_line_update-title"
-msgid "update-line"
-msgstr "update-satz"
+#: auction_house/views.py:289
+msgid "Edit line"
+msgstr "Profil Bearbeiten"
 
-#: auction_house/views.py:260 auction_house/views.py:348
+#: auction_house/views.py:290
+msgid "Edit a specific line in the offer."
+msgstr "Zeile Bearbeiten"
+
+#: auction_house/views.py:314 auction_house/views.py:411
 msgid "Your offer has been added!"
 msgstr "Ihr Angebot wurde Hinzugefügt!"
 
-#: auction_house/views.py:266
-msgctxt "ah_offer_line_create-title"
-msgid "create-offer"
-msgstr "angebot-erstellen"
+#: auction_house/views.py:325
+msgid "Add a line"
+msgstr "Eine Zeile hinzufügen"
 
-#: auction_house/views.py:304
-msgctxt "ah_customer_auction-title"
-msgid "customer-auction"
-msgstr "Kunden-Auktion"
+#: auction_house/views.py:326
+msgid "Add a new product for offer."
+msgstr "Fügen Sie ein neues Produkt zum Angebot hinzu."
 
-#: auction_house/views.py:313
+#: auction_house/views.py:376
 msgid "Auction homepage"
 msgstr "Auktion homepage"
 
-#: auction_house/views.py:317
+#: auction_house/views.py:380
 msgid "Create new offer"
 msgstr "Neues Angebot erstellen"
 
-#: auction_house/views.py:322
+#: auction_house/views.py:385
 msgid "Edit customer info"
 msgstr "Kunden-info Bearbeiten"
 
-#: auction_house/views.py:355
+#: auction_house/views.py:418
 msgid "New offer"
 msgstr "Neues Angebot"
 
-#: auction_house/views.py:356
+#: auction_house/views.py:419
 msgid "Create a new auction offer"
 msgstr "Neues Auktionsangebot erstellen"
 
-#: auction_house/views.py:380
+#: auction_house/views.py:443
 msgid "List of offers"
 msgstr "Liste der Angebote"
 
-#: auction_house/views.py:420
+#: auction_house/views.py:488
 msgid "Your offer has change the state!"
 msgstr "Ihr Angebot hat den Zustand ändern!"
 
-#: auction_house/views.py:424
-msgctxt "ah_offers_change_state-title"
-msgid "offer-state"
-msgstr "angebot-zustand"
-
-#: auction_house/views.py:466
+#: auction_house/views.py:536
 msgid "Your answer has change the state!"
 msgstr "Ihre Antwort hat den Zustand ändern!"
 
-#: auction_house/views.py:470
-msgctxt "ah_answer_change_state-title"
-msgid "offer-state"
-msgstr "angebot-zustand"
+#: auction_house/views.py:593
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:78
+msgid "Edit description"
+msgstr "Beschreibung Bearbeiten"
 
-#: auction_house/views.py:538
+#: auction_house/views.py:601
+msgid "Edit answer"
+msgstr "Antwort Bearbeiten"
+
+#: auction_house/views.py:615
+msgid "Answer"
+msgstr "Antwort"
+
+#: auction_house/views.py:616
+msgid "Detailed view of an answer to:"
+msgstr "Detailansicht einer Antwort auf:"
+
+#: auction_house/views.py:653
 msgctxt "ah_customer_answer_waiting_offers-title"
 msgid "offers_waiting"
 msgstr "wartende-angebote"
 
-#: auction_house/views.py:541
+#: auction_house/views.py:656
 msgid "waiting offer"
 msgstr "Wartende Angebote"
 
-#: auction_house/views.py:552
-msgctxt "ah_customer_answer_by_state_key-title"
-msgid "answers-by-state"
-msgstr "antworten-nach-zustand"
+#: auction_house/views.py:678
+msgid "List of answers"
+msgstr "Liste der Angebote"
 
-#: auction_house/views.py:574
+#: auction_house/views.py:702
 msgid "Your answer has been added!"
 msgstr "Ihre web-url wurde Hinzugefügt!"
 
-#: auction_house/views.py:580
+#: auction_house/views.py:708
 msgctxt "ah_customer_answer_create-title"
 msgid "create-answer"
 msgstr "antwort-erstellen"
 
-#: auction_house/views.py:589
+#: auction_house/views.py:717
 msgid "Create new answer"
 msgstr "Neues Antwort erstellen"
 
-#: auction_house/views.py:632 auction_house/views.py:667
-#: auction_house/views.py:825
+#: auction_house/views.py:751 auction_house/views.py:786
+#: auction_house/views.py:888
 msgctxt "ah_answer_line_update-title"
 msgid "update-line"
 msgstr "update-satz"
 
-#: auction_house/views.py:691 auction_house/views.py:723
+#: auction_house/views.py:811 auction_house/views.py:844
 msgid "Step has been added!"
 msgstr "Schritt wurde Hinzugefügt!"
 
-#: auction_house/views.py:697
+#: auction_house/views.py:817
 msgctxt "ah_offer_step_create-title"
 msgid "create-step"
 msgstr "schritt-erstellen"
 
-#: auction_house/views.py:729
+#: auction_house/views.py:850
 msgctxt "ah_answer_step_create-title"
 msgid "create-step"
 msgstr "schritt-erstellen"
@@ -1446,41 +1550,41 @@ msgstr "Sind Sie sicher, dass Sie den Kunden löschen möchten"
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: customers/templates/customers/customer_detail.html:17
-#: customers/templates/customers/customer_info.html:14
+#: customers/templates/customers/customer_detail.html:14
+#: customers/templates/customers/customer_info.html:13
 #: customers/templates/customers/customer_list.html:96
 msgid "Details"
 msgstr "Detaile"
 
-#: customers/templates/customers/customer_detail.html:22
-#: customers/templates/customers/customer_info.html:16
+#: customers/templates/customers/customer_detail.html:19
+#: customers/templates/customers/customer_info.html:15
 #: customers/templates/customers/customer_list.html:105
 msgid "Registration number:"
 msgstr "Registrierungsnummer:"
 
-#: customers/templates/customers/customer_detail.html:25
-#: customers/templates/customers/customer_info.html:19
+#: customers/templates/customers/customer_detail.html:22
+#: customers/templates/customers/customer_info.html:18
 #: customers/templates/customers/customer_list.html:108
 msgid "VAT:"
 msgstr "Steuernummer:"
 
-#: customers/templates/customers/customer_detail.html:28
+#: customers/templates/customers/customer_detail.html:25
 msgid "Short description:"
 msgstr "Kurzbeschreibung:"
 
-#: customers/templates/customers/customer_detail.html:33
+#: customers/templates/customers/customer_detail.html:30
 msgid "Long description:"
 msgstr "Detailbeschreibung:"
 
-#: customers/templates/customers/customer_detail.html:42
+#: customers/templates/customers/customer_detail.html:39
 msgid "Edit Customer Details"
 msgstr "Bearbeiten der Kundendaten"
 
-#: customers/templates/customers/customer_detail.html:52
+#: customers/templates/customers/customer_detail.html:49
 msgid "Users:"
 msgstr "Benutzers:"
 
-#: customers/templates/customers/customer_detail.html:82
+#: customers/templates/customers/customer_detail.html:79
 msgid "Add New User to Customer"
 msgstr "Neuer Benutzer zum Kunden hinzufügen"
 
@@ -1488,31 +1592,32 @@ msgstr "Neuer Benutzer zum Kunden hinzufügen"
 msgid "Edit translated descriptions"
 msgstr "Übersetzte Beschreibungen Bearbeiten"
 
-#: customers/templates/customers/customer_info.html:22
+#: customers/templates/customers/customer_info.html:21
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:45
 msgid "Description:"
 msgstr "Beschreibung:"
 
-#: customers/templates/customers/customer_info.html:33 customers/views.py:166
+#: customers/templates/customers/customer_info.html:32 customers/views.py:166
 msgid "Establishments:"
 msgstr "Einrichtungen:"
 
-#: customers/templates/customers/customer_info.html:47 customers/views.py:148
+#: customers/templates/customers/customer_info.html:46 customers/views.py:148
 msgid "E-mails:"
 msgstr "E-Mails:"
 
-#: customers/templates/customers/customer_info.html:59 customers/views.py:157
+#: customers/templates/customers/customer_info.html:58 customers/views.py:157
 msgid "Websites:"
 msgstr "Website:"
 
-#: customers/templates/customers/customer_info.html:71 customers/views.py:178
+#: customers/templates/customers/customer_info.html:70 customers/views.py:178
 msgid "Phones:"
 msgstr "Telefone:"
 
-#: customers/templates/customers/customer_info.html:86 customers/views.py:189
+#: customers/templates/customers/customer_info.html:85 customers/views.py:189
 msgid "Bank accounts:"
 msgstr "Bankkonten:"
 
-#: customers/templates/customers/customer_info.html:102
+#: customers/templates/customers/customer_info.html:101
 msgid "Documents:"
 msgstr "Dokumente:"
 
@@ -1961,21 +2066,44 @@ msgid "Open document in a new tab"
 msgstr "Dokument in einem neuen tab öffnen"
 
 #: doc_repo/templates/doc_repo/__btn-icon-download.html:4
-#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:51
 msgid "Download document"
 msgstr "Dokument herunterladen"
 
-#: doc_repo/templates/doc_repo/doc_repo_doc_form.html:27
-msgid "Add document:"
-msgstr "Kunden hinzufügen"
+#: doc_repo/templates/doc_repo/doc_repo_doc_form.html:30
+msgid ""
+"Tip: If you'd like to replace the uploaded file, you have to create a new "
+"document (and delete this one, if needed)."
+msgstr ""
+"Tipp: Wenn Sie die hochgeladene Datei ersetzen möchten, müssen Sie "
+"ein neues Dokument erstellen (und ggf. löschen)."
 
-#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:28
-msgid "Document"
-msgstr "Dokument"
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:16
+msgid "Document list:"
+msgstr "Dokumente:"
 
-#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:37
-msgid "Document detail"
-msgstr "Dokument detail"
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:30
+msgid "Document name:"
+msgstr "Dokumentnamen:"
+
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:36
+msgid "Picture"
+msgstr "Bild"
+
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:40
+msgid "File"
+msgstr "Datei"
+
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:59
+msgid "Open in new tab"
+msgstr "In einem neuen tab öffnen"
+
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:67
+msgid "Download"
+msgstr "Dokument herunterladen"
+
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:83
+msgid "Delete"
+msgstr "Löschen"
 
 #: doc_repo/templates/doc_repo/document_confirm_delete.html:21
 msgid "Delete document"
@@ -1985,35 +2113,37 @@ msgstr "Dokument löschen"
 msgid "Are you sure, you want to delete the document"
 msgstr "Sind Sie sicher, dass Sie das Dokument löschen möchten"
 
-#: doc_repo/views.py:77
+#: doc_repo/views.py:78
 msgid "Document management"
 msgstr "Dokumentenverwaltung"
 
-#: doc_repo/views.py:80
+#: doc_repo/views.py:81
 msgid "Back"
 msgstr "Zurück"
 
-#: doc_repo/views.py:86
+#: doc_repo/views.py:87
 msgid "Add Document"
 msgstr "Dokument Hinzufügen"
 
-#: doc_repo/views.py:109
+#: doc_repo/views.py:115
 msgid "Document has been added!"
 msgstr "Dokument wurde Hinzugefügt!"
 
-#: doc_repo/views.py:115
-msgctxt "doc_repo_document_create-title"
-msgid "create-document"
-msgstr "dokument-erstellen"
+#: doc_repo/views.py:123
+msgid "Add document"
+msgstr "Dokument hinzufügen"
 
-#: doc_repo/views.py:134
+#: doc_repo/views.py:124
+msgid "Add a document to an object"
+msgstr "Ein Dokument zu einem Objekt hinzufügen"
+
+#: doc_repo/views.py:145
 msgid "Document has been updated!"
 msgstr "Dokument wurde aktualisiert!"
 
-#: doc_repo/views.py:140
-msgctxt "doc_repo_document_modify-title"
-msgid "update-document"
-msgstr "update-dokument"
+#: doc_repo/views.py:152
+msgid "Modify the document's descriptions"
+msgstr "Beschreibung des Dokuments Bearbeiten"
 
 #: integ/models.py:14
 msgid "open id"
@@ -2259,10 +2389,6 @@ msgstr "Element löschen"
 #: project_main/templates/project_main/__btn-icon-edit.html:4
 msgid "Edit document description"
 msgstr "Beschreibung des Dokuments Bearbeiten"
-
-#: project_main/templates/project_main/__btn-submit-save.html:10
-msgid "Save changes"
-msgstr "Änderungen speichern"
 
 #: project_main/templates/project_main/__content-header.html:69
 #: project_main/templates/project_main/__content-header.html:70

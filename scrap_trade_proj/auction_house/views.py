@@ -586,16 +586,6 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
             }
         ]
 
-        if state_key in [
-                'answer_new', 'answer_successful', 'answer_accepted'] or  \
-           test_poweruser(self.request.user):
-            button_list.append({
-                'text': _("Edit description"),
-                'href': reverse('ah-answer-customer-update',
-                                kwargs={'pk': answer.pk}),
-                'icon': 'edit-3',
-            })
-
         if test_poweruser(self.request.user):
             button_list.append({
                 'text': _("Edit answer"),
@@ -604,6 +594,15 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
                 'icon': 'edit-3',
                 'type': 'poweruser',
             })
+        elif state_key in [
+                'answer_new', 'answer_successful', 'answer_accepted']:
+            button_list.append({
+                'text': _("Edit description"),
+                'href': reverse('ah-answer-customer-update',
+                                kwargs={'pk': answer.pk}),
+                'icon': 'edit-3',
+            })
+
         if answer.ah_offer.auction_url != "":
             button_list.append({
                 'href': answer.ah_offer.auction_url,
