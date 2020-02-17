@@ -747,12 +747,10 @@ def ah_answer_line_update_ppu(request, pk, pk2):
     else:
         form = AhAnwserLinePpuUpdateForm(instance=answer_line)
 
-    title2 = tr.pgettext('ah_answer_line_update-title', 'update-line')
     context = {
-        'form': form,
-        'title': title2,
+        'ppu_form': form,
         'answer': answer,
-        'min_price': answer_line.offer_line.minimal_ppu,
+        'min_price_ppu': answer_line.offer_line.minimal_ppu,
     }
     return render(request, 'auction_house/answer_line_form.html', context)
 
@@ -767,26 +765,26 @@ def ah_answer_line_update_total(request, pk, pk2):
         form = AhAnwserLineTotalUpdateForm(request.POST, instance=answer_line)
         if form.is_valid():
             form.save()
-            answer_line = AhAnswerLine.objects.filter(id = pk2).first()
+
             answer_line.ppu = answer_line.total_price / answer_line.offer_line.amount
             answer_line.save()
+
             sum = 0
-            answer = AhAnswer.objects.filter(id = pk).first()
             for line in answer.my_lines.all():
                 sum += line.total_price
             answer.total_price = sum
             answer.save()
+
             success_message = _('Your line has been updated!')
             messages.success(request, success_message)
             return redirect('ah-answer-detail', pk)
     else:
         form = AhAnwserLineTotalUpdateForm(instance=answer_line)
 
-    title2 = tr.pgettext('ah_answer_line_update-title', 'update-line')
     context = {
-        'form': form,
-        'title': title2,
+        'total_form': form,
         'answer': answer,
+        'min_price_total': answer_line.offer_line.minimal_ppu * answer_line.offer_line.amount,
     }
     return render(request, 'auction_house/answer_line_form.html', context)
 

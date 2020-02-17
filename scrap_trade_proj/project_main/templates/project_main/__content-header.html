@@ -1,90 +1,76 @@
 {% load i18n %}
 
-
-{% if content_header %}
-
-  <header class="content-pad py-3 border-bottom mb-3
-                 d-flex
-                 flex-md-row flex-column">
-    
-    <section class="d-flex flex-fill
-                    order-2 order-md-1">
-      <div class="align-self-start flex-fill">
-
-        {# Note: `pr-x` classes are for breaking the line earlier #}
-
-        {# Title #}
-        <h2 class="border-bottom py-1 m-0 
-                   line-height-minimal pr-3">
-          {% if content_header.title %}
-            {{ content_header.title }}
-          {% elif debug %}
-            <span class="debug-error">
-              Undefined required text
-            </span>
-          {% endif %}
-        </h2>
-
-        {# Description #}
-        {% if content_header.desc %}
-          <p class="text-muted m-0 mt-1 
-                    line-height-smaller pr-4">
-            {{ content_header.desc }}
-          </p>
-        {% endif %}
-
-        {# Contextual Buttons #}
-        {# @todo; Use the context buttons by including snippets #}
-        {% if content_header.button_list %}
-          <section class="pt-3">
-            {% for button in content_header.button_list %}
-              
-              <a class="btn my-1
-                        {% if button.type %} btn-{{ button.type }} 
-                        {% else %} btn-primary {% endif %}"
-                 href="{{ button.href }}"
-                 title="{{ button.title }}">
-                {% if button.icon %}
-                  <i data-feather="{{ button.icon }}"></i>
-                {% endif %}
-                {{ button.text }}
-              </a>
-              
-            {% endfor %}
-          </section>
-        {% endif %}
-      </div>
-    </section>
-
-    {# Image #}
-
-    {% if customer %}
-      <section class="d-flex 
-                      order-md-2 order-1
-                      pl-md-3
-                      mt-md-0 mb-3"
-               style="width: 140px">
-        <img class="align-self-center m-auto"
-             src="{{ customer.customer_logo.url }}"
-             alt="{% trans "Logo" %}"
-             title="{% trans "Logo" %}" />
-      </section>
-    {% endif %}
-    
-  </header>
-
-
-{% else %}
+<header class="content-pad py-3 border-bottom mb-3
+               d-flex
+               flex-md-row flex-column">
   
-  {% if debug %}
-    <header class="debug-error p-3">
-      <h4>
-        Invalid content header usage!
-      </h4><p>
-        The content header was included but its data wasn't
-        found in the template.
-      </p>
-    </header>
+  <section class="d-flex flex-fill
+                  order-2 order-md-1">
+    <div class="align-self-start flex-fill">
+
+      {# Note: `pr-x` classes are for breaking the line earlier #}
+
+      {# Title #}
+      <h2 class="border-bottom py-1 m-0 
+                 line-height-minimal pr-3">
+        {% if content_header.title %}
+          {{ content_header.title }}
+        {% elif content_header__title %}
+          {{ content_header__title }}  {# INLINER #}
+        {% elif debug %}
+          <span class="debug-error">
+            Undefined required text
+          </span>
+        {% endif %}
+      </h2>
+
+      {# Description #}
+      {% if content_header.desc or content_header__desc %}
+        <p class="text-muted m-0 mt-1 
+                  line-height-smaller pr-4">
+          {% if content_header.desc %}
+            {{ content_header.desc }}
+          {% elif content_header__desc %}
+            {{ content_header__desc }}  {# INLINER #}
+          {% endif %}
+        </p>
+      {% endif %}
+
+      {# Contextual Buttons #}
+      {# @todo; Use the context buttons by including snippets #}
+      {% if content_header.button_list %}
+        <section class="pt-3">
+          {% for button in content_header.button_list %}
+            
+            <a class="btn my-1
+                      {% if button.type %} btn-{{ button.type }} 
+                      {% else %} btn-primary {% endif %}"
+               href="{{ button.href }}"
+               title="{{ button.title }}">
+              {% if button.icon %}
+                <i data-feather="{{ button.icon }}"></i>
+              {% endif %}
+              {{ button.text }}
+            </a>
+            
+          {% endfor %}
+        </section>
+      {% endif %}
+    </div>
+  </section>
+
+  {# Image #}
+  {% if customer %}
+    <section class="d-flex 
+                    order-md-2 order-1
+                    pl-md-3
+                    mt-md-0 mb-3"
+             style="width: 140px">
+      <img class="align-self-center m-auto"
+           src="{{ customer.customer_logo.url }}"
+           alt="{% trans "Logo" %}"
+           title="{% trans "Logo" %}" />
+    </section>
   {% endif %}
   
-{% endif %}
+</header>
