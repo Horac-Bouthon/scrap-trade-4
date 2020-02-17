@@ -21,6 +21,7 @@ from .modules.auction import (
 
 from state_wf.models import (
     StepState,
+    Step,
 )
 
 
@@ -288,6 +289,7 @@ def ah_offer_line_update(request, pk, pk2):
             'title': " | ".join([offer.description, _('Edit line')]),
             'desc': _('Edit a specific line in the offer.')
         },
+        'page_type': 'update',  # Same template is used for update and create
     }
     return render(request, 'auction_house/offer_line_form.html', context)
 
@@ -328,7 +330,8 @@ def ah_offer_line_create(request, pk):
                 'type': 'secondary',
                 'href': reverse('ah-offer-detail', args=[offer.pk]),
             }],
-        }
+        },
+        'page_type': 'create',  # Same template is used for update and create
     }
     return render(request, 'auction_house/offer_line_form.html', context)
 
@@ -459,12 +462,16 @@ def ah_offers_change_state(request, pk, pk2, pk3):
 
     # @todo; Is there any permission checking offer state changes?
 
-    if request.method == 'POST':
+    if request.method == 'GET':
+        pass  # Don't do anything, just ask for accept -> POST
+
+    elif request.method == 'POST':
         offer_add_state(offer, set_state, request.user)
+
         if set_state.state_key == 'offer_confirmed':
             offer.auction_url = request.build_absolute_uri(reverse('realtime-auction-info', kwargs={'pk': offer.id}))
             offer.save()
-        if set_state.state_key == 'offer_canceled':
+        elif set_state.state_key == 'offer_canceled':
             state_send = get_state('answer_canceled')
             my_answers = filter_by_state(offer.answers, 'answer_confirmed')
             for answer in my_answers.all():
@@ -497,7 +504,10 @@ def ah_answer_change_state(request, pk, pk2, pk3):
     answer = get_object_or_404(AhAnswer, id = pk2)
     set_state = StepState.objects.get(id=pk3)
 
-    if request.method == 'POST':
+    if request.method == 'GET':
+        pass  # Don't do anything, just ask for accept -> POST
+
+    elif request.method == 'POST':
         answer_add_state(answer, set_state, request.user)
         if set_state.state_key == 'answer_accepted':
             state_send = get_state('offer_accepted')
@@ -509,7 +519,7 @@ def ah_answer_change_state(request, pk, pk2, pk3):
                     place='auction_house.view - ah_answer_change_state() - answer_accepted',
                     item=answer.ah_offer,
                 )
-        if set_state.state_key == 'answer_closed':
+        elif set_state.state_key == 'answer_closed':
             state_send = get_state('offer_ready_to_close')
             offer_add_state(answer.ah_offer, state_send, request.user)
             if state_send.send_ntf:
@@ -519,16 +529,15 @@ def ah_answer_change_state(request, pk, pk2, pk3):
                     place='auction_house.view - ah_answer_change_state() - answer_closed',
                     item=answer.ah_offer,
                 )
-        if set_state.state_key == 'answer_canceled' and answer.is_bound:
+        elif set_state.state_key == 'answer_canceled' and answer.is_bound:
             resurect_auction(answer.ah_offer)
             set_auction(request, answer.ah_offer)
+
         success_message = _('Your answer has change the state!')
         messages.success(request, success_message)
         return redirect('ah-customer-auction', pk)
 
-    title2 = tr.pgettext('ah_answer_change_state-title', 'offer-state')
     context = {
-        'title': title2,
         'customer': customer,
         'answer': answer,
         'state': set_state,
@@ -553,14 +562,61 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
         answer = kwargs.get('object')
         answer.refresh_total_price()
 
+        state_key = answer.actual_state.state_key
+
         context.update({
-            'state_new': get_state('answer_new'),
-            'state_confirmed': get_state('answer_confirmed'),
-            'state_successful': get_state('answer_successful'),
-            'state_accepted': get_state('answer_accepted'),
-            'state_closed': get_state('answer_closed'),
-            'state_canceled': get_state('answer_canceled'),
+            'answer': answer,
+            'customer': answer.owner,  # @todo; Should we show logo of answer owner or the offer owner??
+            'offer': answer.ah_offer,
+            'state': state_key.replace('answer_', ''),
         })
+
+        button_list = [
+            {
+                'text': _("Auction"),
+                'href': reverse('ah-customer-auction',
+                                kwargs={'pk': answer.owner.pk}),
+                'icon': 'arrow-left',
+                'type': 'secondary'
+            }, {
+                'text': _("Documents"),
+                'href': reverse('doc-repo-dokument-list',
+                                kwargs={'oid': answer.open_id.int_id}),
+                'icon': 'file-text',
+            }
+        ]
+
+        if state_key in [
+                'answer_new', 'answer_successful', 'answer_accepted'] or  \
+           test_poweruser(self.request.user):
+            button_list.append({
+                'text': _("Edit description"),
+                'href': reverse('ah-answer-customer-update',
+                                kwargs={'pk': answer.pk}),
+                'icon': 'edit-3',
+            })
+
+        if test_poweruser(self.request.user):
+            button_list.append({
+                'text': _("Edit answer"),
+                'href': reverse('ah-answer-update',
+                                kwargs={'pk': answer.pk}),
+                'icon': 'edit-3',
+                'type': 'poweruser',
+            })
+        if answer.ah_offer.auction_url != "":
+            button_list.append({
+                'href': answer.ah_offer.auction_url,
+                'text': _("Online auction"),
+                'icon': 'airplay',
+                #'type': 'poweruser',
+            })
+        context['content_header'] = {
+            'title': answer.description + ' | ' + _("Answer"),
+            'desc': '%s "%s"' % (_("Detailed view of an answer to:"),
+                               answer.ah_offer.description),
+            'button_list': button_list
+        }
 
         return context
 
@@ -607,14 +663,27 @@ def ah_customer_answer_waiting_offers(request, pk):
 
 @user_belong_customer
 def ah_customer_answer_by_state_key(request, pk, sk):
+
     customer = get_object_or_404(Customer, id = pk)
-    title2 = tr.pgettext('ah_customer_answer_by_state_key-title', 'answers-by-state')
-    selected_state = get_state(sk)
+    translated_state_key = get_state(sk).get_state_name_plural()
+    filtered_answers = filter_by_state(customer.owned_answers, sk).order_by('-pk')
+
     context = {
-        'title': title2,
-        'selection': selected_state.get_state_name_plural(),
+        'answer_list': filtered_answers,
+
         'customer': customer,
-        'answer_list': filter_by_state(customer.owned_answers, sk).order_by('-pk'),
+        'content_header': {
+            'title': "%s (%s)" % (translated_state_key,
+                                customer.customer_name),
+            'desc': _("List of answers"),
+            'button_list': [{
+                'text': _('Auction'),
+                'href': reverse('ah-customer-auction',
+                                kwargs={'pk': customer.pk}),
+                'icon': 'arrow-left',
+                'type': 'secondary',
+            }],
+        }
     }
     return render(request, 'auction_house/customer_answer_list.html', context)
 
@@ -738,6 +807,7 @@ def ah_offer_step_create(request, pk):
                 changed_by = request.user,
             )
             new.save()
+
             success_message = _('Step has been added!')
             messages.success(request, success_message)
             return redirect('ah-offer-update', pk)
@@ -770,6 +840,7 @@ def ah_answer_step_create(request, pk):
                 changed_by = request.user,
             )
             new.save()
+
             success_message = _('Step has been added!')
             messages.success(request, success_message)
             return redirect('ah-answer-update', pk)

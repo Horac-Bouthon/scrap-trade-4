@@ -181,6 +181,17 @@ a.article-title:hover {
 
 
 
+/* Main page container */
+
+.content-pad {
+  --pad: 1.5rem;
+  padding-left: var(--pad);
+  padding-right: var(--pad);
+}
+@media only screen and (max-width: 768px) {
+  .content-pad { --pad: 0.75rem; }
+}
+
 /* Lists in alert messages can be more compact */
 .alert-block > ul {
   padding-left: 1rem;

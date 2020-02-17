@@ -1,0 +1,63 @@
+
+{% load i18n %}
+
+{% if offer %}
+  <div class="table-wrap max-height-visible">
+    <table>
+      <tr>
+        <th>{% trans "ID" %}</th>
+        <th>{% trans "Description" %}</th>
+        <th>{% trans "Material class" %}</th>
+        <th>{% trans "Amount" %}</th>
+        <th>{% trans "Total Min. Price" %}</th>
+        <th>{# icons #}</th>
+      </tr>
+
+      {% trans "Click to update line" as update_line_title %}
+      {% for line in offer.lines.all %}
+        <tr>
+          <td>{{ line.id }}</td>
+          <td>{{ line.description }}</td>
+          <td>
+            <a href="{% url 'ah-mat-class-detail' line.mat_class.id %}"
+               title="{{ line.mat_class.act_mat_class_description }}"
+               target="_blank">
+              {{ line.mat_class.act_display_name }}
+            </a>
+          </td>
+          <td>{{ line.amount }} {{ line.mat_class.measurement_unit }}</td>
+          <td>{{ line.minimal_ppu }}</td>
+          
+          <td class="icon-wrap">
+            <div>
+              {% url 'doc-repo-dokument-list' line.open_id.int_id as href %}
+              {% include 'doc_repo/__btn-icon-doc.html' %}
+
+              {% if offer.actual_state.state_key == 'offer_new' %}
+                {% url 'ah-offer-line-update' offer.pk line.pk as href%}
+                {% trans "Click to update the offer" as title %}
+                {% with cls='btn-outline-primary btn-icon-only border-0' %}
+                  {% with icon='edit-3' %}
+                    {% include 'project_main/__btn.html' %}
+                  {% endwith %}
+                {% endwith %}
+
+                {% url 'ah-offer-line-delete' line.id as href %}
+                {% include 'project_main/__btn-icon-delete.html' %}
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+    
+    {% include 'project_main/__no-entries.html' with check=offer.lines.all %}
+    
+  </div>
+
+
+{% elif debug %}
+  <p class="debug-error">
+    Offer lines table snippet cannot see an offer to pull the lines from.
+  </p>
+{% endif %}

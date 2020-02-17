@@ -229,4 +229,28 @@
   <!-- Page-local scripts -->
   {% block page_scripts %} {% endblock %}
 
+  {% if debug %}
+    <!-- Debug functions to make frontend development
+         a little bit more bearable. -->
+    <script>
+
+     var util = {
+
+         make_element_text_editable: function(target) {
+             if (!target) {
+                 target = 'dd, dt, h4, td, h2, p, span';  // default
+             }
+             var list = document.querySelectorAll(target);
+             console.log("Making following elements editable:")
+             list.forEach((el) => {
+                 console.log(el);
+                 el.style.backgroundColor = "#cfc";
+                 el.setAttribute("contenteditable", "true");
+             });
+         }
+         
+     }
+    </script>
+  {% endif %}
+
 </html>

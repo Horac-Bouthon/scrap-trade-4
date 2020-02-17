@@ -7,7 +7,7 @@
     
     {% include 'project_main/__content-header.html' %}
     
-    <section class="container">
+    <section class="content-pad">
       <div class="table-wrap max-height-visible">
         <table>
           <tr>
@@ -33,7 +33,7 @@
               <td>
                 {% with btn_styles="btn btn-icon-only" %}
                   <div class="d-flex justify-content-around">
-                    <a class="btn-info {{ btn_styles }}"
+                    <a class="btn-primary {{ btn_styles }}"
                        href="{% url 'ah-offer-detail' offer.pk %}"
                        title="{% trans "Click to update the offer" %}">
                       <i data-feather="edit-3"></i>
