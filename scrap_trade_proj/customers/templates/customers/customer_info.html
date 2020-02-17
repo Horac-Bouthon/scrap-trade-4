@@ -7,103 +7,101 @@
 {% block content %}
   {% include 'project_main/__content-header.html' %}
 
-  <section class="container pb-5">
-    <div class="container">
+  <section class="content-pad pb-5">
 
-      <dl>
-        <h4> {% trans "Details" %} </h4>
+    <dl>
+      <h4> {% trans "Details" %} </h4>
 
-        <dt> {% trans "Registration number:" %} </dt>
-        <dd> {{ object.customer_ICO }} </dd>
+      <dt> {% trans "Registration number:" %} </dt>
+      <dd> {{ object.customer_ICO }} </dd>
 
-        <dt> {% trans "VAT:" %} </dt>
-        <dd> {{ object.customer_DIC }} </dd>
+      <dt> {% trans "VAT:" %} </dt>
+      <dd> {{ object.customer_DIC }} </dd>
 
-        <dt> {% trans "Description:" %}</dt>
-        <dd>
-          {% if object.act_description %}
-            {{ object.act_description }}
-          {% else %}
-            {{ object.act_short }}
-          {% endif %}
-        </dd>
-      </dl>
-
-      <dl>
-        <h4> {% trans "Establishments:" %} </h4>
-        {% if object.customerestablishments_set.all.count > 0 %}
-          <ul class="d-flex flex-wrap list-unstyled">
-            {% for address in object.customerestablishments_set.all %}
-              <li class="px-2 pb-2">
-                {% include 'customers/__address.html' with data=address %}
-                {% include 'doc_repo/__object_docs.html' with object=address %}
-              </li>
-            {% endfor %}
-          </ul>
+      <dt> {% trans "Description:" %}</dt>
+      <dd>
+        {% if object.act_description %}
+          {{ object.act_description }}
+        {% else %}
+          {{ object.act_short }}
         {% endif %}
-      </dl>
+      </dd>
+    </dl>
 
-      <dl>
-        <h4> {% trans "E-mails:" %} </h4>
-        {% if object.customeremail_set.count > 0 %}
-          <ul>
-            {% for email in object.customeremail_set.all %}
-              <li> {{ email.customer_email }} </li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      </dl>
-
-
-      <dl>
-        <h4> {% trans "Websites:" %} </h4>
-        {% if object.customerweb_set.all.count > 0 %}
-          <ul>
-            {% for web in object.customerweb_set.all %}
-              <li> {{ web.customer_web }} </li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      </dl>
-
-
-      <dl>
-        <h4> {% trans "Phones:" %} </h4>
-        {% if object.customerphone_set.count > 0 %}
-          <ul>
-            {% for phone in object.customerphone_set.all %}
-              <li>
-                {{ phone.customer_phone }}
-                {{ phone.desctiption }}
-                ({{ phone.category.act_category_name }})
-              </li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      </dl>
-
-      <dl>
-        <h4> {% trans "Bank accounts:" %} </h4>
-        {% if object.customerbankaccount_set.all.count > 0 %}
-          <ul>
-            {% for b_acc in object.customerbankaccount_set.all %}
-              <li>
-                {{ b_acc.account }}/{{ b_acc.bank_id }}
-                <br>
-                (IBAN: {{ b_acc.iban }})
-              </li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      </dl>
-
-      {% if object.open_id.get_docs.count > 0 %}
-        <dl>
-          <h4> {% trans "Documents:" %} </h4>
-          <br>
-          {% include 'doc_repo/__object_docs.html' with object=object %}
-        </dl>
+    <dl>
+      <h4> {% trans "Establishments:" %} </h4>
+      {% if object.customerestablishments_set.all.count > 0 %}
+        <ul class="d-flex flex-wrap list-unstyled">
+          {% for address in object.customerestablishments_set.all %}
+            <li class="px-2 pb-2">
+              {% include 'customers/__address.html' with data=address %}
+              {% include 'doc_repo/__object_docs.html' with object=address %}
+            </li>
+          {% endfor %}
+        </ul>
       {% endif %}
-    </div>
+    </dl>
+
+    <dl>
+      <h4> {% trans "E-mails:" %} </h4>
+      {% if object.customeremail_set.count > 0 %}
+        <ul>
+          {% for email in object.customeremail_set.all %}
+            <li> {{ email.customer_email }} </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </dl>
+
+
+    <dl>
+      <h4> {% trans "Websites:" %} </h4>
+      {% if object.customerweb_set.all.count > 0 %}
+        <ul>
+          {% for web in object.customerweb_set.all %}
+            <li> {{ web.customer_web }} </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </dl>
+
+
+    <dl>
+      <h4> {% trans "Phones:" %} </h4>
+      {% if object.customerphone_set.count > 0 %}
+        <ul>
+          {% for phone in object.customerphone_set.all %}
+            <li>
+              {{ phone.customer_phone }}
+              {{ phone.desctiption }}
+              ({{ phone.category.act_category_name }})
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </dl>
+
+    <dl>
+      <h4> {% trans "Bank accounts:" %} </h4>
+      {% if object.customerbankaccount_set.all.count > 0 %}
+        <ul>
+          {% for b_acc in object.customerbankaccount_set.all %}
+            <li>
+              {{ b_acc.account }}/{{ b_acc.bank_id }}
+              <br>
+              (IBAN: {{ b_acc.iban }})
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </dl>
+
+    {% if object.open_id.get_docs.count > 0 %}
+      <dl>
+        <h4> {% trans "Documents:" %} </h4>
+        <br>
+        {% include 'doc_repo/__object_docs.html' with object=object %}
+      </dl>
+    {% endif %}
   </section>
 {% endblock content %}

@@ -582,10 +582,11 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
             }
         ]
     
-        if test_poweruser(self.request.user) or  \
-           state_key in ['answer_new', 'answer_successful', 'answer_accepted']:
+        if state_key in [
+                'answer_new', 'answer_successful', 'answer_accepted'] or  \
+           test_poweruser(self.request.user):
             button_list.append({
-                'text': _("Edit answer"),
+                'text': _("Edit description"),
                 'href': reverse('ah-answer-customer-update',
                                 kwargs={'pk': answer.pk}),
                 'icon': 'edit-3',
@@ -654,7 +655,7 @@ def ah_customer_answer_waiting_offers(request, pk):
     }
     return render(request, 'auction_house/customer_waiting_list.html', context)
 
-
+    
 
 @user_belong_customer
 def ah_customer_answer_by_state_key(request, pk, sk):

@@ -3,92 +3,88 @@
 {% load i18n %}
 
 
-
 {% block content %}
 
   {% include 'project_main/__content-header.html' %}
 
-  <section class="container">
-    <div class="container">
+  <section class="content-pad">
+    
+    <dl>
+      <h4>
+        {% trans "Details" %}
+        {% url 'project-customer-update' object.pk as href %}
+        {% include 'project_main/__btn-icon-edit.html' %}
+      </h4>
 
+      <dt> {% trans "Registration number:" %} </dt>
+      <dd> {{ object.customer_ICO }} </dd>
 
-      <dl>
-        <h4>
-          {% trans "Details" %}
-          {% url 'project-customer-update' object.pk as href %}
-          {% include 'project_main/__btn-icon-edit.html' %}
-        </h4>
+      <dt> {% trans "VAT:" %} </dt>
+      <dd> {{ object.customer_DIC }} </dd>
 
-        <dt> {% trans "Registration number:" %} </dt>
-        <dd> {{ object.customer_ICO }} </dd>
+      <dt> {% trans "Short description:" %} </dt>
+      <dd><p>
+        {{ object.act_short }}
+      </p></dd>
 
-        <dt> {% trans "VAT:" %} </dt>
-        <dd> {{ object.customer_DIC }} </dd>
+      <dt> {% trans "Long description:" %} </dt>
+      <dd><p>
+        {{ object.act_description }}
+      </p></dd>
 
-        <dt> {% trans "Short description:" %} </dt>
-        <dd><p>
-          {{ object.act_short }}
-        </p></dd>
+      <div class="text-right">
+        <a class="btn btn-primary text-right"
+           href={{ href }}>
+          <i data-feather="edit-3"></i>
+          {% trans 'Edit Customer Details' %}
+        </a>
+      </div>
 
-        <dt> {% trans "Long description:" %} </dt>
-        <dd><p>
-          {{ object.act_description }}
-        </p></dd>
-
-        <div class="text-right">
-          <a class="btn btn-primary text-right"
-             href={{ href }}>
-            <i data-feather="edit-3"></i>
-            {% trans 'Edit Customer Details' %}
-          </a>
-        </div>
-
-      </dl>
+    </dl>
 
 
 
-      <dl>
-        <h4>
-          {% trans "Users:" %}
-          {% url 'project-customer-user-create' object.pk as href %}
-          {% include 'project_main/__btn-icon-add.html' %}
-        </h4>
+    <dl>
+      <h4>
+        {% trans "Users:" %}
+        {% url 'project-customer-user-create' object.pk as href %}
+        {% include 'project_main/__btn-icon-add.html' %}
+      </h4>
 
-        <ul>
-          {% for user in object.projectcustomuser_set.all %}
-            <li class="my-2 big">
+      <ul>
+        {% for user in object.projectcustomuser_set.all %}
+          <li class="my-2 big">
 
-              {% if user.is_active %}
-                {{ user.name }} / {{ user.email }}
-              {% else %}
-                <span class="text-danger">
-                  {{ user.name }} / {{ user.email }} (inactive)
-                </span>
-              {% endif %}
+            {% if user.is_active %}
+              {{ user.name }} / {{ user.email }}
+            {% else %}
+              <span class="text-danger">
+                {{ user.name }} / {{ user.email }} (inactive)
+              </span>
+            {% endif %}
 
-              <div class="btn-group">
-                {% url 'project-customer-user-update' object.pk user.pk as href %}
-                {% include 'project_main/__btn-icon-edit.html' %}
-              </div>
+            <div class="btn-group">
+              {% url 'project-customer-user-update' object.pk user.pk as href %}
+              {% include 'project_main/__btn-icon-edit.html' %}
+            </div>
 
-            </li>
-          {% endfor %}
-        </ul>
+          </li>
+        {% endfor %}
+      </ul>
 
-        <div class="text-right">
-          <a class="btn btn-primary text-right"
-             href={{ href }}>
-            <i data-feather="plus"></i>
-            {% trans 'Add New User to Customer' %}
-          </a>
-        </div>
-      </dl>
+      <div class="text-right">
+        <a class="btn btn-primary text-right"
+           href={{ href }}>
+          <i data-feather="plus"></i>
+          {% trans 'Add New User to Customer' %}
+        </a>
+      </div>
+    </dl>
 
 
-      {% for inline in inlines %}
-        {% include 'project_main/__inline.html' with inline=inline %}
-      {% endfor %}
-
-    </div>
+    {% for inline in inlines %}
+      {% include 'project_main/__inline.html' with inline=inline %}
+    {% endfor %}
+    
   </section>
 {% endblock content %}
