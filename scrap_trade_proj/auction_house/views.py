@@ -149,22 +149,21 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
                 'icon': 'file-text',
             }
         ]
-        if test_poweruser(self.request.user):
-            button_list.append({
-                'text': _("Edit offer"),
-                'href': reverse('ah-offer-update',
-                                kwargs={'pk': offer.pk}),
-                'icon': 'edit-3',
+        
+        edit_button = {
+            'text': _("Edit offer"),
+            'icon': 'edit-3',
+        }
+        if state_key in ['offer_new','offer_ready_to_close']:
+            edit_button.update({
+                'href': reverse('ah-offer-customer-update', args=[offer.pk])
+            })
+        elif test_poweruser(self.request.user):
+            edit_button.update({
+                'href': reverse('ah-offer-update', args=[offer.pk])
                 'type': 'poweruser',
             })
-        else:
-            if state_key in ['offer_new','offer_ready_to_close']:
-                button_list.append({
-                    'text': _("Edit offer"),
-                    'href': reverse('ah-offer-customer-update',
-                                    kwargs={'pk': offer.pk}),
-                    'icon': 'edit-3',
-                })
+        button_list.append(edit_button)
 
         if offer.auction_url != "":
             button_list.append({
