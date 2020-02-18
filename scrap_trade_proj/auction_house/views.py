@@ -13,10 +13,10 @@ from .modules.auction import (
     get_waiting_offers,
     get_auction_list_control_obj,
     ntf_send_from_view,
-    OnlineBestBet,
+    answer_update_ppu,
+    
     get_online_info_context,
     get_online_context,
-    answer_update_ppu,
 )
 
 from state_wf.models import (
@@ -870,7 +870,7 @@ def ah_answer_online_update_ppu(request, pk, pk2):
 
     answer = get_object_or_404(AhAnswer, id = pk)
     answer_line = get_object_or_404(AhAnswerLine, id = pk2)
-
+    
     if request.method == 'POST':
         form = AhAnwserLinePpuUpdateForm(request.POST, instance=answer_line)
         if form.is_valid():
@@ -882,10 +882,8 @@ def ah_answer_online_update_ppu(request, pk, pk2):
     else:
         form = AhAnwserLinePpuUpdateForm(instance=answer_line)
 
-    title2 = tr.pgettext('ah_answer_line_update-title', 'update-line')
     context = {
         'form': form,
-        'title': title2,
         'answer': answer,
         'min_price': answer_line.offer_line.minimal_ppu,
     }
