@@ -166,7 +166,7 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
                     'icon': 'edit-3',
                 })
 
-        if offer.auction_url != "":
+        if offer.auction_url:
             button_list.append({
                 'text': _("Online auction"),
                 'href': offer.auction_url,
@@ -603,7 +603,7 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
                 'icon': 'edit-3',
             })
 
-        if answer.auction_url != "":
+        if answer.auction_url:
             button_list.append({
                 'href': answer.auction_url,
                 'text': _("Online auction"),
