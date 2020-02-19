@@ -11,48 +11,8 @@
   <section class="content-pad">
 
     <div class="mb-3">
+      {% include 'auction_house/__state-stepping.html' with type='offer' %}
       
-      {% for next in object.actual_state.next_states.all %}
-        {% if next.manual_set == True %}  {# = `next` is settable manually #}
-
-          {# Note: All button hrefs are derived from the state pk #}
-          {% url 'ah-offer-change-state' object.owner.pk object.pk next.pk as btn_href %}
-          
-          {# Proceed to next state #}
-          {% if next.is_alert_button == False %}
-            <a href="{{ btn_href }}"
-
-               {% if next.security_level == 0 %}
-               class="btn btn-primary"
-               {% elif next.security_level == 1 and "customers.is_customer_admin" in perms %}
-               class="btn btn-primary"
-               {% elif next.security_level >= 2 and "customers.is_poweruser" in perms %}
-               class="btn btn-poweruser"
-               {% endif %}
-            >
-              {{ next.get_actual_state_button }}
-            </a>  
-          {% endif %}
-          
-          {# Dangerous actions #}
-          {% if next.is_alert_button == True %}
-            <a href="{{ btn_href }}"
-               
-               {% if next.security_level == 0 %}  
-               class="btn btn-danger"
-               {% elif next.security_level == 1 and "customers.is_customer_admin" in perms %}
-               class="btn btn-danger"
-               {% elif next.security_level >= 2 and "customers.is_poweruser" in perms %}
-               class="btn btn-outline-danger btn-poweruser"
-               {% endif %}
-            >
-              {{ next.get_actual_state_button }}
-            </a>
-          {% endif %}
-          
-        {% endif %}
-      {% endfor %}
-
       <div class="tip">
         {% trans "Tip: Setting a state discards any unsaved changes made on this page." %}
         {% trans "Please make sure to save any changes before changing offer's state." %}

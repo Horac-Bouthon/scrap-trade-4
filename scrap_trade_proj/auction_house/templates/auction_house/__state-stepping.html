@@ -1,0 +1,49 @@
+{% load i18n %}
+
+
+{% for next in object.actual_state.next_states.all %}
+  
+  {% if next.manual_set == True %}  {# = `next` is settable manually #}
+
+    {# Note: All button hrefs are derived from the state pk #}
+    {% if type == 'offer' %}
+      {% url 'ah-offer-change-state' object.owner.pk object.pk next.pk as btn_href %}
+    {% elif type == 'answer' %}
+      {% url 'ah-answer-change-state' object.owner.pk object.pk next.pk as btn_href %}
+    {% endif %}
+    
+    {# Proceed to next state #}
+    {% if next.is_alert_button == False %}
+      <a href="{{ btn_href }}"
+
+         {% if next.security_level == 0 %}
+         class="btn btn-primary"
+         {% elif next.security_level == 1 and "customers.is_customer_admin" in perms %}
+         class="btn btn-primary"
+         {% elif next.security_level >= 2 and "customers.is_poweruser" in perms %}
+         class="btn btn-poweruser"
+         {% endif %}
+      >
+        {{ next.get_actual_state_button }}
+      </a>  
+    {% endif %}
+    
+    {# Dangerous actions #}
+    {% if next.is_alert_button == True %}
+      <a href="{{ btn_href }}"
+         
+         {% if next.security_level == 0 %}  
+         class="btn btn-danger"
+         {% elif next.security_level == 1 and "customers.is_customer_admin" in perms %}
+         class="btn btn-danger"
+         {% elif next.security_level >= 2 and "customers.is_poweruser" in perms %}
+         class="btn btn-outline-danger btn-poweruser"
+         {% endif %}
+      >
+        {{ next.get_actual_state_button }}
+      </a>
+    {% endif %}
+    
+  {% endif %}
+{% endfor %}
+
