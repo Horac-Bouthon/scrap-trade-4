@@ -112,41 +112,6 @@
                </tr>
              {% endfor %}
           </table>
-
-
-          <form method="POST">
-            {% csrf_token %}
-            <!--
-            <div class="pb-2">
-              <label for="Amount"
-                     class="m-0">
-                {% trans "Amount" %}
-              </label>
-              <input type="text"
-                     name="amount" id="Amount"
-                     value=""
-                     class="form-control"/>
-              <small>{% trans "How much do you wish to bid?" %}</small>
-            </div>
-            -->
-            <div>
-              <!--
-              <button type="submit"
-                      class="btn btn-primary mb-2">
-                <i data-feather="check-circle"></i>
-                {% trans "Place a bid" %}
-              </button>
-              -->
-              <button type="button"
-                      class="btn btn-warning float-right"
-                      onclick="location.reload()">
-                <span class="mr-1">
-                  {% trans "Refresh bid list" %}
-                </span>
-                <i data-feather="refresh-cw"></i>
-              </button>
-            </div>
-          </form>
         </section>
 
         <section class="ml-3">
@@ -163,48 +128,6 @@
               </div>
             </li>
             {% endfor %}
-
-            <!--
-            <li class="bid__item bid__item--best bid__item--owned">
-              <div class="bid__amount">
-                {{ best_bit.total_price }}
-              </div>
-              <div class="bid__time">
-                13:30
-              </div>
-            </li>
-
-            <li class="bid__item">
-              <div class="bid__amount">
-                290
-              </div>
-              <div class="bid__time">
-                10:30
-              </div>
-            </li>
-
-
-            <li class="bid__item bid__item--owned">
-              <div class="bid__amount">
-                150
-              </div>
-              <div class="bid__time">
-                11:30
-              </div>
-            </li>
-
-
-            <li class="bid__item">
-              <div class="bid__amount">
-                130
-              </div>
-              <div class="bid__time">
-                12:30
-              </div>
-            </li>
-          -->
-
-
           </ul>
         </section>
 

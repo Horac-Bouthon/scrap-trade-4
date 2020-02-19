@@ -348,10 +348,10 @@ def is_best_line(line):
 
 
 def arrival_type_of_realtime_auction(offer):
-    
+
     in_auction_state = StepState.objects.get(state_key = 'offer_in_auction')
     now = django_timezone.now()
-    
+
     if now < offer.auction_start:
         arrival_type = 'too_soon'
     elif now > offer.auction_end:
@@ -362,7 +362,7 @@ def arrival_type_of_realtime_auction(offer):
         else:
             arrival_type = 'too_soon'
             # @todo; Something more meaningful should be reported
-    
+
     return arrival_type
 
 
@@ -370,59 +370,60 @@ def arrival_type_of_realtime_auction(offer):
 def get_classed_best_bids(price_sorted_bid_list,
                           owned_answer_id=None):
     best_bid_list = []
-    
+
     for index, bid in enumerate(price_sorted_bid_list):
         classes = ['bid__item']
         if index == 0:
             classes.append('bid__item--best')
         if owned_answer_id == bid.id:
             classes.append('bid__item--owned')
-        
+
         best_bid_list.append({
             'total_price': bid.total_price,
             'str_class': " ".join(classes),
         })
-    
+
     return best_bid_list
-    
+
 
 
 
 def get_online_context(offer_id, answer_id):
-    
+
     offer = get_object_or_404(AhOffer, id=offer_id)
     answer = get_object_or_404(AhAnswer, id=answer_id)
-    
+
     lines_object = []
     for line in answer.my_lines.all():
         classes = ['td_lines table_lines']
         if is_best_line(line):
             classes.append('bid__item--best')
-            
+
         lines_object.append({
             'ah_a_line': line,
             'str_class': " ".join(classes),
         })
     print("lines_object = {}".format(lines_object))
-    
+
     best_bids = offer.answers.order_by('-total_price')[:5]
     list_bb = get_classed_best_bids(best_bids, answer_id)
-    
+
     str_arriv = arrival_type_of_realtime_auction(offer)
-    
+
     context = {
         'offer': offer, 'object': answer,
         'answer': answer,
         'customer': answer.owner,
         'arrival': str_arriv,
-        
+
         'content_header': {
             'title': offer.description,
             'desc': _("Online auction"),
         },
-        
+
         'list_bb': list_bb,
         'lines_obj': lines_object,
+        'is_online': True,
     }
     return context
 
@@ -430,25 +431,26 @@ def get_online_context(offer_id, answer_id):
 
 
 def get_online_info_context(offer_id):
-    
+
     offer = get_object_or_404(AhOffer, id=offer_id)
-    
+
     best_bids = offer.answers.all().order_by('-total_price')[:5]
     list_bb = get_classed_best_bids(best_bids)
-    
+
     str_arriv = arrival_type_of_realtime_auction(offer)
-    
+
     context = {
         'offer': offer, 'object': offer,
         'customer': offer.owner,
         'arrival': str_arriv,
-        
+
         'content_header': {
             'title': offer.description,
             'desc': _("Online auction info"),
         },
-        
+
         'list_bb': list_bb,
+        'is_online': True,
     }
     return context
 
