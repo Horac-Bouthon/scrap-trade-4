@@ -197,9 +197,12 @@ class AhOfferInfoView(LoginRequiredMixin, DetailView):
 
 class AhOfferUpdateView(Poweruser, UpdateView):
     model = AhOffer
-    fields = ['description', 'auction_date', 'delivery_date',
-        'minimal_total_price', 'auction_url', 'auction_start',
-        'auction_end', 'offered_to',
+    fields = [
+        'description',
+        'auction_date', 'delivery_date',
+        'minimal_total_price', 
+        'auction_url', 'auction_start', 'auction_end', 
+        'offered_to',
     ]
 
     def get_context_data(self, **kwargs):
@@ -208,7 +211,6 @@ class AhOfferUpdateView(Poweruser, UpdateView):
         offer = context['object']
         context.update({
             'customer': offer.owner,
-            'poweruser': True,
             'content_header': {
                 'title': ' | '.join([_("Edit offer"),
                                      offer.description]),
@@ -222,7 +224,7 @@ class AhOfferUpdateView(Poweruser, UpdateView):
             },
         })
         return context
-
+    
 
 
 class AhOfferCustomerUpdateView(UserBelongOffer, UpdateView):
@@ -241,8 +243,8 @@ class AhOfferCustomerUpdateView(UserBelongOffer, UpdateView):
         context['customer'] = offer.owner
 
         context['content_header'] = {
-            'title': ' | '.join([offer.description,
-                                 _("Edit offer")]),
+            'title': ' | '.join([_("Edit offer"),
+                                 offer.description]),
             'desc': _("Modify the offer's data."),
             'button_list': [{
                 'text': 'Offer',
@@ -322,7 +324,8 @@ def ah_offer_line_create(request, pk):
         'offer': offer,
         'customer': offer.owner,
         'content_header': {
-            'title': ' | '.join([offer.description, _('Add a line')]),
+            'title': ' | '.join([_('Add a line'), 
+                                 offer.description]),
             'desc': _("Add a new product for offer."),
             'button_list': [{
                 'text': 'Offer',
@@ -372,7 +375,8 @@ def ah_customer_auction(request, pk):
     }
 
     context['content_header'] = {
-        'title': ' | '.join([customer.customer_name, _('Auction')]),
+        'title': ' | '.join([_('Auction'), 
+                             customer.customer_name]),
         'desc': _('Auction homepage'),
 
         'button_list': [
@@ -625,10 +629,33 @@ class AhAnswerUpdateView(Poweruser, UpdateView):
     fields = [
         'description',
         'owner',
-        'ah_offer',
+        'ah_offer',  # @todo; Is changing the offer bound to the answer ever a good idea?
         'is_bound',
         'auction_url',
     ]
+    
+    def get_context_data(self, **kwargs):
+        context = super(UpdateView, self).get_context_data(**kwargs)
+
+        answer = context['object']
+        context.update({
+            'customer': answer.owner,  # @todo; Whose icon do we show in the header of answers?
+            'content_header': {
+                'title': ' | '.join([_("Edit answer"),
+                                     answer.description]),
+                'desc': _("Edit answer as a poweruser."),
+                'button_list': [{
+                    'text': 'Answer',
+                    'icon': 'arrow-left',
+                    'type': 'secondary',
+                    'href': reverse('ah-answer-detail', args=[answer.pk]),
+                }],
+            },
+        })
+        return context
+
+    
+    
 
 
 
@@ -638,6 +665,28 @@ class AhAnswerCustomerUpdateView(UserBelongAnswer, UpdateView):
         'description',
     ]
     template_name = 'auction_house/ahanswer_customer_form.html'
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super(UpdateView, self).get_context_data(**kwargs)
+
+        answer = context['object']
+        context['customer'] = answer.owner
+
+        context['content_header'] = {
+            'title': ' | '.join([_("Edit answer"),
+                                 answer.description]),
+            'desc': _("Modify the answer's data."),
+            'button_list': [{
+                'text': 'Answer',
+                'icon': 'arrow-left',
+                'type': 'secondary',
+                'href': reverse('ah-answer-detail', args=[answer.pk]),
+            }],
+        }
+
+        return context
+
 
 
 class AhAnswerDeletelView(Poweruser, DeleteView):
