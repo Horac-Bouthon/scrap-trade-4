@@ -135,13 +135,13 @@ LANGUAGES = [
     ('cs', 'Czech'),
 ]
 
-TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
 USE_L10N = True
 
+# Timezones
 USE_TZ = True
+TIME_ZONE = 'Europe/Prague'
 
 
 # Static files (CSS, JavaScript, Images)
