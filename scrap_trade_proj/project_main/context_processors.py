@@ -9,8 +9,11 @@
 
 
 from .models import Project
+from scrap_trade_proj.settings import DEBUG_OFFLINE
+
 def project(request):
     return { 
-        'project': Project.objects.first() 
+        'project': Project.objects.first(), 
+        'debug_offline': DEBUG_OFFLINE,
     }
     
