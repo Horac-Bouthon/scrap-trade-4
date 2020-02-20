@@ -7,7 +7,21 @@
 
 {% block content %}
 
-  {% if arrival == 'too_soon' %}
+  {% if arrival == 'wrong_state' %}
+
+    <section class="content-pad">
+      <dl class="h5 py-5
+                 mx-md-4 mx-lg-5">
+        
+        <h4 class="mb-4 font-weight-bold">
+          {% trans "This offer is not in auction yet." %}
+        </h4>
+      </dl>
+    </section>
+
+    
+
+  {% elif arrival == 'too_soon' %}
 
     <section class="content-pad">
       <dl class="h5 py-5
@@ -75,136 +89,66 @@
 
       <div class="d-flex">
 
-        <section class="flex-fill">
-          <h4 class="section-header">
-            {% trans "Add a bid" %}
-          </h4>
-
-          <div class="">
-            <dl>
-              <dt>{% trans 'Total price:' %}</dt>
-              <dd>{{ answer.total_price }}</dd>
-            </dl>
+        <dl class="flex-fill">
+          
+          <h4>{% trans "My bid" %}</h4>
+          
+          <dt>{% trans 'Total price:' %}</dt>
+          <dd>{{ answer.total_price }}</dd>
+          
+          <div class="table-wrap">
+            <table>
+              <tr>
+                <th>{% trans "Description" %}</th>
+                <th>{% trans "Amount" %}</th>
+                <th>{% trans "Price per unit" %}</th>
+              </tr>
+              
+              {% for line_obj in lines %}  
+                <tr class="{{ line_obj.str_class }}">
+                  {% with line=line_obj.ah_a_line %}
+                    <td>{{ line.offer_line.description }}</td>
+                    <td>{{ line.offer_line.amount }} {{ line.offer_line.mat_class.measurement_unit }}</td>
+                    <td>
+                      <a href="{% url 'ah-customer-answers-online-ppu' answer.pk line_obj.ah_a_line.pk %}"
+                         title="{% trans "Click to update price per unit" %}">
+                        <div class="d-flex">
+                          {{ line.ppu }}
+                          <i data-feather="edit-3"></i>
+                        </div>
+                      </a>
+                    </td>
+                  {% endwith %}
+                </tr>
+              {% endfor %}
+            </table>
           </div>
 
-          <table class="table_lines">
-            <tr class="table_lines">
-              {% trans "Description" as var_offer_des %}
-              <th class="th_lines table_lines">
-              {{ var_offer_des }}
-              </th>
-              {% trans "Amount" as var_amounth %}
-              <th class="th_lines table_lines">{{ var_amounth }}
-              </th>
-              {% trans "Price per unit" as var_ppu %}
-              <th class="th_lines table_lines">{{ var_ppu }}
-              </th>
-            </tr>
-            {% trans "Click to update line" as var_hint3 %}
-             {% for line_o in  lines_obj %}
-               <tr class="table_lines">
-                 <td class="{{ line_o.str_class }}">{{ line_o.ah_a_line.offer_line.description }}</td>
-                 <td class="{{ line_o.str_class }}"> {{ line_o.ah_a_line.offer_line.amount }} {{ line_o.ah_a_line.offer_line.mat_class.measurement_unit }} </td>
-                 <td class="{{ line_o.str_class }}">
-                   {% trans "Click to update price per unit" as var_hint3 %}
-                   <a class="{{ line_o.str_class }}" href="{% url 'ah-customer-answers-online-ppu' answer.pk line_o.ah_a_line.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}"> {{ line_o.ah_a_line.ppu }} </a>
-                 </td>
-               </tr>
-             {% endfor %}
-          </table>
+          
+          <button type="button"
+                  class="btn btn-warning float-right
+                        mt-2"
+                  onclick="location.reload()">
+            <span class="mr-1">
+              {% trans "Refresh bid list" %}
+            </span>
+            <i data-feather="refresh-cw"></i>
+          </button>
+        </dl>
 
-
-          <form method="POST">
-            {% csrf_token %}
-            <!--
-            <div class="pb-2">
-              <label for="Amount"
-                     class="m-0">
-                {% trans "Amount" %}
-              </label>
-              <input type="text"
-                     name="amount" id="Amount"
-                     value=""
-                     class="form-control"/>
-              <small>{% trans "How much do you wish to bid?" %}</small>
-            </div>
-            -->
-            <div>
-              <!--
-              <button type="submit"
-                      class="btn btn-primary mb-2">
-                <i data-feather="check-circle"></i>
-                {% trans "Place a bid" %}
-              </button>
-              -->
-              <button type="button"
-                      class="btn btn-warning float-right"
-                      onclick="location.reload()">
-                <span class="mr-1">
-                  {% trans "Refresh bid list" %}
-                </span>
-                <i data-feather="refresh-cw"></i>
-              </button>
-            </div>
-          </form>
-        </section>
-
-        <section class="ml-3">
-          <h4 class="section-header m-0">
+        <dl class="ml-3">
+          <h4 class="m-0">
             {% trans "Best bids" %}
           </h4>
 
           <ul class="bid__list">
-
-            {% for item in list_bb%}
-            <li class="{{ item.str_class }}">
+            {% for bid in ordered_best_bid_list %}
+            <li class="{{ bid.str_class }}">
               <div class="bid__amount">
-                {{ item.total_price }}
+                {{ bid.total_price }}
               </div>
             </li>
             {% endfor %}
-
-            <!--
-            <li class="bid__item bid__item--best bid__item--owned">
-              <div class="bid__amount">
-                {{ best_bit.total_price }}
-              </div>
-              <div class="bid__time">
-                13:30
-              </div>
-            </li>
-
-            <li class="bid__item">
-              <div class="bid__amount">
-                290
-              </div>
-              <div class="bid__time">
-                10:30
-              </div>
-            </li>
-
-
-            <li class="bid__item bid__item--owned">
-              <div class="bid__amount">
-                150
-              </div>
-              <div class="bid__time">
-                11:30
-              </div>
-            </li>
-
-
-            <li class="bid__item">
-              <div class="bid__amount">
-                130
-              </div>
-              <div class="bid__time">
-                12:30
-              </div>
-            </li>
-          -->
-
-
           </ul>
         </section>
 
@@ -247,7 +191,7 @@
          flex: 1 1 auto; /* flex-fill */
      }
      .bid__item--best {
-         background: #ff5;
+         background: #ff5 !important;
      }
      .bid__item--owned {
          color: var(--orange);

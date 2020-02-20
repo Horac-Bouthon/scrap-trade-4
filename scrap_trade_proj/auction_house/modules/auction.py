@@ -360,7 +360,7 @@ def arrival_type_of_realtime_auction(offer):
         if offer.actual_state == in_auction_state:
             arrival_type = 'ok'
         else:
-            arrival_type = 'too_soon'
+            arrival_type = 'wrong_state'
             # @todo; Something more meaningful should be reported
     
     return arrival_type
@@ -395,18 +395,13 @@ def get_online_context(offer_id, answer_id):
     
     lines_object = []
     for line in answer.my_lines.all():
-        classes = ['td_lines table_lines']
-        if is_best_line(line):
-            classes.append('bid__item--best')
-            
         lines_object.append({
             'ah_a_line': line,
-            'str_class': " ".join(classes),
+            'str_class': 'bid__item--best' if is_best_line(line) else '',
         })
-    print("lines_object = {}".format(lines_object))
     
     best_bids = offer.answers.order_by('-total_price')[:5]
-    list_bb = get_classed_best_bids(best_bids, answer_id)
+    ordered_best_bid_list = get_classed_best_bids(best_bids, answer_id)
     
     str_arriv = arrival_type_of_realtime_auction(offer)
     
@@ -421,8 +416,8 @@ def get_online_context(offer_id, answer_id):
             'desc': _("Online auction"),
         },
         
-        'list_bb': list_bb,
-        'lines_obj': lines_object,
+        'ordered_best_bid_list': ordered_best_bid_list,
+        'lines': lines_object,
     }
     return context
 
@@ -434,7 +429,7 @@ def get_online_info_context(offer_id):
     offer = get_object_or_404(AhOffer, id=offer_id)
     
     best_bids = offer.answers.all().order_by('-total_price')[:5]
-    list_bb = get_classed_best_bids(best_bids)
+    ordered_best_bid_list = get_classed_best_bids(best_bids)
     
     str_arriv = arrival_type_of_realtime_auction(offer)
     
@@ -448,7 +443,7 @@ def get_online_info_context(offer_id):
             'desc': _("Online auction info"),
         },
         
-        'list_bb': list_bb,
+        'ordered_best_bid_list': ordered_best_bid_list,
     }
     return context
 

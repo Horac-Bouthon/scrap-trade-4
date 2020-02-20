@@ -907,11 +907,16 @@ def ah_answer_step_create(request, pk):
 
 ## REALTIME AUCTION
 
-#@login_required
-@user_belong_answer
+@user_belong_answer  # For the offer's owner
 def realtime_auction(request, pk2, pk):
     context = get_online_context(pk2, pk)
     return render(request, 'auction_house/realtime_auction.html', context)
+
+
+@login_required  # For others answering to the offer
+def realtime_auction_info(request, pk):
+    context = get_online_info_context(pk)
+    return render(request, 'auction_house/realtime_auction_info.html', context)
 
 
 @user_belong_answer
@@ -919,6 +924,8 @@ def ah_answer_online_update_ppu(request, pk, pk2):
 
     answer = get_object_or_404(AhAnswer, id = pk)
     answer_line = get_object_or_404(AhAnswerLine, id = pk2)
+    
+    offer = answer.ah_offer
     
     if request.method == 'POST':
         form = AhAnwserLinePpuUpdateForm(request.POST, instance=answer_line)
@@ -932,13 +939,11 @@ def ah_answer_online_update_ppu(request, pk, pk2):
         form = AhAnwserLinePpuUpdateForm(instance=answer_line)
 
     context = {
-        'form': form,
+        'ppu_form': form,
         'answer': answer,
-        'min_price': answer_line.offer_line.minimal_ppu,
+        'min_price_ppu': answer_line.offer_line.minimal_ppu,
+        
+        'cancel_to_online': True,
+        'offer': offer,  # Needed for that cancel link
     }
     return render(request, 'auction_house/answer_line_form.html', context)
-
-@login_required
-def realtime_auction_info(request, pk):
-    context = get_online_info_context(pk)
-    return render(request, 'auction_house/realtime_auction_info.html', context)

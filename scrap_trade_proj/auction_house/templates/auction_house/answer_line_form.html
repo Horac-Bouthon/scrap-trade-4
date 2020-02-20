@@ -43,18 +43,27 @@
           <dl class="p-0">
             <dt>{% trans "Minimal total price:" %}</dt>
             <dd>{{ min_price_total }}</dd>
-          </dl>  
+          </dl>
           {{ total_form|crispy }}
           
         {% endif %}
         
       </fieldset>
+      
       <div>
-
         {% include 'project_main/__btn-submit-save.html' %}
+
         
-        {% trans "Cancel" as var_cancel %}
-        <a class="btn btn-outline-secondary" href="{% url 'ah-answer-detail' answer.pk %}">{{ var_cancel }}</a>
+        {% if not cancel_to_online %}
+          {% url 'ah-answer-detail' answer.pk as href %}
+        {% else %}
+          {% url 'realtime-auction' offer.pk answer.pk as href %}
+        {% endif %}
+        
+        <a class="btn btn-outline-secondary"
+           href="{{ href }}">
+          {% trans "Cancel" %}
+        </a>
       </div>
       
     </form>
