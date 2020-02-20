@@ -171,7 +171,7 @@ THUMB_SIZE = (100, 100)
 
 # Use local assets instead of CDN's.
 # When in production, switch to False.
-DEBUG_OFFLINE = True
+DEBUG_OFFLINE = False
 
 # Production check
 if DEBUG_OFFLINE and not DEBUG:
