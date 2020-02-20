@@ -14,7 +14,7 @@ from .modules.auction import (
     get_auction_list_control_obj,
     ntf_send_from_view,
     answer_update_ppu,
-    
+
     get_online_info_context,
     get_online_context,
 )
@@ -921,11 +921,8 @@ def realtime_auction_info(request, pk):
 
 @user_belong_answer
 def ah_answer_online_update_ppu(request, pk, pk2):
-
     answer = get_object_or_404(AhAnswer, id = pk)
     answer_line = get_object_or_404(AhAnswerLine, id = pk2)
-    
-    offer = answer.ah_offer
     
     if request.method == 'POST':
         form = AhAnwserLinePpuUpdateForm(request.POST, instance=answer_line)
@@ -934,7 +931,7 @@ def ah_answer_online_update_ppu(request, pk, pk2):
             answer_update_ppu(answer_line)
             success_message = _('Your line has been updated!')
             messages.success(request, success_message)
-            return redirect('realtime-auction', answer.ah_offer.pk, answer.pk)
+            return redirect('realtime-auction', answer.ah_offer.pk, pk)
     else:
         form = AhAnwserLinePpuUpdateForm(instance=answer_line)
 
@@ -943,7 +940,8 @@ def ah_answer_online_update_ppu(request, pk, pk2):
         'answer': answer,
         'min_price_ppu': answer_line.offer_line.minimal_ppu,
         
-        'cancel_to_online': True,
-        'offer': offer,  # Needed for that cancel link
+        'offer': answer.ah_offer,  # Needed for that cancel link
+
+        'from_online': True,
     }
     return render(request, 'auction_house/answer_line_form.html', context)

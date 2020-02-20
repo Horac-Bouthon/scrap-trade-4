@@ -7,14 +7,14 @@
 {% block content %}
 
   {% if ppu_form %}
-    
+
     {# @quick_header #}
     {% trans "Edit price per unit" as content_header__title %}
     {% trans "Change the price for a single unit in an answer to an offer line. The price has to meet the minimal unit price set by offer's owner." as content_header__desc %}
     {% with customer=answer.owner %}
       {% include 'project_main/__content-header.html' %}
     {% endwith %}
-    
+
   {% elif total_form %}
 
     {# @quick_header #}
@@ -23,14 +23,14 @@
     {% with customer=answer.owner %}
       {% include 'project_main/__content-header.html' %}
     {% endwith %}
-    
+
   {% endif %}
 
-  
+
   <section class="content-pad">
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-      <fieldset>  
+      <fieldset>
 
         {% if ppu_form %}
           <dl class="p-0">
@@ -38,23 +38,22 @@
             <dd>{{ min_price_ppu }}</dd>
           </dl>
           {{ ppu_form|crispy }}
-          
+
         {% elif total_form %}
           <dl class="p-0">
             <dt>{% trans "Minimal total price:" %}</dt>
             <dd>{{ min_price_total }}</dd>
           </dl>
           {{ total_form|crispy }}
-          
+
         {% endif %}
-        
+
       </fieldset>
       
       <div>
         {% include 'project_main/__btn-submit-save.html' %}
 
-        
-        {% if not cancel_to_online %}
+        {% if not from_online %}
           {% url 'ah-answer-detail' answer.pk as href %}
         {% else %}
           {% url 'realtime-auction' offer.pk answer.pk as href %}
@@ -65,7 +64,7 @@
           {% trans "Cancel" %}
         </a>
       </div>
-      
+
     </form>
   </section>
 {% endblock content %}

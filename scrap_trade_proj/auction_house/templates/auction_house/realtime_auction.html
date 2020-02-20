@@ -124,16 +124,6 @@
             </table>
           </div>
 
-          
-          <button type="button"
-                  class="btn btn-warning float-right
-                        mt-2"
-                  onclick="location.reload()">
-            <span class="mr-1">
-              {% trans "Refresh bid list" %}
-            </span>
-            <i data-feather="refresh-cw"></i>
-          </button>
         </dl>
 
         <dl class="ml-3">
@@ -143,16 +133,14 @@
 
           <ul class="bid__list">
             {% for bid in ordered_best_bid_list %}
-            <li class="{{ bid.str_class }}">
-              <div class="bid__amount">
-                {{ bid.total_price }}
-              </div>
-            </li>
+              <li class="{{ bid.str_class }}">
+                <div class="bid__amount">
+                  {{ bid.total_price }}
+                </div>
+              </li>
             {% endfor %}
           </ul>
-        </section>
-
-
+        </dl>
       </div>
 
     </section>
