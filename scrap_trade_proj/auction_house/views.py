@@ -697,10 +697,22 @@ class AhAnswerDeletelView(Poweruser, DeleteView):
 
 @user_belong_customer
 def ah_customer_answer_waiting_offers(request, pk):
+    
     customer = get_object_or_404(Customer, id = pk)
-    title2 = tr.pgettext('ah_customer_answer_waiting_offers-title', 'offers_waiting')
+    
     context = {
-        'title': title2,
+        'content_header': {
+            'title': _("Offers waiting for answers"),
+            'desc': _("List of offers that you can make an answer to."),
+            'button_list': [{
+                'text': _('Auction'),
+                'href': reverse('ah-customer-auction',
+                                kwargs={'pk': customer.pk}),
+                'icon': 'arrow-left',
+                'type': 'secondary',
+            }],
+        },
+        
         'selection': _('waiting offer'),
         'customer': customer,
         'offer_list': get_waiting_offers(customer),
@@ -860,12 +872,11 @@ def ah_offer_step_create(request, pk):
     else:
         form = StepUpdateForm()
 
-    title2 = tr.pgettext('ah_offer_step_create-title', 'create-step')
     context = {
         'form': form,
-        'title': title2,
         'customer': offer.owner,
         'object': offer,
+        'object_type': 'answer',
         'update_url': 'ah-offer-update',
     }
     return render(request, 'auction_house/ah_step_new.html', context)
@@ -893,12 +904,11 @@ def ah_answer_step_create(request, pk):
     else:
         form = StepUpdateForm()
 
-    title2 = tr.pgettext('ah_answer_step_create-title', 'create-step')
     context = {
         'form': form,
-        'title': title2,
         'customer': customer,
         'object': answer,
+        'object_type': 'answer',
         'update_url': 'ah-answer-update',
     }
     return render(request, 'auction_house/ah_step_new.html', context)
@@ -907,13 +917,13 @@ def ah_answer_step_create(request, pk):
 
 ## REALTIME AUCTION
 
-@user_belong_answer  # For the offer's owner
+@user_belong_answer
 def realtime_auction(request, pk2, pk):
     context = get_online_context(pk2, pk)
     return render(request, 'auction_house/realtime_auction.html', context)
 
 
-@login_required  # For others answering to the offer
+@login_required  
 def realtime_auction_info(request, pk):
     context = get_online_info_context(pk)
     return render(request, 'auction_house/realtime_auction_info.html', context)
@@ -931,10 +941,10 @@ def ah_answer_online_update_ppu(request, pk, pk2):
             answer_update_ppu(answer_line)
             success_message = _('Your line has been updated!')
             messages.success(request, success_message)
-            return redirect('realtime-auction', answer.ah_offer.pk, pk)
+            return redirect('realtime-auction', answer.ah_offer.pk, answer.pk)
     else:
         form = AhAnwserLinePpuUpdateForm(instance=answer_line)
-
+    
     context = {
         'ppu_form': form,
         'answer': answer,
