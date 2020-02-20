@@ -167,3 +167,16 @@ INTERNAL_IPS = ['127.0.0.1']  # For limiting Debug Toolbar to dev
 LOCALE_PATHS = ( os.path.join(BASE_DIR, 'locale'), )
 
 THUMB_SIZE = (100, 100)
+
+
+# Use local assets instead of CDN's.
+# When in production, switch to False.
+DEBUG_OFFLINE = False
+
+# Production check
+if DEBUG_OFFLINE and not DEBUG:
+    from django.core.exceptions import ImproperlyConfigured
+    raise ImproperlyConfigured(
+        "You can't have DEBUG_OFFLINE when not in debug"
+    )
+    
