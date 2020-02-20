@@ -16,13 +16,41 @@ from project_main.models import Project
 from integ.models import OpenId
 from notification.modules import ntf_manager
 
+class ProjectCustomUserManager(BaseUserManager):
+    """Helps Django work with custom user model """
+
+    def create_user(self, name, email, password=None, customer=None):
+        """ Create new custom user object """
+        if not email:
+            raise ValueError(_('User must have an email address.'))
+        email = self.normalize_email(email)
+        proj = Project.objects.all().first()
+        print('project>')
+        print(proj)
+        if customer is not None:
+            user = self.model(email=email, name=name, customer=customer, project=proj)
+        else:
+            user = self.model(email=email, name=name, project=proj)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, name, email, password):
+        """ Create and saves new super custom user object """
+        user = self.create_user(name, email, password)
+        user.is_superuser = True
+        user.is_staff = True
+        user.save(using=self._db)
+        return user
+
+
 class ProjectCustomUser(AbstractBaseUser, PermissionsMixin):
     """ basic user for admin AND customer base users """
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
 
-    objects = BaseUserManager()  # @todo; Why do we need to say this??
+    objects = ProjectCustomUserManager()
 
     email = models.EmailField(
         unique=True,
