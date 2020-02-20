@@ -9,27 +9,37 @@
     <section class="content-pad pt-3">
 
       <h4 class="section-header">
-        {% trans "Add a new step to offer" %}
+        {% if object_type == 'offer' %}
+          {% trans "Add a new step to offer" %}
+        {% elif object_type == 'answer' %}
+          {% trans "Add a new step to answer" %}
+        {% endif %}
       </h4>
       <form method="POST">
         {% csrf_token %}
-        <fieldset class="form-group">
+        <fieldset>
           
           {{ form|crispy }}
           
           {% trans "Create" as var_create %}
-          <button class="btn btn-outline-info" type="submit">{{ var_create }}</button>
+          <button class="btn btn-outline-info"
+                  type="submit">
+            {{ var_create }}
+          </button>
+          
           {% trans "Cancel" as var_cancel %}
           <a class="btn btn-outline-secondary" href="{% url update_url object.pk %}">{{ var_cancel }}</a>
 
         </fieldset>
 
       </form>
-      
-      <h4 class="section-header">
-        {% trans "Offer information" %}
-      </h4>
-      {% include 'auction_house/__offer-details.html' with offer=object %}
+
+      {% if object_type == 'offer' %}
+        <h4 class="section-header">
+          {% trans "Offer information" %}
+        </h4>
+        {% include 'auction_house/__offer-details.html' with offer=object %}
+      {% endif %}
 
     </section>
     

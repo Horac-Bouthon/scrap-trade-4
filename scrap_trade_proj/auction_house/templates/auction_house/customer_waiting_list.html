@@ -1,67 +1,67 @@
 {% extends "project_main/base.html" %}
-{% load static %}
-{% load crispy_forms_tags %}
 {% load i18n %}
 
 
+{# Viewing a list of offers in the answer pane #}
+
+
 {% block content %}
-  <article class="media content-section">
-    <a class=""
-      href="{% url 'project-customer-info' customer.pk %}" target="_blank">
-      <img class="rounded-circle customer-logo" src="{{ customer.customer_logo.url }}">
-    </a>
-    <div class="media-body">
-      <h2 class="customer-name">{{ customer.customer_name }} ({{ selection }})</h2>
-      {% trans "Back to auction" as var_back %}
-      <div class="auction_nav">
-        <a class="btn btn-outline-secondary" href="{% url 'ah-customer-auction' customer.pk %}">{{ var_back }}</a>
-        <p></p>
-      </div>
-      <table class="table_offer">
-        <tr class="table_offer">
-          {% trans "ID" as var_o_n %}
-          <th class="th_offer table_offer">{{ var_o_n }}</th>
-          {% trans "Description" as var_des %}
-          <th class="th_offer table_offer">{{ var_des }}</th>
-          {% trans "Owner" as var_crea %}
-          <th class="th_offer table_offer">{{ var_crea }}</th>
-          {% trans "Created at" as var_cre_at %}
-          <th class="th_offer table_offer">{{ var_cre_at }}</th>
-          <th class="th_offer table_offer"></th>
+
+  {% include 'project_main/__content-header.html' %}
+  {# @todo; Back button for customer_waiting_list.html header #}
+  
+  <section class="content-pad">
+
+    <div class="table-wrap">
+      <table>
+        <tr>
+          <th>{% trans "ID" %}</th>
+          <th>{% trans "Offer Description" %}</th>
+          <th>{% trans "Owner" %}</th>
+          <th>{% trans "Created at" %}</th>
+          <th>{# icons #}</th>
         </tr>
         {% for offer in offer_list %}
-        <tr class="table_offer">
-          <td class="td_offer table_offer"> {{ offer.pk }} </td>
-          <td class="td_offer table_offer">
-            {% if "customers.is_poweruser" in perms %}
-              {% trans "Click to update the offer" as var_hint1 %}
-              <a class="customer-detail-content" href="{% url 'ah-offer-detail' offer.pk %}"
-                data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}" target="_blank">{{ offer.description }}</a>
-            {% else %}
-              {% trans "Click to view the offer" as var_hint1 %}
-              <a class="customer-detail-content" href="{% url 'ah-offer-info' offer.pk %}"
-                data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}" target="_blank">{{ offer.description }}</a>
-            {% endif %}
-          </td>
-          <td class="td_offer table_offer">
-            {% trans "Click to view offer owner" as var_hint1 %}
-            <a class="customer-detail-content" href="{% url 'project-customer-info' offer.owner.pk %}"
-              data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}" target="_blank">{{ offer.owner.customer_name }}</a>
-          </td>
-          <td class="td_offer table_offer"> {{ offer.created_at }}</td>
-          <td class="td_offer table_offer">
-            {% trans "Click to create answer" as var_hint3 %}
-            <a class="" href="{% url 'ah-customer-answers-create' customer.pk offer.pk %}"
-                data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}">
-              <img class="rounded-circle delete-icon" src="/media/icons/Green_check.svg.png">
-            </a>
-          </td>
-        </tr>
+          <tr>
+            <td>{{ offer.pk }}</td>
+            <td>            
+              <a  target="_blank"
+                  
+                  {% if "customers.is_poweruser" in perms %}
+                  title="{% trans "Click to update the offer" %}"
+                  href="{% url 'ah-offer-detail' offer.pk %}"
+                  {% else %}
+                  title="{% trans "Click to view the offer" %}"
+                  href="{% url 'ah-offer-info' offer.pk %}"
+                  {% endif %}
+              >
+                {{ offer.description }}
+              </a>            
+            </td>
+            <td>
+              <a title="{% trans "Click to view offer owner" %}"
+                 href="{% url 'project-customer-info' offer.owner.pk %}"
+                 target="_blank">
+                {{ offer.owner.customer_name }}
+              </a>
+            </td>
+            <td> {{ offer.created_at }}</td>
+            <td class="icon-wrap">
+              <div>
+
+                {% url 'ah-customer-answers-create' customer.pk offer.pk as href%}
+                {% trans "Click to answer" as title %}
+                {% with cls='btn-primary btn-icon-only' %}
+                  {% with icon='plus' %}
+                    {% include 'project_main/__btn.html' %}
+                  {% endwith %}
+                {% endwith %}
+                
+              </div>
+            </td>
+          </tr>
         {% endfor %}
       </table>
     </div>
-  </article>
+  </section>
 {% endblock content %}
-
-{% block spec_action %}
-{% endblock spec_action %}
