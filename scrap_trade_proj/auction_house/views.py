@@ -25,6 +25,42 @@ from state_wf.models import (
 )
 
 
+
+def _back_button(type, kwargs_dict):
+    # Note; That kwargs isn't a **kwargs, I really want a dict
+    #   that'll get passed to the reverse() func.
+    
+    button_dict = {
+        # Common things
+        'icon': 'arrow-left',
+        'type': 'secondary'
+    }
+    
+    if type == 'offer':
+        button_dict.update({
+            'text': _("Offer"),
+            'href': reverse(
+                'ah-offer-detail', kwargs=kwargs_dict),
+        })
+    elif type == 'auction':
+        button_dict.update({
+            'text': _("Auction"),
+            'href': reverse(
+                'ah-customer-auction', kwargs=kwargs_dict),
+        })
+    elif type == 'answer':
+        button_dict.update({
+            'text': _("Answer"),
+            'href': reverse(
+                'ah-answer-detail', kwargs=kwargs_dict),
+        })
+    else:
+        raise ValueError("Back button type is not valid")
+    return button_dict
+    
+    
+
+
 from customers.permissions import (
     test_poweruser, Poweruser, poweruser,
     test_user_belong_customer, UserBelongCustomer, user_belong_customer,
@@ -136,13 +172,8 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
         })
 
         button_list = [
+            _back_button('auction', {'pk': offer.owner.pk}),
             {
-                'text': _("Auction"),
-                'href': reverse('ah-customer-auction',
-                                kwargs={'pk': offer.owner.pk}),
-                'icon': 'arrow-left',
-                'type': 'secondary'
-            }, {
                 'text': _("Documents"),
                 'href': reverse('doc-repo-dokument-list',
                                 kwargs={'oid': offer.open_id.int_id}),
@@ -215,12 +246,9 @@ class AhOfferUpdateView(Poweruser, UpdateView):
                 'title': ' | '.join([_("Edit offer"),
                                      offer.description]),
                 'desc': _("Edit offer as a poweruser."),
-                'button_list': [{
-                    'text': 'Offer',
-                    'icon': 'arrow-left',
-                    'type': 'secondary',
-                    'href': reverse('ah-offer-detail', args=[offer.pk]),
-                }],
+                'button_list': [
+                    _back_button('offer', {'pk': offer.pk}), 
+                ],
             },
         })
         return context
@@ -246,12 +274,9 @@ class AhOfferCustomerUpdateView(UserBelongOffer, UpdateView):
             'title': ' | '.join([_("Edit offer"),
                                  offer.description]),
             'desc': _("Modify the offer's data."),
-            'button_list': [{
-                'text': 'Offer',
-                'icon': 'arrow-left',
-                'type': 'secondary',
-                'href': reverse('ah-offer-detail', args=[offer.pk]),
-            }],
+            'button_list': [
+                _back_button('offer', {'pk': offer.pk}), 
+            ],
         }
 
         return context
@@ -327,12 +352,9 @@ def ah_offer_line_create(request, pk):
             'title': ' | '.join([_('Add a line'), 
                                  offer.description]),
             'desc': _("Add a new product for offer."),
-            'button_list': [{
-                'text': 'Offer',
-                'icon': 'arrow-left',
-                'type': 'secondary',
-                'href': reverse('ah-offer-detail', args=[offer.pk]),
-            }],
+            'button_list': [
+                _back_button('offer', {'pk': offer.pk}), 
+            ],
         },
         'page_type': 'create',  # Same template is used for update and create
     }
@@ -445,13 +467,9 @@ def ah_customer_offers_by_state_key(request, pk, sk):
             'title': "%s (%s)" % (translated_state_key,
                                   customer.customer_name),
             'desc': _("List of offers"),
-            'button_list': [{
-                'text': _('Auction'),
-                'href': reverse('ah-customer-auction',
-                                kwargs={'pk': customer.pk}),
-                'icon': 'arrow-left',
-                'type': 'secondary',
-            }],
+            'button_list': [
+                _back_button('auction', {'pk': customer.pk}),
+            ],
         },
     }
     return render(request, 'auction_house/customer_offer_list.html', context)
@@ -576,13 +594,8 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
         })
 
         button_list = [
+            _back_button('auction', {'pk': answer.owner.pk}),
             {
-                'text': _("Auction"),
-                'href': reverse('ah-customer-auction',
-                                kwargs={'pk': answer.owner.pk}),
-                'icon': 'arrow-left',
-                'type': 'secondary'
-            }, {
                 'text': _("Documents"),
                 'href': reverse('doc-repo-dokument-list',
                                 kwargs={'oid': answer.open_id.int_id}),
@@ -644,12 +657,9 @@ class AhAnswerUpdateView(Poweruser, UpdateView):
                 'title': ' | '.join([_("Edit answer"),
                                      answer.description]),
                 'desc': _("Edit answer as a poweruser."),
-                'button_list': [{
-                    'text': 'Answer',
-                    'icon': 'arrow-left',
-                    'type': 'secondary',
-                    'href': reverse('ah-answer-detail', args=[answer.pk]),
-                }],
+                'button_list': [
+                    _back_button('answer', {'pk': answer.pk}), 
+                ],
             },
         })
         return context
@@ -677,12 +687,9 @@ class AhAnswerCustomerUpdateView(UserBelongAnswer, UpdateView):
             'title': ' | '.join([_("Edit answer"),
                                  answer.description]),
             'desc': _("Modify the answer's data."),
-            'button_list': [{
-                'text': 'Answer',
-                'icon': 'arrow-left',
-                'type': 'secondary',
-                'href': reverse('ah-answer-detail', args=[answer.pk]),
-            }],
+            'button_list': [
+                _back_button('answer', {'pk': answer.pk}), 
+            ],
         }
 
         return context
@@ -704,13 +711,9 @@ def ah_customer_answer_waiting_offers(request, pk):
         'content_header': {
             'title': _("Offers waiting for answers"),
             'desc': _("List of offers that you can make an answer to."),
-            'button_list': [{
-                'text': _('Auction'),
-                'href': reverse('ah-customer-auction',
-                                kwargs={'pk': customer.pk}),
-                'icon': 'arrow-left',
-                'type': 'secondary',
-            }],
+            'button_list': [
+                _back_button('auction', {'pk': customer.pk}),
+            ],
         },
         
         'selection': _('waiting offer'),
@@ -736,13 +739,9 @@ def ah_customer_answer_by_state_key(request, pk, sk):
             'title': "%s (%s)" % (translated_state_key,
                                 customer.customer_name),
             'desc': _("List of answers"),
-            'button_list': [{
-                'text': _('Auction'),
-                'href': reverse('ah-customer-auction',
-                                kwargs={'pk': customer.pk}),
-                'icon': 'arrow-left',
-                'type': 'secondary',
-            }],
+            'button_list': [
+                _back_button('auction', {'pk': customer.pk}),
+            ],
         }
     }
     return render(request, 'auction_house/customer_answer_list.html', context)
@@ -777,13 +776,7 @@ def ah_customer_answer_create(request, pk, pk2):
         'desc': _('Create new answer'),
 
         'button_list': [
-            {
-                'text': _("Auction"),
-                'href': reverse('ah-customer-auction',
-                                kwargs={'pk': customer.pk}),
-                'icon': 'arrow-left',
-                'type': 'secondary'
-            },
+            _back_button('auction', {'pk': customer.pk}),
         ]
     }
     return render(request, 'auction_house/ahanswer_customer_new.html', context)
@@ -802,6 +795,7 @@ def ah_answer_line_update_ppu(request, pk, pk2):
         if form.is_valid():
             form.save()
             answer_update_ppu(answer_line)
+            
             success_message = _('Your line has been updated!')
             messages.success(request, success_message)
             return redirect('ah-answer-detail', pk)
