@@ -4,10 +4,13 @@
 {% block content %}
 
   <div class="page-poweruser">
-    
+
+    {% trans "Offer list" as content_header__title %}
+    {% trans "A list of all offers in the application." as content_header__desc %}
     {% include 'project_main/__content-header.html' %}
     
     <section class="content-pad">
+      
       <div class="table-wrap max-height-visible">
         <table>
           <tr>
@@ -20,37 +23,31 @@
           </tr>
           {% for offer in offers %}
             <tr>
-              <td>{{ offer.pk }}</td>
-              
+              <td>{{ offer.pk }}</td>              
               <td>{{ offer.description }}</td>
-              
               <td>{{ offer.owner.customer_name }}</td>
-              
               <td>{{ offer.creator.name }}</td>
-              
               <td>{{ offer.created_at }}</td>
               
-              <td>
-                {% with btn_styles="btn btn-icon-only" %}
-                  <div class="d-flex justify-content-around">
-                    <a class="btn-primary {{ btn_styles }}"
-                       href="{% url 'ah-offer-detail' offer.pk %}"
-                       title="{% trans "Click to update the offer" %}">
-                      <i data-feather="edit-3"></i>
-                    </a>
-                    <a class="btn-danger {{ btn_styles }}"
-                       href="{% url 'ah-offer-delete' offer.pk %}"
-                       title="{% trans "Click to delete offer" %}">
-                      <i data-feather="x"></i>
-                    </a>
-                  </div>
-                {% endwith %}
+              <td class="icon-wrap">
+                <div>
+                  {% url 'ah-offer-detail' offer.pk as href %}
+                  {% with cls="btn-outline-primary btn-icon-noborder" %}
+                    {% with icon="edit-3" %}
+                      {% include 'project_main/__btn.html' %}
+                    {% endwith %}
+                  {% endwith %}
+                  
+                  {% url 'ah-offer-delete' offer.pk as href%}
+                  {% include 'project_main/__btn-icon-delete.html' %}
+                </div>
               </td>
               
             </tr>
           {% endfor %}
         </table>
       </div>
+      
     </section>
   </div>
 {% endblock content %}

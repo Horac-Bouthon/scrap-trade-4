@@ -4,8 +4,8 @@
 {% block content %}
   <div class="page-poweruser">
     
-    {% trans "All answers" as content_header__title %}
-    {% trans "A list of all answers in the system." as content_header__desc %}
+    {% trans "Answer list" as content_header__title %}
+    {% trans "A list of all answers in the application." as content_header__desc %}
     {% include 'project_main/__content-header.html' %}
     
     <section class="content-pad">
@@ -24,23 +24,22 @@
           {% for answer in answers %}
             <tr>
               <td>{{ answer.pk }}</td>
-              <td>
-                
-                <a title="{% trans "Click to update the answer" %}"
-                   href="{% url 'ah-answer-detail' answer.pk %}">
-                  {{ answer.description }}
-                </a>
-              </td>
+              <td>{{ answer.description }}</td>
               <td>{{ answer.owner.customer_name }}</td>
               <td>{{ answer.creator.name }}</td>
               <td>{{ answer.created_at }}</td>
-              <td>
-                
-                <a title="{% trans "Click to delete answer" %}"
-                   href="{% url 'ah-answer-delete' answer.pk %}">
-                  <img class="rounded-circle delete-icon"
-                       src="/media/icons/delete_icon.jpg">
-                </a>
+              <td class="icon-wrap">
+                <div>
+                  {% url 'ah-answer-detail' answer.pk as href %}
+                  {% with cls="btn-outline-primary btn-icon-noborder" %}
+                    {% with icon="edit-3" %}
+                      {% include 'project_main/__btn.html' %}
+                    {% endwith %}
+                  {% endwith %}
+                  
+                  {% url 'ah-answer-delete' answer.pk as href %}
+                  {% include 'project_main/__btn-icon-delete.html' %}
+                </div>
               </td>
             </tr>
           {% endfor %}

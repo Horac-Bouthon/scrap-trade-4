@@ -114,14 +114,7 @@ class AhOfferListView(Poweruser, ListView):
     template_name = 'auction_house/ahoffer_list.html'
     context_object_name = 'offers'
     ordering = ['-pk']
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['content_header'] = {
-            'title': _('Offer list'),
-            'desc': _('A list of all offers in the application.'),
-        }
-        return context
+    
 
 class AhOfferListForAcceptView(Poweruser, ListView):
     model = AhOffer
