@@ -136,8 +136,15 @@ LANGUAGES = [
 ]
 
 
-USE_I18N = True
-USE_L10N = True
+USE_I18N = True  # Internationalization (multiple languages)
+
+
+USE_L10N = False  # Localisation (data formatting based on culture)
+DATE_FORMAT = "d.m.Y"
+TIME_FORMAT = "H:i"
+DATETIME_FORMAT = "d.m.Y H:i"
+
+
 
 # Timezones
 USE_TZ = True
