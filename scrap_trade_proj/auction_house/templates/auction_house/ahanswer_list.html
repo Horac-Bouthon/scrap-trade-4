@@ -1,47 +1,53 @@
 {% extends "project_main/base.html" %}
 {% load i18n %}
 
-
-
 {% block content %}
-  <article class="media content-section">
-  <div class="media-body">
-    <table class="table_answer">
-      <tr class="table_answer">
-        {% trans "ID" as var_o_n %}
-        <th class="th_answer table_answer">{{ var_o_n }}</th>
-        {% trans "Description" as var_des %}
-        <th class="th_answer table_answer">{{ var_des }}</th>
-        {% trans "Owner" as var_owner %}
-        <th class="th_answer table_answer">{{ var_owner }}</th>
-        {% trans "Creator" as var_crea %}
-        <th class="th_answer table_answer">{{ var_crea }}</th>
-        {% trans "Created at" as var_cre_at %}
-        <th class="th_answer table_answer">{{ var_cre_at }}</th>
-        <th class="th_answer table_answer"></th>
-      </tr>
-      {% for answer in answers %}
-      <tr class="table_answer">
-        <td class="td_answer table_answer"> {{ answer.pk }} </td>
-        <td class="td_answer table_answer">
-          {% trans "Click to update the answer" as var_hint1 %}
-          <a class="customer-detail-content" href="{% url 'ah-answer-detail' answer.pk %}"  data-toggle="tooltip" data-placement="top" title="{{ var_hint1 }}">{{ answer.description }}</a>
-        </td>
-        <td class="td_answer table_answer"> {{ answer.owner.customer_name }} </td>
-        <td class="td_answer table_answer"> {{ answer.creator.name }}</td>
-        <td class="td_answer table_answer"> {{ answer.created_at }}</td>
-        <td class="td_answer table_answer">
-          {% trans "Click to delete answer" as var_hint3 %}
-          <a class="" href="{% url 'ah-answer-delete' answer.pk %}" data-toggle="tooltip" data-placement="top" title="{{ var_hint3 }}">
-            <img class="rounded-circle delete-icon" src="/media/icons/delete_icon.jpg">
-          </a>
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
+  <div class="page-poweruser">
+    
+    {% trans "All answers" as content_header__title %}
+    {% trans "A list of all answers in the system." as content_header__desc %}
+    {% include 'project_main/__content-header.html' %}
+    
+    <section class="content-pad">
+      
+      <div class="table-wrap">        
+        <table>
+          <tr>
+            <th>{% trans "ID" %}</th>
+            <th>{% trans "Description" %}</th>
+            <th>{% trans "Owner" %}</th>
+            <th>{% trans "Creator" %}</th>
+            <th>{% trans "Created at" %}</th>
+            <th>{# icons #}</th>
+          </tr>
+          
+          {% for answer in answers %}
+            <tr>
+              <td>{{ answer.pk }}</td>
+              <td>
+                
+                <a title="{% trans "Click to update the answer" %}"
+                   href="{% url 'ah-answer-detail' answer.pk %}">
+                  {{ answer.description }}
+                </a>
+              </td>
+              <td>{{ answer.owner.customer_name }}</td>
+              <td>{{ answer.creator.name }}</td>
+              <td>{{ answer.created_at }}</td>
+              <td>
+                
+                <a title="{% trans "Click to delete answer" %}"
+                   href="{% url 'ah-answer-delete' answer.pk %}">
+                  <img class="rounded-circle delete-icon"
+                       src="/media/icons/delete_icon.jpg">
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </table>  
+      </div>
+      
+    </section>
   </div>
-  </article>
+  
 {% endblock content %}
-
-{% block spec_action %}
-{% endblock spec_action %}

@@ -1,29 +1,30 @@
-{% extends "project_main/system_base.html" %}
-{% load static %}
+{% extends "project_main/base.html" %}
 {% load i18n %}
 
 {% block content %}
 
-    <article class="media content-section">
-      <div class="media-body">
-        <h2 class="customer-name">
-          {{ object.act_display_name }}
-        </h2>
-        <p>
-          {{ object.act_mat_class_description|linebreaks }}
-        </p>
-        <p>
-          {% trans "Material class name:" as var_cl_n %}
-          <span class="customer-detail-content-highlighite">{{ var_cl_n }} </span>
-          <span class="customer-detail-content">{{ object.class_name }}</span>
-        </p>
-        <p>
-          {% trans "Measurement unit:" as var_m_u %}
-          <span class="customer-detail-content-highlighite">{{ var_m_u }} </span>
-          <span class="customer-detail-content">{{ object.measurement_unit }}</span>
-        </p>
-      </div>
-    </article>
-
+  {# @todo; Material classes could be AJAX'd in-page tables, there isn't much going on with them. #}
+  
+  {% trans 'Material class detail' as content_header__desc %}
+  {% with content_header__title=object.act_display_name %}
+    {% include 'project_main/__content-header.html' %}
+  {% endwith %}
+  
+  <section class="content-pad">
+    <dl>
+      <dt>{% trans 'Description:' %}</dt>
+      <dd>{{ object.act_mat_class_description|linebreaks }}</dd>
+    </dl>
+    <div class="d-flex">
+      <dl>
+        <dt>{% trans 'Name:' %}</dt>
+        <dd>{{ object.class_name }}</dd>
+      </dl>
+      <dl>
+        <dt>{% trans 'Measurement unit:' %}</dt>
+        <dd>{{ object.measurement_unit }}</dd>
+      </dl>
+    </div>
+  </section>
 
 {% endblock content %}
