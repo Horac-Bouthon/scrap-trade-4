@@ -46,6 +46,8 @@
             </tr>
           {% endfor %}
         </table>
+        {% include 'project_main/__no-entries.html' with check=offers.all %}
+        
       </div>
       
     </section>

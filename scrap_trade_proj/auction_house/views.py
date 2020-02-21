@@ -121,12 +121,16 @@ class AhOfferListForAcceptView(Poweruser, ListView):
     template_name = 'auction_house/ahoffer_list.html'
     context_object_name = 'offers'
     ordering = ['-pk']
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # Note; Template has default content_header title and desc
+        #   but setting one overrides what is in the template.
         context['content_header'] = {
             'title': _('Offers waiting for approval'),
-            'desc': _(('A list of offers waiting for approval in the application.')),
+            'desc': _(
+                'A list of offers waiting for approval in the application.'
+            ),
         }
         return context
 
