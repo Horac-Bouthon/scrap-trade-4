@@ -1,86 +1,22 @@
 {% extends "project_main/base.html" %}
-{% load crispy_forms_tags %}
 {% load i18n %}
 
 
 {% block content %}
 
-    <article class="media content-section">
-      <a href="{% url 'project-customer-info' object.owner.pk %}" target="_blank">
-        <img class="rounded-circle customer-logo" src="{{ object.owner.customer_logo.url }}">
-      </a>
-      <div class="media-body">
-        <h2 class="customer-name">{{ object.description }}</h2>
-        <p>
-          {% trans "Status:" as var_status %}
-          <span class="customer-detail-content-highlighite">{{ var_status }} </span>
-          <span class="customer-detail-content">{{ object.actual_state.act_state_name }}</span>
-        </p>
-        {% include 'auction_house/__auction_date.html' with data=object %}
-        <!--
-        <p>
-          {% trans "Auction date:" as var_auction %}
-          <span class="customer-detail-content-highlighite">{{ var_auction }} </span>
-          <span class="customer-detail-content">{{ object.auction_date }}</span>
-        </p>
-        -->
-        <p>
-          {% trans "Delivery date:" as var_delivery %}
-          <span class="customer-detail-content-highlighite">{{ var_delivery }} </span>
-          <span class="customer-detail-content">{{ object.delivery_date }}</span>
-        </p>
-        <p/>
-        {% if object.lines.all.count > 0 %}
-          <table class="table_lines">
-            <tr class="table_lines">
-              {% trans "ID" as var_o_n %}
-              <th class="th_lines table_lines">{{ var_o_n }}</th>
-              {% trans "Description" as var_des %}
-              <th class="th_lines table_lines">{{ var_des }}</th>
-              {% trans "Material class" as var_mc %}
-              <th class="th_lines table_lines">{{ var_mc }}</th>
-              {% trans "Amount" as var_crea %}
-              <th class="th_lines table_lines">{{ var_crea }}</th>
-              {% trans "Price" as var_price %}
-              <th class="th_lines table_lines">{{ var_price }}</th>
-            </tr>
-            {% trans "Click to update line" as var_hint3 %}
-            {% for line in  object.lines.all %}
-            <tr class="table_lines">
-              <td class="td_lines table_lines"> {{ line.id }} </td>
-              <td class="td_lines table_lines">{{ line.description }}</td>
-              <td class="td_lines table_lines">
-                <a class="table_lines" href="{% url 'ah-mat-class-detail' line.mat_class.id %}" data-toggle="tooltip" data-placement="top" title="{{ line.mat_class.act_mat_class_description }}" target="_blank">
-                 {{ line.mat_class.act_display_name }}
-                </a>
-              </td>
-              <td class="td_lines table_lines"> {{ line.amount }} {{ line.mat_class.measurement_unit }} </td>
-              <td class="td_lines table_lines"> {{ line.minimal_ppu }}</td>
-            </tr>
-            {% if line.open_id.get_docs.count > 0 %}
-              <tr class="table_lines">
-                <td class="td_lines table_lines" colspan="5">
-                  {% include 'doc_repo/__object_docs.html' with object=line %}
-                </td>
-              </tr>
-            {% endif %}
-            {% endfor %}
-          </table>
-        {% endif %}
+  {% include 'project_main/__content-header.html' %}
 
-        {% if object.open_id.get_docs.count > 0 %}
-          <div class="">
-            <p></p>
-            {% trans "Offers documents" as var_docs %}
-            <h5 class="">{{ var_docs }}</h5>
-            {% include 'doc_repo/__object_docs.html' with object=object %}
-          </div>
-        {% endif %}
-      </div>
-    </article>
+  <section class="content-pad">
 
+    {% include 'auction_house/__offer-details.html' %}
+    
+    <dl>
+      <h4>{% trans "Offer Lines" %}</h4>
+      
+      {% include 'auction_house/__offerlines-table.html' %}
+    </dl>
 
+    {# @todo; Should answers to offers (anonymous) be displayed on public offer views or are answers visible only to the offer owner?? #}
+  </section>
+  
 {% endblock content %}
-
-{% block spec_action %}
-{% endblock spec_action %}
