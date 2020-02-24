@@ -437,8 +437,8 @@ table td.icon-wrap > div {
 /* Classes for visually denoting the security level 
    of a component. */
 :root {
-  --poweruser: #A35229;
-  --superuser: #EE4C4C;
+  --superuser: #417690;
+  --poweruser: #aa33aa;
 }
 .btn-poweruser {
   color: white !important;

@@ -17,8 +17,7 @@ from .models import AhOffer, AhAnswer
 
 
 def test_user_belong_offer(user, offer):  # Test func
-    customer = offer.owner
-    return test_user_belong_customer(user, customer)
+    return test_user_belong_customer(user, offer.owner)
 
 class UserBelongOffer(UserPassesTestMixin):  # Interface
     def test_func(self):
@@ -27,7 +26,9 @@ class UserBelongOffer(UserPassesTestMixin):  # Interface
 
 def user_belong_offer(function):  # Decorator
     def wrap(request, *args, **kwargs):
+        
         offer = AhOffer.objects.get(id = kwargs['pk'])
+        
         if test_user_belong_offer(request.user, offer):
             return function(request, *args, **kwargs)
         else:
@@ -40,8 +41,7 @@ def user_belong_offer(function):  # Decorator
 
 
 def test_user_belong_answer(user, answer):  # Test func
-    customer = answer.owner
-    return test_user_belong_customer(user, customer)
+    return test_user_belong_customer(user, answer.owner)
 
 
 class UserBelongAnswer(UserPassesTestMixin):  # Interface
