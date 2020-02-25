@@ -399,10 +399,10 @@ def get_online_context(offer_id, answer_id):
             'ah_a_line': line,
             'str_class': 'bid__item--best' if is_best_line(line) else '',
         })
-    
+
     best_bids = offer.answers.order_by('-total_price')[:5]
     ordered_best_bid_list = get_classed_best_bids(best_bids, answer_id)
-    
+
     str_arriv = arrival_type_of_realtime_auction(offer)
 
     context = {
@@ -410,15 +410,15 @@ def get_online_context(offer_id, answer_id):
         'answer': answer,
         'customer': answer.owner,
         'arrival': str_arriv,
-        
+
         'content_header': {
             'title': offer.description,
             'desc': _("Online auction"),
         },
-        
+
         'ordered_best_bid_list': ordered_best_bid_list,
         'lines': lines_object,
-        
+
         'is_online': True,
     }
     return context
@@ -432,7 +432,8 @@ def get_online_info_context(offer_id):
 
     best_bids = offer.answers.all().order_by('-total_price')[:5]
     ordered_best_bid_list = get_classed_best_bids(best_bids)
-    
+    print('ordered_best_bid_list = {}'.format(ordered_best_bid_list))
+
     str_arriv = arrival_type_of_realtime_auction(offer)
 
     context = {
@@ -444,9 +445,9 @@ def get_online_info_context(offer_id):
             'title': offer.description,
             'desc': _("Online auction info"),
         },
-        
+
         'ordered_best_bid_list': ordered_best_bid_list,
-        
+
         'is_online': True,
     }
     return context
