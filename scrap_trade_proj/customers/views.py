@@ -88,7 +88,7 @@ class CustomerInfo(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         customer = self.get_object()
         oid = str(customer.open_id.int_id)
-        
+
         button_list = []
         if test_can_edit_customer(self.request.user, customer):
             button_list.append({
@@ -100,11 +100,11 @@ class CustomerInfo(LoginRequiredMixin, DetailView):
         if test_poweruser(self.request.user):
             button_list.append({
                 'text': _("To Auction"),
-                'href': reverse('ah-customer-auction', 
+                'href': reverse('ah-customer-auction',
                                 kwargs={'pk': customer.pk}),
                 'type': 'poweruser',
             })
-        
+
         context['content_header'] = {
             'title': customer.customer_name,
             'desc': _('Detailed customer information'),
@@ -124,7 +124,7 @@ class CustomerDetailView(CanEditCustomer, DetailView):
             'title': customer.customer_name + ' | ' + _('Edit'),
             'desc': _("Edit customer details"),
         }
-        
+
         button_list = []
         if test_poweruser(self.request.user):
             button_list.append({
@@ -257,6 +257,10 @@ def customer_email_create(request, pk):
             customer.customeremail_set.create(
                 customer_email = form.cleaned_data['customer_email'],
                 customer = customer,
+                is_private_adr = form.cleaned_data['is_private_adr'],
+                is_admin_adr = form.cleaned_data['is_admin_adr'],
+                is_business_adr = form.cleaned_data['is_business_adr'],
+                language = form.cleaned_data['language'],
             )
             success_message = _('Your e-mail has been added!')
             messages.success(request, success_message)
@@ -772,10 +776,10 @@ def customer_tran_update(request, pk, lang):
 
 
 def log_in(request):
-    
+
     if request.method == 'GET':
         form = AuthenticationForm()
-    
+
     elif request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -787,7 +791,7 @@ def log_in(request):
             if user_f.customer:
                 return redirect('ah-customer-auction', user_f.customer.pk)
             return redirect('project-customer-home')
-        
+
     context = {
         'form': form,
         'title': tr.pgettext('customer-login-title', 'Login'),
