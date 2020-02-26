@@ -9,46 +9,48 @@
   <section class="content-pad">
     
     <dl>
-      <h4>
-        {% trans "Details" %}
-        {% url 'project-customer-update' object.pk as href %}
-        {% include 'project_main/__btn-icon-edit.html' %}
-      </h4>
+      <h4>{% trans "Details" %}</h4>
 
       <dt> {% trans "Registration number:" %} </dt>
       <dd> {{ object.customer_ICO }} </dd>
 
       <dt> {% trans "VAT:" %} </dt>
       <dd> {{ object.customer_DIC }} </dd>
+      
+      <a class="btn btn-primary"
+         href={% url 'project-customer-update' object.pk %}>
+        <i data-feather="edit-3"></i>
+        {% trans 'Edit Customer Details' %}
+      </a>
+    </dl>
+    
+    <dl>
+      <h4>{% trans "Descriptions" %}</h4>
 
+      {# @todo; Show translated descriptions in the main customer edit view #}
+      
       <dt> {% trans "Short description:" %} </dt>
-      <dd><p>
+      <dd>
         {{ object.act_short }}
-      </p></dd>
+      </dd>
 
       <dt> {% trans "Long description:" %} </dt>
-      <dd><p>
-        {{ object.act_description }}
-      </p></dd>
-
-      <div class="text-right">
-        <a class="btn btn-primary text-right"
-           href={{ href }}>
-          <i data-feather="edit-3"></i>
-          {% trans 'Edit Customer Details' %}
-        </a>
-      </div>
-
+      <dd>
+        {{ object.act_description|linebreaks }}
+      </dd>
+      
+      {% get_current_language as LANGUAGE_CODE %}
+      <a class="btn btn-primary"
+         href="{% url 'project-customer-tran' object.pk LANGUAGE_CODE %}">
+        <i data-feather="edit-3"></i>
+        {% trans "Edit translated descriptions" %}
+      </a>
     </dl>
 
 
 
     <dl>
-      <h4>
-        {% trans "Users:" %}
-        {% url 'project-customer-user-create' object.pk as href %}
-        {% include 'project_main/__btn-icon-add.html' %}
-      </h4>
+      <h4>{% trans "Users:" %}</h4>
 
       <ul>
         {% for user in object.projectcustomuser_set.all %}
@@ -70,14 +72,12 @@
           </li>
         {% endfor %}
       </ul>
-
-      <div class="text-right">
-        <a class="btn btn-primary text-right"
-           href={{ href }}>
-          <i data-feather="plus"></i>
-          {% trans 'Add New User to Customer' %}
-        </a>
-      </div>
+      
+      <a class="btn btn-primary text-right"
+         href={{ href }}>
+        <i data-feather="plus"></i>
+        {% trans 'Add New User to Customer' %}
+      </a>
     </dl>
 
 

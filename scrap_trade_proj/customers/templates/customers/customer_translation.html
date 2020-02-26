@@ -4,6 +4,7 @@
 
 
 {% block content %}
+{# @lasttime; Trying to rewrite the last bits of this redesign into a better thing. #}
   <article class="media content-section">
     <img class="rounded-circle customer-logo" src="{{ customer.customer_logo.url }}">
     <div class="media-body">
@@ -31,8 +32,11 @@
         <div class="form-group">
           {% trans "Send" as var_add %}
           <button class="btn btn-outline-info" type="submit">{{ var_add }}</button>
-          {% trans "Cancel" as var_cancel %}
-          <a class="btn btn-outline-secondary" href="{% url 'project-customer-update' customer.pk %}">{{ var_cancel }}</a>
+          
+          <a class="btn btn-outline-secondary"
+             href="{% url 'project-customer-detail' customer.pk %}">
+            {% trans "Cancel" %}
+          </a>
         </div>
       </form>
     </div>

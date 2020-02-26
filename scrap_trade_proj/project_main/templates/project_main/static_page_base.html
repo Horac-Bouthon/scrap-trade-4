@@ -1,5 +1,5 @@
-{% load static %}
 {% load i18n %}
+
 
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}"
@@ -8,6 +8,8 @@
   
   <head>
 
+
+    
     {% include 'project_main/__common.html' with type='head' %}
     
     
@@ -46,9 +48,9 @@
     </main>
 
     {% include "project_main/__footer.html" %}
-
-
-
+    
+    
+    
     {% include 'project_main/__common.html' with type='page-end' %}
     
   </body>

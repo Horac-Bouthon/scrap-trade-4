@@ -1,7 +1,6 @@
-{% load crispy_forms_tags %}
-{# @todo; Do we need crispy forms init in base template? If so, why include them in every template extending base anyway? #}
 {% load i18n %}
-{% load static %}
+{% load crispy_forms_tags %}  {# For the login form #}
+
 
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}"
@@ -14,6 +13,9 @@
     {% include 'project_main/__common.html' with type='head' %}
 
     
+    <!-- Additional page-local styles -->
+    {% block page-style %} {% endblock %}
+
     
     
     {% if is_online %}
@@ -21,6 +23,7 @@
       <meta http-equiv="refresh" content="15">
     {% endif %}
 
+    
 
     {# Backgrounds corresponding to page #}
     <style>
@@ -40,9 +43,6 @@
          {% endif %}
      }
     </style>
-    
-    <!-- Additional page-local styles -->
-    {% block page-style %} {% endblock %}
     
   </head>
   <body>
@@ -77,7 +77,28 @@
           <div class="bg-light rounded p-3
                       d-flex flex-column">
 
-            {% if user.is_authenticated %}
+            
+            {% if not user.is_authenticated %}
+              {# Login form #}
+              {# @todo; ...Do we need a login form in the base? We shouldn't be able to get into these pages without being authenticated anyway... #}
+              <form method="POST">
+                {% csrf_token %}
+
+                <fieldset class="form-group">
+                  <legend class="border-bottom mb-4">
+                    {% trans "Log In" context 'login_template' %}
+                  </legend>
+                  {{ form_login|crispy }}
+                </fieldset>
+
+                <div class="form-group">
+                  <button class="btn btn-outline-info"
+                          type="submit">
+                    {% trans "Login" %}
+                  </button>
+                </div>
+              </form>              
+            {% else %}
 
               {# Basic user info #}
               <section class="d-flex flex-wrap mb-4
@@ -165,28 +186,7 @@
               {% block spec_action %} {% endblock spec_action %}
               {% block site_list %} {% endblock site_list %}
               {# @todo; Delete button blocks in side-panel after testing #}
-
-            {% else %}
-
-              {# Login form #}
-              <form class="login-form" method="POST">
-                {% csrf_token %}
-
-                <fieldset class="form-group">
-                  <legend class="border-bottom mb-4">
-                    {% trans "Log In" context 'login_template' %}
-                  </legend>
-                  {{ form_login|crispy }}
-                </fieldset>
-
-                <div class="form-group">
-                  <button class="btn btn-outline-info"
-                          type="submit">
-                    {% trans "Login" %}
-                  </button>
-                </div>
-              </form>
-
+              
             {% endif %}
 
           </div>

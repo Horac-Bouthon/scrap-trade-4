@@ -4,8 +4,8 @@
 
 
 {% block content %}
-  <div class="content-section">
-    <form class="" method="POST">
+  <section class="content-pad pt-3">
+    <form method="POST">
       {% csrf_token %}
       <fieldset class="form-group">
         {% trans "Delete Customer" as var_customer %}
@@ -13,6 +13,7 @@
         {% trans "Are you sure, you want to delete the Customer" as var_question %}
         <h2>{{ var_question }} "{{ object.customer_name }}" </h2>
       </fieldset>
+      
       <div class="form-group">
         {% trans "Yes, Delete" as var_delete %}
         <button class="btn btn-outline-danger" type="submit">{{ var_delete }}</button>
@@ -20,5 +21,5 @@
         <a class="btn btn-outline-secondary" href="{% url 'project-customer-detail' object.pk %}">{{ var_cancel }}</a>
       </div>
     </form>
-  </div>
+  </seciton>
 {% endblock content %}
