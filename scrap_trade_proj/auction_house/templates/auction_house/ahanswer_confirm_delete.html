@@ -4,7 +4,7 @@
 
 
 {% block content %}
-  <div class="content-section">
+  <section class="content-pad">
     <form class="" method="POST">
       {% csrf_token %}
       <fieldset class="form-group">
@@ -20,5 +20,5 @@
         <a class="btn btn-outline-secondary" href="{% url 'ah-answer-list' %}">{{ var_cancel }}</a>
       </div>
     </form>
-  </div>
+  </section>
 {% endblock content %}

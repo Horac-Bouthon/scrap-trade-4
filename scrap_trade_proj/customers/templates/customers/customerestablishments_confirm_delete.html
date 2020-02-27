@@ -3,11 +3,9 @@
 {% load i18n %}
 
 
-
-
 {% block content %}
-  <div class="content-section">
-    <form class="" method="POST">
+  <section class="content-pad">
+    <form method="POST">
       {% csrf_token %}
       <fieldset class="form-group">
         {% trans "Delete establishment" as var_email %}
@@ -22,5 +20,5 @@
         <a class="btn btn-outline-secondary" href="{% url 'project-customer-detail' object.customer.pk %}">{{ var_cancel }}</a>
       </div>
     </form>
-  </div>
+  </section>
 {% endblock content %}
