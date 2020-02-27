@@ -12,17 +12,17 @@
       <dd>{{ offer.description }}</dd>
     </dl>
   </div>
-  
+
   <dl>
     <dt>{% trans "Status:" %}</dt>
     <dd>{{ offer.actual_state.act_state_name }}</dd>
 
-    {% with state=offer.actual_state.state_key %}    
+    {% with state=offer.actual_state.state_key %}
       {# @todo; The status needs a tip about what the state actually means #}
       {# for the user in terms of interaction. We can't let a user get #}
       {# confused by something like "Why did the button disappear?" #}
       {# and get a call to support. #}
-      
+
       {# This tip text would have to be included in the state model #}
       {# itself -- including translations. If a new state is made, #}
       {# we might need the tip text for that, which is not easy to do. #}
@@ -31,14 +31,15 @@
       {# can be "hard-coded" because their behavior is also hard-coded. #}
     {% endwith %}
 
-    
+
   </dl>
 
-  
+
   <div class="d-flex">
     <dl>
-      {% include 'auction_house/__auction_date.html' with data=object %}
-    </dl><dl>
+      {% include 'auction_house/__auction_date.html' with data=offer %}
+    </dl>
+    <dl>
       <dt>{% trans 'Delivery date:' %}</dt>
       <dd>{{ offer.delivery_date|date:"d.m.Y" }}</dd>
     </dl>
@@ -48,7 +49,7 @@
     <dt>{% trans 'Minimal total price:' %}</dt>
     <dd>{{ offer.minimal_total_price }}</dd>
   </dl>
-  
+
 
 {% elif debug %}
   <div class="debug-error">

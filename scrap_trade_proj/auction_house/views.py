@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.conf import settings
 from django.urls import reverse_lazy, reverse
 
 from .modules.auction import (
@@ -14,6 +15,10 @@ from .modules.auction import (
     get_auction_list_control_obj,
     ntf_send_from_view,
     answer_update_ppu,
+    generate_answers,
+    _get_state,
+    accept_answer,
+    except_state,
 
     get_online_info_context,
     get_online_context,
@@ -22,12 +27,12 @@ from .modules.auction import (
 from state_wf.models import (
     StepState,
     Step,
-)    
+)
 
 from customers.permissions import (
     test_poweruser, Poweruser, poweruser,
     test_user_belong_customer, UserBelongCustomer, user_belong_customer,
-    test_can_edit_customer, 
+    test_can_edit_customer,
 )
 from .permissions import (
     test_user_belong_offer, UserBelongOffer, user_belong_offer,
@@ -75,13 +80,13 @@ from django.views.generic import (
 def _back_button(type, kwargs_dict):  # util
     # Note; That kwargs isn't a **kwargs, I really want a dict
     #   that'll get passed to the reverse() func.
-    
+
     button_dict = {
         # Common things
         'icon': 'arrow-left',
         'type': 'secondary'
     }
-    
+
     if type == 'offer':
         button_dict.update({
             'text': _("Offer"),
@@ -105,26 +110,20 @@ def _back_button(type, kwargs_dict):  # util
     return button_dict
 
 
-def _get_state(state_key):  #util
-    assert isinstance(state_key, str), "state_key must be a string"
-    return get_object_or_404(StepState, state_key=state_key)
-
-
-
 
 class AhOfferListView(Poweruser, ListView):
     model = AhOffer
     template_name = 'auction_house/ahoffer_list.html'
     context_object_name = 'offers'
     ordering = ['-pk']
-    
+
 
 class AhOfferListForAcceptView(Poweruser, ListView):
     model = AhOffer
     template_name = 'auction_house/ahoffer_list.html'
     context_object_name = 'offers'
     ordering = ['-pk']
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Note; Template has default content_header title and desc
@@ -158,13 +157,17 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
             'customer': offer.owner,
         })
 
+        if settings.AUTO_ANSWERS:
+            my_answers = except_state(
+                offer.answers, 'answer_canceled'
+            ).order_by('-total_price')[:5]
+        else:
+            my_answers = filter_by_state(
+                offer.answers, 'answer_confirmed'
+            ).order_by('-total_price')[:5]
         context.update({
-            'my_answers': filter_by_state(
-                offer.answers, 'answer_confirmed'
-            ).order_by('-total_price')[:5],
-            'answers_total': filter_by_state(
-                offer.answers, 'answer_confirmed'
-            ).count(),
+            'my_answers': my_answers,
+            'answers_total': my_answers.count(),
 
             'bound_answers': offer.answers.filter(is_bound = True),
 
@@ -180,7 +183,7 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
                 'icon': 'file-text',
             }
         ]
-        if test_poweruser(self.request.user):
+        if test_poweruser(self.request.user) and state_key != 'offer_in_auction':
             button_list.append({
                 'text': _("Edit offer"),
                 'href': reverse('ah-offer-update',
@@ -225,7 +228,7 @@ class AhOfferInfoView(LoginRequiredMixin, DetailView):
             'offer': offer,
             'customer': offer.owner,
         })
-        
+
         context['content_header'] = {
             'title': ' | '.join([_("Offer"), offer.description]),
             'desc': _("Offer information."),
@@ -245,8 +248,8 @@ class AhOfferUpdateView(Poweruser, UpdateView):
     fields = [
         'description',
         'auction_date', 'delivery_date',
-        'minimal_total_price', 
-        'auction_url', 'auction_start', 'auction_end', 
+        'minimal_total_price',
+        'auction_url', 'auction_start', 'auction_end',
         'offered_to',
     ]
 
@@ -261,12 +264,12 @@ class AhOfferUpdateView(Poweruser, UpdateView):
                                      offer.description]),
                 'desc': _("Edit offer as a poweruser."),
                 'button_list': [
-                    _back_button('offer', {'pk': offer.pk}), 
+                    _back_button('offer', {'pk': offer.pk}),
                 ],
             },
         })
         return context
-    
+
 
 
 class AhOfferCustomerUpdateView(UserBelongOffer, UpdateView):
@@ -289,7 +292,7 @@ class AhOfferCustomerUpdateView(UserBelongOffer, UpdateView):
                                  offer.description]),
             'desc': _("Modify the offer's data."),
             'button_list': [
-                _back_button('offer', {'pk': offer.pk}), 
+                _back_button('offer', {'pk': offer.pk}),
             ],
         }
 
@@ -363,11 +366,11 @@ def ah_offer_line_create(request, pk):
         'offer': offer,
         'customer': offer.owner,
         'content_header': {
-            'title': ' | '.join([_('Add a line'), 
+            'title': ' | '.join([_('Add a line'),
                                  offer.description]),
             'desc': _("Add a new product for offer."),
             'button_list': [
-                _back_button('offer', {'pk': offer.pk}), 
+                _back_button('offer', {'pk': offer.pk}),
             ],
         },
         'page_type': 'create',  # Same template is used for update and create
@@ -388,7 +391,7 @@ class AhDeletelOfferLine(UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         offer = self.get_object().offer
-        return test_user_belong_offer(request.user, offer)
+        return test_user_belong_offer(self.request.user, offer)
 
 
 #--------------------------------
@@ -410,7 +413,7 @@ def ah_customer_auction(request, pk):
         'auc_obj': auc_obj,
     }
 
-    
+
     button_list = [{
         'text': _("Create new offer"),
         'href': reverse('ah-customer-create-offers', kwargs={'pk': customer.pk}),
@@ -419,12 +422,12 @@ def ah_customer_auction(request, pk):
     if test_can_edit_customer(request.user, customer):
         button_list.append({
             'text': _("Edit customer info"),
-            'href': reverse('project-customer-detail', 
+            'href': reverse('project-customer-detail',
                             kwargs={'pk': customer.pk}),
             'icon': 'edit-3',
         })
     context['content_header'] = {
-        'title': ' | '.join([_('Auction'), 
+        'title': ' | '.join([_('Auction'),
                              customer.customer_name]),
         'desc': _('Auction homepage'),
 
@@ -508,9 +511,11 @@ def ah_offers_change_state(request, pk, pk2, pk3):
         if set_state.state_key == 'offer_confirmed':
             offer.auction_url = request.build_absolute_uri(reverse('realtime-auction-info', kwargs={'pk': offer.id}))
             offer.save()
+            if settings.AUTO_ANSWERS:
+                generate_answers(request, offer)
         elif set_state.state_key == 'offer_canceled':
             state_send = _get_state('answer_canceled')
-            my_answers = filter_by_state(offer.answers, 'answer_confirmed')
+            my_answers = except_state(offer.answers, 'answer_canceled')
             for answer in my_answers.all():
                 answer_add_state(answer, state_send, request.user)
 
@@ -536,7 +541,7 @@ def ah_offers_change_state(request, pk, pk2, pk3):
 
 @user_belong_customer
 def ah_answer_change_state(request, pk, pk2, pk3):
-    
+
     customer = get_object_or_404(Customer, id = pk)
     answer = get_object_or_404(AhAnswer, id = pk2)
     set_state = StepState.objects.get(id=pk3)
@@ -568,7 +573,7 @@ def ah_answer_change_state(request, pk, pk2, pk3):
                 )
         elif set_state.state_key == 'answer_canceled' and answer.is_bound:
             resurect_auction(answer.ah_offer)
-            set_auction(request, answer.ah_offer)
+            set_auction(request, answer.ah_offer, 'answer_in_auction')
 
         success_message = _('Your answer has change the state!')
         messages.success(request, success_message)
@@ -587,8 +592,8 @@ class AhAnswerListView(Poweruser, ListView):
     template_name = 'auction_house/ahanswer_list.html'
     context_object_name = 'answers'
     ordering = ['-pk']
-    
-    
+
+
 class AhAnswerDetailView(UserBelongAnswer, DetailView):
     model = AhAnswer
     template_name = 'auction_house/ahanswer_detail.html'
@@ -618,7 +623,7 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
             }
         ]
 
-        if test_poweruser(self.request.user):
+        if test_poweruser(self.request.user) and state_key != 'answer_in_auction':
             button_list.append({
                 'text': _("Edit answer"),
                 'href': reverse('ah-answer-update',
@@ -661,7 +666,7 @@ class AhAnswerUpdateView(Poweruser, UpdateView):
         'is_bound',
         'auction_url',
     ]
-    
+
     def get_context_data(self, **kwargs):
         context = super(UpdateView, self).get_context_data(**kwargs)
 
@@ -673,14 +678,14 @@ class AhAnswerUpdateView(Poweruser, UpdateView):
                                      answer.description]),
                 'desc': _("Edit answer as a poweruser."),
                 'button_list': [
-                    _back_button('answer', {'pk': answer.pk}), 
+                    _back_button('answer', {'pk': answer.pk}),
                 ],
             },
         })
         return context
 
-    
-    
+
+
 
 
 
@@ -690,8 +695,8 @@ class AhAnswerCustomerUpdateView(UserBelongAnswer, UpdateView):
         'description',
     ]
     template_name = 'auction_house/ahanswer_customer_form.html'
-    
-    
+
+
     def get_context_data(self, **kwargs):
         context = super(UpdateView, self).get_context_data(**kwargs)
 
@@ -703,7 +708,7 @@ class AhAnswerCustomerUpdateView(UserBelongAnswer, UpdateView):
                                  answer.description]),
             'desc': _("Modify the answer's data."),
             'button_list': [
-                _back_button('answer', {'pk': answer.pk}), 
+                _back_button('answer', {'pk': answer.pk}),
             ],
         }
 
@@ -719,9 +724,9 @@ class AhAnswerDeletelView(Poweruser, DeleteView):
 
 @user_belong_customer
 def ah_customer_answer_waiting_offers(request, pk):
-    
+
     customer = get_object_or_404(Customer, id = pk)
-    
+
     context = {
         'content_header': {
             'title': _("Offers waiting for answers"),
@@ -730,7 +735,7 @@ def ah_customer_answer_waiting_offers(request, pk):
                 _back_button('auction', {'pk': customer.pk}),
             ],
         },
-        
+
         'selection': _('waiting offer'),
         'customer': customer,
         'offer_list': get_waiting_offers(customer),
@@ -802,8 +807,8 @@ def ah_customer_answer_create(request, pk, pk2):
 @user_belong_answer
 def ah_answer_line_update_ppu(request, pk, pk2):
 
-    # @todo; @security; You can have an ID of /your/ answer with /somebody else's/ line 
-    
+    # @todo; @security; You can have an ID of /your/ answer with /somebody else's/ line
+
     answer = get_object_or_404(AhAnswer, id = pk)
     answer_line = get_object_or_404(AhAnswerLine, id = pk2)
 
@@ -812,7 +817,7 @@ def ah_answer_line_update_ppu(request, pk, pk2):
         if form.is_valid():
             form.save()
             answer_update_ppu(answer_line)
-            
+
             success_message = _('Your line has been updated!')
             messages.success(request, success_message)
             return redirect('ah-answer-detail', pk)
@@ -877,6 +882,10 @@ def ah_offer_step_create(request, pk):
             )
             new.save()
 
+            if new.state.state_key == 'offer_new':
+                for answer in offer.answers.all():
+                    answer.delete()
+
             success_message = _('Step has been added!')
             messages.success(request, success_message)
             return redirect('ah-offer-update', pk)
@@ -934,7 +943,7 @@ def realtime_auction(request, pk2, pk):
     return render(request, 'auction_house/realtime_auction.html', context)
 
 
-@login_required  
+@login_required
 def realtime_auction_info(request, pk):
     context = get_online_info_context(pk)
     return render(request, 'auction_house/realtime_auction_info.html', context)
@@ -944,7 +953,7 @@ def realtime_auction_info(request, pk):
 def ah_answer_online_update_ppu(request, pk, pk2):
     answer = get_object_or_404(AhAnswer, id = pk)
     answer_line = get_object_or_404(AhAnswerLine, id = pk2)
-    
+
     if request.method == 'POST':
         form = AhAnwserLinePpuUpdateForm(request.POST, instance=answer_line)
         if form.is_valid():
@@ -955,12 +964,12 @@ def ah_answer_online_update_ppu(request, pk, pk2):
             return redirect('realtime-auction', answer.ah_offer.pk, answer.pk)
     else:
         form = AhAnwserLinePpuUpdateForm(instance=answer_line)
-    
+
     context = {
         'ppu_form': form,
         'answer': answer,
         'min_price_ppu': answer_line.offer_line.minimal_ppu,
-        
+
         'offer': answer.ah_offer,  # Needed for that cancel link
 
         'from_online': True,

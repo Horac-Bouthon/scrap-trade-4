@@ -2,7 +2,7 @@
 
 {% if data.auction_start == None or data.auction_end == None  %}
   <dt>{% trans 'Auction date:' %}</dt>
-  <dd>{{ object.auction_date|date:"d.m.Y" }}</dd>
+  <dd>{{ data.auction_date|date:"d.m.Y" }}</dd>
 {% else %}
   <dt>{% trans 'Auction:' %}</dt>
   <dd>{{ data.auction_start|date:"d.m.Y" }} {{ data.auction_start|time:"H:i" }} - {{ data.auction_end|date:"d.m.Y" }} {{ data.auction_end|time:"H:i" }}</dd>

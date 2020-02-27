@@ -1,4 +1,5 @@
 
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 
 from auction_house.models import (
@@ -74,10 +75,10 @@ class AuctionLine:
 
 def resurect_auction(par_offer):
     print('resurect offer: {}'.format(par_offer))
-    state_obj = StepState.objects.get(state_key='offer_confirmed')
+    state_obj = StepState.objects.get(state_key='offer_in_auction')
     offer_add_state(par_offer, state_obj, None)
     answer_canceled = StepState.objects.get(state_key='answer_canceled')
-    state_obj = StepState.objects.get(state_key='answer_confirmed')
+    state_obj = StepState.objects.get(state_key='answer_in_auction')
     for set_a in par_offer.answers.all():
         if set_a.actual_state != answer_canceled:
             print('resurect answer: {}'.format(set_a))
@@ -85,6 +86,7 @@ def resurect_auction(par_offer):
         set_a.is_bound = False
         set_a.save()
     return
+
 def offer_no_answers(request, par_offer):
     # cancel offer - no anwers
     print('cancel - no answers - {}'.format(par_offer))
@@ -110,8 +112,11 @@ def kill_new_answers(par_offer):
 
 def start_auction(request, par_offer):
     print('Start auction: {} at {}'.format(par_offer, par_offer.auction_start))
-    kill_new_answers(par_offer)
-    my_answers = filter_by_state(par_offer.answers, 'answer_confirmed')
+    if settings.AUTO_ANSWERS:
+        my_answers = par_offer.answers.all()
+    else:
+        kill_new_answers(par_offer)
+        my_answers = filter_by_state(par_offer.answers, 'answer_confirmed')
     if my_answers.count() > 0 :
         state_in_auction = StepState.objects.get(state_key='offer_in_auction')
         offer_add_state(par_offer, state_in_auction, None)
@@ -146,18 +151,36 @@ def start_auction(request, par_offer):
         offer_no_answers(request, par_offer)
     return
 
+def accept_answer(request, par_answer, par_place, par_user):
+    state_send = _get_state('offer_accepted')
+    offer_add_state(par_answer.ah_offer, state_send, par_user)
+    if state_send.send_ntf:
+        print('send to offer')
+        ntf_send_from_view(
+        request=request,
+        state=state_send,
+        place=par_place,
+        item=par_answer.ah_offer,
+    )
+
+
 def set_auction(request, par_offer, par_answer_state):
     print('from second: {} must be set / {}'.format(par_offer, par_offer.auction_date))
     state_obj = StepState.objects.get(state_key='answer_canceled')
     # kill not confirmed Answers
-    kill_new_answers(par_offer)
-    my_answers = filter_by_state(par_offer.answers, par_answer_state)
+    if settings.AUTO_ANSWERS:
+        my_answers = except_state(par_offer.answers, 'answer_canceled')
+    else:
+        kill_new_answers(par_offer)
+        my_answers = filter_by_state(par_offer.answers, par_answer_state)
+
     if my_answers.count() > 0 :
         # vyhodnoceni
         print('vyhodnoceni {}'.format(par_offer))
         # set offer in auction
-        state_in_auction = StepState.objects.get(state_key='offer_in_auction')
-        offer_add_state(par_offer, state_in_auction, None)
+        if par_offer.actual_state.state_key != 'offer_in_auction':
+            state_in_auction = StepState.objects.get(state_key='offer_in_auction')
+            offer_add_state(par_offer, state_in_auction, None)
         # find and mark succesfull
         lucky_one = my_answers.all().order_by('-total_price').first()
         print('set to {}'.format(lucky_one))
@@ -173,6 +196,13 @@ def set_auction(request, par_offer, par_answer_state):
                 place='modules.auction - set_auction()',
                 item=lucky_one,
             )
+        # auto confirm
+        if settings.DIRECT_ANSWER_ACCEPT:
+            print('auto-accept')
+            set_state = _get_state('answer_accepted')
+            answer_add_state(lucky_one, set_state, None)
+            accept_answer(request, lucky_one, 'Auto-accept', None)
+
         # unbound others
         state_obj = StepState.objects.get(state_key='answer_closed')
         for unlucky_one in filter_by_state(par_offer.answers, par_answer_state):
@@ -261,6 +291,14 @@ def filter_by_state(p_data, p_state_key):
     id_set = [x.id for x in p_data.all() if x.is_equal_state(state)]
     return p_data.filter(id__in = id_set)
 
+def except_state(p_data, p_state_key):
+    state = StepState.objects.get(state_key = p_state_key)
+    print('state = {}'.format(state))
+    id_set = [x.id for x in p_data.all() if not x.is_equal_state(state)]
+    print('id_set = {}'.format(id_set))
+    return p_data.filter(id__in = id_set)
+
+
 def answer_add_state(answer_obj, state_obj, user):
     answer_obj.my_steps.create(
         state = state_obj,
@@ -314,13 +352,14 @@ def get_auction_list_control_obj(customer, data_offer, data_answers):
     )
     ret_val.append(obj_offers)
     answer_list = list()
-    fist = AuctionLine(
-        _('Wating offers'),
-        get_waiting_offers(customer).count(),
-        'Not set',
-        'ah-customer-waiting-offers'
-    )
-    answer_list.append(fist)
+    if not settings.AUTO_ANSWERS:
+        fist = AuctionLine(
+            _('Wating offers'),
+            get_waiting_offers(customer).count(),
+            'Not set',
+            'ah-customer-waiting-offers'
+        )
+        answer_list.append(fist)
     for state in StepState.get_group_members(2):
         obj_line = AuctionLine(
             state.get_state_name_plural(),
@@ -462,6 +501,39 @@ def answer_update_ppu(answer_line):
     return
 
 
+def generate_answers(request, par_offer):
+    for customer in par_offer.offered_to.all():
+        #---- create answers
+        new = AhAnswer(
+            description = customer.customer_name,
+            owner = customer,
+            ah_offer = par_offer,
+            creator = None,
+            changed_by = None,
+        )
+        new.save()
+        new.auction_url = request.build_absolute_uri(reverse('realtime-auction', kwargs={'pk': new.id, 'pk2': par_offer.id}))
+        new.save()
+        new_state = StepState.objects.get(state_key='answer_new')
+        answer_add_state(new, new_state, None)
+        for line in par_offer.lines.all():
+            n_a_l = AhAnswerLine(
+                #ppu = line.minimal_ppu,
+                #total_price = line.amount * line.minimal_ppu,
+                ppu = 0.0,
+                total_price = 0.0,
+                answer = new,
+                offer_line = line,
+            )
+            n_a_l.save()
+        new.refresh_total_price()
+        new.save()
+
+def _get_state(state_key):
+    assert isinstance(state_key, str), "state_key must be a string"
+    return get_object_or_404(StepState, state_key=state_key)
+
+
 #--------------- notification ntf_support
 
 def send_ntf_from_state(request, state, context):
@@ -480,17 +552,31 @@ def send_ntf_from_state(request, state, context):
         if type(item).__name__ != 'AhOffer':
             return False
         mess_list = list()
-        for customer in item.offered_to.all():
-            cust_url = request.build_absolute_uri(reverse('ah-customer-answers-create', args=[customer.pk, item.pk]))
-            message = ntf_create_from_auction(
-                template=state.ntf_template,
-                context=context.clone_context(),
-                cust_url=cust_url,
-                customer=customer,
-                admins=False,
-                business=True,
-            )
-            mess_list.append(message)
+        if settings.AUTO_ANSWERS:
+            print('item = {}'.format(item))
+            for answer in item.answers.all():
+                cust_url = request.build_absolute_uri(reverse('ah-answer-detail', args=[answer.pk]))
+                message = ntf_create_from_auction(
+                    template=state.ntf_template,
+                    context=context.clone_context(),
+                    cust_url=cust_url,
+                    customer=answer.owner,
+                    admins=False,
+                    business=True,
+                )
+                mess_list.append(message)
+        else:
+            for customer in item.offered_to.all():
+                cust_url = request.build_absolute_uri(reverse('ah-customer-answers-create', args=[customer.pk, item.pk]))
+                message = ntf_create_from_auction(
+                    template=state.ntf_template,
+                    context=context.clone_context(),
+                    cust_url=cust_url,
+                    customer=customer,
+                    admins=False,
+                    business=True,
+                )
+                mess_list.append(message)
         ret_val = ntf_manager.send_via_ntf(request, mess_list, f_context)
     #---- answer_successful
     if state.state_key == 'answer_successful':
