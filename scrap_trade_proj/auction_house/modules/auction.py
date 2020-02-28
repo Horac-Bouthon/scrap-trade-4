@@ -113,7 +113,7 @@ def kill_new_answers(par_offer):
 def start_auction(request, par_offer):
     print('Start auction: {} at {}'.format(par_offer, par_offer.auction_start))
     if settings.AUTO_ANSWERS:
-        my_answers = par_offer.answers.all()
+        my_answers = except_state(par_offer.answers, 'answer_canceled')
     else:
         kill_new_answers(par_offer)
         my_answers = filter_by_state(par_offer.answers, 'answer_confirmed')
@@ -439,7 +439,7 @@ def get_online_context(offer_id, answer_id):
             'str_class': 'bid__item--best' if is_best_line(line) else '',
         })
 
-    best_bids = offer.answers.order_by('-total_price')[:5]
+    best_bids = filter_by_state(offer.answers, 'answer_in_auction').order_by('-total_price')[:5]
     ordered_best_bid_list = get_classed_best_bids(best_bids, answer_id)
 
     str_arriv = arrival_type_of_realtime_auction(offer)
@@ -469,7 +469,7 @@ def get_online_info_context(offer_id):
 
     offer = get_object_or_404(AhOffer, id=offer_id)
 
-    best_bids = offer.answers.all().order_by('-total_price')[:5]
+    best_bids = filter_by_state(offer.answers, 'answer_in_auction').order_by('-total_price')[:5]
     ordered_best_bid_list = get_classed_best_bids(best_bids)
     print('ordered_best_bid_list = {}'.format(ordered_best_bid_list))
 

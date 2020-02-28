@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.conf import settings
 from django.urls import reverse_lazy, reverse
+from django.core.exceptions import PermissionDenied
 
 from .modules.auction import (
     resurect_auction,
@@ -200,7 +201,7 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
                     'icon': 'edit-3',
                 })
 
-        if offer.auction_url:
+        if offer.auction_url and offer.actual_state.state_key == 'offer_in_auction':
             button_list.append({
                 'text': _("Online auction"),
                 'href': offer.auction_url,
@@ -640,7 +641,8 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
                 'icon': 'edit-3',
             })
 
-        if answer.auction_url:  # @todo; Realtime auction buttons need a better condition for being displayed... This leads to errors.
+        if answer.auction_url and answer.actual_state.state_key == 'answer_in_auction':  
+            # @todo; Realtime auction buttons need a better condition for being displayed... This leads to errors.
             button_list.append({
                 'href': answer.auction_url,
                 'text': _("Online auction"),
@@ -940,8 +942,11 @@ def ah_answer_step_create(request, pk):
 @user_belong_answer
 def realtime_auction(request, pk2, pk):
     context = get_online_context(pk2, pk)
-    return render(request, 'auction_house/realtime_auction.html', context)
-
+    state = AhAnswer.objects.get(id=pk).actual_state.state_key
+    if state == 'answer_in_auction':
+        return render(request, 'auction_house/realtime_auction.html', context)
+    else:
+        raise PermissionDenied
 
 @login_required
 def realtime_auction_info(request, pk):
