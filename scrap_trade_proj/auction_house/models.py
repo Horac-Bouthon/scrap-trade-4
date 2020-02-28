@@ -120,7 +120,16 @@ class AhOffer(models.Model):
         return reverse('ah-offer-detail', kwargs={'pk': self.pk})
 
     def __str__(self):
-        return '{} {} ({}) {}'.format(self.pk, self.owner.customer_name, self.description, self.created_at)
+        if self.owner:
+            str = '{} {} ({}) {}'.format(
+                self.pk, self.owner.customer_name, 
+                self.description, self.created_at
+            )
+        else:
+            str = '{} -- ({}) {}'.format(
+                self.pk, self.description, self.created_at
+            )
+        return str
 
     @property
     def actual_state(self):
