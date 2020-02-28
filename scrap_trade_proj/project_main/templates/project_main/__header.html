@@ -74,12 +74,7 @@
         <ul class="nav navbar-nav">
           
           {% if variant == 'static_page' %}
-            {% for page in project.get_page_sequence %}
-              <li><a class="btn nav-item nav-link"
-                     href="{% url page.page_code %}">  {# @todo; Change the header homepage sections from redirects to href anchor jumps #}
-                {{ page.act_name }}
-              </a></li>
-            {% endfor %}
+            {# Don't display anything #}
           {% else %}
             
             {% if user.is_authenticated %}
