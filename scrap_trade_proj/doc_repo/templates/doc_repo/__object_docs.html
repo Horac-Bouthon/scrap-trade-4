@@ -1,26 +1,85 @@
-{% with object.open_id.get_docs as list %}
-  {% if list.count > 0 %}
-    <div class="">
-      {% for doc in list %}
-        {% if not doc.is_file %}
-          <a class="" href="{{ doc.file.url }}" data-toggle="tooltip" data-placement="top" title="{{ doc.doc_name }}" target="_blank">
-            {% if doc.thumbnail %}
-              <img class="doc_thumbnail" src="{{ doc.thumbnail.url }}">
-            {% else %}
-              {% if doc.is_picture %}
-                <img class="doc_thumbnail" src="/media/icons/def_picture_icon.png">
+{% load i18n %}
+
+{% with object.open_id.get_docs as docs %}
+
+  <ul class="list-unstyled">
+    {% for doc in docs %}
+      <li class="bg-white border rounded shadow-sm
+                 p-3 my-2">
+
+        <div class="d-flex">
+          <div class="align-self-start flex-fill">
+            <dl class="p-0">
+              <dt>{% trans "Document name:" %}</dt>
+              <dd>
+                
+                {{ doc.doc_name }}
+
+                <div class="badge badge-primary ml-1">
+                  {% if doc.is_picture %}
+                    {% trans "Picture" %}
+                  {% elif doc.is_pdf %}
+                    PDF
+                  {% else %}
+                    {% trans "File" %}
+                  {% endif %}
+                </div>
+              </dd>
+
+              {% if doc.doc_description %}
+                <dt>{% trans "Description:" %}</dt>
+                <dd class="small">
+                  {{ doc.doc_description|linebreaks }}
+                </dd>
               {% endif %}
-              {% if doc.is_pdf %}
-                <img class="doc_thumbnail" src="/media/icons/def_PDF_icon.png">
+            </dl>
+            
+
+            <section>
+              <div class="mb-1 btn-group">
+                {% if not doc.is_file %}
+                  <a class="btn btn-sm btn-outline-primary"
+                     href="{{ doc.file.url }}"
+                     target="_blank">
+                    <i data-feather="external-link"></i>
+                    {% trans "Open in new tab" %}
+                  </a>
+                {% endif %}
+
+                <a class="btn btn-sm btn-outline-primary"
+                   href="{{ doc.file.url }}"
+                   download {# <- Important attribute! #}>
+                  <i data-feather="download"></i>
+                  {% trans "Download" %}
+                </a>
+              </div>
+              
+            </section>
+          </div>
+
+          
+          <div class="align-self-stretch">
+            {# Document thumbnail #}
+            {% with smaller_min_height="min-height: 90px !important;" %}
+              {% if not doc.is_file and doc.thumbnail %}
+                <div class="doc-thumb"
+                     style="background-image: 
+                            url('{{ doc.thumbnail.url }}');
+                            {{ smaller_min_height }}">
+                </div>
+              {% else %}
+                <div class="doc-thumb"
+                     style="background-image: 
+                            url('/media/icons/def_file_icon.png');
+                            {{ smaller_min_height }}">
+                </div>
               {% endif %}
-            {% endif %}
-          </a>
-        {% else %}
-          <a class="" href="{{ doc.file.url }}" data-toggle="tooltip" data-placement="top" title="{{ doc.doc_name }}" download>
-              <img class="doc_thumbnail" src="/media/icons/def_file_icon.png">
-          </a>
-        {% endif %}
-      {% endfor %}
-    </div>
-  {% endif %}
-{% endwith %} <!-- object.open_id.get_docs -->
+            {% endwith %}
+          </div>
+        </div>
+        
+      </li>
+    {% endfor %}
+  </ul>
+  
+{% endwith %}

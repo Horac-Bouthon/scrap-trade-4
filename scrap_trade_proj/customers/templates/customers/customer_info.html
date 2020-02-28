@@ -95,12 +95,12 @@
       {% endif %}
     </dl>
 
-    {% if object.open_id.get_docs.count > 0 %}
-      <dl>
-        <h4> {% trans "Documents:" %} </h4>
-        <br>
+    <dl>
+      <h4> {% trans "Documents:" %} </h4>
+      {% if object.open_id.get_docs.count > 0 %}
         {% include 'doc_repo/__object_docs.html' with object=object %}
-      </dl>
-    {% endif %}
+      {% endif %}
+    </dl>
+    
   </section>
 {% endblock content %}
