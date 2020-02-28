@@ -282,10 +282,14 @@ def customer_offer_create(customer, user, data):
     for cc in offer_to(customer):
         new.offered_to.add(cc)
     new.save()
+    
     # fisrt step
-    new_state = StepState.objects.filter(state_key='offer_new').first()
+    new_state = StepState.objects.get(state_key='offer_new')
     offer_add_state(new, new_state, user)
-
+    
+    return new.pk
+    
+    
 def filter_by_state(p_data, p_state_key):
     state = StepState.objects.get(state_key = p_state_key)
     id_set = [x.id for x in p_data.all() if x.is_equal_state(state)]

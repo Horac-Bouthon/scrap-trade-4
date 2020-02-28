@@ -300,7 +300,7 @@ class AhOfferCustomerUpdateView(UserBelongOffer, UpdateView):
         return context
 
 
-class AhOfferDeletelView(Poweruser, DeleteView):
+class AhOfferDeleteView(Poweruser, DeleteView):
     model = AhOffer
     success_url = reverse_lazy('ah-offer-list')
 
@@ -382,13 +382,8 @@ def ah_offer_line_create(request, pk):
 class AhDeletelOfferLine(UserPassesTestMixin, DeleteView):
     model = AhOfferLine
 
-    def delete(self, *args, **kwargs):
-        self.offer_pk = self.get_object().offer.id
-        super().delete(*args, **kwargs)
-        return redirect('ah-offer-detail', self.object.offer.pk)
-
     def get_success_url(self):
-        return reverse_lazy('ah-offer-detail',  args=[self.offer_pk])
+        return reverse_lazy('ah-offer-detail', args=[self.object.offer.pk])
 
     def test_func(self):
         offer = self.get_object().offer
@@ -447,14 +442,15 @@ def ah_customer_offers_create(request, pk):
     if request.method == 'POST':
         form = AhOfferUpdateForm(request.POST)
         if form.is_valid():
-            customer_offer_create(
+            offer_pk = customer_offer_create(
                 customer = customer,
                 user = request.user,
                 data = form.cleaned_data
             )
+            
             messages.success(request,
                              _('Your offer has been added!'))
-            return redirect('ah-customer-auction', pk)
+            return redirect('ah-offer-detail', offer_pk)
     else:
         form = AhOfferUpdateForm()
 
