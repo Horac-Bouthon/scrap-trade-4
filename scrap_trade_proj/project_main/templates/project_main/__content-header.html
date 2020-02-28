@@ -71,6 +71,18 @@
            alt="{% trans "Logo" %}"
            title="{% trans "Logo" %}" />
     </section>
+  {% elif content_header.account_image %}
+    <section class="d-flex 
+                    order-md-2 order-1
+                    pl-md-3
+                    mt-md-0 mb-3"
+             style="width: 140px">
+      <img class="align-self-center m-auto
+                  rounded-circle"
+           src="{{ content_header.account_image.url }}"
+           alt="{% trans "Logo" %}"
+           title="{% trans "Logo" %}" />
+    </section>
   {% endif %}
   
 </header>

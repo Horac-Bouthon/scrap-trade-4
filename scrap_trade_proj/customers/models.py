@@ -155,14 +155,17 @@ class PasswordResetLink(models.Model):
         return expired or used_already
 
 
-    def send_to_user(self, request):
+    def send_link_email_to_user(self, request):
         # Make a URL link out of the id
         url = reverse('user-reset', kwargs={'uuid': self.id})
         full_url = request.build_absolute_uri(url)
+        
         context = ntf_manager.NtfContext()
         context['access_url'] = full_url
         address_obj = (self.for_user.email, self.for_user.userprofile.language)
-        ntf_manager.send_by_template_to_address(request, context, address_obj, 'set_password')
+        ntf_manager.send_by_template_to_address(
+            request, context, address_obj, 'set_password'
+        )
 
     def reset_password(self, new_password):
         user = self.for_user
