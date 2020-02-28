@@ -402,7 +402,7 @@ def ah_customer_auction(request, pk):
     customer = get_object_or_404(Customer, id = pk)
 
     auc_obj = get_auction_list_control_obj(
-        customer, customer.owned_offers, customer.owned_answers)
+        customer, customer.owned_offers, customer.owned_answers)  # @performance; This takes a whopping 1.4secs...
 
     context = {
         'customer': customer,

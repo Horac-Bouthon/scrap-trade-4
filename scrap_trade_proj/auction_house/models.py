@@ -334,14 +334,19 @@ class AhAnswer(models.Model):
     #    return reverse('ah-offer-detail', kwargs={'pk': self.pk})
 
     def __str__(self):
-        return '{} {} ({}) to {} {} ({})'.format(self.pk,
-            self.owner.customer_name,
-            self.description,
-            self.ah_offer.pk,
-            self.ah_offer.owner.customer_name,
-            self.ah_offer.description
-        )
-
+        if self.ah_offer and self.owner:
+            string = '{} {} ({}) to {} {} ({})'.format(
+                self.pk,
+                self.owner.customer_name,
+                self.description,
+                self.ah_offer.pk,
+                self.ah_offer.owner.customer_name,
+                self.ah_offer.description
+            )
+        else:
+            string = '{} {}'.format(self.pk, self.description)
+        return string
+    
     def get_absolute_url(self):
         return reverse('ah-answer-detail', kwargs={'pk': self.pk})
 
