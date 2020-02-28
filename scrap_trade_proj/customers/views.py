@@ -577,25 +577,22 @@ def customer_user_create(request, pk):
             new_user.set_unusable_password()
             # Send the user into the DB.
             new_user.save()
-            password_link = PasswordResetLink(
-                for_user = new_user
-            )
+            
+            password_link = PasswordResetLink(for_user=new_user)
             password_link.save()
-            password_link.send_to_user(request)
+            password_link.send_link_email_to_user(request)
 
-            msg = _("The user has been created. ") + ' ' +\
-            _("An email with a link for setting a new password has been sent to the user's address.") + ' ' +\
-            _("This link is valid for 48 hours from now.")
+            msg = (_("The user has been created. "), 
+                   _("An email with a link for setting a new password has been sent to the user's address."),
+                   _("This link is valid for 48 hours from now."))
             # @todo; For user create message, use variables in the translation with user's name, email address and a variable for the actual expiry time
             messages.success(request, msg)
             return redirect('project-customer-detail', pk)
     else:
         form = UserRestCreationForm()
 
-    title2 = tr.pgettext('customer_user_create-title', 'create-user')
     context = {
         'form': form,
-        'title': title2,
         'customer': customer,
     }
     return render(request, 'customers/projectcustomuser_form.html', context)
@@ -627,17 +624,26 @@ def request_password_reset_link(request):
                 # doesn't exist.
                 pass
 
-            # Register the link, make the link's id
-            new_link = PasswordResetLink(for_user=user)
-            new_link.save()
-            new_link.send_to_user(request)
+            if user:
+                # Register the link, make the link's id
+                password_link = PasswordResetLink(for_user=user)
+                password_link.save()
+                password_link.send_link_email_to_user(request)
 
         # Return the same success message regardless of whether the user
         # is valid or not. This is a security measure to not allow
         # bots to know if the user exists or not by spamming this page.
-        msg = _("A reset link has been sent to the email address. ") + ' ' +\
-        _("If you didn't recieve any email, make sure that your address has been typed correctly ") + ' ' +\
-        _(" and that the message wasn't marked as spam. ")
+        
+        if 'from_profile_edit' in request.GET:
+            msg = (
+                _("A reset link has been sent to your email address. "),
+            )
+        else:
+            msg = (
+                _("A reset link has been sent to the email address. "),
+                _("If you didn't recieve any email, make sure that your address has been typed correctly "),
+                _("and that the message wasn't marked as spam. ")
+            )
         messages.success(request, msg)
         return redirect('user-login')
 
@@ -807,13 +813,15 @@ def log_out(request):
 
 @login_required
 def profile(request):
-    proj = Project.objects.all().first()
+    
     oid = str(request.user.userprofile.open_id.int_id)
+    user = request.user  # Use the currently logged in user
+    
     if request.method == 'POST':
-        user_form = UserUpdateForm(request.POST, instance=request.user)
+        user_form = UserUpdateForm(request.POST, instance=user)
         profile_form = ProfileUpdateForm(request.POST,
                                         request.FILES,
-                                        instance=request.user.userprofile)
+                                        instance=user.userprofile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -821,15 +829,22 @@ def profile(request):
             messages.success(request, success_message)
             return redirect('user-profile')
     else:
-        user_form = UserUpdateForm(instance=request.user)
-        profile_form = ProfileUpdateForm(instance=request.user.userprofile)
-
-    title2 = tr.pgettext('customer-user-profile-title', 'user-profile')
+        user_form = UserUpdateForm(instance=user)
+        profile_form = ProfileUpdateForm(instance=user.userprofile)
+    
     context = {
         'u_form': user_form,
         'p_form': profile_form,
-        'title': title2,
-        'project': proj,
-        'oid': oid,
+        
+        'content_header': {
+            'title': _('Edit your profile'),
+            'account_image': user.userprofile.image,
+            'button_list': [{
+                'text': _("Documents"),
+                'href': reverse('doc-repo-dokument-list',
+                                kwargs={'oid': oid}),
+                'icon': 'file-text',
+            }]
+        }
     }
     return render(request, 'customers/user_profile.html', context)
