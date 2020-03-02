@@ -22,7 +22,6 @@ class AhOffer(models.Model):
         verbose_name=_('Description'),
         help_text=_("Offers description"),
         null=True,
-        blank=True,
     )
     owner = models.ForeignKey(
         Customer,
