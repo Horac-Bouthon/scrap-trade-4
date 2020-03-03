@@ -42,13 +42,13 @@ class AhOfferUpdateForm(forms.ModelForm):
     
     auction_date = forms.DateField(
         label=_('Auction date:'), 
-        initial=datetime.now(), 
-        widget=forms.SelectDateWidget)
+        initial=datetime.now
+    )
     
     delivery_date = forms.DateField(
         label=_('Delivery date:'), 
-        initial=datetime.now(), 
-        widget=forms.SelectDateWidget)
+        initial=datetime.now
+    )
     
     class Meta:
         model = AhOffer
