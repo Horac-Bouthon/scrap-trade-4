@@ -9,26 +9,72 @@
   {% include 'project_main/__content-header.html' %}
 
   <section class="content-pad">
+    
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      {{ form|crispy }}
 
-    <div class="media-body">
-      <h2 class="customer-name">{{ object.customer_name }}</h2>
-      <form class="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <fieldset class="form-group">
-          {{ form|crispy }}
-        </fieldset>
-        <div class="form-group">
+      
+      {% include 'project_main/__btn-submit-save.html' %}
 
-          {% include 'project_main/__btn-submit-save.html' %}
+      <a class="btn btn-outline-secondary"
+         href="{% url 'ah-customer-auction' customer.pk %}">
+        {% trans "Cancel" %}
+      </a>
 
-          <a class="btn btn-outline-secondary"
-             href="{% url 'ah-customer-auction' customer.pk %}">
-            {% trans "Cancel" %}
-          </a>
-        </div>
-      </form>
-    </div>
+      
+    </form>
+  </section>
+  <!-- 
+       
+       <div id="Templates"
+       class="d-none" {# Hide templates #}>
+
+       {# Calendar #}
+       <div id="Calendar-Template"
+       class="calendar shadow border rounded my-2 overflow-hidden">
+       
+       <section class="calendar__header
+       bg-white d-flex align-items-center py-2 px-3">
+       
+       <span class="Top-Date flex-fill 
+       h5 m-0">{##}</span>
+
+       <div class="btn-group">
+       <button type="button"
+       class="Prev-Month btn btn-outline-primary btn-sm">
+       <i data-feather="chevron-left"></i>
+       </button>        
+       <button type="button"
+       class="Next-Month btn btn-outline-primary btn-sm">
+       <i data-feather="chevron-right"></i>
+       </button>
+       </div>
+       </section>
+
+       <section class="calendar__weekdays
+       px-1">{##}</section>
+       <section class="calendar__months
+       px-1">{##}</section>
+       </div>
+
+       <div id="CalendarMonth-Template"
+       class="Month-Wrap">
+       {##}
+       </div>
+       <div id="CalendarRow-Template"
+       class="d-flex mb-1">
+       {##}
+       </div>
+       <div id="CalendarItem-Template"
+       class="
+       text-center font-weight-bold
+       rounded-pill px-0 py-1 mx-1"
+       style="flex: 1 1 0px" {# = Same width for all items #}>
+       {##}
+       </div>
+       </div>
+  -->
+  
 {% endblock content %}
-
-{% block spec_action %}
-{% endblock spec_action %}

@@ -1,0 +1,82 @@
+{% load i18n %}
+
+<script>
+ // Add translations from the backend for consistency
+ MONTHS = [
+     "{% trans "January" %}",
+     "{% trans "February" %}",
+     "{% trans "March" %}",
+     "{% trans "April" %}",
+     "{% trans "May" %}",
+     "{% trans "June" %}",
+     "{% trans "July" %}",
+     "{% trans "August" %}",
+     "{% trans "September" %}",
+     "{% trans "October" %}",
+     "{% trans "November" %}",
+     "{% trans "December" %}"
+ ]
+ DAYS = [
+     "{% trans "Monday" %}",
+     "{% trans "Tuesday" %}",
+     "{% trans "Wednesday" %}",
+     "{% trans "Thursday" %}",
+     "{% trans "Friday" %}",
+     "{% trans "Saturday" %}",
+     "{% trans "Sunday" %}",
+ ]
+</script>
+
+
+<div id="Templates"
+     class="d-none" {# Hide templates #}>
+
+  {# Calendar #}
+  <div id="Calendar-Template"
+       class="
+           border rounded overflow-hidden
+           mt-1 mb-3"
+       style="position: relative;">
+    
+    <section class="calendar__header
+                    bg-white d-flex align-items-center py-2 px-3">
+      
+      <span class="Top-Date flex-fill 
+                   h5 m-0">{##}</span>
+
+      <div class="btn-group">
+        <button type="button"
+                class="Prev-Month btn btn-outline-primary btn-sm">
+          <i data-feather="chevron-left"></i>
+          {# @todo; Replace icons in calendars with raw SVG #}
+        </button>        
+        <button type="button"
+                class="Next-Month btn btn-outline-primary btn-sm">
+          <i data-feather="chevron-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <section class="calendar__weekdays
+                    d-flex mx-1 mb-1
+                    bg-primary text-white rounded">{##}</section>
+    <section class="calendar__months
+                    px-1">{##}</section>
+  </div>
+
+  <div id="CalendarMonth-Template"
+       class="Month-Wrap">
+    {##}
+  </div>
+  <div id="CalendarRow-Template"
+       class="d-flex mb-1">
+    {##}
+  </div>
+  <div id="CalendarItem-Template"
+       class="
+           text-center font-weight-bold
+           rounded-pill px-0 py-1 mx-1"
+       style="flex: 1 1 0px" {# = Same width for all items #}>
+    {##}
+  </div>
+</div>
