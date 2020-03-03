@@ -647,6 +647,7 @@ def ntf_send_from_auction(
     set_url="",
     ):
     context = ntf_manager.NtfContext()
+    context['app_name'] = Project.objects.all().first().project_name
     context['place'] = place
     context['offer_description'] = offer_description
     if set_url != "":
