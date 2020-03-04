@@ -28,10 +28,7 @@
     {# Backgrounds corresponding to page #}
     <style>
      body {
-         {% if object.offer.owner.customer_background %} {# = At offer line #}
-         background-image: url("{{ object.offer.owner.customer_background.url }}");
-
-         {% elif object.owner.customer_background %} {# = At customer's offers #}
+         {% if ahoffer.owner.customer_background %} {# = At customer's offers #}
          background-image: url("{{ object.owner.customer_background.url }}");
 
          {% elif customer.customer_background %} {# = At customer pages #}
@@ -39,7 +36,6 @@
 
          {% elif project %}  {# Anywhere else #}
          background-image: url("{{ project.project_background.url }}");
-
          {% endif %}
      }
     </style>
