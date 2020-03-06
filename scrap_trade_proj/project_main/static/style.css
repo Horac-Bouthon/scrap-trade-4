@@ -214,6 +214,42 @@ div.tip {
 }
 
 
+
+/* Checkbox styles (Bootstrap doesn't have any! I know right, wild!) */
+input[type=checkbox] {
+  outline: none;  /* Input outline done with box-shadow instead */
+  /* display: none; ...would hide the ::before element too */
+  /* Hide original but display the ::before element */
+  height: 0;
+}
+input[type=checkbox]::before {
+  /* Visible checkbox */
+  content: ' ';
+  font-weight: bold;
+  display: block;
+
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.25rem;
+  
+  transition: all 0.1s;
+  background: white;
+  border: 1px solid #5a6a6a;
+  box-shadow: 0 0 0 0 transparent;
+}
+input[type=checkbox]:checked::before {
+  /* Modified `check` icon from feather-icons, width & height is 1rem */
+  content: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+  /* Checked colors */
+  background: var(--primary);
+  border: var(--primary);
+}
+input[type=checkbox]:focus::before {
+  /* Bootstrap focus copy */
+  box-shadow: 0 0 0 0.2rem rgba(38,143,255,.5);
+}
+
+
 /* Login popup */
 #LOGIN_POPUP {
   position: fixed;
