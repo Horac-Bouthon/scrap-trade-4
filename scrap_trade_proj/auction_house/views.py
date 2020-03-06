@@ -20,9 +20,6 @@ from .modules.auction import (
     _get_state,
     accept_answer,
     except_state,
-
-    get_online_info_context,
-    get_online_context,
 )
 
 from state_wf.models import (
@@ -184,7 +181,7 @@ class AhOfferDetailView(UserBelongOffer, DetailView):
                 'icon': 'file-text',
             }
         ]
-        if test_poweruser(self.request.user) and state_key != 'offer_in_auction':
+        if test_poweruser(self.request.user):
             button_list.append({
                 'text': _("Edit offer"),
                 'href': reverse('ah-offer-update',
@@ -637,7 +634,7 @@ class AhAnswerDetailView(UserBelongAnswer, DetailView):
                 'icon': 'edit-3',
             })
 
-        if answer.auction_url and answer.actual_state.state_key == 'answer_in_auction':  
+        if answer.auction_url and answer.actual_state.state_key == 'answer_in_auction':
             # @todo; Realtime auction buttons need a better condition for being displayed... This leads to errors.
             button_list.append({
                 'href': answer.auction_url,
@@ -894,7 +891,7 @@ def ah_offer_step_create(request, pk):
         'form': form,
         'customer': offer.owner,
         'object': offer,
-        'object_type': 'answer',
+        'object_type': 'offer',
         'update_url': 'ah-offer-update',
     }
     return render(request, 'auction_house/ah_step_new.html', context)
@@ -935,19 +932,214 @@ def ah_answer_step_create(request, pk):
 
 ## REALTIME AUCTION
 
-@user_belong_answer
-def realtime_auction(request, pk2, pk):
-    context = get_online_context(pk2, pk)
-    state = AhAnswer.objects.get(id=pk).actual_state.state_key
-    if state == 'answer_in_auction':
-        return render(request, 'auction_house/realtime_auction.html', context)
-    else:
-        raise PermissionDenied
+import django.utils.timezone as django_timezone
+def _arrival_type_of_realtime_auction(offer):
 
+    in_auction_state = StepState.objects.get(state_key = 'offer_in_auction')
+    now = django_timezone.now()
+
+    if now < offer.auction_start:
+        arrival_type = 'too_soon'
+    elif now > offer.auction_end:
+        arrival_type = 'too_late'
+    else:
+        if offer.actual_state == in_auction_state:
+            arrival_type = 'ok'
+        else:
+            arrival_type = 'wrong_state'
+            # @todo; Something more meaningful should be reported
+
+    return arrival_type
+
+
+
+def _get_classed_best_bids(offer, my_answer=None):
+    
+    best_bid_list = []
+    price_sorted_bid_list = filter_by_state(
+        offer.answers, 'answer_in_auction').order_by('-total_price')[:5]
+
+    for index, bid in enumerate(price_sorted_bid_list):
+        
+        bid_data = {
+            'total_price': bid.total_price,
+        }
+        if my_answer and my_answer.id == bid.id:
+            bid_data['current_answer'] = True
+        if index == 0:
+            bid_data['best'] = True
+        
+        best_bid_list.append(bid_data)
+
+    return best_bid_list
+
+
+
+
+@user_belong_answer
+def realtime_auction(request, pk2, pk):  # Answer view
+    
+    offer = get_object_or_404(AhOffer, id=pk2)
+    arrival = _arrival_type_of_realtime_auction(offer)
+    
+    context = {
+        'arrival': arrival,
+        
+        'offer': offer,
+        'customer': offer.owner,
+        'content_header': {
+            'title': offer.description,
+            'desc': _("Online auction"),
+        },
+    }
+    if arrival != 'ok':
+        # Exit early if we don't need actual data
+        return render(request, 'auction_house/realtime_auction.html', context)
+    
+    
+    answer = get_object_or_404(AhAnswer, id=pk)
+    
+    answer_state = AhAnswer.objects.get(id=pk).actual_state.state_key
+    if answer_state != 'answer_in_auction':
+        # Exit early if answer isn't in the correct state
+        raise PermissionDenied    
+
+    
+    my_lines = []
+    for my_line in answer.my_lines.all():
+        my_lines.append({
+            'ah_a_line': my_line,
+            'ppu_form_id': 'ppu_' + str(my_line.pk),
+            'total_form_id': 'total_' + str(my_line.pk),
+        })
+    
+    ordered_best_bid_list = _get_classed_best_bids(offer, answer)
+    
+    context.update({
+        'answer': answer, 'object': answer,
+        
+        'ordered_best_bid_list': ordered_best_bid_list,
+        'lines': my_lines,
+    })
+    return render(request, 'auction_house/realtime_auction.html', context)
+
+
+
+
+@login_required  # @todo; Should online auction info be viewable by any user?
+def realtime_auction_info(request, pk):  # Read-only view
+    
+    offer = get_object_or_404(AhOffer, id=pk)
+    arrival = _arrival_type_of_realtime_auction(offer)
+    
+    context = {
+        'arrival': arrival,
+        
+        'offer': offer,
+        'customer': offer.owner,
+        'content_header': {
+            'title': offer.description,
+            'desc': _("Online auction info"),
+        },
+    }
+    if arrival != 'ok':
+        # Exit early if we don't need actual data
+        return render(
+            request, 'auction_house/realtime_auction.html', context)
+    
+    context = {
+        'arrival': arrival,
+        
+        'offer': offer, 'object': offer,
+        'customer': offer.owner,
+
+        'content_header': {
+            'title': offer.description,
+            'desc': _("Online auction info"),
+        },
+    }
+    return render(request, 'auction_house/realtime_auction.html', context)
+
+
+
+from django.http import JsonResponse
 @login_required
-def realtime_auction_info(request, pk):
-    context = get_online_info_context(pk)
-    return render(request, 'auction_house/realtime_auction_info.html', context)
+def bidlist_anonymous(request, pk):
+    offer = get_object_or_404(AhOffer, id=pk)
+    return JsonResponse(
+        _get_classed_best_bids(offer), 
+        safe=False
+    )
+    
+@user_belong_answer
+def bidlist_answer(request, pk, pk2):
+    offer = get_object_or_404(AhOffer, id=pk2)
+    answer = get_object_or_404(AhAnswer, id=pk)
+    return JsonResponse(
+        _get_classed_best_bids(offer, answer),
+        safe=False
+    )
+
+
+from decimal import Decimal
+@user_belong_answer
+def realtime_update_answer(request, pk):
+    
+    answer = get_object_or_404(AhAnswer, id=pk)
+    
+    def _decode_pk(name):
+        separator = '_'
+        objects = ['ppu', 'total']
+        for type_str in objects:
+            if name.startswith(type_str + separator):
+                pk_part = name.split(separator)[1]  # Raises key error
+                pk = int(pk_part)  # Raises conversion error
+                return (pk, type_str)
+        return (None, None)
+        
+    if request.method == 'POST':
+        # @perf; Precalc the pk's from all names, filter lines and then match in the for -- minimize the DB fetches
+        for name, value in request.POST.items():
+            
+            pk, type_str = _decode_pk(name)
+            if pk is None:
+                continue  # Some unrelated field was there
+            
+            answer_line = get_object_or_404(AhAnswerLine, id=pk)  
+    
+            if answer_line.answer.pk != answer.pk:
+                print("Answer pk's don't match with the line!\n", name)
+                continue
+            
+            if type_str == 'total':
+                pass  # Ignore the TOTAL, calculate it rather than relying on FE
+            elif type_str == 'ppu':
+                
+                float_val = Decimal(value)  # Parse a number from the value
+                # @todo; Handle the conversion error
+                
+                print("{}:\n  {}\n  {} * {}".format(
+                    answer_line.offer_line.description,
+                    answer_line.total_price,
+                    answer_line.ppu, answer_line.offer_line.amount,
+                ))
+                
+                answer_line.ppu = float_val
+                answer_line.total_price = float_val * answer_line.offer_line.amount
+                answer_line.save()  # Save, then calculate total
+                answer_line.answer.refresh_total_price()
+                
+                print("{}:\n  {}\n  {} * {}".format(
+                    answer_line.offer_line.description,
+                    answer_line.total_price,
+                    answer_line.ppu, answer_line.offer_line.amount,
+                ))
+                
+        print('New total:', answer.total_price)
+    
+    return JsonResponse({
+        'ok': True,  # @todo; Return meaningful data to the FE
+    })
 
 
 @user_belong_answer

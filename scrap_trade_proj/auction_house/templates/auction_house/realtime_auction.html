@@ -1,4 +1,3 @@
-
 {% extends 'project_main/base.html' %}
 
 {% load i18n %}
@@ -7,6 +6,7 @@
 
 {% block content %}
 
+  
   {% if arrival == 'wrong_state' %}
 
     <section class="content-pad">
@@ -60,7 +60,7 @@
   {% elif arrival == 'ok' %}
 
     {% include 'project_main/__content-header.html' %}
-
+    
     <section class="content-pad">
 
       <dl>
@@ -77,81 +77,389 @@
           </dl>
           <dl>
             <dt>{% trans 'Auction end:' %}</dt>
-            <dd>{{ offer.auction_end|date:"d.m.Y" }} {{ offer.auction_end|time:"H:i" }}</dd>
+            <dd>
+              {{ offer.auction_end|date:"d.m.Y" }}
+              {{ offer.auction_end|time:"H:i" }}
+            </dd>
           </dl>
         </div>
 
-        <h4>{% trans "Offer lines" %}</h4>
-
-        {% include 'auction_house/__offerlines-table.html' %}
+        {% if answer %}
+          <h4>{% trans "Offer lines" %}</h4>
+          {% include 'auction_house/__offerlines-table.html' %}
+        {% endif %}
 
       </dl>
 
-      <div class="d-flex">
+      <div class="d-flex flex-wrap">
 
         <dl class="flex-fill">
-          
-          <h4>{% trans "My bid" %}</h4>
-          
-          <dt>{% trans 'Total price:' %}</dt>
-          <dd>{{ answer.total_price }}</dd>
-          
-          <div class="table-wrap">
-            <table>
-              <tr>
-                <th>{% trans "Description" %}</th>
-                <th>{% trans "Amount" %}</th>
-                <th>{% trans "Price per unit" %}</th>
-              </tr>
+
+          {% if answer %}
+            
+            <h4>
+              {% trans "My bid" %}
+            </h4>
+
+            <form action="javascript:"
+                  id="Answer_Inline_Wrap">
               
-              {% for line_obj in lines %}  
-                <tr class="{{ line_obj.str_class }}">
-                  {% with line=line_obj.ah_a_line %}
-                    <td>{{ line.offer_line.description }}</td>
-                    <td>{{ line.offer_line.amount }} {{ line.offer_line.mat_class.measurement_unit }}</td>
-                    <td>
-                      <a href="{% url 'ah-customer-answers-online-ppu' answer.pk line_obj.ah_a_line.pk %}"
-                         title="{% trans "Click to update price per unit" %}">
-                        <div class="d-flex">
-                          {{ line.ppu }}
-                          <i data-feather="edit-3"></i>
-                        </div>
-                      </a>
-                    </td>
-                  {% endwith %}
-                </tr>
-              {% endfor %}
-            </table>
-          </div>
+              {% csrf_token %}  {# Don't forget to add even for AJAX forms #}
+              
+              <div class="table-wrap">
+                <table>
+                  <tr>
+                    <th>{% trans "Description" %}</th>
+                    <th>{% trans "Amount" %}</th>
+                    <th>{% trans "Price" %}</th>
+                  </tr>
+                  
+                  {% for line_obj in lines %}  
+                    <tr>
+                      {% with line=line_obj.ah_a_line %}
+                        <td>{{ line.offer_line.description }}</td>
+                        <td>
+                          {{ line.offer_line.amount }}
+                          {{ line.offer_line.mat_class.measurement_unit }}
+                        </td>
+
+                        <td class="Answer_Line_Inlines"
+                            data-amount="{{ line.offer_line.amount }}"
+                            style="max-width: 10rem">
+
+                          {# PPU #}
+                          {% with id=line_obj.ppu_form_id %}
+                            <label for="{{ id }}"
+                                   class="mb-0 small">
+                              Unit:
+                            </label>
+                            <input id="{{ id }}"
+                                   name="{{ id }}"
+                                   value="{{ line.ppu }}"
+                                   type="number" step="any"
+                                   class="Ppu form-control" />
+                          {% endwith %}
+
+                          {# TOTAL #}
+                          {% with id=line_obj.total_form_id %}
+                            <label for="{{ id }}"
+                                   class="mb-0 small">
+                              Line total:
+                            </label>                        
+                            <input id="{{ id }}"
+                                   value="{# JS-calculated #}"
+                                   readonly {# non-editable #}
+                                   class="Total form-control"/>
+                          {% endwith %}
+                        </td>
+                      {% endwith %}
+                    </tr>
+                  {% endfor %}
+                </table>
+              </div>
+
+
+              <div class="d-flex float-right my-1 btn-group
+                          bg-white rounded shadow big">
+                <div class="d-flex align-items-center
+                            px-3 py-1">
+                  <span class="mr-2">
+                    {% trans 'Total price:' %}
+                  </span>
+                  <span class="m-0 h3 font-weight-bold 
+                               owned"
+                        id="Total_Price">
+                    {{ answer.total_price }}
+                  </span>
+                </div>
+                
+                <button class="btn btn-primary btn-sm"
+                        type="submit">
+                  <i data-feather="check"></i>
+                </button>
+              </div>
+              
+            </form>
+            
+          {% else %}  {# Offer's read only view #}
+            <h4>
+              {% trans "Offer detail" %}
+            </h4>
+            {% include 'auction_house/__offerlines-table.html' %}
+          {% endif %}
 
         </dl>
 
-        <dl class="ml-3">
+        <dl>
           <h4 class="m-0">
             {% trans "Best bids" %}
           </h4>
 
-          <ul class="bid__list">
-            {% for bid in ordered_best_bid_list %}
-              <li class="{{ bid.str_class }}">
-                <div class="bid__amount">
-                  {{ bid.total_price }}
-                </div>
-              </li>
-            {% endfor %}
-          </ul>
+          {% with bid_list=ordered_best_bid_list %}
+            <div id="BidList"> {# filled with JS #} </div>
+          {% endwith %}
+
+          <script>
+           // Bidlist refresh URLs
+           {% if answer %}
+           const BIDLIST_URL = "{% url 'bidlist-answer' offer.pk answer.pk %}";
+           {% else %}
+           const BIDLIST_URL = "{% url 'bidlist-anonymous' offer.pk %}";
+           {% endif %}
+
+           // Modify answer URL
+           {% if answer %}
+           const SUBMIT_URL = "{% url 'realtime-update-answer' answer.pk %}";
+           {% endif %}
+          </script>
+          <div class="templates d-none">
+            <div id="Award-Template"
+                 class="
+                     text-dark border-warning bg-warning
+                     border rounded-circle shadow-sm
+                     position-absolute"
+                 style="
+                     padding: 4px 5px;
+                     width: 36px; 
+                     height: 36px;
+                     right: -17px;"
+                 title="{% trans "Winning" %}">
+              <i data-feather="award"></i>
+            </div>
+          </div>
         </dl>
       </div>
 
     </section>
 
+
+    <script>
+
+     (function ppu_total__inline_form() {
+
+         const FormWrapper = document.querySelector('form#Answer_Inline_Wrap');
+         const TotalPrice = FormWrapper.querySelector('span#Total_Price');
+         if (!FormWrapper || !TotalPrice) {
+             console.error("PpuTotalForm; Couldn't get all required elements.");
+             return;
+         }
+
+         // Input initializing
+         var line_total_elements = [];  // Remember for final summing
+         FormWrapper
+             .querySelectorAll('.Answer_Line_Inlines')
+             .forEach(function(el) {
+                 var total = el.querySelector('.Total');
+                 var ppu = el.querySelector('.Ppu');
+                 var amount = parseFloat(el.dataset.amount); 
+                 // @todo; Error checks
+
+                 line_total_elements.push(total);  // Remember for final sum
+                 sync_fields(total, ppu, amount);
+             });
+         
+         // Submitting
+         FormWrapper.addEventListener('submit', function() {
+             var request = new XMLHttpRequest();
+             request.open('POST', SUBMIT_URL);
+             
+             request.onload = function load_callback() {
+                 var ok = (request.status >= 200 && request.status < 300);
+                 if (!ok) {
+                     // @todo; Show the user what's up when XHRs fail
+                     console.error(
+                         "PpuTotalForm; Submit responded with an error",
+                         request);
+                     return;
+                 }
+                 try {
+                     var response_data = JSON.parse(request.response);
+                     console.log(response_data);
+                 } catch(e) {
+                     console.error(
+                         'PpuTotalForm; Server returned invalid JSON data',
+                         request);
+                     return;
+                 }
+                 // Try to refresh the bid list a bit sooner
+                 BidList.refresh()
+             };
+             
+             // Send request and eventually run the callback
+             var form_data = (function grab_inputs() {
+                 var data = new FormData();
+                 FormWrapper.querySelectorAll('input').forEach(function(input) {
+                     // Note; This includes the middleware token into the POST
+                     console.log(input.name, input.value);
+                     data.append(input.name, input.value);
+                 });
+                 return data;
+             })();
+             request.send(form_data);
+         });
+         
+         
+         function sync_fields(total, ppu, amount) {
+
+             // Onload, calculate total from ppu*amount
+             update_line_total();
+             // Answer total is fine uncalculated at the start
+             
+             // Hook up on_change events for both inputs
+             var events = ['keydown', 'change'];
+             events.forEach(function(evt) {
+                 ppu.addEventListener(evt, update_line_total);
+             });
+
+
+             function round_price(number) {
+                 const factor = 10 * (DECIMAL_SPACES = 2);
+                 return Math.round(number * factor) / factor;
+             }
+             function update_line_total() {
+                 setTimeout(function() {
+                     total.value = round_price(ppu.value * amount);
+                     update_final_price();
+                 }, 1);  // Defer to slightly after the event
+             }
+             function update_final_price() {
+                 var final_sum = 0;
+                 line_total_elements.forEach(function(total) {
+                     var total_float = parseFloat(total.value);
+                     if (!isNaN(total_float)) {  // Just in case
+                         final_sum += total_float;
+                     }
+                 });
+                 TotalPrice.innerHTML = round_price(final_sum);
+             }
+         }
+     })();
+     
+     var BidList = (function BidList_Init() {
+         
+         // A bid list that automatically fetches its data at an interval
+
+         const AUTOREFRESH_INTERVAL = 2 * (second = 1000);
+         
+         const Wrapper = document.getElementById('BidList');
+         if (!Wrapper) {
+             console.error('Bidlist; Could not find the bid list wrapper.');
+             return;
+         }
+         const Best_Award = document.getElementById('Award-Template');
+         // @todo; Error
+         
+         send_refresh_request();  // Initial request
+         (function autorefresh_when_browser_tab_is_open() {
+             setInterval(function() {
+                 if (document.hidden) {
+                     return;  // The browser tab is not in focus
+                 }
+                 send_refresh_request();
+             }, AUTOREFRESH_INTERVAL);
+             // @todo; Smarter things could be done with bidlist refreshes
+         })();
+
+         
+         function swap_in_new_bidlist(response_data) {
+
+             var list_refresh = document.createElement('ul');
+             // Appended later...
+
+             // Fill in the bid items from the data
+             const bid_items = response_data;
+             bid_items.forEach(function(bid_data, index) {
+
+                 var bid_elem = document.createElement('li');
+                 
+                 bid_elem.innerHTML = '<span class="amount">' +
+                                      bid_data.total_price +
+                                      '</span>';
+                 
+                 if (bid_data['best'] === true) {
+                     bid_elem.appendChild(copy_of(Best_Award));
+                 }
+                 if (bid_data['current_answer'] === true) {
+                     bid_elem.classList.add('owned')
+                 }
+                 
+                 // Append only after we've modified the element
+                 list_refresh.appendChild(bid_elem);
+             });
+             
+
+             // Swap the lists with the new refresh
+             Wrapper.querySelectorAll('ul').forEach(function(ul) {
+                 ul.classList.add('d-none');
+             });
+             
+             list_refresh.classList.add('hidden');
+             Wrapper.appendChild(list_refresh);
+             setTimeout(function() {  // Defer showing for effects
+                 list_refresh.classList.remove('hidden');
+             }, 1);
+         }
+         
+         function send_refresh_request() {
+             // Ajax request for fetching the list
+             var request = new XMLHttpRequest();
+             // What site to request
+             request.open('GET', BIDLIST_URL);
+             // What to do with the result
+             request.onload = function load_callback() {
+                 var ok = (request.status >= 200 && request.status < 300);
+                 if (!ok) {
+                     console.error(
+                         'Bidlist; Fetch list request failed', request);
+                     return;
+                 }
+
+                 try {
+                     var response_data = JSON.parse(request.response);
+                 } catch(e) {
+                     console.error(
+                         'Bidlist; Server returned invalid JSON data',
+                         request);
+                     return;
+                 }
+                 
+                 swap_in_new_bidlist( response_data );
+             };
+             // Send request and eventually run the callback
+             request.send();
+         }
+
+         // Public API
+         return {
+             refresh: send_refresh_request
+         }
+     })();
+
+     function copy_of(node) {  // util
+         const CLONE_CHILDREN = true;
+         var copy = node.cloneNode(CLONE_CHILDREN);
+         copy.id = '';  // Copy can't have the ID
+         return copy;
+     };
+     
+    </script>
+
     <style>
-     .bid__list {
+
+     #BidList > ul{
          padding-left: 0;
          list-style: none;
+
+         position: relative;
+         transition: all 0.2s ease-out;
+         left: 0;
      }
-     .bid__item {
-         padding: 0.25rem 1.5rem;
+     #BidList > ul.hidden {
+         left: -5px;
+         opacity: 0;
+     }
+     #BidList > ul > li {
+         padding: 0.25rem 1rem;
          margin: 0.5rem 0;
 
          background: white;
@@ -162,27 +470,23 @@
          display: flex;
          align-items: center;
      }
-     .bid__time {
-         color: #6c757d;
-         text-align: right;
-         width: 3rem;
-         margin-top: 10px;  /* slight off-center */
-     }
-     .bid__amount {
+     #BidList .amount {
          text-align: right;
          font-weight: bold;
          font-size: 2.5rem;
          line-height: 1.15em;
 
-         padding-right: 0.25rem;
+         padding: 0 0.5rem;
 
          flex: 1 1 auto; /* flex-fill */
      }
-     .bid__item--best {
-         background: #ff5 !important;
-     }
-     .bid__item--owned {
-         color: var(--orange);
+     
+
+     /* Same look for both the setting and the owned item 
+        in the bidlist */
+     #BidList li.owned,
+     form#Answer_Inline_Wrap span.owned {
+         color: var(--primary);
      }
     </style>
 
