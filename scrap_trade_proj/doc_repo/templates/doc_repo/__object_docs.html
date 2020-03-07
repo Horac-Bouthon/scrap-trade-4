@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load icons_and_buttons %}
 
 {% with object.open_id.get_docs as docs %}
 
@@ -41,7 +42,7 @@
                   <a class="btn btn-sm btn-outline-primary"
                      href="{{ doc.file.url }}"
                      target="_blank">
-                    <i data-feather="external-link"></i>
+                    {% icon 'new_tab' %}
                     {% trans "Open in new tab" %}
                   </a>
                 {% endif %}
@@ -49,7 +50,7 @@
                 <a class="btn btn-sm btn-outline-primary"
                    href="{{ doc.file.url }}"
                    download {# <- Important attribute! #}>
-                  <i data-feather="download"></i>
+                  {% icon 'download' %}
                   {% trans "Download" %}
                 </a>
               </div>

@@ -1,6 +1,7 @@
 {% extends "project_main/base.html" %}
 {% load crispy_forms_tags %}
 {% load i18n %}
+{% load icons_and_buttons %}
 
 
 {% block content %}
@@ -20,10 +21,10 @@
         <button class="btn btn-primary"
                 type="submit">
           {% if page_type == 'update' %}
-            <i data-feather="check"></i>
+            {% icon 'save' %}
             {% trans "Save changes" %}
           {% elif page_type == 'create' %}
-            <i data-feather="plus-circle"></i>
+            {% icon 'add' %}
             {% trans "Add a line to offer" %}
           {% endif %}
         </button>

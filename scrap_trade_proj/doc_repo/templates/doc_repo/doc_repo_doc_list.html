@@ -1,7 +1,7 @@
 {% extends "project_main/base.html" %}
 {% load crispy_forms_tags %}
 {% load i18n %}
-
+{% load icons_and_buttons %}
 
 {% block content %}
   
@@ -54,7 +54,7 @@
                     <a class="btn btn-outline-primary"
                        href="{{ doc.file.url }}"
                        target="_blank">
-                      <i data-feather="external-link"></i>
+                      {% icon 'new_tab' %}
                       {% trans "Open in new tab" %}
                     </a>
                   {% endif %}
@@ -62,7 +62,7 @@
                   <a class="btn btn-outline-primary"
                      href="{{ doc.file.url }}"
                      download {# <- Important attribute! #}>
-                    <i data-feather="download"></i>
+                    {% icon 'download' %}
                     {% trans "Download" %}
                   </a>
                 </div>
@@ -73,12 +73,12 @@
                   <div class="btn-group">
                     <a class="btn btn-outline-primary"
                        href="{% url 'doc-repo-dokument-modify' doc.pk %}">
-                      <i data-feather="edit-3"></i>
+                      {% icon 'edit' %}
                       {% trans "Edit description" %}
                     </a>
                     <a class="btn btn-outline-danger"
                        href="{% url 'doc-repo-dokument-delete' doc.pk %}">
-                      <i data-feather="trash-2"></i>
+                      {% icon 'delete' %}
                       {% trans "Delete" %}
                     </a>
                   </div>

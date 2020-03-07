@@ -1,6 +1,7 @@
 {% extends "project_main/base.html" %}
 {% load crispy_forms_tags %}
 {% load i18n %}
+{% load icons_and_buttons %}
 
 
 {% block content %}
@@ -103,12 +104,12 @@
 
           <button class="btn btn-primary"
                   type="submit">
-            <i data-feather="plus"></i>
+            {% icon 'add' %}
             {% trans "Create a New Answer" %}
           </button>
           <a class="btn btn-secondary"
              href="{% url 'ah-customer-auction' customer.pk %}">
-            <i data-feather="x"></i>
+            {% icon 'cancel' %}
             {% trans "Cancel" %}
           </a>
 

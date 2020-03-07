@@ -2,10 +2,10 @@
 
 {% load i18n %}
 {% load crispy_forms_tags %}
+{% load icons_and_buttons %}
 
 
 {% block content %}
-
   
   {% if arrival == 'wrong_state' %}
 
@@ -175,7 +175,7 @@
                 
                 <button class="btn btn-primary btn-sm"
                         type="submit">
-                  <i data-feather="check"></i>
+                  {% icon 'ajax_save' %}
                 </button>
               </div>
               
@@ -224,7 +224,7 @@
                      height: 36px;
                      right: -17px;"
                  title="{% trans "Winning" %}">
-              <i data-feather="award"></i>
+              {% icon 'winner' %}
             </div>
           </div>
         </dl>
@@ -238,8 +238,12 @@
      (function ppu_total__inline_form() {
 
          const FormWrapper = document.querySelector('form#Answer_Inline_Wrap');
+         if (!FormWrapper) {
+             console.info("PpuTotalForm; No form for widget found.");
+             return;
+         }
          const TotalPrice = FormWrapper.querySelector('span#Total_Price');
-         if (!FormWrapper || !TotalPrice) {
+         if (!TotalPrice) {
              console.error("PpuTotalForm; Couldn't get all required elements.");
              return;
          }

@@ -1,12 +1,11 @@
-
 {% load i18n %}
+{% load icons_and_buttons %}
 
 <button type="submit"
         class="btn btn-primary 
               {{ cls }}">
 
-  <i data-feather="check"></i>
-
+  {% icon 'save' %}
   {% trans "Save changes" %}
   
 </button>

@@ -3,13 +3,14 @@
 
 {% load i18n %}
 {% load crispy_forms_tags %}
+{% load icons_and_buttons %}
 
 <dl>
   <h4>
     {{ inline.heading }}
     <button onclick="Inlines.add_line(this)"
             class="btn btn-icon-noborder btn-outline-primary">
-      <i data-feather="plus"></i>
+      {% icon 'add' %}
     </button>
   </h4>
   <ul>
@@ -29,7 +30,7 @@
               <button class="btn btn-icon-noborder btn-outline-primary"
                       onclick='Inlines.edit(this)'
                       type='button'>
-                <i data-feather="edit-3"></i>
+                {% icon 'edit' %}
               </button>
               {% include 'project_main/__btn-icon-delete.html' with href=entry.url_delete %}
               {% if entry.url_docs %}
@@ -53,13 +54,13 @@
             <div class="">
               <button class="btn btn-sm btn-success"
                       type="submit">
-                <i data-feather="check"></i>
+                {% icon 'save' %}
                 {% trans 'Save' context 'Inline edit button text' %}
               </button>
               <button onclick="Inlines.restore_all()"
                       class="btn btn-sm btn-secondary"
                       type="button">
-                <i data-feather="x"></i>
+                {% icon 'cancel' %}
                 {% trans 'Cancel' context 'Inline button text' %}
               </button>
             </div>
@@ -82,13 +83,13 @@
         <div>
           <button class="btn btn-sm btn-primary"
                   type="submit">
-            <i data-feather="plus"></i>
+            {% icon 'add' %}
             {% trans 'Add new entry' context 'Inline add new button text' %}
           </button>
           <button onclick="Inlines.restore_all()"
                   class="btn btn-sm btn-secondary"
                   type="button">
-            <i data-feather="x"></i>
+            {% icon 'cancel' %}
             {% trans 'Cancel' context 'Inline button text' %}
           </button>
         </div>

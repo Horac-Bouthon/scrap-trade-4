@@ -1,5 +1,6 @@
 {% extends "project_main/base.html" %}
 {% load i18n %}
+{% load icons_and_buttons %}
 
 
 {% block content %}
@@ -19,7 +20,7 @@
       
       <a class="btn btn-primary"
          href={% url 'project-customer-update' object.pk %}>
-        <i data-feather="edit-3"></i>
+        {% icon 'edit' %}
         {% trans 'Edit Customer Details' %}
       </a>
     </dl>
@@ -42,7 +43,7 @@
       {% get_current_language as LANGUAGE_CODE %}
       <a class="btn btn-primary"
          href="{% url 'project-customer-tran' object.pk LANGUAGE_CODE %}">
-        <i data-feather="edit-3"></i>
+        {% icon 'edit' %}
         {% trans "Edit translated descriptions" %}
       </a>
     </dl>
@@ -75,7 +76,7 @@
       
       <a class="btn btn-primary text-right"
          href="{% url 'project-customer-user-create' customer.pk %}">
-        <i data-feather="plus"></i>
+        {% icon 'add' %}
         {% trans 'Add New User to Customer' %}
       </a>
     </dl>

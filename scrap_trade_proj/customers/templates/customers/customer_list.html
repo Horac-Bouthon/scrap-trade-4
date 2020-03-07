@@ -1,6 +1,6 @@
 {% extends "project_main/base.html" %}
 {% load i18n %}
-
+{% load icons_and_buttons %}
 
 {% block content %}
 
@@ -79,7 +79,7 @@
                   data-target="#Customer_Collapse_{{ forloop.counter }}"
                   aria-controls="Customer_Collapse_{{ forloop.counter }}"
                   title="{% trans "Toggle details" context "collapse-button-title" %}">
-            <i data-feather="chevron-down"></i>
+            {% icon 'collapse' %}
           </button>
           
         </section>

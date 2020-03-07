@@ -1,6 +1,6 @@
 {% extends "project_main/base.html" %}
 {% load i18n %}
-
+{% load icons_and_buttons %}
 
 
 {% block content %}
@@ -71,7 +71,7 @@
                      title="{% trans "Update price per unit" %}">
                     <div class="d-flex">
                       {{ line.ppu }}
-                      <i data-feather="edit-3"></i>
+                      {% icon 'edit' %}
                     </div>
                   </a>
                 {% else %}
@@ -85,7 +85,7 @@
                      title="{% trans "Update total price" %}">
                     <div class="d-flex">
                       {{ line.total_price }}
-                      <i data-feather="edit-3"></i>
+                      {% icon 'edit' %}
                     </div>
                     
                   </a>
