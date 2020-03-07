@@ -74,7 +74,7 @@
       </ul>
       
       <a class="btn btn-primary text-right"
-         href={{ href }}>
+         href="{% url 'project-customer-user-create' customer.pk %}">
         <i data-feather="plus"></i>
         {% trans 'Add New User to Customer' %}
       </a>
