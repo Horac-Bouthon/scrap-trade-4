@@ -182,27 +182,50 @@ const login = (function() {
 
 
 var calendar_widget = (function CalendarWidget() {
-
+    
     // Formatting to/from django
-    function django_encode(date) {
-        var month = '' + (date.getMonth() + 1);
-        var day = '' + date.getDate();
+    function django_encode(date, type) {
         var year = '' + date.getFullYear();
-        // Pad with zeroes
-        if (month.length == 1) month = '0' + month;
-        if (day.length == 1) day = '0' + day;
-        return [year, month, day].join('-')
+        var month = '' + (date.getMonth() + 1);  // JS month is 0-based
+        var day = '' + date.getDate();
+        var hours = '' + date.getHours();
+        var minutes = '' + date.getMinutes();
+        var Date = [year, zeropad(month), zeropad(day)].join('-');
+        var Time = [zeropad(hours), zeropad(minutes)].join(':');
+        var Datetime = [Date, Time].join(' ');
+        var types = { 'date': Date, 'time': Time, 'datetime': Datetime };
+        return types[type];
     }
     function django_decode(date_string) {
-        var comps = date_string.split('-');
-        // @todo; Make decoding dates in JS a bit more robust
-        return new Date(
-            comps[0],      // year
-            comps[1] - 1,  // month
-            comps[2]       // day
-        );
+        if (date_string.trim().length == 0) {
+            return null;
+        }
+        
+        var datetime = date_string.split(' ');
+        var date_comps = datetime[0].split('-');
+        if (datetime.length == 1) {
+            return new Date(
+                date_comps[0],      // year
+                date_comps[1] - 1,  // month
+                date_comps[2]       // day
+            );
+        } else {
+            var time_comps = datetime[1].split(':');
+            return new Date(
+                date_comps[0],      // year
+                date_comps[1] - 1,  // month
+                date_comps[2],      // day
+                time_comps[0],      // hour
+                time_comps[1]       // minute
+            )
+        }
     }
-
+    function zeropad(number) {
+        var str = '' + number;
+        if (str.length == 1) return ('0' + str);
+        else return (str);
+    }
+    
     // Utility functions
     function copy_of(node) {
         const CLONE_CHILDREN = true;
@@ -217,9 +240,11 @@ var calendar_widget = (function CalendarWidget() {
     
 
     // Find the inputs viable for widgeting
-    const INPUT_SELECTOR = 'input[type="text"].dateinput.form-control';
-    const INPUTS = document.querySelectorAll(INPUT_SELECTOR);
-    if (INPUTS.length == 0) {
+    const DATETIME_SELECTOR = 'input[type="text"].datetimeinput.form-control';
+    const DATE_SELECTOR = 'input[type="text"].dateinput.form-control';
+    const Inputs = document.querySelectorAll(DATETIME_SELECTOR + ', ' +
+                                             DATE_SELECTOR);
+    if (Inputs.length == 0) {
         console.info("Calendar widget; No inputs for widget found.");
         return;
     }
@@ -237,22 +262,95 @@ var calendar_widget = (function CalendarWidget() {
                       ItemTemplate, MonthTemplate);
         return;
     }
-
     
-    INPUTS.forEach(function init_input(input) {
-        
-        const InitialDate = django_decode(input.value);
-        var CurrentlyDisplayed = null;  // Set when switching
+    
+    Inputs.forEach(function init_input(input) {
 
-        setTimeout(function() {  // Defer to the end
-            force_select_date(InitialDate);
-        }, 1);
+        const INPUT_TYPE = (function() {
+            if (input.classList.contains('dateinput')) return 'date'
+            else return 'datetime';
+        })();
         
-        // Element construction
-        var Wrapper = null;
-        (function construct_calendar_skeleton() {
+        const InitialDate = django_decode(input.value, INPUT_TYPE);
+        var CurrentlyDisplayedMonth = null;  // Set when switching
+        
+        // Element construction, immediatelly
+        var Wrapper = construct_calendar_skeleton();
+        init_time_events();
+
+        // Defer selecting the loaded date to the end
+        setTimeout(function() {
+            // Create current month, select loaded date
+            force_select_date(InitialDate, input);
+            // Update the time fields, if possible
+            init_time_fields(InitialDate);
+        }, 1);
+
+        
+        function init_time_fields(date) {
+            // Don't init non-datetimes
+            if (INPUT_TYPE !== 'datetime') return;
+            // If date wasn't initiated at load, fill in the current time
+            if (date === null) date = new Date();
+
+            // Copy over the initial values
+            const hours = Wrapper.querySelector('input[name=hours]');
+            const mins = Wrapper.querySelector('input[name=minutes]');
+            hours.value = zeropad(date.getHours());
+            mins.value = zeropad(date.getMinutes());
+        }
+        
+        function init_time_events() {
+            // Add time-setting event listeners
+            var minutes_and_hours = Wrapper.querySelectorAll(
+                'input[name=minutes], input[name=hours]');
+            minutes_and_hours.forEach(function(time_element) {
+                
+                time_element.addEventListener('click', update_input);
+                time_element.addEventListener('keydown', update_input);
+            });
             
-            Wrapper = copy_of(WrapperTemplate);
+            function update_input() {
+                // Timed out so that it won't clash with builtin functionality
+                setTimeout(function() {
+                    // Clamp the hours and minutes before setting them
+                    const hours = Wrapper.querySelector('input[name=hours]');
+                    const mins = Wrapper.querySelector('input[name=minutes]');
+                    hours.value = zeropad(
+                        clamp(
+                            parseInt(hours.value), hours.min, hours.max
+                        ) || hours.value);
+                    mins.value = zeropad(
+                        clamp(
+                            parseInt(mins.value), mins.min, mins.max
+                        ) || mins.value);
+                    // Decode the current time, modify hrs and mins
+                    var current_date = django_decode(input.value, INPUT_TYPE);
+                    if (current_date === null) {
+                        // If date in field isn't valid, pick today as date
+                        // and select it in the calendar visibly.
+                        current_date = new Date();
+                        force_select_date(current_date, input);
+                    }
+                    input.value = django_encode(new Date(
+                        current_date.getFullYear(),
+                        current_date.getMonth(),
+                        current_date.getDate(),
+                        hours.value, mins.value
+                    ), INPUT_TYPE);
+                }, 1);
+            }
+            function clamp(value, min, max) {
+                if (value <= min) return min;
+                else if (value > max) return max;
+                else return value;
+            }
+        }
+
+
+        function construct_calendar_skeleton() {
+            
+            var Wrapper = copy_of(WrapperTemplate);
             input.parentNode.appendChild(Wrapper);
             
             // Weekdays header
@@ -269,46 +367,81 @@ var calendar_widget = (function CalendarWidget() {
             prev_btn.addEventListener('click', function() {
                 var new_date = new Date(CurrentlyDisplayedMonth);  // Clone
                 new_date.setMonth(CurrentlyDisplayedMonth.getMonth() - 1);
-                switch_to_month(new_date);
+                switch_to_month(new_date, input);
             });
             const next_btn = Wrapper.querySelector('button.Next-Month');
             next_btn.addEventListener('click', function() {
                 var new_date = new Date(CurrentlyDisplayedMonth);  // Clone
                 new_date.setMonth(CurrentlyDisplayedMonth.getMonth() + 1);
-                switch_to_month(new_date);
+                switch_to_month(new_date, input);
             });
-        })();
-        
-        function switch_to_month(date_obj) {
 
-            // Internal value
-            CurrentlyDisplayedMonth = new Date(date_obj);  // Clone date
-            CurrentlyDisplayedMonth.setDate(1);  // Just in case...
+            // Display time section, if needed
+            var Time = Wrapper.querySelector('section.calendar__time');
+            if (INPUT_TYPE !== 'datetime')
+                Time.classList.add('d-none');
+
+            return Wrapper;
+        }
+        
+        function force_select_date(date, input) {
+            if (date === null) {
+                // Date wasn't filled in by the backend, so we shouldn't
+                // fill it at the start.
+                // ...Maybe it's supposed to not be filled in, we can't know
+                switch_to_month(null, input);
+                
+            } else {
+                // Get the month with the date, (maybe create) and display it
+                var shown_month = switch_to_month(date, input);
+
+                // Find the button that corresponds with the date and click it
+                var dates = shown_month.querySelectorAll('.Date');
+                dates.forEach(function(date_elem) {
+                    var data_attr = date_elem.dataset;
+                    if (date.getFullYear() == data_attr.year &&
+                        date.getMonth() == data_attr.month &&
+                        date.getDate() == data_attr.day
+                       ) {
+                        date_elem.click();  // Trigger the click event
+                    }
+                });
+            }
+        }
+        
+        function switch_to_month(date_obj, input) {
             
-            // Switch the calendar heading
+            // Switch the calendar heading, modify the internal value
+            if (date_obj === null) {
+                CurrentlyDisplayedMonth = new Date();  // Set to now
+            } else {
+                // Modify the internal value
+                CurrentlyDisplayedMonth = new Date(date_obj);  // Clone date
+                CurrentlyDisplayedMonth.setDate(1);  // Just in case...
+            }
+            
+            // In case we don't get a valid date object, 
             Wrapper.querySelector('.Top-Date')
                 .innerHTML =
-                capitalize(MONTHS[date_obj.getMonth()]) + ' ' +
-                date_obj.getFullYear();
-
+                capitalize(MONTHS[CurrentlyDisplayedMonth.getMonth()]) + ' ' +
+                CurrentlyDisplayedMonth.getFullYear();
+            
             // Find the corresponding month
             var wraps = Wrapper.querySelectorAll('.Month-Wrap');
             var show_month = (function find_wrap_for_month(date) {
                 var found = null;
                 wraps.forEach(function(wrap) {
-                    if (wrap.dataset.month == date.getMonth()) {
+                    if (wrap.dataset.month == date.getMonth())
                         found = wrap;
-                        // break;  // Can't `break` out of a function!
-                    }
                 });
                 return found;
-            })(date_obj);
+            })(CurrentlyDisplayedMonth);
 
             // Construct the wanted month if it doesn't exist
             if (show_month === null) {
-                show_month = construct_month(date_obj); 
+                show_month = construct_month(CurrentlyDisplayedMonth, input); 
             }
-
+            
             // Show only the month that we want to see  @todo; With effects
             wraps.forEach(function(wrap) {
                 if (wrap == show_month) {
@@ -318,34 +451,20 @@ var calendar_widget = (function CalendarWidget() {
                 }
             });
 
-            return show_month;  // Return the month we've decided to show
+            // Return the month we've decided to show
+            return show_month;
         };
-
-        function force_select_date(date) {
-            // Get the month with the date, (maybe create) and display it
-            var shown_month = switch_to_month(date);
-
-            // Find the button that corresponds with the date and click it
-            var dates = shown_month.querySelectorAll('.Date');
-            dates.forEach(function(date_elem) {
-                var data_attr = date_elem.dataset;
-                if (date.getFullYear() == data_attr.year &&
-                    date.getMonth() == data_attr.month &&
-                    date.getDate() == data_attr.day
-                   ) {
-                    date_elem.click();  // Trigger the click event
-                }
-            });
-        }
         
-        function construct_month(date_obj) {
-            const month_wrap = Wrapper.querySelector('.calendar__months');
+        function construct_month(date_obj, input) {
             
+            const month_wrap = Wrapper.querySelector('.calendar__months');
             const Month = copy_of(MonthTemplate);
             month_wrap.appendChild(Month);
-            Month.dataset.month = date_obj.getMonth();
-            
 
+            // Remember month in the HTML for later
+            Month.dataset.month = date_obj.getMonth();
+
+            
             // Padding out the months' starting day
             
             const month_starts_at_day = (function(date) {
@@ -360,10 +479,7 @@ var calendar_widget = (function CalendarWidget() {
             
             var row_i = 0;  // How filled is the current row
             var current_row = copy_of(RowTemplate);
-            
-            current_row.innerHTML = '';
             Month.appendChild(current_row);
-
             
             for (var day=0; day < month_starts_at_day; day++) {
                 current_row.appendChild(copy_of(ItemTemplate));
@@ -380,15 +496,6 @@ var calendar_widget = (function CalendarWidget() {
                     0  // 0th day wraps and gets last day of previous month
                 );
                 return last_day.getDate();
-            })(date_obj);
-            const today_day_index = (function(date) {
-                var today_date = new Date();
-                if (date.getFullYear() === today_date.getFullYear()) {
-                    if (date.getMonth() === today_date.getMonth()){
-                        return today_date.getDate();
-                    }
-                }
-                return -1;  // Today is not in current month
             })(date_obj);
             
             for (var day=0; day < days_in_this_month; day++) {
@@ -411,24 +518,21 @@ var calendar_widget = (function CalendarWidget() {
                 data_attr.day = day + 1;
                 data_attr.month = date_obj.getMonth();
                 data_attr.year = date_obj.getFullYear();
-
+                function get_datestring_from_button(day_button) {
+                    var current_time = django_decode(input.value, INPUT_TYPE);
+                    if (current_time === null) current_time = new Date();
+                    const btn_date = day_button.dataset;
+                    return django_encode(new Date(
+                        btn_date.year, btn_date.month, btn_date.day,
+                        current_time.getHours(), current_time.getMinutes()
+                    ), INPUT_TYPE);
+                }
+                
                 // Click events for choosing the date
                 new_day.addEventListener('click', function() {
 
-                    const selected_date = (function(day_button) {
-                        const data_attr = day_button.dataset;
-                        return django_encode(new Date(
-                            data_attr.year, data_attr.month, data_attr.day
-                        ));
-                    })(this);
-                    
-                    const input = (function(calendar) {
-                        // Find nearest input element
-                        const widget_parent = calendar.parentNode;
-                        return widget_parent.querySelector('input');
-                    })(Wrapper);
-
-                    input.value = selected_date;
+                    // Set the original input's value
+                    input.value = get_datestring_from_button(this);
 
                     // Toggle the selected item classes
                     Wrapper.querySelectorAll('.SELECTED_DAY')
@@ -440,6 +544,15 @@ var calendar_widget = (function CalendarWidget() {
                 });
                 
                 // Highlight today, if viewing the correct month
+                const today_day_index = (function(date) {
+                    var today_date = new Date();
+                    if (date.getFullYear() === today_date.getFullYear()) {
+                        if (date.getMonth() === today_date.getMonth()){
+                            return today_date.getDate();
+                        }
+                    }
+                    return -1;  // Today is not in current month
+                })(date_obj);
                 if (today_day_index > 0) {
                     const is_today = ((day + 1) === today_day_index);
                     if (is_today) {
@@ -447,7 +560,8 @@ var calendar_widget = (function CalendarWidget() {
                             '0px 0px 0px 3px hsla(205, 100%, 50%, 0.5)';
                     }
                 }
-                
+
+                // Add the day into the row, keep track of days in the row
                 current_row.appendChild(new_day);
                 row_i += 1;
             }

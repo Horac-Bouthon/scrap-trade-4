@@ -38,9 +38,10 @@
            border rounded overflow-hidden
            mt-1 mb-3"
        style="position: relative;">
-    
+
     <section class="calendar__header
-                    bg-white d-flex align-items-center py-2 px-3">
+                    bg-white d-flex align-items-center py-2 px-3
+                    border-bottom">
       
       <span class="Top-Date flex-fill 
                    h5 m-0">{##}</span>
@@ -58,12 +59,36 @@
     </section>
 
     <section class="calendar__weekdays
-                    d-flex mx-1 mb-1
+                    d-flex m-1 px-1
                     bg-primary text-white rounded">{##}</section>
     <section class="calendar__months
-                    px-1">{##}</section>
+                    m-1 p-1
+                    bg-white border rounded">{##}</section>
+    
+    <section class="calendar__time
+                    m-1">
+      <div class="d-flex justify-content-center align-items-center">
+        <div class="time-hours">
+          <input class="form-control big text-center font-weight-bold p-1"
+                 style="width: 3em;"
+                 type="number" step="1" min="0" max="23"
+                 name="hours" value="10"/>
+        </div>
+        <div class="px-1 font-weight-bold big">
+          :
+        </div>
+        <div class="time-minutes">
+          <input class="form-control big text-center font-weight-bold p-1"
+                 style="width: 3em;"
+                 type="number" step="1" min="0" max="59"
+                 name="minutes" value="32"/>
+        </div>
+      </div>
+    </section>
   </div>
 
+
+  
   <div id="CalendarMonth-Template"
        class="Month-Wrap">
     {##}
