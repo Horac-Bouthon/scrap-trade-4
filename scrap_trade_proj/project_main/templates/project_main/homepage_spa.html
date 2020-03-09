@@ -22,17 +22,13 @@
        border-bottom: 1px solid rgba(0,0,0,0.2);
        padding-bottom: 0.1em;
    }
+
    
+   /* First section's splash text -- the first thing a visitor sees */
    .section--first {
        min-height: 100vh;
        padding-top: 60vh;
-       
-       background-image: url("/media/default-project-background.jpg");
-       background-repeat: no-repeat;
-       background-size: cover;
    }
-   
-   /* First section's splash text -- the first thing a visitor sees */
    .section--first h1, .section--first h2 {
        font-size: 3rem;
        font-weight: bold; 
@@ -46,6 +42,7 @@
 
 
 {% block content %}  {# How the `block content` would be loaded #}
+  
   {% for section in sections %}
     
     {% if forloop.first %}
@@ -70,4 +67,111 @@
     {% endif %}
     
   {% endfor %}
+
+
+  {# Images for the carousel to display. #}
+  {# @todo; Allow adding images in the project editing. #}
+  <script>   
+   var CAROUSEL_IMAGES = [
+       "/media/default-project-background.jpg",
+       
+       "https://natureconservancy-h.assetsadobe.com/is/image/content/dam/tnc/nature/en/photos/tnc_86887171.jpg?crop=0,176,3032,1667&wid=4000&hei=2200&scl=0.758",
+       
+       "https://natureconservancy-h.assetsadobe.com/is/image/content/dam/tnc/nature/en/photos/tnc_69881045.jpg?crop=240,0,2400,1320&wid=4000&hei=2200&scl=0.6",
+   ]
+  </script>
+
+
+  <style>
+   .section__first {
+       position: relative;
+   }
+   .CarouselWrap {
+       position: absolute;
+   }
+   .CarouselImage {
+       background-size: cover;
+       background-position: center;
+       
+       transition: none 1s ease-out;
+       transition-property: opacity, filter;
+       opacity: 0;
+       filter: blur(2px);
+   }
+   .CarouselImage.shown {
+       opacity: 1;
+       filter: none;
+   }
+   
+   .stretch-out {
+       position: absolute;
+       top: 0; left: 0;
+       width: 100%; height: 100%;
+   }
+  </style>
+  
+  
+  <script>
+   var Carousel = (function() {
+       
+       var target_to_overlay = document.querySelector('.section--first');
+       var carousel_wrap = init_wrap(target_to_overlay);
+
+       var image_list = []
+       var currently_displayed = -1;
+       add_images(carousel_wrap, CAROUSEL_IMAGES);
+
+       const SWITCH_AFTER_MILLISECONDS = 10 * (second = 1000);
+       var first_image = new Image();
+       first_image.onload = function() {
+           setInterval( advance, SWITCH_AFTER_MILLISECONDS );
+           advance();
+       }
+       first_image.src = CAROUSEL_IMAGES[0];  // Triggers the load req
+       
+
+       function advance() {
+           var to_display = (currently_displayed + 1) % image_list.length;
+           image_list.forEach(function(img, index) {
+               if (index === to_display) {
+                   img.classList.add('shown');
+               } else {
+                   img.classList.remove('shown');
+               }
+           });
+           currently_displayed += 1;
+       }
+       
+       function init_wrap(section) {
+           // Fix positioning of that element
+           section.style.background = 'none';
+           
+           // Add the carousel element
+           var carousel_wrap = (function create_wrap(section) {
+               var cls = 'CarouselWrap';
+               section.innerHTML = '<div class="' + cls + '"></div>' +
+                                   section.innerHTML;
+               var wrap = section.querySelector('.' + cls);
+               return wrap;
+           })(section);
+           carousel_wrap.classList.add('stretch-out');
+           carousel_wrap.style = 'z-index: -1;';  // Get under content
+           carousel_wrap.classList.add('bg-dark');
+           
+           return carousel_wrap;
+       }
+       
+       function add_images(carousel, image_url_list) {
+           image_url_list.forEach(function(img_url) {
+               var image_el = document.createElement('div');
+               carousel.appendChild(image_el);
+               image_list.push(image_el);
+
+               image_el.classList.add('stretch-out', 'CarouselImage');
+               image_el.style.backgroundImage = 'url("' + img_url + '")';
+           });
+       }
+   })();
+  </script>
+
 {% endblock %}
