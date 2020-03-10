@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load crispy_forms_tags %}  {# For the login form #}
+{% load icons_and_buttons %}
 
 
 <!DOCTYPE html>
@@ -44,13 +45,17 @@
         <main class="col-lg-9 mb-5">
 
           {# Form feedback messages #}
-          {% if messages %}
-            {% for message in messages %}
-              <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-              </div>
+          <div class="alert-templates d-none">
+            {% include 'project_main/__alert.html' with type='TEMPLATE' %}
+          </div>
+          <div class="Alert-Wrap
+                      px-4">
+            
+            {% for msg in messages %}
+              {% include 'project_main/__alert.html' with msg=msg type=msg.tags %}
             {% endfor %}
-          {% endif %}
+
+          </div>
 
           <div class="bg-light overflow-hidden rounded shadow-lg
                       pb-3">

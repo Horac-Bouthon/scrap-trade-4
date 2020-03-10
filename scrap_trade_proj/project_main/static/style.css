@@ -192,10 +192,47 @@ a.article-title:hover {
   .content-pad { --pad: 0.75rem; }
 }
 
-/* Lists in alert messages can be more compact */
+
+
+
+/* Alerts */
+
+/* Styles for making the alerts fixed into the page */
+.Alert-Wrap {
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%;
+  z-index: 100;
+
+  display: flex;  /* Easiest way to center */
+  flex-direction: column;  /* Fix 1 item per line */
+
+  font-size: 1.2em;
+
+  pointer-events: none;  /* Click through the wrap */
+}
+.alert {
+  margin-left: auto;
+  margin-right: auto;
+  
+  transition: all 0.2s ease-out;
+  
+  transform: translateY(-0.5rem) scale(0.95);
+  opacity: 0;
+  pointer-events: none; /* Not clickable if not shown */
+}
+.alert.shown {
+  transform: none;
+  opacity: 1;
+  pointer-events: initial;  /* Restore clicks when visible */
+}
+
 .alert-block > ul {
+  /* Lists in alert messages can be more compact */
   padding-left: 1rem;
 }
+
+
 
 
 /* Additional styles for tips. 

@@ -1,0 +1,22 @@
+
+{% load icons_and_buttons %}
+
+<div class="alert 
+            alert-{{ type }} border-{{ type }}
+            shadow px-2 py-2
+            d-flex align-items-stretch"
+     
+     {% if type == 'TEMPLATE' %}
+     id='AlertTemplate'
+     {% endif %}
+>
+  <span class="Alert-Text
+               px-2 flex-fill">
+    {{ msg }}
+  </span>
+  <div class="px-1"></div>
+  <button class="Alert-Close
+                 btn btn-outline-{{ type }} border-0 py-0 px-1">
+    {% icon 'close' %}
+  </button>
+</div>

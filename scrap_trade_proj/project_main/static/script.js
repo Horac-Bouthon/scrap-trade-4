@@ -16,6 +16,99 @@ function _find_ancestor(el, selector_criteria) {
 function _show(el) { el.classList.remove('d-none'); }
 function _hide(el) { el.classList.add('d-none'); }
 
+function _copy_of(node) {
+    const CLONE_CHILDREN = true;
+    var copy = node.cloneNode(CLONE_CHILDREN);
+    copy.id = '';  // Copy can't have the same ID as the original
+    return copy;
+}
+
+function _replace_all(str, a, b) {
+    return str.replace(new RegExp(a, 'g'), b);
+}
+
+
+const Alerts = (function init_alerts() {
+
+    // On load; Display all the alerts with effect
+    // by adding the `shown` class.
+    // Time out the initial display to get the user's
+    // attention better + deferring needed for display effects.
+    setTimeout(function display_all() {
+        document.querySelectorAll('.alert').forEach(display);
+    }, 300);
+    
+    function display(mesg) {
+        // Ignore templates
+        if (mesg.id == 'AlertTemplate') { return; }
+        
+        // Hook up the close button when displaying
+        var close_button = mesg.querySelector('button');
+        close_button.addEventListener('click', hide_handler);
+                
+        // Show by adding the class
+        mesg.classList.add('shown');
+        
+        // @todo; [optional] Auto-close alerts after a set time?? 
+    }
+    
+    function hide_handler(ev) {
+        var button = this;
+        var alert = _find_ancestor(button, '.alert');
+        alert.classList.remove('shown');
+        setTimeout(function shrink_to_nothing() {
+            alert.style =
+                'overflow: hidden;' +
+                'height: 0;' +
+                'margin: 0 !important;' +
+                'padding: 0 !important;';
+        }, 300);  // Make sure we're hiding after transition finished
+    }
+
+
+    // Alerts at runtime
+    
+    var Wrapper = document.querySelector('.Alert-Wrap');
+    var AlertTemplate = document.getElementById('AlertTemplate');
+    function add_new(message, type) {
+        if (!AlertTemplate) {
+            console.error('Alerts; Template for new alert not found');
+            return;
+        }
+        if (!Wrapper) {
+            console.error('Alerts; We have nowhere to put the alert.');
+            return;
+        }
+
+        var new_alert = _copy_of(AlertTemplate);
+        var text = new_alert.querySelector('.Alert-Text');
+        var button = new_alert.querySelector('.Alert-Close');
+        [new_alert, text, button].forEach(function fill_types(el) {
+            el.className = _replace_all(el.className, 'TEMPLATE', type);
+        });
+        
+        text.innerHTML = message;
+        
+        Wrapper.appendChild(new_alert);
+        
+        return new_alert;
+    }
+    
+    function add_and_show(message, type) {    
+        var new_alert = add_new(message, type);
+        
+        setTimeout(function() {  // defer
+            display(new_alert);
+        }, 1);
+    }
+
+    // Public API
+    return {
+        add: add_new,
+        show: display,
+        add_and_show: add_and_show,
+    };
+})();
 
 /**
  *  Inline editable forms interactivitiy.
@@ -227,12 +320,6 @@ var calendar_widget = (function CalendarWidget() {
     }
     
     // Utility functions
-    function copy_of(node) {
-        const CLONE_CHILDREN = true;
-        var copy = node.cloneNode(CLONE_CHILDREN);
-        copy.id = '';  // Copy can't have the ID
-        return copy;
-    }
     function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.substring(1);
     }
@@ -352,13 +439,13 @@ var calendar_widget = (function CalendarWidget() {
 
         function construct_calendar_skeleton() {
             
-            var wrap = copy_of(WrapperTemplate);
+            var wrap = _copy_of(WrapperTemplate);
             input.parentNode.appendChild(wrap);
             
             // Weekdays header
             const weekdays = wrap.querySelector('.calendar__weekdays');
             DAYS.forEach(function(translated_day_name) {
-                const day = copy_of(ItemTemplate);
+                const day = _copy_of(ItemTemplate);
                 weekdays.appendChild(day);
                 var first_few = translated_day_name.substring(0, 2);
                 day.innerHTML = capitalize(first_few);
@@ -461,7 +548,7 @@ var calendar_widget = (function CalendarWidget() {
         function construct_month(date_obj, input) {
             
             const month_wrap = Wrapper.querySelector('.calendar__months');
-            const Month = copy_of(MonthTemplate);
+            const Month = _copy_of(MonthTemplate);
             month_wrap.appendChild(Month);
 
             // Remember month in the HTML for later
@@ -481,11 +568,11 @@ var calendar_widget = (function CalendarWidget() {
             })(date_obj);
             
             var row_i = 0;  // How filled is the current row
-            var current_row = copy_of(RowTemplate);
+            var current_row = _copy_of(RowTemplate);
             Month.appendChild(current_row);
             
             for (var day=0; day < month_starts_at_day; day++) {
-                current_row.appendChild(copy_of(ItemTemplate));
+                current_row.appendChild(_copy_of(ItemTemplate));
                 row_i += 1;
             }
 
@@ -506,13 +593,13 @@ var calendar_widget = (function CalendarWidget() {
                 // Break line of days before writing Monday
                 var is_new_week = (row_i == 7);
                 if (is_new_week) {
-                    current_row = copy_of(RowTemplate);
+                    current_row = _copy_of(RowTemplate);
                     Month.appendChild(current_row);
                     is_new_week = false;
                     row_i = 0;
                 }
                 
-                const new_day = copy_of(ItemTemplate);
+                const new_day = _copy_of(ItemTemplate);
                 new_day.innerHTML = (day + 1) + '';
                 new_day.classList.add('Date', 'btn', 'big');
                 
@@ -573,7 +660,7 @@ var calendar_widget = (function CalendarWidget() {
             // Padding out the end
             
             for (var day=row_i; day < 7; day++) {
-                current_row.appendChild(copy_of(ItemTemplate));
+                current_row.appendChild(_copy_of(ItemTemplate));
             }
 
 
