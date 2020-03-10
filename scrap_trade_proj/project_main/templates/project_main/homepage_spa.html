@@ -124,12 +124,15 @@
        const SWITCH_AFTER_MILLISECONDS = 10 * (second = 1000);
        var first_image = new Image();
        first_image.onload = function() {
-           setInterval( advance, SWITCH_AFTER_MILLISECONDS );
-           advance();
+           setInterval(
+               advance, SWITCH_AFTER_MILLISECONDS );  // Repeated
+           advance();  // First display
+           first_image = null;  // Free the image from JS memory
        }
        first_image.src = CAROUSEL_IMAGES[0];  // Triggers the load req
        
 
+       
        function advance() {
            var to_display = (currently_displayed + 1) % image_list.length;
            image_list.forEach(function(img, index) {
@@ -139,7 +142,7 @@
                    img.classList.remove('shown');
                }
            });
-           currently_displayed += 1;
+           currently_displayed = to_display;
        }
        
        function init_wrap(section) {
@@ -154,10 +157,9 @@
                var wrap = section.querySelector('.' + cls);
                return wrap;
            })(section);
-           carousel_wrap.classList.add('stretch-out');
-           carousel_wrap.style = 'z-index: -1;';  // Get under content
-           carousel_wrap.classList.add('bg-dark');
            
+           carousel_wrap.style = 'z-index: -1;';  // Get under content
+           carousel_wrap.classList.add('stretch-out', 'bg-dark');
            return carousel_wrap;
        }
        
