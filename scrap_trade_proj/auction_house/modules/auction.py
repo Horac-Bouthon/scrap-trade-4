@@ -1,4 +1,5 @@
 
+import sys
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 
@@ -282,14 +283,14 @@ def customer_offer_create(customer, user, data):
     for cc in offer_to(customer):
         new.offered_to.add(cc)
     new.save()
-    
+
     # fisrt step
     new_state = StepState.objects.get(state_key='offer_new')
     offer_add_state(new, new_state, user)
-    
+
     return new.pk
-    
-    
+
+
 def filter_by_state(p_data, p_state_key):
     state = StepState.objects.get(state_key = p_state_key)
     id_set = [x.id for x in p_data.all() if x.is_equal_state(state)]
@@ -514,10 +515,14 @@ def send_ntf_from_state(request, state, context):
     return ret_val
 
 def ntf_send_from_view(request, state, place='No where', item=None):
-    context = ntf_manager.NtfContext()
-    context['place'] = place
-    context['item'] = item
-    send_ntf_from_state(request, state, context)
+    try:
+        context = ntf_manager.NtfContext()
+        context['place'] = place
+        context['item'] = item
+        send_ntf_from_state(request, state, context)
+    except:
+        print('ntf_send_from_view error')
+        print("Unexpected error:", sys.exc_info()[0])
     return
 
 def ntf_send_from_auction(
@@ -530,13 +535,17 @@ def ntf_send_from_auction(
     business=False,
     set_url="",
     ):
-    context = ntf_manager.NtfContext()
-    context['app_name'] = Project.objects.all().first().project_name
-    context['place'] = place
-    context['offer_description'] = offer_description
-    if set_url != "":
-        context['access_url'] = set_url
-    ntf_manager.send_by_template(request, context, customer, template, admins, business)
+    try:
+        context = ntf_manager.NtfContext()
+        context['app_name'] = Project.objects.all().first().project_name
+        context['place'] = place
+        context['offer_description'] = offer_description
+        if set_url != "":
+            context['access_url'] = set_url
+        ntf_manager.send_by_template(request, context, customer, template, admins, business)
+    except:
+        print('ntf_send_from_auction error')
+        print("Unexpected error:", sys.exc_info()[0])
 
 def ntf_create_from_auction(
     template='fallback',
@@ -546,9 +555,14 @@ def ntf_create_from_auction(
     admins=False,
     business=False,
     ):
-    message = ntf_manager.NtfMessage()
-    message.template = template
-    message.context = context
-    message.context['access_url'] = cust_url
-    message = customer.add_emails(message, False, True)
+    try:
+        message = ntf_manager.NtfMessage()
+        message.template = template
+        message.context = context
+        message.context['access_url'] = cust_url
+        message = customer.add_emails(message, False, True)
+    except:
+        print('ntf_create_from_auction error')
+        print("Unexpected error:", sys.exc_info()[0])
+    return
     return message
