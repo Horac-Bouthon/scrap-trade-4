@@ -53,15 +53,11 @@
         {% include 'project_main/__btn-submit-save.html' %}
 
         {% if not from_online %}
-          {% url 'ah-answer-detail' answer.pk as href %}
+          {% url 'ah-answer-detail' answer.pk as cancel_href %}
         {% else %}
-          {% url 'realtime-auction' offer.pk answer.pk as href %}
+          {% url 'realtime-auction' offer.pk answer.pk as cancel_href %}
         {% endif %}
-        
-        <a class="btn btn-outline-secondary"
-           href="{{ href }}">
-          {% trans "Cancel" %}
-        </a>
+        {% include 'project_main/__btn-cancel.html' %}
       </div>
 
     </form>

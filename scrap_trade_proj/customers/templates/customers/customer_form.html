@@ -18,11 +18,9 @@
 
       
       {% include 'project_main/__btn-submit-save.html' %}
-      
-      <a class="btn btn-outline-secondary"
-         href="{% url 'project-customer-detail' object.pk %}">  
-        {% trans "Cancel" %}
-      </a>      
+
+      {% url 'project-customer-detail' object.pk as cancel_href %}
+      {% include 'project_main/__btn-cancel.html' %}
     </form>
   </section>
   

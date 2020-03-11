@@ -102,19 +102,13 @@
 
           {{ form|crispy }}
 
-          <button class="btn btn-primary"
-                  type="submit">
-            {% icon 'add' %}
-            {% trans "Create a New Answer" %}
-          </button>
-          <a class="btn btn-secondary"
-             href="{% url 'ah-customer-auction' customer.pk %}">
-            {% icon 'cancel' %}
-            {% trans "Cancel" %}
-          </a>
+          
+          {% include 'project_main/__btn-submit-add.html' %}
 
+          {% url 'ah-customer-auction' customer.pk as cancel_href %}
+          {% include 'project_main/__btn-cancel.html' %}
         </fieldset>
-
+        
       </form>
     </dl>
   </section>

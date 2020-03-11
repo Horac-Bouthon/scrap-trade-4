@@ -20,15 +20,12 @@
         <fieldset>
           
           {{ form|crispy }}
-          
-          {% trans "Create" as var_create %}
-          <button class="btn btn-outline-info"
-                  type="submit">
-            {{ var_create }}
-          </button>
-          
-          {% trans "Cancel" as var_cancel %}
-          <a class="btn btn-outline-secondary" href="{% url update_url object.pk %}">{{ var_cancel }}</a>
+
+
+          {% include 'project_main/__btn-submit-add.html' %}
+
+          {% url update_url object.pk as cancel_href %}
+          {% include 'project_main/__btn-cancel.html' %}
 
         </fieldset>
 

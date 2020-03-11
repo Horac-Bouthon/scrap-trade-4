@@ -15,14 +15,16 @@
 
         {{ form|crispy }}
 
-        <button class="btn btn-outline-info"
-                type="submit">
-          {% trans "Send" %}
-        </button>
-        <a class="btn btn-outline-secondary"
-           href = "{% url 'doc-repo-dokument-list' oid %}">
-          {% trans "Cancel" %}
-        </a>
+
+        {% if page_type == 'create' %}
+          {% include 'project_main/__btn-submit-save.html' %}
+        {% elif page_type == 'edit' %}
+          {% include 'project_main/__btn-submit-add.html' %}
+        {% endif %}
+        
+        {% url 'doc-repo-dokument-list' oid as cancel_href %}
+        {% include 'project_main/__btn-cancel.html' %}
+        
       </fieldset>
     </form>
 

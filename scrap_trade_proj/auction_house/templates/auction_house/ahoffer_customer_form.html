@@ -28,14 +28,11 @@
         
         {{ form|crispy }}
         
-        <div>
-          {% include 'project_main/__btn-submit-save.html' %}
-          
-          <a class="btn btn-outline-secondary"
-             href="{% url 'ah-offer-detail' object.pk %}">
-            {% trans "Cancel" %}
-          </a>
-        </div>
+
+        {% include 'project_main/__btn-submit-save.html' %}
+        
+        {% url 'ah-offer-detail' object.pk as cancel_href %}
+        {% include 'project_main/__btn-cancel.html' %}
         
       </fieldset>
     </form>
