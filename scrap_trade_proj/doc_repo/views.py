@@ -118,7 +118,8 @@ def doc_repo_document_create(request, oid):
 
     context = {
         'form': form,
-        'oid': oid,  # @todo; Is the oid needed in the template when it's in the URL and form gets it afterwards?
+        'oid': oid,  # For cancel button
+        'page_type': 'add',  # For submit button
         'content_header': {
             'title': _("Add document"), 
             'desc': _("Add a document to an object")  # @todo; Do we have a way to know what are we adding the document to?? Can we pass that in a GET attribute so the user knows?
@@ -147,7 +148,8 @@ def doc_repo_document_modify(request, pk):
 
     context = {
         'form': form,
-        'oid': oid,
+        'oid': oid,  # For cancel button
+        'page_type': 'edit',  # For submit button
         'content_header': {
             'title': _("Modify the document's descriptions"),
         }

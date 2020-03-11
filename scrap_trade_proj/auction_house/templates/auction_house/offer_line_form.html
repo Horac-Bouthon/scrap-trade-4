@@ -17,27 +17,19 @@
       <fieldset>
         
         {{ form|crispy }}
+
         
-        <button class="btn btn-primary"
-                type="submit">
-          {% if page_type == 'update' %}
-            {% icon 'save' %}
-            {% trans "Save changes" %}
-          {% elif page_type == 'create' %}
-            {% icon 'add' %}
-            {% trans "Add a line to offer" %}
-          {% endif %}
-        </button>
-        
-        <a class="btn btn-outline-secondary"
-           href="{% url 'ah-offer-detail' offer.pk %}">
-          {% trans "Cancel" %}
-        </a>
+        {% if page_type == 'update' %}
+          {% include 'project_main/__btn-submit-save.html' %}
+        {% elif page_type == 'create' %}
+          {% include 'project_main/__btn-submit-add.html' %}
+        {% endif %}
+
+        {% url 'ah-offer-detail' offer.pk as cancel_href %}
+        {% include 'project_main/__btn-cancel.html' %}
         
       </fieldset>
     </form>
   </section>
 {% endblock content %}
 
-{% block spec_action %}
-{% endblock spec_action %}

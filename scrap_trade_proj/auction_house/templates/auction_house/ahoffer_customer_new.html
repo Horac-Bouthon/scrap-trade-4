@@ -16,13 +16,10 @@
       {{ form|crispy }}
 
       
-      {% include 'project_main/__btn-submit-save.html' %}
+      {% include 'project_main/__btn-submit-add.html' %}
 
-      <a class="btn btn-outline-secondary"
-         href="{% url 'ah-customer-auction' customer.pk %}">
-        {% trans "Cancel" %}
-      </a>
-
+      {% url 'ah-customer-auction' customer.pk as cancel_href %}
+      {% include 'project_main/__btn-cancel.html' %}
       
     </form>
   </section>
