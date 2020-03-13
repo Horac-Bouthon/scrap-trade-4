@@ -105,7 +105,13 @@ const Alerts = (function init_alerts() {
     // Public API
     return {
         add: add_new,
-        show: display,
+        show: function(alert_node) {
+            setTimeout(function() {
+                display(alert_node);
+            }, 1);
+            // If we use show by itself, it should always come
+            // with the deferred call to ensure effects run correctly.
+        },
         add_and_show: add_and_show,
     };
 })();
