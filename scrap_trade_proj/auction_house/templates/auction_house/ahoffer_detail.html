@@ -15,7 +15,7 @@
 
         {% if state == 'new' %}
           {% url 'ah-offer-line-create' offer.pk as href %}
-          {% with icon='plus' cls='btn-icon-only btn-outline-primary border-0'%}
+          {% with icon='plus' cls='btn-outline-primary btn-icon-noborder'%}
             {% include 'project_main/__btn.html' %}
           {% endwith %}
         {% endif %}
