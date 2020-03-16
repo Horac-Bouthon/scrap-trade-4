@@ -8,6 +8,7 @@ from auction_house.models import (
     AhMatClassTranslation,
     AhAnswer,
     AhAnswerLine,
+    Catalog,
 )
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
@@ -29,3 +30,4 @@ admin.site.register(AhOfferLine)
 admin.site.register(AhMatClass, AhMatClassAdmin)
 admin.site.register(AhAnswer)
 admin.site.register(AhAnswerLine)
+admin.site.register(Catalog)

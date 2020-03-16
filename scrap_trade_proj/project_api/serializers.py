@@ -12,3 +12,9 @@ class OnlineAuctionSeralizer(serializers.Serializer):
         input_formats=["%Y-%m-%d %H:%M:%S",'iso-8601',],
         initial=datetime.now(),
     )
+
+class CatalogSerializer(serializers.Serializer):
+    products = serializers.ListField(
+        child=serializers.CharField(max_length=1500),
+        allow_empty=True,
+        )

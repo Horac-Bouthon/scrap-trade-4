@@ -121,7 +121,7 @@ class AhOffer(models.Model):
     def __str__(self):
         if self.owner:
             str = '{} {} ({}) {}'.format(
-                self.pk, self.owner.customer_name, 
+                self.pk, self.owner.customer_name,
                 self.description, self.created_at
             )
         else:
@@ -345,7 +345,7 @@ class AhAnswer(models.Model):
         else:
             string = '{} {}'.format(self.pk, self.description)
         return string
-    
+
     def get_absolute_url(self):
         return reverse('ah-answer-detail', kwargs={'pk': self.pk})
 
@@ -416,4 +416,56 @@ class AhAnswerLine(models.Model):
             self.total_price,
             self.answer.id,
             self.answer.description,
+        )
+
+#------------------------  strap trade special
+class Catalog(models.Model):
+    code = models.CharField(
+        max_length=25,
+        verbose_name=_('Code'),
+        help_text=_("Catalog entry code"),
+        null=True,
+        blank=True,
+    )
+    description = models.CharField(
+        max_length=200,
+        verbose_name=_('Description'),
+        help_text=_("Catalog entry description"),
+        null=True,
+        blank=True,
+    )
+    str_type = models.CharField(
+        max_length=1,
+        verbose_name=_('Type'),
+        help_text=_("Catalog entry Type"),
+        null=True,
+        blank=True,
+    )
+    is_group = models.BooleanField(
+        default=False,
+        verbose_name=_('Is group'),
+        help_text=_("Mark groups for other catalog entries. ")
+    )
+    is_dangerous = models.BooleanField(
+        default=False,
+        verbose_name=_('Is dangerous'),
+        help_text=_("Mark dangerous catalog entries. ")
+    )
+    non_actual = models.BooleanField(
+        default=False,
+        verbose_name=_('Not actual'),
+        help_text=_("Mark not actual entries. ")
+    )
+
+    class Meta:
+        verbose_name = tr.pgettext_lazy('Catalog definition', 'Catalog entry')
+        verbose_name_plural = tr.pgettext_lazy('Catalog definition', 'Catalog entries')
+
+    # def get_absolute_url(self):
+    #    return reverse('ah-offer-detail', kwargs={'pk': self.pk})
+
+    def __str__(self):
+        return '{} {} - {}'.format(self.pk,
+            self.code,
+            self.description,
         )
