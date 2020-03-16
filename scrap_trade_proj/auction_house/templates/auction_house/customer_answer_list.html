@@ -28,7 +28,7 @@
               <div>
                 {% url 'ah-answer-detail' answer.pk as href %}
                 {% trans "Click to update the answer" as title %}
-                {% with cls='btn-primary btn-icon-only' %}
+                {% with cls='btn-outline-primary btn-icon-noborder' %}
                   {% with icon='edit-3' %}
                     {% include 'project_main/__btn.html' %}
                   {% endwith %}

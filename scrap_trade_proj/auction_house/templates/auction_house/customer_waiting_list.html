@@ -50,7 +50,7 @@
 
                 {% url 'ah-customer-answers-create' customer.pk offer.pk as href%}
                 {% trans "Click to answer" as title %}
-                {% with cls='btn-primary btn-icon-only' %}
+                {% with cls='btn-outline-primary btn-icon-noborder' %}
                   {% with icon='plus' %}
                     {% include 'project_main/__btn.html' %}
                   {% endwith %}
