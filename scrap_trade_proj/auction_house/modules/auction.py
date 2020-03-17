@@ -7,7 +7,9 @@ from auction_house.models import (
     AhOffer,
     AhOfferLine,
     AhAnswer,
-    AhAnswerLine
+    AhAnswerLine,
+    Catalog,
+    AhMatClass,
 )
 
 from state_wf.models import (
@@ -565,4 +567,87 @@ def ntf_create_from_auction(
         print('ntf_create_from_auction error')
         print("Unexpected error:", sys.exc_info()[0])
     return
+    return message
+
+
+#-------- scrap special -------------
+def set_cat_non_actual():
+    for material in AhMatClass.objects.all():
+        material.non_actual = True
+        material.save()
+    for c_e in Catalog.objects.all():
+        c_e.non_actual = True
+        c_e.save()
+    return
+
+
+def manage_materials(
+    data_line,
+):
+    # ------------- Materials
+    if AhMatClass.objects.filter(class_name=data_line.code).count() < 1:
+        mat_line = AhMatClass(
+            class_name=data_line.code,
+            measurement_unit='T',
+            base_description=data_line.description,
+            is_dangerous=data_line.is_dangerous,
+            non_actual=False,
+            c_entry=data_line,
+        )
+        mat_line.save()
+        mat_line.translations.create(
+             model = mat_line,
+             language = "cs",
+             display_name = data_line.code,
+             mat_class_description = data_line.description
+        )
+    else:
+        mat_line = AhMatClass.objects.filter(class_name=data_line.code).first()
+        mat_line.class_name = data_line.code
+        mat_line.measurement_unit = 'T'
+        mat_line.base_description=data_line.description
+        mat_line.is_dangerous=data_line.is_dangerous
+        mat_line.non_actual=False
+        mat_line.c_entry=data_line
+        mat_line.save()
+        for trans in mat_line.translations.filter(language='cs'):
+            trans.display_name = data_line.code
+            trans.mat_class_description = data_line.description
+            trans.save()
+    return
+
+
+def scrap_set_catalog(katalog):
+    # ------- make old values not actual
+    set_cat_non_actual()
+    #-------- refresh from new values
+    my_created = 0
+    my_updated = 0
+    for line in katalog:
+        test = Catalog.objects.filter(code=line['code'])
+        if test.count() < 1:
+            data_line = Catalog(
+                code=line['code'],
+                description=line['description'],
+                str_type=line['kind'],
+            )
+            data_line.save()
+            my_created += 1
+        else:
+            data_line = test.first()
+            data_line.code = line['code']
+            data_line.description=line['description']
+            data_line.str_type=line['kind']
+            my_updated += 1
+        if 'G' in data_line.str_type:
+            data_line.is_group = True
+        if 'N' in data_line.str_type:
+            data_line.is_dangerous = True
+        data_line.non_actual = False
+        data_line.save()
+        if data_line.is_group == False:
+            manage_materials(data_line)
+
+    message = 'Created {} lines. Updated {} lines. [{}]'\
+        .format(my_created, my_updated, my_created+my_updated)
     return message

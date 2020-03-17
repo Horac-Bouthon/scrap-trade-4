@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-27 15:48+0100\n"
+"POT-Creation-Date: 2020-03-16 16:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,9 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: auction_house/admin.py:17 auction_house/admin.py:18
+#: auction_house/admin.py:18 auction_house/admin.py:19
 #: auction_house/templates/auction_house/__offerlines-table.html:10
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:52
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:53
 #: auction_house/templates/auction_house/ahanswer_detail.html:42
 #: auction_house/templates/auction_house/ahoffer_detail.html:117
 msgid "Material class"
@@ -41,16 +41,15 @@ msgstr "Auktionstermin:"
 
 #: auction_house/forms.py:49
 #: auction_house/templates/auction_house/__offer-details.html:43
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:30
-#: auction_house/templates/auction_house/realtime_auction.html:75
-#: auction_house/templates/auction_house/realtime_auction_info.html:61
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:31
+#: auction_house/templates/auction_house/realtime_auction.html:137
 msgid "Delivery date:"
 msgstr "Liefertermin:"
 
-#: auction_house/models.py:22 auction_house/models.py:150
-#: auction_house/models.py:252
+#: auction_house/models.py:22 auction_house/models.py:158
+#: auction_house/models.py:219 auction_house/models.py:339
 #: auction_house/templates/auction_house/__offerlines-table.html:9
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:51
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:52
 #: auction_house/templates/auction_house/ahanswer_detail.html:41
 #: auction_house/templates/auction_house/ahanswer_list.html:17
 #: auction_house/templates/auction_house/ahoffer_detail.html:81
@@ -58,399 +57,469 @@ msgstr "Liefertermin:"
 #: auction_house/templates/auction_house/ahoffer_list.html:18
 #: auction_house/templates/auction_house/customer_answer_list.html:15
 #: auction_house/templates/auction_house/customer_offer_list.html:17
-#: auction_house/templates/auction_house/realtime_auction.html:102
-#: auction_house/templates/auction_house/realtime_auction_info.html:81
-#: customers/models.py:363
+#: auction_house/templates/auction_house/realtime_auction.html:174
+#: customers/models.py:366
 msgid "Description"
 msgstr "Beschreibung"
 
-#: auction_house/models.py:23 auction_house/models.py:253
+#: auction_house/models.py:23 auction_house/models.py:340
 msgid "Offers description"
 msgstr "Angebot Beschreibung"
 
-#: auction_house/models.py:30
+#: auction_house/models.py:29
 msgctxt "AhOffer definition"
 msgid "Owner"
 msgstr "Besitzer"
 
-#: auction_house/models.py:31
+#: auction_house/models.py:30
 msgctxt "AhOffer definition"
 msgid "Link to Owner"
 msgstr "Link zum Besitzer"
 
-#: auction_house/models.py:38
+#: auction_house/models.py:37
 msgctxt "AhOffer definition"
 msgid "Creator"
 msgstr "Schöpfer"
 
-#: auction_house/models.py:39
+#: auction_house/models.py:38
 msgctxt "AhOffer definition"
 msgid "Link to Creator"
 msgstr "Link zum Schöpfer"
 
-#: auction_house/models.py:44
+#: auction_house/models.py:43
 msgctxt "AhOffer definition"
 msgid "Created at"
 msgstr "Erstellt am"
 
-#: auction_house/models.py:45
+#: auction_house/models.py:44
 msgctxt "AhOffer definition"
 msgid "Date of offer creation"
 msgstr "Datum der Angebotserstellung"
 
-#: auction_house/models.py:51
+#: auction_house/models.py:50
 msgctxt "AhOffer definition"
 msgid "Last change"
 msgstr "Zu letzt geändert"
 
-#: auction_house/models.py:52
+#: auction_house/models.py:51
 msgctxt "AhOffer definition"
 msgid "Link to user made last change"
 msgstr "Link zum Benutzer, wer Letzte änderung vorgenommen hat"
 
-#: auction_house/models.py:57
+#: auction_house/models.py:56
 msgctxt "AhOffer definition"
 msgid "Changed at"
 msgstr "Geändern am"
 
-#: auction_house/models.py:62
+#: auction_house/models.py:61
 msgctxt "AhOffer definition"
 msgid "Offered to"
 msgstr "Angeboten zu"
 
-#: auction_house/models.py:63
+#: auction_house/models.py:62
 msgctxt "AhOffer definition"
 msgid "List of customers who recieved the offer"
 msgstr "Liste der Kunden, die das Angebot erhalten haben"
 
-#: auction_house/models.py:68
+#: auction_house/models.py:67
 msgctxt "AhOffer definition"
 msgid "Auction date"
 msgstr "Auktionstermin"
 
-#: auction_house/models.py:69
+#: auction_house/models.py:68
 msgctxt "AhOffer definition"
 msgid "Date of auction"
 msgstr "Datum der Versteigerung"
 
-#: auction_house/models.py:74
+#: auction_house/models.py:73
 msgctxt "AhOffer definition"
 msgid "Delivery date"
 msgstr "Liefertermin"
 
-#: auction_house/models.py:75
+#: auction_house/models.py:74
 msgctxt "AhOffer definition"
 msgid "Date of the delivery"
 msgstr "Datum der Lieferung"
 
-#: auction_house/models.py:82
+#: auction_house/models.py:81
 msgctxt "AhOffer definition"
 msgid "Minimal total price"
 msgstr "Minimaler Gesamtpreis"
 
-#: auction_house/models.py:83
+#: auction_house/models.py:82
 msgctxt "AhOffer definition"
 msgid "Final minimal price"
 msgstr "Mindestpreis insgesamt"
 
-#: auction_house/models.py:89
+#: auction_house/models.py:88
 msgctxt "AhOffer definition"
 msgid "Auction URL"
 msgstr "Auktion URL"
 
-#: auction_house/models.py:90
+#: auction_house/models.py:89
 msgctxt "AhOffer definition"
 msgid "Online auction url"
 msgstr "Url der Online-Auktion"
 
-#: auction_house/models.py:95
+#: auction_house/models.py:94
 msgctxt "AhOffer definition"
 msgid "Auction start"
 msgstr "Auktionsstart"
 
-#: auction_house/models.py:96
+#: auction_house/models.py:95
 msgctxt "AhOffer definition"
 msgid "From this time is auction URL accessible"
 msgstr "Von dieser Zeit ist Auktion URL zugänglich"
 
-#: auction_house/models.py:101
+#: auction_house/models.py:100
 msgctxt "AhOffer definition"
 msgid "Auction end"
 msgstr "Auktionsende"
 
-#: auction_house/models.py:102
+#: auction_house/models.py:101
 msgctxt "AhOffer definition"
 msgid "From this time is auction URL closed"
 msgstr "Ab dieser Zeit ist die Auktions-URL geschlossen"
 
-#: auction_house/models.py:109 auction_house/models.py:183
-#: auction_house/models.py:314 customers/models.py:207 customers/models.py:250
-#: customers/models.py:440 doc_repo/models.py:118
+#: auction_house/models.py:108 auction_house/models.py:191
+#: auction_house/models.py:401 customers/models.py:210 customers/models.py:253
+#: customers/models.py:443 doc_repo/models.py:118
 msgctxt "UserProfile definition"
 msgid "Open id"
 msgstr "Open id"
 
-#: auction_house/models.py:110 auction_house/models.py:184
-#: auction_house/models.py:315 customers/models.py:209 customers/models.py:251
-#: customers/models.py:441 doc_repo/models.py:119
+#: auction_house/models.py:109 auction_house/models.py:192
+#: auction_house/models.py:402 customers/models.py:212 customers/models.py:254
+#: customers/models.py:444 doc_repo/models.py:119
 msgctxt "UserProfile definition"
 msgid "Link to integration key"
 msgstr "Link zum integrationsschlüssel"
 
-#: auction_house/models.py:116
+#: auction_house/models.py:115
 msgctxt "AhOffer definition"
 msgid "Offer"
 msgstr "Angebot"
 
-#: auction_house/models.py:117
+#: auction_house/models.py:116
 msgctxt "AhOffer definition"
 msgid "Offers"
 msgstr "Angebote"
 
-#: auction_house/models.py:151
+#: auction_house/models.py:159
 msgid "Offers line description"
 msgstr "Angebot Satz Beschreibung"
 
-#: auction_house/models.py:156
+#: auction_house/models.py:164
 msgctxt "AhOfferLine definition"
 msgid "Amount"
 msgstr "Menge"
 
-#: auction_house/models.py:157
+#: auction_house/models.py:165
 msgctxt "AhOfferLine definition"
 msgid "Quantity of material"
 msgstr "Menge des Materials"
 
-#: auction_house/models.py:162
+#: auction_house/models.py:170
 msgctxt "AhOfferLine definition"
 msgid "Offer"
 msgstr "Angebot"
 
-#: auction_house/models.py:163
+#: auction_house/models.py:171
 msgctxt "AhOfferLine definition"
 msgid "Link to Offer"
 msgstr "Link zum Angebot"
 
-#: auction_house/models.py:169
+#: auction_house/models.py:177
 msgctxt "AhOfferLine definition"
 msgid "Material class"
 msgstr "Material Klasse"
 
-#: auction_house/models.py:170
+#: auction_house/models.py:178
 msgctxt "AhOfferLine definition"
 msgid "Link to Material class"
 msgstr "Link zur Materialklasse"
 
-#: auction_house/models.py:177
+#: auction_house/models.py:185
 msgctxt "AhAnswerLine definition"
 msgid "Minimal price per unit"
 msgstr "Minimaler Preis pro Einheit"
 
-#: auction_house/models.py:178
+#: auction_house/models.py:186
 msgctxt "AhAnswerLine definition"
 msgid "Minimal price for one measurement unit"
 msgstr "Minimaler Preis für eine Maßeinheit"
 
-#: auction_house/models.py:190
+#: auction_house/models.py:198
 msgctxt "AhOffer definition"
 msgid "Offer line"
 msgstr "Angebot Satz"
 
-#: auction_house/models.py:191
+#: auction_house/models.py:199
 msgctxt "AhOffer definition"
 msgid "Offer lines"
 msgstr "Angebot Satzen"
 
-#: auction_house/models.py:204
+#: auction_house/models.py:212
+msgid "Code"
+msgstr "Code"
+
+#: auction_house/models.py:213
+msgid "Catalog entry code"
+msgstr "Katalog-Eintrag code"
+
+#: auction_house/models.py:220
+msgid "Catalog entry description"
+msgstr "Katalog-Eintrag Beschreibung"
+
+#: auction_house/models.py:226
+msgid "Type"
+msgstr "Typ"
+
+#: auction_house/models.py:227
+msgid "Catalog entry Type"
+msgstr "Katalog-Eintrag Typ"
+
+#: auction_house/models.py:233
+msgid "Is group"
+msgstr "Gruppe"
+
+#: auction_house/models.py:234
+msgid "Mark groups for other catalog entries. "
+msgstr "Markiert eine Gruppen für andere Katalogeinträge"
+
+#: auction_house/models.py:238 auction_house/models.py:285
+msgid "Is dangerous"
+msgstr "Ist gefährlich"
+
+#: auction_house/models.py:239
+msgid "Mark dangerous catalog entries. "
+msgstr "Markiert Gefährliche Katalogeinträge."
+
+#: auction_house/models.py:243 auction_house/models.py:290
+msgid "Not actual"
+msgstr "Nicht aktuell"
+
+#: auction_house/models.py:244
+msgid "Mark not actual entries. "
+msgstr "Markiert nicht aktuelle Einträge."
+
+#: auction_house/models.py:248
+msgctxt "Catalog definition"
+msgid "Catalog entry"
+msgstr "Katalogeintrag"
+
+#: auction_house/models.py:249
+msgctxt "Catalog definition"
+msgid "Catalog entries"
+msgstr "Katalogeinträge"
+
+#: auction_house/models.py:266
 msgid "Material class name"
 msgstr "Material Klasse name"
 
-#: auction_house/models.py:205
+#: auction_house/models.py:267
 msgid "Name of the material class"
 msgstr "Name der materialklasse"
 
-#: auction_house/models.py:210
+#: auction_house/models.py:272
 msgid "Measurement unit"
 msgstr "Maßeinheit"
 
-#: auction_house/models.py:211
+#: auction_house/models.py:273
 msgid "Units in which material is entered"
 msgstr "Einheiten, in denen material eingegeben wird"
 
-#: auction_house/models.py:216
+#: auction_house/models.py:276
+msgid "Material class quick description"
+msgstr "Materialklasse schnelle Beschreibung"
+
+#: auction_house/models.py:277
+msgid "Text to describe the material class for quick access."
+msgstr "Text zur Beschreibung der materialklasse für den schnellen Zugriff."
+
+#: auction_house/models.py:286
+msgid "Mark dangerous material. "
+msgstr "Markiert gefährliches material."
+
+#: auction_house/models.py:291
+msgid "Mark not actual materials. "
+msgstr "Markiert nicht aktueles Material."
+
+#: auction_house/models.py:296
+msgctxt "AhMatClass definition"
+msgid "Catalog entry"
+msgstr "Katalogeintrag"
+
+#: auction_house/models.py:297
+msgctxt "AhMatClass definition"
+msgid "Link to the Catalog"
+msgstr "Link zum Katalog"
+
+#: auction_house/models.py:303
 msgctxt "AhMatClass definition"
 msgid "Material class"
 msgstr "Material Klasse"
 
-#: auction_house/models.py:217
+#: auction_house/models.py:304
 msgctxt "AhMatClass definition"
 msgid "Material classes"
 msgstr "Material Klassen"
 
-#: auction_house/models.py:234
+#: auction_house/models.py:321
 msgid "Material class display name"
 msgstr "Material Klasse display name"
 
-#: auction_house/models.py:235
+#: auction_house/models.py:322
 msgid "Name of the material class for displaying"
 msgstr "Name der materialklasse zur Anzeige"
 
-#: auction_house/models.py:240
+#: auction_house/models.py:327
 msgid "Material class description"
 msgstr "Material Klasse Beschreibung"
 
-#: auction_house/models.py:241
+#: auction_house/models.py:328
 msgid "Text to describe the material class."
 msgstr "Text zur Beschreibung der materialklasse."
 
-#: auction_house/models.py:260
+#: auction_house/models.py:347
 msgctxt "AhAnswer definition"
 msgid "Owner"
 msgstr "Besitzer"
 
-#: auction_house/models.py:261
+#: auction_house/models.py:348
 msgctxt "AhAnswer definition"
 msgid "Link to Owner"
 msgstr "Link zum Besitzer"
 
-#: auction_house/models.py:268
+#: auction_house/models.py:355
 msgctxt "AhAnswer definition"
 msgid "Offer"
 msgstr "Angebot"
 
-#: auction_house/models.py:269
+#: auction_house/models.py:356
 msgctxt "AhAnswer definition"
 msgid "Link to Offer"
 msgstr "Link zum Angebot"
 
-#: auction_house/models.py:276
+#: auction_house/models.py:363
 msgctxt "AhAnswer definition"
 msgid "Total price"
 msgstr "Gesamtpreis"
 
-#: auction_house/models.py:277
+#: auction_house/models.py:364
 msgctxt "AhAnswer definition"
 msgid "Final price for the answer"
 msgstr "Endpreis für die Antwort"
 
-#: auction_house/models.py:283
+#: auction_house/models.py:370
 msgid "Bound"
 msgstr "Gebunden"
 
-#: auction_house/models.py:284
+#: auction_house/models.py:371
 msgid "Mark bound answers. "
 msgstr "Mark gebundene Antworten."
 
-#: auction_house/models.py:289
+#: auction_house/models.py:376
 msgctxt "AhAnswer definition"
 msgid "Creator"
 msgstr "Schöpfer"
 
-#: auction_house/models.py:290
+#: auction_house/models.py:377
 msgctxt "AhAnswer definition"
 msgid "Link to Creator"
 msgstr "Link zum Schöpfer"
 
-#: auction_house/models.py:298
+#: auction_house/models.py:385
 msgctxt "AhAnswer definition"
 msgid "Last change"
 msgstr "Zu letzt geändert"
 
-#: auction_house/models.py:299
+#: auction_house/models.py:386
 msgctxt "AhAnswer definition"
 msgid "Link to user made last change"
 msgstr "Link zum Benutzer, wer Letzte änderung vorgenommen hat"
 
-#: auction_house/models.py:306
+#: auction_house/models.py:393
 msgctxt "AhAnswer definition"
 msgid "Auction URL"
 msgstr "Auktion URL"
 
-#: auction_house/models.py:307
+#: auction_house/models.py:394
 msgctxt "AhAnswer definition"
 msgid "Online auction url"
 msgstr "Url der Online-Auktion"
 
-#: auction_house/models.py:321
+#: auction_house/models.py:408
 msgctxt "AhAnswer definition"
 msgid "Answer"
 msgstr "Antwort"
 
-#: auction_house/models.py:322
+#: auction_house/models.py:409
 msgctxt "AhAnswer definition"
 msgid "Answers"
 msgstr "Antworten"
 
-#: auction_house/models.py:366
+#: auction_house/models.py:458
 msgctxt "AhAnswerLine definition"
 msgid "Price per unit"
 msgstr "Preis pro Einheit"
 
-#: auction_house/models.py:367
+#: auction_house/models.py:459
 msgctxt "AhAnswerLine definition"
 msgid "Price for one measurement unit"
 msgstr "Preis für eine Maßeinheit"
 
-#: auction_house/models.py:373
+#: auction_house/models.py:465
 msgctxt "AhAnswerLine definition"
 msgid "Total price"
 msgstr "Gesamtpreis"
 
-#: auction_house/models.py:374
+#: auction_house/models.py:466
 msgctxt "AhAnswerLine definition"
 msgid "Final price for the line"
 msgstr "Endpreis für eine Linie"
 
-#: auction_house/models.py:379
+#: auction_house/models.py:471
 msgctxt "AhAnswerLine definition"
 msgid "Answer"
 msgstr "Antwort"
 
-#: auction_house/models.py:380
+#: auction_house/models.py:472
 msgctxt "AhAnswerLine definition"
 msgid "Link to Answer"
 msgstr "Link zur Antwort"
 
-#: auction_house/models.py:387
+#: auction_house/models.py:479
 msgctxt "AhAnswerLine definition"
 msgid "Offer line"
 msgstr "Angebot Satz"
 
-#: auction_house/models.py:388
+#: auction_house/models.py:480
 msgctxt "AhAnswerLine definition"
 msgid "Link to line of offer"
 msgstr "Link zum Angebot Satz"
 
-#: auction_house/models.py:394
+#: auction_house/models.py:486
 msgctxt "AhAnswerLine definition"
 msgid "Answer line"
 msgstr "Antwort Satz"
 
-#: auction_house/models.py:395
+#: auction_house/models.py:487
 msgctxt "AhAnswerLine definition"
 msgid "Answer lines"
 msgstr "Antwort Satzen"
 
-#: auction_house/modules/auction.py:350
+#: auction_house/modules/auction.py:357
 msgid "Offers:"
 msgstr "Angebote:"
 
-#: auction_house/modules/auction.py:357
+#: auction_house/modules/auction.py:364
 msgid "Wating offers"
 msgstr "Wartende Angebote"
 
-#: auction_house/modules/auction.py:372
+#: auction_house/modules/auction.py:379
 msgid "Answers:"
 msgstr "Antworten:"
-
-#: auction_house/modules/auction.py:455 auction_house/views.py:205
-#: auction_house/views.py:646
-msgid "Online auction"
-msgstr "Online-Auktion"
-
-#: auction_house/modules/auction.py:485
-msgid "Online auction info"
-msgstr "Online-Auktion-info"
 
 #: auction_house/templates/auction_house/__auction_date.html:7
 msgid "Auction:"
@@ -462,25 +531,25 @@ msgstr "Besitzer:"
 
 #: auction_house/templates/auction_house/__offer-details.html:11
 #: auction_house/templates/auction_house/ahmatclass_detail.html:20
+#: customers/templates/customers/projectcustomuser_active.html:22
 msgid "Name:"
 msgstr "Name:"
 
 #: auction_house/templates/auction_house/__offer-details.html:17
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:22
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:23
 #: auction_house/templates/auction_house/ahanswer_detail.html:28
 msgid "Status:"
 msgstr "Status:"
 
 #: auction_house/templates/auction_house/__offer-details.html:49
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:35
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:36
 #: auction_house/templates/auction_house/answer_line_form.html:43
-#: auction_house/templates/auction_house/realtime_auction.html:71
-#: auction_house/templates/auction_house/realtime_auction_info.html:57
+#: auction_house/templates/auction_house/realtime_auction.html:133
 msgid "Minimal total price:"
 msgstr "Minimaler Gesamtpreis:"
 
 #: auction_house/templates/auction_house/__offerlines-table.html:8
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:50
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:51
 #: auction_house/templates/auction_house/ahanswer_detail.html:40
 #: auction_house/templates/auction_house/ahanswer_detail.html:124
 #: auction_house/templates/auction_house/ahanswer_list.html:16
@@ -495,11 +564,10 @@ msgid "ID"
 msgstr "ID"
 
 #: auction_house/templates/auction_house/__offerlines-table.html:11
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:53
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:54
 #: auction_house/templates/auction_house/ahanswer_detail.html:43
 #: auction_house/templates/auction_house/ahoffer_detail.html:118
-#: auction_house/templates/auction_house/realtime_auction.html:103
-#: auction_house/templates/auction_house/realtime_auction_info.html:85
+#: auction_house/templates/auction_house/realtime_auction.html:175
 msgid "Amount"
 msgstr "Menge"
 
@@ -525,51 +593,14 @@ msgstr "Neuen Schritt zum Gebot hinzufügen"
 msgid "Add a new step to answer"
 msgstr "Neuen Schritt zu Antwort hinzufügen"
 
-#: auction_house/templates/auction_house/ah_step_new.html:24
-msgid "Create"
-msgstr "Erstellen"
-
-#: auction_house/templates/auction_house/ah_step_new.html:30
-#: auction_house/templates/auction_house/ahanswer_confirm_delete.html:19
-#: auction_house/templates/auction_house/ahanswer_customer_form.html:32
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:112
-#: auction_house/templates/auction_house/ahanswer_form.html:41
-#: auction_house/templates/auction_house/ahoffer_confirm_delete.html:19
-#: auction_house/templates/auction_house/ahoffer_customer_form.html:36
-#: auction_house/templates/auction_house/ahoffer_customer_new.html:26
-#: auction_house/templates/auction_house/ahoffer_form.html:44
-#: auction_house/templates/auction_house/ahofferline_confirm_delete.html:21
-#: auction_house/templates/auction_house/answer_line_form.html:63
-#: auction_house/templates/auction_house/offer_line_form.html:33
-#: customers/templates/customers/customer_confirm_delete.html:19
-#: customers/templates/customers/customer_create.html:19
-#: customers/templates/customers/customer_form.html:28
-#: customers/templates/customers/customer_translation.html:34
-#: customers/templates/customers/customerbankaccount_confirm_delete.html:19
-#: customers/templates/customers/customerbankaccount_form.html:21
-#: customers/templates/customers/customeremail_confirm_delete.html:21
-#: customers/templates/customers/customerestablishments_confirm_delete.html:21
-#: customers/templates/customers/customerestablishments_form.html:23
-#: customers/templates/customers/customerphone_confirm_delete.html:21
-#: customers/templates/customers/customerphone_form.html:22
-#: customers/templates/customers/customerweb_confirm_delete.html:20
-#: customers/templates/customers/customerweb_form.html:23
-#: customers/templates/customers/email_form.html:23
-#: customers/templates/customers/projectcustomuser_active.html:27
-#: customers/templates/customers/projectcustomuser_form.html:23
-#: doc_repo/templates/doc_repo/doc_repo_doc_form.html:24
-#: doc_repo/templates/doc_repo/document_confirm_delete.html:29
-msgid "Cancel"
-msgstr "Stornieren"
-
-#: auction_house/templates/auction_house/ah_step_new.html:39
+#: auction_house/templates/auction_house/ah_step_new.html:36
 #: auction_house/templates/auction_house/ahanswer_detail.html:13
 msgid "Offer information"
 msgstr "Angebot Informationen"
 
 #: auction_house/templates/auction_house/ahanswer_confirm_delete.html:11
 #: auction_house/templates/auction_house/ahoffer_confirm_delete.html:11
-#: auction_house/templates/auction_house/ahofferline_confirm_delete.html:13
+#: auction_house/templates/auction_house/ahofferline_confirm_delete.html:11
 msgid "Delete offer"
 msgstr "Angebot löschen"
 
@@ -579,16 +610,36 @@ msgstr "Sind Sie sicher, dass Sie den Kunden löschen möchten"
 
 #: auction_house/templates/auction_house/ahanswer_confirm_delete.html:17
 #: auction_house/templates/auction_house/ahoffer_confirm_delete.html:17
-#: auction_house/templates/auction_house/ahofferline_confirm_delete.html:19
-#: customers/templates/customers/customer_confirm_delete.html:17
+#: auction_house/templates/auction_house/ahofferline_confirm_delete.html:17
+#: customers/templates/customers/customer_confirm_delete.html:18
 #: customers/templates/customers/customerbankaccount_confirm_delete.html:17
-#: customers/templates/customers/customeremail_confirm_delete.html:19
-#: customers/templates/customers/customerestablishments_confirm_delete.html:19
+#: customers/templates/customers/customeremail_confirm_delete.html:17
+#: customers/templates/customers/customerestablishments_confirm_delete.html:17
 #: customers/templates/customers/customerphone_confirm_delete.html:19
 #: customers/templates/customers/customerweb_confirm_delete.html:18
 #: doc_repo/templates/doc_repo/document_confirm_delete.html:27
 msgid "Yes, Delete"
 msgstr "Ja, Löschen"
+
+#: auction_house/templates/auction_house/ahanswer_confirm_delete.html:19
+#: auction_house/templates/auction_house/ahoffer_confirm_delete.html:19
+#: auction_house/templates/auction_house/ahofferline_confirm_delete.html:19
+#: customers/templates/customers/customer_confirm_delete.html:20
+#: customers/templates/customers/customerbankaccount_confirm_delete.html:19
+#: customers/templates/customers/customerbankaccount_form.html:21
+#: customers/templates/customers/customeremail_confirm_delete.html:19
+#: customers/templates/customers/customerestablishments_confirm_delete.html:19
+#: customers/templates/customers/customerestablishments_form.html:23
+#: customers/templates/customers/customerphone_confirm_delete.html:21
+#: customers/templates/customers/customerphone_form.html:22
+#: customers/templates/customers/customerweb_confirm_delete.html:20
+#: customers/templates/customers/customerweb_form.html:23
+#: customers/templates/customers/email_form.html:23
+#: customers/templates/customers/projectcustomuser_form.html:23
+#: doc_repo/templates/doc_repo/document_confirm_delete.html:29
+#: project_main/templates/project_main/__btn-cancel.html:9
+msgid "Cancel"
+msgstr "Stornieren"
 
 #: auction_house/templates/auction_house/ahanswer_customer_form.html:16
 #: auction_house/templates/auction_house/ahanswer_form.html:25
@@ -607,37 +658,33 @@ msgid "Please make sure to save any changes before changing offer's state."
 msgstr ""
 "Bitte speichern Sie änderungen, bevor Sie den Status des Angebots ändern."
 
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:16
-#: auction_house/views.py:92 auction_house/views.py:211
-#: auction_house/views.py:233
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:17
+#: auction_house/views.py:90 auction_house/views.py:209
+#: auction_house/views.py:231
 msgid "Offer"
 msgstr "Angebot"
 
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:18
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:19
 msgid "Offer description:"
 msgstr "Angebot Beschreibung:"
 
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:41
-#: auction_house/templates/auction_house/realtime_auction.html:84
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:42
+#: auction_house/templates/auction_house/realtime_auction.html:150
 msgid "Offer lines"
 msgstr "Angebot Satzen"
 
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:54
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:55
 msgid "Minimal unit price"
 msgstr "Minimaler Stückpreis"
 
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:88
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:89
 msgid "Offers documents"
 msgstr "Dokumente-Angebot"
 
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:96
-#: auction_house/views.py:795
+#: auction_house/templates/auction_house/ahanswer_customer_new.html:97
+#: auction_house/views.py:790
 msgid "New answer"
 msgstr "Neue Antwort"
-
-#: auction_house/templates/auction_house/ahanswer_customer_new.html:107
-msgid "Create a New Answer"
-msgstr "Eine neue Antwort erstellen"
 
 #: auction_house/templates/auction_house/ahanswer_detail.html:18
 msgid "Answer Information"
@@ -670,7 +717,6 @@ msgstr "Min. Einzelpreis"
 
 #: auction_house/templates/auction_house/ahanswer_detail.html:45
 #: auction_house/templates/auction_house/ahoffer_detail.html:119
-#: auction_house/templates/auction_house/realtime_auction.html:104
 msgid "Price per unit"
 msgstr "Preis pro Einheit"
 
@@ -744,6 +790,7 @@ msgstr "Material Klasse detail"
 
 #: auction_house/templates/auction_house/ahmatclass_detail.html:15
 #: customers/templates/customers/customer_info.html:20
+#: doc_repo/templates/doc_repo/__object_docs.html:31
 #: doc_repo/templates/doc_repo/doc_repo_doc_list.html:44
 msgid "Description:"
 msgstr "Beschreibung:"
@@ -762,7 +809,6 @@ msgid "Offer Lines"
 msgstr "Angebot Satzen"
 
 #: auction_house/templates/auction_house/ahoffer_detail.html:30
-#: auction_house/templates/auction_house/offer_line_form.html:27
 msgid "Add a line to offer"
 msgstr "Fügen Sie eine Zeile dem Angebot zu"
 
@@ -802,7 +848,7 @@ msgstr "Angebotsliste"
 msgid "A list of all offers in the application."
 msgstr "Eine Liste aller Angebote in der Anwendung."
 
-#: auction_house/templates/auction_house/ahofferline_confirm_delete.html:15
+#: auction_house/templates/auction_house/ahofferline_confirm_delete.html:13
 msgid "Are you sure, you want to delete offer line"
 msgstr "Sind Sie sicher, Sie möchten angebotssatz löschen"
 
@@ -854,221 +900,223 @@ msgstr "Aktivieren, um dem Besitzer von antwort anzuzeigen"
 msgid "Click to answer"
 msgstr "Klicken, um zu Antworten"
 
-#: auction_house/templates/auction_house/offer_line_form.html:24
-#: project_main/templates/project_main/__btn-submit-save.html:10
-msgid "Save changes"
-msgstr "Änderungen speichern"
-
 #: auction_house/templates/auction_house/realtime_auction.html:17
 msgid "This offer is not in auction yet."
 msgstr "Dieses Angebot ist noch nicht in Auktion."
 
 #: auction_house/templates/auction_house/realtime_auction.html:31
-#: auction_house/templates/auction_house/realtime_auction_info.html:17
 msgid "This auction has not started yet."
 msgstr "Diese Auktion hat noch nicht begonnen."
 
 #: auction_house/templates/auction_house/realtime_auction.html:34
-#: auction_house/templates/auction_house/realtime_auction_info.html:20
 msgid "Auction is starting at: "
 msgstr "Auktion beginnt am:"
 
 #: auction_house/templates/auction_house/realtime_auction.html:50
-#: auction_house/templates/auction_house/realtime_auction_info.html:36
 msgid "This auction has already ended."
 msgstr "Diese Auktion ist bereits beendet."
 
-#: auction_house/templates/auction_house/realtime_auction.html:67
-#: auction_house/templates/auction_house/realtime_auction_info.html:53
+#: auction_house/templates/auction_house/realtime_auction.html:129
 msgid "Auction details"
 msgstr "Auktion details"
 
-#: auction_house/templates/auction_house/realtime_auction.html:79
-#: auction_house/templates/auction_house/realtime_auction_info.html:65
+#: auction_house/templates/auction_house/realtime_auction.html:141
 msgid "Auction end:"
 msgstr "Auktionsende:"
 
-#: auction_house/templates/auction_house/realtime_auction.html:94
+#: auction_house/templates/auction_house/realtime_auction.html:163
 msgid "My bid"
 msgstr "Mein Gebot"
 
-#: auction_house/templates/auction_house/realtime_auction.html:96
+#: auction_house/templates/auction_house/realtime_auction.html:176
+msgid "Price"
+msgstr "Preis"
+
+#: auction_house/templates/auction_house/realtime_auction.html:229
 msgid "Total price:"
 msgstr "Gesamtpreis:"
 
-#: auction_house/templates/auction_house/realtime_auction.html:114
-msgid "Click to update price per unit"
-msgstr "Aktivieren, um Preis pro Einheit zu Bearbeiten"
-
-#: auction_house/templates/auction_house/realtime_auction.html:131
-#: auction_house/templates/auction_house/realtime_auction_info.html:106
-msgid "Best bids"
-msgstr "Beste Gebote"
-
-#: auction_house/templates/auction_house/realtime_auction_info.html:76
+#: auction_house/templates/auction_house/realtime_auction.html:248
 msgid "Offer detail"
 msgstr "Angebot Details"
 
-#: auction_house/templates/auction_house/realtime_auction_info.html:88
-msgid "Minimal price per unit"
-msgstr "Minimaler Preis pro Einheit"
+#: auction_house/templates/auction_house/realtime_auction.html:257
+msgid "Best bids"
+msgstr "Beste Gebote"
 
-#: auction_house/views.py:98 auction_house/views.py:430
+#: auction_house/templates/auction_house/realtime_auction.html:264
+msgid "Server error. Trying again..."
+msgstr "Serverfehler. Ein weiterer Versuch..."
+
+#: auction_house/templates/auction_house/realtime_auction.html:295
+msgid "Winning"
+msgstr "Preisgekrönt"
+
+#: auction_house/views.py:96 auction_house/views.py:423
 #: project_main/templates/project_main/__header.html:61
 msgid "Auction"
 msgstr "Auktion"
 
-#: auction_house/views.py:104 auction_house/views.py:651
+#: auction_house/views.py:102 auction_house/views.py:646
 msgid "Answer"
 msgstr "Antwort"
 
-#: auction_house/views.py:132
+#: auction_house/views.py:130
 msgid "Offers waiting for approval"
 msgstr "Angebote warten auf Genehmigung"
 
-#: auction_house/views.py:134
+#: auction_house/views.py:132
 msgid "A list of offers waiting for approval in the application."
 msgstr "Eine Liste der Angebote warten auf die Genehmigung in der Anwendung."
 
-#: auction_house/views.py:180 auction_house/views.py:236
-#: auction_house/views.py:619 customers/views.py:139
+#: auction_house/views.py:178 auction_house/views.py:234
+#: auction_house/views.py:613 customers/views.py:139 customers/views.py:843
 #: doc_repo/templates/doc_repo/__btn-icon-doc.html:4
 #: project_main/templates/project_main/__btn-documents.html:12
 msgid "Documents"
 msgstr "Documente"
 
-#: auction_house/views.py:188 auction_house/views.py:197
-#: auction_house/views.py:263 auction_house/views.py:291
+#: auction_house/views.py:186 auction_house/views.py:195
+#: auction_house/views.py:261 auction_house/views.py:289
 msgid "Edit offer"
 msgstr "Angebot Bearbeiten"
 
-#: auction_house/views.py:212
+#: auction_house/views.py:203 auction_house/views.py:641
+#: auction_house/views.py:992
+msgid "Online auction"
+msgstr "Online-Auktion"
+
+#: auction_house/views.py:210
 msgid "Offer detail view."
 msgstr "Angebot Detailansicht."
 
-#: auction_house/views.py:234
+#: auction_house/views.py:232
 msgid "Offer information."
 msgstr "Angebot Informationen"
 
-#: auction_house/views.py:265
+#: auction_house/views.py:263
 msgid "Edit offer as a poweruser."
 msgstr "Angebot als Poweruser Bearbeiten."
 
-#: auction_house/views.py:293
+#: auction_house/views.py:291
 msgid "Modify the offer's data."
 msgstr "Ändern Sie die Daten des Angebots."
 
-#: auction_house/views.py:322 auction_house/views.py:821
-#: auction_house/views.py:855 auction_house/views.py:962
+#: auction_house/views.py:320 auction_house/views.py:816
+#: auction_house/views.py:850 auction_house/views.py:1155
 msgid "Your line has been updated!"
 msgstr "Ihr Satz wurde aktualisiert!"
 
-#: auction_house/views.py:333
+#: auction_house/views.py:331
 msgid "Edit line"
 msgstr "Profil Bearbeiten"
 
-#: auction_house/views.py:334
+#: auction_house/views.py:332
 msgid "Edit a specific line in the offer."
 msgstr "Zeile Bearbeiten"
 
-#: auction_house/views.py:358 auction_house/views.py:455
+#: auction_house/views.py:356 auction_house/views.py:449
 msgid "Your offer has been added!"
 msgstr "Ihr Angebot wurde Hinzugefügt!"
 
-#: auction_house/views.py:369
+#: auction_house/views.py:367
 msgid "Add a line"
 msgstr "Eine Zeile hinzufügen"
 
-#: auction_house/views.py:371
+#: auction_house/views.py:369
 msgid "Add a new product for offer."
 msgstr "Fügen Sie ein neues Produkt zum Angebot hinzu."
 
-#: auction_house/views.py:418
+#: auction_house/views.py:411
 msgid "Create new offer"
 msgstr "Neues Angebot erstellen"
 
-#: auction_house/views.py:424
+#: auction_house/views.py:417
 msgid "Edit customer info"
 msgstr "Kunden-info Bearbeiten"
 
-#: auction_house/views.py:432
+#: auction_house/views.py:425
 msgid "Auction homepage"
 msgstr "Auktion homepage"
 
-#: auction_house/views.py:462
+#: auction_house/views.py:456
 msgid "New offer"
 msgstr "Neues Angebot"
 
-#: auction_house/views.py:463
+#: auction_house/views.py:457
 msgid "Create a new auction offer"
 msgstr "Neues Auktionsangebot erstellen"
 
-#: auction_house/views.py:487
+#: auction_house/views.py:481
 msgid "List of offers"
 msgstr "Liste der Angebote"
 
-#: auction_house/views.py:530
+#: auction_house/views.py:524
 msgid "Your offer has change the state!"
 msgstr "Ihr Angebot hat den Zustand ändern!"
 
-#: auction_house/views.py:578
+#: auction_house/views.py:572
 msgid "Your answer has change the state!"
 msgstr "Ihre Antwort hat den Zustand ändern!"
 
-#: auction_house/views.py:628 auction_house/views.py:677
-#: auction_house/views.py:707
+#: auction_house/views.py:622 auction_house/views.py:672
+#: auction_house/views.py:702
 msgid "Edit answer"
 msgstr "Antwort Bearbeiten"
 
-#: auction_house/views.py:637
+#: auction_house/views.py:631
 #: doc_repo/templates/doc_repo/doc_repo_doc_list.html:77
 msgid "Edit description"
 msgstr "Beschreibung Bearbeiten"
 
-#: auction_house/views.py:652
+#: auction_house/views.py:647
 msgid "Detailed view of an answer to:"
 msgstr "Detailansicht einer Antwort auf:"
 
-#: auction_house/views.py:679
+#: auction_house/views.py:674
 msgid "Edit answer as a poweruser."
 msgstr "Antwort als poweruser bearbeiten."
 
-#: auction_house/views.py:709
+#: auction_house/views.py:704
 msgid "Modify the answer's data."
 msgstr "Ändern Sie die Daten der Antwort."
 
-#: auction_house/views.py:732
+#: auction_house/views.py:727
 msgid "Offers waiting for answers"
 msgstr "Angebote wartende auf Antworten"
 
-#: auction_house/views.py:733
+#: auction_house/views.py:728
 msgid "List of offers that you can make an answer to."
 msgstr "Liste der Angebote, auf die Sie eine Antwort geben können."
 
-#: auction_house/views.py:739
+#: auction_house/views.py:734
 msgid "waiting offer"
 msgstr "Wartende Angebote"
 
-#: auction_house/views.py:761
+#: auction_house/views.py:756
 msgid "List of answers"
 msgstr "Liste der Angebote"
 
-#: auction_house/views.py:781
+#: auction_house/views.py:776
 msgid "Your answer has been added!"
 msgstr "Ihre web-url wurde Hinzugefügt!"
 
-#: auction_house/views.py:787
+#: auction_house/views.py:782
 msgctxt "ah_customer_answer_create-title"
 msgid "create-answer"
 msgstr "antwort-erstellen"
 
-#: auction_house/views.py:796
+#: auction_house/views.py:791
 msgid "Create new answer"
 msgstr "Neues Antwort erstellen"
 
-#: auction_house/views.py:889 auction_house/views.py:921
+#: auction_house/views.py:884 auction_house/views.py:916
 msgid "Step has been added!"
 msgstr "Schritt wurde Hinzugefügt!"
+
+#: auction_house/views.py:1042 auction_house/views.py:1058
+msgid "Online auction info"
+msgstr "Online-Auktion-info"
 
 #: customers/admin.py:29
 msgid "Password"
@@ -1181,363 +1229,363 @@ msgctxt "ProjectCustomUser definition"
 msgid "Users"
 msgstr "Benutzers"
 
-#: customers/models.py:183
+#: customers/models.py:186
 msgctxt "UserProfile user"
 msgid "user"
 msgstr "Benutzer"
 
-#: customers/models.py:184
+#: customers/models.py:187
 msgctxt "UserProfile definition"
 msgid "Link to pattern object"
 msgstr "Link zum musterobjekt"
 
-#: customers/models.py:188 customers/models.py:297
+#: customers/models.py:191 customers/models.py:300
 msgctxt "UserProfile user"
 msgid "language"
 msgstr "Sprache"
 
-#: customers/models.py:189 customers/models.py:298
+#: customers/models.py:192 customers/models.py:301
 msgctxt "UserProfile definition"
 msgid "Set the language to communicate with the user"
 msgstr "Legen Sie die Sprache fest, um mit dem Benutzer zu kommunizieren"
 
-#: customers/models.py:196
+#: customers/models.py:199
 msgctxt "UserProfile image"
 msgid "image"
 msgstr "Bild"
 
-#: customers/models.py:197
+#: customers/models.py:200
 msgctxt "UserProfile definition"
 msgid "Here you can add an image to the profile"
 msgstr "Hier können Sie dem Profil ein Bild hinzufügen"
 
-#: customers/models.py:213
+#: customers/models.py:216
 msgctxt "UserProfile definition"
 msgid "User Profile"
 msgstr "Benutzerprofil"
 
-#: customers/models.py:214
+#: customers/models.py:217
 msgctxt "UserProfile definition"
 msgid "User Profiles"
 msgstr "Benutzerprofile"
 
-#: customers/models.py:228
+#: customers/models.py:231
 msgid "Establishment"
 msgstr "Einrichtung"
 
-#: customers/models.py:229
+#: customers/models.py:232
 msgid "Establishment name"
 msgstr "Einrichtungs name"
 
-#: customers/models.py:230
+#: customers/models.py:233
 msgid "Street"
 msgstr "Straße"
 
-#: customers/models.py:231
+#: customers/models.py:234
 msgid "Street in address"
 msgstr "Straße in der Adresse"
 
-#: customers/models.py:232
+#: customers/models.py:235
 msgid "House"
 msgstr "Hausnummer"
 
-#: customers/models.py:233
+#: customers/models.py:236
 msgid "House number in address"
 msgstr "Hausnummer in Adresse"
 
-#: customers/models.py:234
+#: customers/models.py:237
 msgid "City"
 msgstr "Stadt"
 
-#: customers/models.py:235
+#: customers/models.py:238
 msgid "City name in address"
 msgstr "Stadt name Adresse"
 
-#: customers/models.py:236
+#: customers/models.py:239
 msgid "ZIP"
 msgstr "Postleitzahl"
 
-#: customers/models.py:237
+#: customers/models.py:240
 msgid "ZIP code in address"
 msgstr "Postleitzahl in Adresse"
 
-#: customers/models.py:238
+#: customers/models.py:241
 msgid "headquarter"
 msgstr "Firmensitz"
 
-#: customers/models.py:239
+#: customers/models.py:242
 msgid "Mark customers headquarter. "
 msgstr "name des Firmensitzes"
 
-#: customers/models.py:243
+#: customers/models.py:246
 msgctxt "CustomerEstablishments definition"
 msgid "Customer"
 msgstr "Kunde"
 
-#: customers/models.py:244
+#: customers/models.py:247
 msgctxt "CustomerEstablishments definition"
 msgid "Link to Customer"
 msgstr "Link zum Kunden"
 
-#: customers/models.py:257
+#: customers/models.py:260
 msgctxt "CustomerEstablishments definition"
 msgid "Establishment"
 msgstr "Einrichtung"
 
-#: customers/models.py:258
+#: customers/models.py:261
 msgctxt "CustomerEstablishments definition"
 msgid "Establishments"
 msgstr "Einrichtung"
 
-#: customers/models.py:261
+#: customers/models.py:264
 msgctxt "CustomerAddress __str__"
 msgid "establishment"
 msgstr "Einrichtung"
 
-#: customers/models.py:268
+#: customers/models.py:271
 msgctxt "Customer definition"
 msgid "email address"
 msgstr "E-Mail-Adresse"
 
-#: customers/models.py:269
+#: customers/models.py:272
 msgctxt "Customer definition"
 msgid "Required: 150 characters or fewer. Letters, digits and @/./+/-/_ only."
 msgstr ""
 "Erforderlich: 150 Zeichen oder weniger. Nur Buchstaben, Ziffern und @/./+/-/_"
 
-#: customers/models.py:276 customers/models.py:321 customers/models.py:397
+#: customers/models.py:279 customers/models.py:324 customers/models.py:400
 msgctxt "CustomerEmail definition"
 msgid "Customer"
 msgstr "Kunde"
 
-#: customers/models.py:277 customers/models.py:322 customers/models.py:398
+#: customers/models.py:280 customers/models.py:325 customers/models.py:401
 msgctxt "CustomerEmail definition"
 msgid "Link to Customer"
 msgstr "Link zum Kunden"
 
-#: customers/models.py:282
+#: customers/models.py:285
 msgid "Private address"
 msgstr "Private Adresse"
 
-#: customers/models.py:283
+#: customers/models.py:286
 msgid "This address will not be included in the info. "
 msgstr "Diese Adresse wird nicht in der info enthalten sein."
 
-#: customers/models.py:287
+#: customers/models.py:290
 msgid "Admin address"
 msgstr "Admin-Adresse"
 
-#: customers/models.py:288
+#: customers/models.py:291
 msgid "Mark special addresses to send additional administration messages. "
 msgstr ""
 "An diese spezielle Adressen werden zusätzliche administrationsmeldungen "
 "gesendet."
 
-#: customers/models.py:292
+#: customers/models.py:295
 msgid "Business address"
 msgstr "Geschäftsadresse"
 
-#: customers/models.py:293
+#: customers/models.py:296
 msgid "Business messages will be sent to this address"
 msgstr "Business-Nachrichten werden an diese Adresse gesendet"
 
-#: customers/models.py:304
+#: customers/models.py:307
 msgctxt "CustomerEmail definition"
 msgid "Customer email"
 msgstr "Kunden-E-Mail"
 
-#: customers/models.py:305
+#: customers/models.py:308
 msgctxt "CustomerEmail definition"
 msgid "Customer emails"
 msgstr "Kunden-E-Mails"
 
-#: customers/models.py:308 customers/models.py:407 customers/models.py:451
+#: customers/models.py:311 customers/models.py:410 customers/models.py:454
 msgid "address"
 msgstr "Adresse"
 
-#: customers/models.py:312 customers/models.py:313
+#: customers/models.py:315 customers/models.py:316
 msgid "Account number"
 msgstr "Kontonummer"
 
-#: customers/models.py:314
+#: customers/models.py:317
 msgid "Bank ID"
 msgstr "Bank-ID"
 
-#: customers/models.py:315
+#: customers/models.py:318
 msgid "National identification of the bank"
 msgstr "Nationale Identifikation der Bank"
 
-#: customers/models.py:316
+#: customers/models.py:319
 msgid "IBAN"
 msgstr "IBAN"
 
-#: customers/models.py:317
+#: customers/models.py:320
 msgid "International account identification"
 msgstr "Internationale Kontokennung"
 
-#: customers/models.py:325
+#: customers/models.py:328
 msgid "Prefered account"
 msgstr "Bevorzugtes Konto"
 
-#: customers/models.py:326
+#: customers/models.py:329
 msgid "Preferably use this account."
 msgstr "Vorzugsweise dieses Konto verwenden."
 
-#: customers/models.py:329
+#: customers/models.py:332
 msgctxt "CustomerBankAccount definition"
 msgid "Customer bank account"
 msgstr "Kunden Bankkonto"
 
-#: customers/models.py:330
+#: customers/models.py:333
 msgctxt "CustomerBankAccount definition"
 msgid "Customer bank accounts"
 msgstr "Kunden Bankkonten"
 
-#: customers/models.py:339
+#: customers/models.py:342
 msgctxt "BasicPhoneCategory definition"
 msgid "Type"
 msgstr "Typ"
 
-#: customers/models.py:340
+#: customers/models.py:343
 msgctxt "BasicPhoneCategory definition"
 msgid "Phone category type"
 msgstr "Telefon Kategorie Typ"
 
-#: customers/models.py:346
+#: customers/models.py:349
 msgctxt "BasicPhoneCategory definition"
 msgid "Phone category"
 msgstr "Telefon Kategorie"
 
-#: customers/models.py:347
+#: customers/models.py:350
 msgctxt "BasicPhoneCategory definition"
 msgid "Phone categories"
 msgstr "Telefon Kategories"
 
-#: customers/models.py:361
+#: customers/models.py:364
 msgid "Customer phone"
 msgstr "Kunden Telefon"
 
-#: customers/models.py:362
+#: customers/models.py:365
 msgid "Customer phone number"
 msgstr "Kundentelefonnummer"
 
-#: customers/models.py:364
+#: customers/models.py:367
 msgid "Phone description"
 msgstr "Telefon Beschreibung"
 
-#: customers/models.py:370
+#: customers/models.py:373
 msgctxt "CustomerPhone definition"
 msgid "Phone category"
 msgstr "Telefon Kategorie"
 
-#: customers/models.py:371
+#: customers/models.py:374
 msgctxt "CustomerPhone definition"
 msgid "Category of the phone"
 msgstr "Kategorie des Telefons"
 
-#: customers/models.py:376
+#: customers/models.py:379
 msgctxt "CustomerPhone definition"
 msgid "Customer"
 msgstr "Kunde"
 
-#: customers/models.py:377
+#: customers/models.py:380
 msgctxt "CustomerPhone definition"
 msgid "Link to Customer"
 msgstr "Link zum Kunden"
 
-#: customers/models.py:382
+#: customers/models.py:385
 msgctxt "CustomerEmail definition"
 msgid "Customer phone"
 msgstr "Kunden Telefon"
 
-#: customers/models.py:383
+#: customers/models.py:386
 msgctxt "CustomerEmail definition"
 msgid "Customer phones"
 msgstr "Kunden Telefonen"
 
-#: customers/models.py:391
+#: customers/models.py:394
 msgid "Customer web"
 msgstr "Kunden Seite"
 
-#: customers/models.py:392
+#: customers/models.py:395
 msgid "Customers website URL"
 msgstr "Kunden website-URL"
 
-#: customers/models.py:403
+#: customers/models.py:406
 msgctxt "CustomerWeb definition"
 msgid "Customer website"
 msgstr "Kunden Seite"
 
-#: customers/models.py:404
+#: customers/models.py:407
 msgctxt "CustomerWeb definition"
 msgid "Customer websites"
 msgstr "Kunden Seiten"
 
-#: customers/models.py:412
+#: customers/models.py:415
 msgid "Customer name"
 msgstr "Benutzername"
 
-#: customers/models.py:413
+#: customers/models.py:416
 msgid "Customer identification"
 msgstr "Benutzeridentifikation"
 
-#: customers/models.py:416
+#: customers/models.py:419
 msgid "Registration number"
 msgstr "Registrierungsnummer"
 
-#: customers/models.py:417
+#: customers/models.py:420
 msgid "Customer registration number"
 msgstr "Kunden Registriernummer"
 
-#: customers/models.py:421
+#: customers/models.py:424
 msgid "VAT"
 msgstr "Steuernummer"
 
-#: customers/models.py:422
+#: customers/models.py:425
 msgid "Customer VAT number"
 msgstr "Kunden Steuer-Nummer"
 
-#: customers/models.py:428
+#: customers/models.py:431
 msgctxt "Customer image"
 msgid "Background"
 msgstr "Hintergrund"
 
-#: customers/models.py:429
+#: customers/models.py:432
 msgid "Image to fill customers web page background"
 msgstr "Bild zu füllen Kunden Webseite hintergrund"
 
-#: customers/models.py:434
+#: customers/models.py:437
 msgctxt "Customer image"
 msgid "Logo"
 msgstr "Logo"
 
-#: customers/models.py:435
+#: customers/models.py:438
 msgid "Customer logo"
 msgstr "Kunden Logo"
 
-#: customers/models.py:447
+#: customers/models.py:450
 msgctxt "Customer definition"
 msgid "Customer"
 msgstr "Kunde"
 
-#: customers/models.py:448
+#: customers/models.py:451
 msgctxt "Customer definition"
 msgid "Customers"
 msgstr "Kunden"
 
-#: customers/models.py:490
+#: customers/models.py:493
 msgid "Customer description"
 msgstr "Kunden-Beschreibung"
 
-#: customers/models.py:491
+#: customers/models.py:494
 msgid "Text to describe the Customer extensively."
 msgstr "Text, um den Kunden ausführlich zu beschreiben."
 
-#: customers/models.py:497
+#: customers/models.py:500
 msgid "Short description"
 msgstr "Kurzbeschreibung"
 
-#: customers/models.py:498
+#: customers/models.py:501
 msgid "Short text to describe the Customer."
 msgstr "Kurzer text zur Beschreibung des Kunden."
 
@@ -1550,51 +1598,55 @@ msgstr "Kunden Löschen"
 msgid "Are you sure, you want to delete the Customer"
 msgstr "Sind Sie sicher, dass Sie den Kunden löschen möchten"
 
-#: customers/templates/customers/customer_create.html:17
-msgid "Add"
-msgstr "Hinzufügen"
-
 #: customers/templates/customers/customer_detail.html:13
 #: customers/templates/customers/customer_info.html:12
 #: customers/templates/customers/customer_list.html:96
 msgid "Details"
 msgstr "Detaile"
 
-#: customers/templates/customers/customer_detail.html:18
+#: customers/templates/customers/customer_detail.html:15
 #: customers/templates/customers/customer_info.html:14
 #: customers/templates/customers/customer_list.html:105
 msgid "Registration number:"
 msgstr "Registrierungsnummer:"
 
-#: customers/templates/customers/customer_detail.html:21
+#: customers/templates/customers/customer_detail.html:18
 #: customers/templates/customers/customer_info.html:17
 #: customers/templates/customers/customer_list.html:108
 msgid "VAT:"
 msgstr "Steuernummer:"
 
 #: customers/templates/customers/customer_detail.html:24
-msgid "Short description:"
-msgstr "Kurzbeschreibung:"
-
-#: customers/templates/customers/customer_detail.html:29
-msgid "Long description:"
-msgstr "Detailbeschreibung:"
-
-#: customers/templates/customers/customer_detail.html:38
 msgid "Edit Customer Details"
 msgstr "Bearbeiten der Kundendaten"
 
-#: customers/templates/customers/customer_detail.html:48
+#: customers/templates/customers/customer_detail.html:29
+msgid "Descriptions"
+msgstr "Beschreibung"
+
+#: customers/templates/customers/customer_detail.html:33
+msgid "Short description:"
+msgstr "Kurzbeschreibung:"
+
+#: customers/templates/customers/customer_detail.html:38
+msgid "Long description:"
+msgstr "Detailbeschreibung:"
+
+#: customers/templates/customers/customer_detail.html:47
+msgid "Edit translated descriptions"
+msgstr "Übersetzte Beschreibungen Bearbeiten"
+
+#: customers/templates/customers/customer_detail.html:54
 msgid "Users:"
 msgstr "Benutzers:"
 
-#: customers/templates/customers/customer_detail.html:78
+#: customers/templates/customers/customer_detail.html:80
 msgid "Add New User to Customer"
 msgstr "Neuer Benutzer zum Kunden hinzufügen"
 
-#: customers/templates/customers/customer_form.html:35
-msgid "Edit translated descriptions"
-msgstr "Übersetzte Beschreibungen Bearbeiten"
+#: customers/templates/customers/customer_form.html:9 customers/views.py:125
+msgid "Edit customer details"
+msgstr "Bearbeiten der Kundendaten"
 
 #: customers/templates/customers/customer_info.html:31 customers/views.py:166
 msgid "Establishments:"
@@ -1616,7 +1668,7 @@ msgstr "Telefone:"
 msgid "Bank accounts:"
 msgstr "Bankkonten:"
 
-#: customers/templates/customers/customer_info.html:100
+#: customers/templates/customers/customer_info.html:99
 msgid "Documents:"
 msgstr "Dokumente:"
 
@@ -1630,7 +1682,7 @@ msgid "Detail"
 msgstr "Detail"
 
 #: customers/templates/customers/customer_list.html:53
-#: project_main/templates/project_main/__header.html:94
+#: project_main/templates/project_main/__header.html:89
 msgid "My Auction"
 msgstr "Meine Auktion"
 
@@ -1647,21 +1699,10 @@ msgstr "Details Umschalten"
 msgid "Establishments"
 msgstr "Einrichtung"
 
-#: customers/templates/customers/customer_translation.html:23
+#: customers/templates/customers/customer_translation.html:24
 msgctxt "navbar-languages"
 msgid "Go"
 msgstr "OK"
-
-#: customers/templates/customers/customer_translation.html:32
-#: customers/templates/customers/customerbankaccount_form.html:19
-#: customers/templates/customers/customerestablishments_form.html:21
-#: customers/templates/customers/customerphone_form.html:20
-#: customers/templates/customers/customerweb_form.html:21
-#: customers/templates/customers/email_form.html:21
-#: customers/templates/customers/projectcustomuser_form.html:21
-#: doc_repo/templates/doc_repo/doc_repo_doc_form.html:20
-msgid "Send"
-msgstr "Senden"
 
 #: customers/templates/customers/customerbankaccount_confirm_delete.html:11
 msgid "Delete bank account"
@@ -1675,19 +1716,28 @@ msgstr "Sind Sie sicher, Sie möchten diese Bankkonto löschen:"
 msgid "Bank account:"
 msgstr "Bankkonto:"
 
-#: customers/templates/customers/customeremail_confirm_delete.html:13
+#: customers/templates/customers/customerbankaccount_form.html:19
+#: customers/templates/customers/customerestablishments_form.html:21
+#: customers/templates/customers/customerphone_form.html:20
+#: customers/templates/customers/customerweb_form.html:21
+#: customers/templates/customers/email_form.html:21
+#: customers/templates/customers/projectcustomuser_form.html:21
+msgid "Send"
+msgstr "Senden"
+
+#: customers/templates/customers/customeremail_confirm_delete.html:11
 msgid "Delete email"
 msgstr "E-Mail löschen"
 
-#: customers/templates/customers/customeremail_confirm_delete.html:15
+#: customers/templates/customers/customeremail_confirm_delete.html:13
 msgid "Are you sure, you want to delete email: "
 msgstr "Sind Sie sicher, diesem E-Mail zu löschen:"
 
-#: customers/templates/customers/customerestablishments_confirm_delete.html:13
+#: customers/templates/customers/customerestablishments_confirm_delete.html:11
 msgid "Delete establishment"
 msgstr "Einrichtung löschen"
 
-#: customers/templates/customers/customerestablishments_confirm_delete.html:15
+#: customers/templates/customers/customerestablishments_confirm_delete.html:13
 msgid "Are you sure, you want to delete establishment: "
 msgstr "Sind Sie sicher, dieses Einrichtung zu löschen:"
 
@@ -1725,24 +1775,43 @@ msgstr "E-Mail:"
 
 #: customers/templates/customers/login.html:27
 #: project_main/templates/project_main/__footer.html:43
-#: project_main/templates/project_main/__header.html:165
-#: project_main/templates/project_main/base.html:204
+#: project_main/templates/project_main/__header.html:161
+#: project_main/templates/project_main/base.html:84
 msgctxt "login_template"
 msgid "Log In"
 msgstr "Melden Sie sich an"
 
 #: customers/templates/customers/login.html:39
-#: project_main/templates/project_main/__header.html:178
+#: project_main/templates/project_main/__header.html:174
 msgctxt "login form submit button"
 msgid "Login"
 msgstr "Anmelden"
 
 #: customers/templates/customers/login.html:47
-#: project_main/templates/project_main/__header.html:186
+#: project_main/templates/project_main/__header.html:182
 msgid "Forgot your password?"
 msgstr "Passwort vergessen?"
 
-#: customers/templates/customers/projectcustomuser_active.html:16
+#: customers/templates/customers/projectcustomuser_active.html:8
+msgid "Modify user"
+msgstr "Benutzer ändern"
+
+#: customers/templates/customers/projectcustomuser_active.html:9
+msgid "As a customer administrator, change the user."
+msgstr "Ändern Sie als kundenadministrator den Benutzer."
+
+#: customers/templates/customers/projectcustomuser_active.html:18
+msgid "User information"
+msgstr "Benutzerinformationen"
+
+#: customers/templates/customers/projectcustomuser_active.html:26
+msgid "Email address:"
+msgstr "E-Mail-Adresse:"
+
+#: customers/templates/customers/projectcustomuser_active.html:33
+msgid "Change"
+msgstr "Ändern"
+
 #: customers/templates/customers/projectcustomuser_form.html:16
 msgid "User:"
 msgstr "Benutzer:"
@@ -1764,9 +1833,9 @@ msgstr "Einen Passwort-reset-link zu dieser E-Mail senden"
 msgid "Change password"
 msgstr "Passwort ändern"
 
-#: customers/templates/customers/user_profile.html:26
-msgid "Profile info"
-msgstr "Profil info"
+#: customers/templates/customers/user_profile.html:22
+msgid "Send a password reset link"
+msgstr "Einen Passwort-reset-link senden"
 
 #: customers/templates/customers/user_register.html:11
 msgid "Join Today"
@@ -1811,10 +1880,6 @@ msgstr "Detaillierte Kundeninformationen"
 #: customers/views.py:124
 msgid "Edit"
 msgstr "Bearbeiten"
-
-#: customers/views.py:125
-msgid "Edit customer details"
-msgstr "Bearbeiten der Kundendaten"
 
 #: customers/views.py:235
 msgid "Your e-mail has been updated!"
@@ -1897,11 +1962,11 @@ msgctxt "customer_bank_update-title"
 msgid "update-establishment"
 msgstr "update-einrichtung"
 
-#: customers/views.py:586
+#: customers/views.py:585
 msgid "The user has been created. "
 msgstr "Benutzer wurde aktualisiert!"
 
-#: customers/views.py:587
+#: customers/views.py:586
 msgid ""
 "An email with a link for setting a new password has been sent to the user's "
 "address."
@@ -1909,20 +1974,19 @@ msgstr ""
 "Eine E-Mail mit einem link zum festlegen eines neuen Passworts wurde an die "
 "Adresse des Benutzers gesendet"
 
-#: customers/views.py:588
+#: customers/views.py:587
 msgid "This link is valid for 48 hours from now."
 msgstr "Dieser link ist ab sofort für 48 Stunden gültig."
 
-#: customers/views.py:595
-msgctxt "customer_user_create-title"
-msgid "create-user"
-msgstr "benutzer-erstellen"
+#: customers/views.py:639
+msgid "A reset link has been sent to your email address. "
+msgstr "Ein reset-link wurde an die E-Mail-Adresse gesendet."
 
-#: customers/views.py:638
+#: customers/views.py:643
 msgid "A reset link has been sent to the email address. "
 msgstr "Ein reset-link wurde an die E-Mail-Adresse gesendet."
 
-#: customers/views.py:639
+#: customers/views.py:644
 msgid ""
 "If you didn't recieve any email, make sure that your address has been typed "
 "correctly "
@@ -1930,61 +1994,60 @@ msgstr ""
 "Wenn Sie keine E-Mail erhalten haben, stellen Sie sicher, dass Ihre Adresse "
 "korrekt eingegeben wurde"
 
-#: customers/views.py:640
-msgid " and that the message wasn't marked as spam. "
+#: customers/views.py:645
+msgid "and that the message wasn't marked as spam. "
 msgstr "und dass die Nachricht nicht als Spam markiert ist."
 
-#: customers/views.py:664
+#: customers/views.py:670
 msgid "The password reset link is either invalid or expired."
 msgstr "Die Passwort-reset-link ist entweder ungültig oder abgelaufen"
 
-#: customers/views.py:686
+#: customers/views.py:692
 msgid "You have successfully changed your password. "
 msgstr "Sie haben Ihr Passwort erfolgreich geändert."
 
-#: customers/views.py:687
+#: customers/views.py:693
 msgid "You can now use the new password to log into your account."
 msgstr "Mit dem neuen Passwort können Sie sich nun in Ihr Konto einloggen."
 
-#: customers/views.py:711
+#: customers/views.py:717
 msgid "User has been updated!"
 msgstr "Benutzer wurde aktualisiert!"
 
-#: customers/views.py:717
+#: customers/views.py:723
 msgctxt "customer_user_update-title"
 msgid "update-user"
 msgstr "update-benutzer"
 
-#: customers/views.py:759
+#: customers/views.py:765
 msgid "Your translation has been updated!"
 msgstr "Ihre übersetzung wurde aktualisiert!"
 
-#: customers/views.py:765
+#: customers/views.py:771
 msgctxt "customer_tran_update-title"
 msgid "update-translation"
 msgstr "update-übersetzung"
 
-#: customers/views.py:788
+#: customers/views.py:794
 msgid "Successfully logged in"
 msgstr "Erfolgreich eingeloggt"
 
-#: customers/views.py:797
+#: customers/views.py:803
 msgctxt "customer-login-title"
 msgid "Login"
 msgstr "Anmelden"
 
-#: customers/views.py:803
+#: customers/views.py:809
 msgid "You have been logged out"
 msgstr "Sie wurden ausgeloggt"
 
-#: customers/views.py:820
+#: customers/views.py:828
 msgid "Your account has been updated!"
 msgstr "Ihr Konto wurde aktualisiert!"
 
-#: customers/views.py:827
-msgctxt "customer-user-profile-title"
-msgid "user-profile"
-msgstr "Benutzerprofil"
+#: customers/views.py:840
+msgid "Edit your profile"
+msgstr "Profil Bearbeiten"
 
 #: doc_repo/admin.py:15
 msgid "Document type"
@@ -2079,7 +2142,32 @@ msgstr "Dokument in einem neuen tab öffnen"
 msgid "Download document"
 msgstr "Dokument herunterladen"
 
-#: doc_repo/templates/doc_repo/doc_repo_doc_form.html:30
+#: doc_repo/templates/doc_repo/__object_docs.html:14
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:29
+msgid "Document name:"
+msgstr "Dokumentnamen:"
+
+#: doc_repo/templates/doc_repo/__object_docs.html:21
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:35
+msgid "Picture"
+msgstr "Bild"
+
+#: doc_repo/templates/doc_repo/__object_docs.html:25
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:39
+msgid "File"
+msgstr "Datei"
+
+#: doc_repo/templates/doc_repo/__object_docs.html:46
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:58
+msgid "Open in new tab"
+msgstr "In einem neuen tab öffnen"
+
+#: doc_repo/templates/doc_repo/__object_docs.html:54
+#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:66
+msgid "Download"
+msgstr "Dokument herunterladen"
+
+#: doc_repo/templates/doc_repo/doc_repo_doc_form.html:32
 msgid ""
 "Tip: If you'd like to replace the uploaded file, you have to create a new "
 "document (and delete this one, if needed)."
@@ -2090,26 +2178,6 @@ msgstr ""
 #: doc_repo/templates/doc_repo/doc_repo_doc_list.html:15
 msgid "Document list:"
 msgstr "Dokumente:"
-
-#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:29
-msgid "Document name:"
-msgstr "Dokumentnamen:"
-
-#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:35
-msgid "Picture"
-msgstr "Bild"
-
-#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:39
-msgid "File"
-msgstr "Datei"
-
-#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:58
-msgid "Open in new tab"
-msgstr "In einem neuen tab öffnen"
-
-#: doc_repo/templates/doc_repo/doc_repo_doc_list.html:66
-msgid "Download"
-msgstr "Dokument herunterladen"
 
 #: doc_repo/templates/doc_repo/doc_repo_doc_list.html:82
 msgid "Delete"
@@ -2139,19 +2207,19 @@ msgstr "Dokument Hinzufügen"
 msgid "Document has been added!"
 msgstr "Dokument wurde Hinzugefügt!"
 
-#: doc_repo/views.py:123
+#: doc_repo/views.py:124
 msgid "Add document"
 msgstr "Dokument hinzufügen"
 
-#: doc_repo/views.py:124
+#: doc_repo/views.py:125
 msgid "Add a document to an object"
 msgstr "Ein Dokument zu einem Objekt hinzufügen"
 
-#: doc_repo/views.py:145
+#: doc_repo/views.py:146
 msgid "Document has been updated!"
 msgstr "Dokument wurde aktualisiert!"
 
-#: doc_repo/views.py:152
+#: doc_repo/views.py:154
 msgid "Modify the document's descriptions"
 msgstr "Beschreibung des Dokuments Bearbeiten"
 
@@ -2389,6 +2457,7 @@ msgid "Static page text."
 msgstr "Statischer Seitentext."
 
 #: project_main/templates/project_main/__btn-icon-add.html:3
+#: project_main/templates/project_main/__btn-submit-add.html:9
 msgid "Add new item"
 msgstr "Neues Element hinzufügen"
 
@@ -2400,26 +2469,113 @@ msgstr "Element löschen"
 msgid "Edit document description"
 msgstr "Beschreibung des Dokuments Bearbeiten"
 
+#: project_main/templates/project_main/__btn-submit-save.html:9
+msgid "Save changes"
+msgstr "Änderungen speichern"
+
+#: project_main/templates/project_main/__calendar-templates.html:7
+msgid "January"
+msgstr "Januar"
+
+#: project_main/templates/project_main/__calendar-templates.html:8
+msgid "February"
+msgstr "Februar"
+
+#: project_main/templates/project_main/__calendar-templates.html:9
+msgid "March"
+msgstr "März"
+
+#: project_main/templates/project_main/__calendar-templates.html:10
+msgid "April"
+msgstr "April"
+
+#: project_main/templates/project_main/__calendar-templates.html:11
+msgid "May"
+msgstr "Mai"
+
+#: project_main/templates/project_main/__calendar-templates.html:12
+msgid "June"
+msgstr "Juni"
+
+#: project_main/templates/project_main/__calendar-templates.html:13
+msgid "July"
+msgstr "Juli"
+
+#: project_main/templates/project_main/__calendar-templates.html:14
+msgid "August"
+msgstr "August"
+
+#: project_main/templates/project_main/__calendar-templates.html:15
+msgid "September"
+msgstr "September"
+
+#: project_main/templates/project_main/__calendar-templates.html:16
+msgid "October"
+msgstr "October"
+
+#: project_main/templates/project_main/__calendar-templates.html:17
+msgid "November"
+msgstr "November"
+
+#: project_main/templates/project_main/__calendar-templates.html:18
+msgid "December"
+msgstr "Dezember"
+
+#: project_main/templates/project_main/__calendar-templates.html:21
+msgid "Monday"
+msgstr "Montag"
+
+#: project_main/templates/project_main/__calendar-templates.html:22
+msgid "Tuesday"
+msgstr "Dienstag"
+
+#: project_main/templates/project_main/__calendar-templates.html:23
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+#: project_main/templates/project_main/__calendar-templates.html:24
+msgid "Thursday"
+msgstr "Donnerstag"
+
+#: project_main/templates/project_main/__calendar-templates.html:25
+msgid "Friday"
+msgstr "Freitag"
+
+#: project_main/templates/project_main/__calendar-templates.html:26
+msgid "Saturday"
+msgstr "Samstag"
+
+#: project_main/templates/project_main/__calendar-templates.html:27
+msgid "Sunday"
+msgstr "Sonntag"
+
+#: project_main/templates/project_main/__common.html:14
+msgctxt "homepage-title"
+msgid "All Waste Has Its Value"
+msgstr "Alle Abfälle Haben Ihren Wert"
+
 #: project_main/templates/project_main/__content-header.html:71
 #: project_main/templates/project_main/__content-header.html:72
+#: project_main/templates/project_main/__content-header.html:83
+#: project_main/templates/project_main/__content-header.html:84
 msgid "Logo"
 msgstr "Logo"
 
 #: project_main/templates/project_main/__footer.html:51
 #: project_main/templates/project_main/__header.html:26
-#: project_main/templates/project_main/__header.html:110
-#: project_main/templates/project_main/base.html:212
+#: project_main/templates/project_main/__header.html:105
+#: project_main/templates/project_main/base.html:92
 msgid "Login"
 msgstr "Anmelden"
 
 #: project_main/templates/project_main/__footer.html:62
-#: project_main/templates/project_main/base.html:161
+#: project_main/templates/project_main/base.html:150
 msgctxt "base-navbar"
 msgid "Log Out"
 msgstr "Abmelden"
 
 #: project_main/templates/project_main/__header.html:31
-#: project_main/templates/project_main/__header.html:115
+#: project_main/templates/project_main/__header.html:110
 msgid "Logout"
 msgstr "Abmelden"
 
@@ -2427,12 +2583,12 @@ msgstr "Abmelden"
 msgid "Homepage"
 msgstr "Homepage"
 
-#: project_main/templates/project_main/__header.html:88
+#: project_main/templates/project_main/__header.html:83
 msgctxt "base-navbar"
 msgid "Customer List"
 msgstr "Kundenliste"
 
-#: project_main/templates/project_main/__header.html:197
+#: project_main/templates/project_main/__header.html:193
 msgctxt "login form tip"
 msgid ""
 "Tip: You can press the Escape key to toggle the login menu with your "
@@ -2441,18 +2597,18 @@ msgstr ""
 "Tipp: Sie können die Escape-Taste drücken, um das login-Menü nur mit Ihrer "
 "Tastatur zu wechseln! "
 
-#: project_main/templates/project_main/__inline.html:57
+#: project_main/templates/project_main/__inline.html:58
 msgctxt "Inline edit button text"
 msgid "Save"
 msgstr "Speichern"
 
-#: project_main/templates/project_main/__inline.html:63
-#: project_main/templates/project_main/__inline.html:92
+#: project_main/templates/project_main/__inline.html:64
+#: project_main/templates/project_main/__inline.html:93
 msgctxt "Inline button text"
 msgid "Cancel"
 msgstr "Stornieren"
 
-#: project_main/templates/project_main/__inline.html:86
+#: project_main/templates/project_main/__inline.html:87
 msgctxt "Inline add new button text"
 msgid "Add new entry"
 msgstr "Neuen Eintrag hinzufügen"
@@ -2461,43 +2617,37 @@ msgstr "Neuen Eintrag hinzufügen"
 msgid "No entries."
 msgstr "Keine Einträge."
 
-#: project_main/templates/project_main/base.html:45
-#: project_main/templates/project_main/static_page_base.html:29
-msgctxt "homepage-title"
-msgid "All Waste Has Its Value"
-msgstr "Alle Abfälle Haben Ihren Wert"
-
-#: project_main/templates/project_main/base.html:117
-#: project_main/templates/project_main/base.html:156
+#: project_main/templates/project_main/base.html:106
+#: project_main/templates/project_main/base.html:145
 msgctxt "base-navbar"
 msgid "Edit Profile"
 msgstr "Profil Bearbeiten"
 
-#: project_main/templates/project_main/base.html:128
+#: project_main/templates/project_main/base.html:117
 msgid "Administrator"
 msgstr "Administrator"
 
-#: project_main/templates/project_main/base.html:132
+#: project_main/templates/project_main/base.html:121
 msgid "Worker"
 msgstr "Arbeiter"
 
-#: project_main/templates/project_main/base.html:169
+#: project_main/templates/project_main/base.html:158
 #: project_main/templates/project_main/project_home.html:14
 msgctxt "right-navbar"
 msgid "Administration tools"
 msgstr "Verwaltungsprogramme"
 
-#: project_main/templates/project_main/base.html:177
+#: project_main/templates/project_main/base.html:166
 msgctxt "right-navbar"
 msgid "Offer list"
 msgstr "Angebotsliste"
 
-#: project_main/templates/project_main/base.html:182
+#: project_main/templates/project_main/base.html:171
 msgctxt "right-navbar"
 msgid "Offers for approval"
 msgstr "Angebote zur Genehmigung"
 
-#: project_main/templates/project_main/base.html:187
+#: project_main/templates/project_main/base.html:176
 msgctxt "right-navbar"
 msgid "Answer list"
 msgstr "Antwort-Liste"
@@ -2729,3 +2879,29 @@ msgstr "Schritt"
 msgctxt "Step definition"
 msgid "Steps"
 msgstr "Schritte"
+
+#~ msgid "Create"
+#~ msgstr "Erstellen"
+
+#~ msgid "Create a New Answer"
+#~ msgstr "Eine neue Antwort erstellen"
+
+#~ msgid "Click to update price per unit"
+#~ msgstr "Aktivieren, um Preis pro Einheit zu Bearbeiten"
+
+#~ msgid "Minimal price per unit"
+#~ msgstr "Minimaler Preis pro Einheit"
+
+#~ msgid "Add"
+#~ msgstr "Hinzufügen"
+
+#~ msgid "Profile info"
+#~ msgstr "Profil info"
+
+#~ msgctxt "customer_user_create-title"
+#~ msgid "create-user"
+#~ msgstr "benutzer-erstellen"
+
+#~ msgctxt "customer-user-profile-title"
+#~ msgid "user-profile"
+#~ msgstr "Benutzerprofil"

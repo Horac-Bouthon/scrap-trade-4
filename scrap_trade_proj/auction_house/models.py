@@ -205,6 +205,60 @@ class AhOfferLine(models.Model):
         return '{} - {} from {} - {} '.format(self.pk, self.description, self.offer.pk, self.offer.description)
 
 
+#------------------------  strap trade special
+class Catalog(models.Model):
+    code = models.CharField(
+        max_length=25,
+        verbose_name=_('Code'),
+        help_text=_("Catalog entry code"),
+        null=True,
+        blank=True,
+    )
+    description = models.CharField(
+        max_length=200,
+        verbose_name=_('Description'),
+        help_text=_("Catalog entry description"),
+        null=True,
+        blank=True,
+    )
+    str_type = models.CharField(
+        max_length=1,
+        verbose_name=_('Type'),
+        help_text=_("Catalog entry Type"),
+        null=True,
+        blank=True,
+    )
+    is_group = models.BooleanField(
+        default=False,
+        verbose_name=_('Is group'),
+        help_text=_("Mark groups for other catalog entries. ")
+    )
+    is_dangerous = models.BooleanField(
+        default=False,
+        verbose_name=_('Is dangerous'),
+        help_text=_("Mark dangerous catalog entries. ")
+    )
+    non_actual = models.BooleanField(
+        default=False,
+        verbose_name=_('Not actual'),
+        help_text=_("Mark not actual entries. ")
+    )
+
+    class Meta:
+        verbose_name = tr.pgettext_lazy('Catalog definition', 'Catalog entry')
+        verbose_name_plural = tr.pgettext_lazy('Catalog definition', 'Catalog entries')
+
+    # def get_absolute_url(self):
+    #    return reverse('ah-offer-detail', kwargs={'pk': self.pk})
+
+    def __str__(self):
+        return '{} - {} [pk:{}]'.format(
+            self.code,
+            self.description,
+            self.pk,
+        )
+
+
 #------------------------  AhMatClass
 class AhMatClass(TranslatableModel):
     class_name = models.CharField(
@@ -217,7 +271,32 @@ class AhMatClass(TranslatableModel):
         max_length=10,
         verbose_name=_('Measurement unit'),
         help_text=_("Units in which material is entered"),
-        unique = True,
+    )
+    base_description =  models.TextField(
+        verbose_name=_('Material class quick description'),
+        help_text=_("Text to describe the material class for quick access."),
+        null=True,
+        blank=True,
+        unique=False,
+    )
+    #TODO: filling with language dependent text???
+    is_dangerous = models.BooleanField(
+        default=False,
+        verbose_name=_('Is dangerous'),
+        help_text=_("Mark dangerous material. ")
+    )
+    non_actual = models.BooleanField(
+        default=False,
+        verbose_name=_('Not actual'),
+        help_text=_("Mark not actual materials. ")
+    )
+    c_entry = models.ForeignKey(
+        Catalog,
+        on_delete=models.SET_NULL,
+        verbose_name=tr.pgettext_lazy('AhMatClass definition', 'Catalog entry'),
+        help_text=tr.pgettext_lazy('AhMatClass definition','Link to the Catalog'),
+        related_name="material",
+        null=True,
     )
 
     class Meta:
@@ -233,7 +312,7 @@ class AhMatClass(TranslatableModel):
         return self.translated('mat_class_description', default=None, language=lang, fallback=True)
 
     def __str__(self):
-        return '{} ({})'.format(self.act_display_name(), self.measurement_unit)
+        return '{} --- {}'.format(self.class_name, self.base_description)
 
 
 class AhMatClassTranslation(get_translation_model(AhMatClass, "ahmatclass")):
@@ -416,56 +495,4 @@ class AhAnswerLine(models.Model):
             self.total_price,
             self.answer.id,
             self.answer.description,
-        )
-
-#------------------------  strap trade special
-class Catalog(models.Model):
-    code = models.CharField(
-        max_length=25,
-        verbose_name=_('Code'),
-        help_text=_("Catalog entry code"),
-        null=True,
-        blank=True,
-    )
-    description = models.CharField(
-        max_length=200,
-        verbose_name=_('Description'),
-        help_text=_("Catalog entry description"),
-        null=True,
-        blank=True,
-    )
-    str_type = models.CharField(
-        max_length=1,
-        verbose_name=_('Type'),
-        help_text=_("Catalog entry Type"),
-        null=True,
-        blank=True,
-    )
-    is_group = models.BooleanField(
-        default=False,
-        verbose_name=_('Is group'),
-        help_text=_("Mark groups for other catalog entries. ")
-    )
-    is_dangerous = models.BooleanField(
-        default=False,
-        verbose_name=_('Is dangerous'),
-        help_text=_("Mark dangerous catalog entries. ")
-    )
-    non_actual = models.BooleanField(
-        default=False,
-        verbose_name=_('Not actual'),
-        help_text=_("Mark not actual entries. ")
-    )
-
-    class Meta:
-        verbose_name = tr.pgettext_lazy('Catalog definition', 'Catalog entry')
-        verbose_name_plural = tr.pgettext_lazy('Catalog definition', 'Catalog entries')
-
-    # def get_absolute_url(self):
-    #    return reverse('ah-offer-detail', kwargs={'pk': self.pk})
-
-    def __str__(self):
-        return '{} {} - {}'.format(self.pk,
-            self.code,
-            self.description,
         )

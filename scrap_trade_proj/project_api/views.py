@@ -6,7 +6,11 @@ from rest_framework.response import Response
 from . import serializers
 from rest_framework import status
 
-from auction_house.modules.auction import make_auctions, online_manager
+from auction_house.modules.auction import (
+    make_auctions,
+    online_manager,
+    scrap_set_catalog
+)
 
 class HelloApiView(APIView):
     def get(self, request, format=None):
@@ -73,34 +77,8 @@ class CatalogView(APIView):
 
     def post(self, request):
         serializer = serializers.CatalogSerializer(data=request.data)
-        my_created = 0
-        my_updated = 0
         if 'katalog' in request.data:
-            for line in request.data.get("katalog"):
-                print(line['code'], line['description'])
-                code = line['code']
-                test = Catalog.objects.filter(code=code)
-                if test.count() < 1:
-                    data_line = Catalog(
-                        code=line['code'],
-                        description=line['description'],
-                        str_type=line['kind'],
-                    )
-                    data_line.save()
-                    my_created += 1
-                else:
-                    data_line = test.first()
-                    data_line.code = line['code']
-                    data_line.description=line['description']
-                    data_line.str_type=line['kind']
-                    my_updated += 1
-                if 'G' in data_line.str_type:
-                    data_line.is_group = True
-                if 'N' in data_line.str_type:
-                    data_line.is_dangerous = True
-                data_line.save()
-            message = 'Created {} lines. Updated {} lines. [{}]'\
-                .format(my_created, my_updated, my_created+my_updated)
+            message = scrap_set_catalog(request.data.get("katalog"))
             return Response({'message': message})
         else:
             return Response({'message': 'Missinng katalog object'}, status=status.HTTP_400_BAD_REQUEST)
